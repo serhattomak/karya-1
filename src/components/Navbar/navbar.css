@@ -1,0 +1,152 @@
+.nav {
+  background: radial-gradient(
+    97.57% 210.75% at 0.9% 2.98%,
+    rgba(7, 7, 7, 0.5) 0%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  font-weight: 700;
+  line-height: 30px;
+  font-size: 16px;
+  z-index: 10;
+  position: fixed;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+}
+
+.logo img {
+  height: 50px;
+  width: auto;
+}
+
+.main_list.desktop {
+  display: flex; /* Web görünümünde menüyü göster */
+  gap: 1rem;
+}
+
+.main_list.mobile {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 70%;
+  height: 100vh;
+  background-color: rgba(27, 27, 27, 0.97);
+  color: white;
+  display: none; /* Başlangıçta gizli */
+  flex-direction: column;
+  text-align: left;
+  align-items: flex-start;
+  padding-top: 5rem;
+  padding-left: 2rem;
+  transition: transform 0.3s ease;
+  transform: translateX(100%);
+}
+
+.main_list.mobile.show_list {
+  display: flex;
+  transform: translateX(0); /* Menü açıldığında görünür hale gelsin */
+}
+
+.navlinks {
+  list-style: none;
+  display: flex;
+}
+
+.navlinks li a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  align-items: center;
+  display: flex;
+  padding: 0.2rem 2rem;
+}
+
+.contact-button {
+  display: flex;
+  align-items: center;
+}
+
+.contact-word {
+  background-color: rgba(246, 139, 31, 1);
+  color: white;
+  border-radius: 20px;
+  font-size: 1rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.contact-icon {
+  font-size: 20px;
+}
+
+/* Hamburger buton */
+.navTrigger {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.navTrigger i {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+}
+
+/* X kapama simgesi */
+.navClose {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+}
+
+/* Responsive ayarlar */
+@media screen and (max-width: 729px) {
+  .main_list.desktop {
+    display: none;
+  }
+
+  .main_list.mobile {
+    display: none;
+  }
+
+  .navTrigger {
+    display: flex;
+  }
+
+  .navlinks {
+    flex-direction: column;
+    gap: 3rem;
+  }
+}
+
+@media screen and (min-width: 730px) {
+  /* Mobil menüyü geniş ekranda gizle */
+  .main_list.mobile {
+    display: none;
+  }
+
+  /* Web menüsünü geniş ekranda göster */
+  .main_list.desktop {
+    display: flex;
+  }
+
+  /* Hamburger menüyü geniş ekranda gizle */
+  .navTrigger {
+    display: none;
+  }
+}

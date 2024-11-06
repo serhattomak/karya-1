@@ -1,0 +1,47 @@
+/* HomeBanner.css */
+.banner {
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: white;
+  text-align: left;
+}
+
+.banner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  background: radial-gradient(
+    97.57% 210.75% at 0.9% 2.98%,
+    rgba(7, 7, 7, 0.6) 0.22%,
+    rgba(3, 3, 3, 0.343874) 28.25%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+
+  backdrop-filter: blur(10px);
+  z-index: -1;
+}
+
+.banner h1 {
+  font-size: 3rem; /* Başlık boyutunu ayarlayalım */
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.banner p {
+  font-size: 1.5rem; /* Alt yazı boyutunu ayarlayalım */
+  font-weight: 400;
+  max-width: 800px; /* Alt yazının genişliğini sınırlayalım */
+  margin: 0 auto;
+}
