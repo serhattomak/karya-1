@@ -1,9 +1,11 @@
 .nav {
   background: radial-gradient(
     97.57% 210.75% at 0.9% 2.98%,
-    rgba(7, 7, 7, 0.5) 0%,
-    rgba(0, 0, 0, 0.4) 100%
+    rgba(7, 7, 7, 0.4) 0%,
+    /* Opaklık azaltıldı */ rgba(0, 0, 0, 0.2) 100%
+      /* Daha parlak bir ton eklendi */
   );
+  backdrop-filter: blur(7px) brightness(1.2); /* Parlaklık ve bulanıklık eklendi */
   padding: 1rem;
   display: flex;
   justify-content: center;
@@ -20,7 +22,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 90%;
+  width: 100%;
 }
 
 .logo img {

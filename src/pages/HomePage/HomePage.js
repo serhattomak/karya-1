@@ -1,17 +1,14 @@
 import React from "react";
 import HomeBanner from "../../components/HomeBanner/HomeBanner";
-// import ProductBox from "../../components/ProductBox/ProductBox";
+import ProductSlider from "../../components/ProductSlider/ProductSlider";
 import "./HomePage.css";
-
-// const bannerData = {
-//   background: "/assets/images/banner_background.png",
-// };
 
 function HomePage() {
   return (
-    <div>
-      <HomeBanner />
-      {/* <ProductBox /> */}
+    <div className="home-container">
+      <HomeBanner>
+        <ProductSlider /> {/* ProductSlider'ı HomeBanner'ın içinde gösteriyoruz */}
+      </HomeBanner>
     </div>
   );
 }

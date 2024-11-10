@@ -1,7 +1,7 @@
 import React from "react";
 import "./HomeBanner.css";
 
-const HomeBanner = ({ data }) => {
+const HomeBanner = ({ children }) => {
   return (
     <div
       className="banner"
@@ -9,12 +9,15 @@ const HomeBanner = ({ data }) => {
         backgroundImage: "url('/assets/images/banner_background.png')",
       }}
     >
-      <div className="banner-content">
-        <h1>Güvenli Yapılar, Kalıcı Çözümler!</h1>
-        <p>
-          Betonarme yapılarda Poliüretan Enjeksiyon Sistemleriyle Su
-          Sızıntılarına Son!
-        </p>
+      <div className="banner-container">
+        <div className="banner-content">
+          <h1>Güvenli Yapılar, Kalıcı Çözümler!</h1>
+          <p>
+            Betonarme yapılarda Poliüretan Enjeksiyon Sistemleriyle Su
+            Sızıntılarına Son!
+          </p>
+        </div>
+        {children} {/* ProductSlider burada gösterilecek */}
       </div>
     </div>
   );

@@ -1,11 +1,11 @@
 .home-background {
-    background-size: cover;
-    background-position: center;
-    height: 100vh;
-    position: relative;
-    z-index: 1;
-  }
-  
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
 .home-background::before {
   content: "";
   position: absolute;
@@ -21,6 +21,6 @@
     rgba(0, 0, 0, 0.1) 100%
   );
 
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(10px);
   z-index: -1;
 }
