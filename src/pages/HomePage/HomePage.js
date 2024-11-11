@@ -7,7 +7,10 @@ function HomePage() {
   return (
     <div className="home-container">
       <HomeBanner>
-        <ProductSlider /> {/* ProductSlider'ı HomeBanner'ın içinde gösteriyoruz */}
+        <ProductSlider />{" "}
+        <div className="banner-info">
+          <a>www.karyayapi.com © 2007 - 2024 Karya Yapı San. Tic. Ltd. Şti.</a>
+        </div>
       </HomeBanner>
     </div>
   );

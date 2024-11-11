@@ -92,7 +92,7 @@ const ProductSlider = () => {
           ))}
         </ul>
 
-        <div className="slider__buttons">
+        {/* <div className="slider__buttons">
           <button
             ref={prevRef}
             className="slider__button"
@@ -109,7 +109,7 @@ const ProductSlider = () => {
           >
             Next
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

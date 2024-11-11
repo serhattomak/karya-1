@@ -24,3 +24,7 @@
   backdrop-filter: blur(10px);
   z-index: -1;
 }
+.banner-info {
+  font-size: 0.75rem;
+  margin-top: 1rem;
+}

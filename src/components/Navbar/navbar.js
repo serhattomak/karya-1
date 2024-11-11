@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./navbar.css";
 import { IoClose, IoMail } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -13,27 +14,24 @@ const Navbar = () => {
     <nav className="nav">
       <div className="container">
         <div className="logo">
-          {/* Public klasöründen resme erişim */}
           <img src="/assets/images/KaryaLogo.png" alt="Logo" />
         </div>
-        {/* Desktop Menüsü */}
         <div className="main_list desktop">
           <ul className="navlinks">
             <li>
-              <a href="#">Anasayfa</a>
+              <Link to="/">Anasayfa</Link>
             </li>
             <li>
-              <a href="#">Karya Yapı Hakkında</a>
+              <Link to="/about">Karya Yapı Hakkında</Link>
             </li>
             <li className="contact-button">
-              <a href="#" className="contact-word">
+              <Link to="/contact" className="contact-word">
                 İletişim
                 <IoMail className="contact-icon" />
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
-        {/* Mobil Menüsü */}
         <div
           id="mainListDiv"
           className={`main_list mobile ${isMenuOpen ? "show_list" : ""}`}
@@ -43,24 +41,20 @@ const Navbar = () => {
           </span>
           <ul className="navlinks">
             <li>
-              <a href="#">Anasayfa</a>
+              <Link to="/">Anasayfa</Link>
             </li>
-
             <li>
-              <a href="#">Karya Yapı Hakkında</a>
+              <Link to="/about">Karya Yapı Hakkında</Link>
             </li>
-
             <li className="contact-button">
-              <a href="#">İletişim</a>
+              <Link to="/contact">İletişim</Link>
               <IoMail className="contact-icon" />
             </li>
-
             <li>
               <a href="#">Bizi Sosyal Medyada Takip Et!</a>
             </li>
           </ul>
         </div>
-        {/* Menü Butonu */}
         <span className="navTrigger" onClick={toggleMenu}>
           <i></i>
           <i></i>

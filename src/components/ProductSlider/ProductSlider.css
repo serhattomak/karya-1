@@ -66,7 +66,7 @@
   width: 100%;
   height: auto;
   border-radius: 4px;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .product-title {
@@ -80,9 +80,45 @@
 
 /* Mobil ekranda iki kutuyu yan yana göstermek için */
 @media (max-width: 768px) {
+  .slider-container {
+    padding: 0.5rem;
+    margin-top: 2rem; /* Reduce top margin for mobile */
+  }
+
+  .slider-title {
+    font-size: 1.25rem; /* Smaller title size on mobile */
+    margin-bottom: 0.5rem;
+  }
+
   .slide {
-    flex: 0 0 50%; /* Her kutu %50 genişlikte olacak */
-    min-width: 50%; /* Mobil ekranlarda iki kutu yan yana görünecek */
+    flex: 0 0 50%; /* Each slide takes full width on mobile */
+    min-width: 50%;
+    margin: 0.5rem; /* Smaller margin between items */
+    padding: 0.5rem; /* Adjust padding for compact design */
+  }
+
+  .product-image {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 0.25rem; /* Smaller space below the image */
+  }
+
+  .product-title {
+    font-size: 1rem; /* Smaller font for product titles on mobile */
+    font-weight: 500; /* Adjust font weight */
+    color: #ffffff;
+    text-align: left;
+    align-self: flex-start;
+    margin-bottom: 1rem; /* Reduced space below title */
+  }
+
+  .slider__buttons {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
   }
 }
 
