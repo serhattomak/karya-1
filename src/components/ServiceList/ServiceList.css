@@ -1,0 +1,53 @@
+.service-list {
+  width: 50%;
+  padding: 20px;
+}
+
+.service-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #212121;
+  text-align: left;
+}
+
+.line {
+  width: 80px;
+  height: 4px;
+  background-color: #ff6600;
+  margin-bottom: 1rem;
+}
+
+.service-items {
+  list-style-type: none;
+  padding-left: 0;
+  text-align: left;
+  max-width: 650px;
+}
+
+.service-items li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-left: 45px; /* Ensure text starts after the bullet */
+  position: relative;
+  font-size: 1rem;
+  line-height: 32px;
+  color: #212121;
+}
+
+.service-items li::before {
+  content: "➜";
+  color: #212121;
+  background-color: #d9d9d9; /* Bullet color */
+  border-radius: 50%; /* Make it circular */
+  width: 30px; /* Fixed width for the bullet */
+  height: 30px; /* Fixed height for the bullet */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem; /* Bullet size */
+  position: absolute;
+  left: 0; /* Position bullet at the start of the list item */
+  top: 50%;
+  transform: translateY(-50%); /* Vertically center the bullet */
+}
