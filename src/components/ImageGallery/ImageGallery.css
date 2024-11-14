@@ -27,7 +27,6 @@
   right: 5%;
   width: 45%;
   height: 45%;
-  z-index: 10;
 }
 
 .image-container:nth-child(3) {
@@ -35,7 +34,6 @@
   left: 10%;
   width: 40%;
   height: 50%;
-  z-index: -1;
 }
 
 .image-container:nth-child(4) {

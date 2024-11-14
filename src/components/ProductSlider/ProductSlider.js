@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Yönlendirme için useNavigate eklendi
 import "./ProductSlider.css";
 
 const ProductSlider = () => {
@@ -6,6 +7,7 @@ const ProductSlider = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const [isScrollable, setIsScrollable] = useState(false);
+  const navigate = useNavigate(); // useNavigate kullanarak yönlendirme işlevini çağırıyoruz
 
   const handlePrevClick = () => {
     if (trackRef.current && nextRef.current) {
@@ -51,22 +53,27 @@ const ProductSlider = () => {
     );
   };
 
+  // Her bir ürün için route path tanımlıyoruz
   const products = [
     {
       image: "/assets/images/asilnunx.png",
       title: "AŞIL NUN X",
+      path: "/AsilNunX", // Yönlendirme yapılacak path
     },
     {
       image: "/assets/images/poliuretanenjeksiyon.png",
       title: "Poliüretan Enjeksiyon",
+      path: "/PoliuretanEnjeksiyon", // Yönlendirme yapılacak path
     },
     {
       image: "/assets/images/halatlıtelbetonkesme.png",
-      title: "Halatlı Tel -Beton Kesme",
+      title: "Halatlı Tel - Beton Kesme",
+      path: "/HalatliTelBetonKesme", // Yönlendirme yapılacak path
     },
     {
       image: "/assets/images/kimyasalankraj.png",
       title: "Kimyasal Ankraj Filiz Ekim",
+      path: "/KimyasalAnkraj", // Yönlendirme yapılacak path
     },
   ];
 
@@ -74,19 +81,27 @@ const ProductSlider = () => {
     setIsScrollable(false);
   }, []);
 
+  // Ürüne tıklandığında yönlendirme fonksiyonu
+  const handleProductClick = (path) => {
+    navigate(path);
+  };
+
   return (
     <div className="slider-container">
       <div className="slider-title">Ürün ve Hizmetlerimiz</div>
       <div className="slider">
         <ul className="slider__track" ref={trackRef} onScroll={handleScroll}>
           {products.map((product, index) => (
-            <li key={index} className="slide">
+            <li
+              key={index}
+              className="slide"
+              onClick={() => handleProductClick(product.path)} // Ürün tıklama olayını tanımladık
+            >
               <img
                 src={product.image}
                 alt={product.title}
                 className="product-image"
               />
-
               <h3 className="product-title">{product.title}</h3>
             </li>
           ))}
