@@ -26,7 +26,6 @@
     /* Opaklığı azalttık */ rgba(3, 3, 3, 0.343874) 28.25%,
     rgba(255, 255, 255, 0.1) 100% /* Parlaklık için beyaz tonu ekledik */
   );
-  backdrop-filter: blur(4px) brightness(1.2); /* Parlaklık artırıldı */
   z-index: -1;
 }
 

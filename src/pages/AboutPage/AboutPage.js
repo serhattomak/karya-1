@@ -3,6 +3,8 @@ import Navbar from "../../components/Navbar/navbar";
 import Banner from "../../components/Banner/Banner";
 import AboutUsInfo from "../../components/AboutUsInfo/Aboutusinfo";
 import ServiceSection from "../../components/ServicesSection/ServicesSection"; // ServiceSection bileşenini içe aktarın
+import PartnersSlider from "../../components/PartnersSlider/PartnersSlider";
+import Footer from "../../components/Footer/Footer";
 
 function AboutPage() {
   return (
@@ -10,7 +12,10 @@ function AboutPage() {
       <Navbar />
       <Banner />
       <AboutUsInfo />
-      <ServiceSection /> 
+      <ServiceSection />
+      <PartnersSlider></PartnersSlider>
+      <br></br>
+      <Footer></Footer>
     </div>
   );
 }
