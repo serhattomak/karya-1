@@ -1,15 +1,16 @@
+// Banner.js
 import React from "react";
 import "./Banner.css";
 
-const Banner = () => {
+const Banner = ({ imageSrc, title }) => {
   return (
     <div className="banner-about">
       <img
-        src="/assets/images/aboutbanner.png" /* Dinamik olarak güncellenebilecek resim kaynağı */
+        src={imageSrc} // Dinamik resim kaynağı
         alt="Banner"
         className="banner-image-about"
       />
-      <h1 className="banner-text-about">Hakkımızda</h1>
+      <h1 className="banner-text-about">{title}</h1> {/* Dinamik başlık */}
     </div>
   );
 };

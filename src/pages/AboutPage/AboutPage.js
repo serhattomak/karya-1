@@ -10,7 +10,11 @@ function AboutPage() {
   return (
     <div>
       <Navbar />
-      <Banner />
+      <Banner
+        imageSrc="/assets/images/aboutbanner.png"
+        title="Hakkımızda"
+      />{" "}
+      {/* Resim ve başlık props olarak geçiliyor */}
       <AboutUsInfo />
       <ServiceSection />
       <PartnersSlider></PartnersSlider>
