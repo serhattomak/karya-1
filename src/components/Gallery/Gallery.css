@@ -2,15 +2,18 @@
 .gallery-container {
   width: 100%;
   padding: 20px;
-  gap: 2rem;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  align-items: center; /* Yazı ve görseller aynı hizaya gelir */
+  gap: 30px; /* Başlık ve görseller arasında boşluk */
   flex-direction: column;
 }
 
+/* Yazı alanı */
 .gallery-content {
-  width: 100%;
+  flex-basis: 20%; /* Yazı alanının genişliği */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Yazıları sola hizala */
 }
 
 .gallery-title {
@@ -18,25 +21,32 @@
   font-weight: bold;
   color: #333;
   margin-bottom: 15px;
-  border-bottom: 3px solid #e67e22;
-  display: inline-block;
+  border-bottom: 4px solid #e67e22;
   padding-bottom: 5px;
-  text-align: left; /* Ortalamak için */
+  text-align: left; /* Yazıyı sola hizala */
 }
 
-/* Görsel galerisi */
+/* Görsel galerisi alanı */
+.gallery-images-container {
+  flex: 1; /* Görseller alanını genişlet */
+  display: flex;
+  justify-content: center; /* Görselleri ortala */
+  align-items: center;
+}
+
 .gallery-images {
   display: flex;
-  justify-content: center; /* Görselleri ortalamak için */
+  justify-content: space-between; /* Görseller arası boşluk */
   align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
+  flex-wrap: wrap; /* Görselleri birden fazla satıra yerleştir */
+  gap: 3rem;
+  width: 100%;
 }
 
 /* Her bir görsel */
 .gallery-images img {
   width: 100%;
-  max-width: 250px;
+  max-width: 300px;
   height: auto;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -49,12 +59,21 @@
 
 /* Responsive düzen */
 @media (max-width: 768px) {
-  .gallery-images {
-    flex-direction: column;
+  .gallery-container {
+    flex-direction: column; /* Mobilde yazı ve görseller alt alta */
     align-items: center;
   }
 
+  .gallery-content {
+    align-items: center;
+    text-align: center; /* Mobilde yazıyı ortala */
+  }
+
+  .gallery-images {
+    justify-content: center; /* Görselleri mobilde ortala */
+  }
+
   .gallery-images img {
-    max-width: 90%;
+    max-width: 90%; /* Mobilde görseller tam genişlik */
   }
 }

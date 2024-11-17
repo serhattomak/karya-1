@@ -1,0 +1,43 @@
+/* Genel container ve içerik stil */
+.KimyasalAnkrajInfo-container {
+  display: flex;
+  justify-content: center; /* Ortalıyor ama içerik sola hizalı */
+  align-items: flex-start;
+  width: 100%;
+  padding: 30px;
+  background-color: #ffffff;
+  box-sizing: border-box; /* Padding'i dahil eder */
+}
+
+/* İçeriğin genişliği ve hizalaması */
+.KimyasalAnkrajInfo-content {
+  width: 72%; /* Ekranın %90 genişliğinde */
+  display: flex;
+  justify-content: flex-start; /* Sol hizalama */
+  align-items: flex-start;
+}
+
+/* Sol kısımdaki metin bölümü */
+.KimyasalAnkrajInfo-text {
+  flex: 1;
+  color: #333;
+  max-width: 770px;
+  text-align: left; /* Sol hizalı metin */
+}
+
+/* Başlık ve paragraf stilleri */
+.KimyasalAnkrajInfo-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+  border-bottom: 3px solid #e67e22;
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+.KimyasalAnkrajInfo-description {
+  font-size: 16px;
+  margin-top: 10px;
+  line-height: 1.6;
+}

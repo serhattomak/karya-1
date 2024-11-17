@@ -2,18 +2,21 @@
 import React from "react";
 import Navbar from "../../components/Navbar/navbar";
 import Banner from "../../components/Banner/Banner";
-import AsilNunXInfo from "../../components/AsilNunXInfo/AsilNunXInfo";
+import HtbkInfo from "../../components/HtbkInfo/HtbkInfo";
 import Gallery from "../../components/Gallery/Gallery";
 import ContactSection from "../../components/ContactSection/ContactSection";
 import Footer from "../../components/Footer/Footer";
 
-function ServicesPage() {
+function HalatliTelBetonKesme() {
   return (
     <div>
       <Navbar />
-      <Banner imageSrc="/assets/images/Asilnunxbanner.png" title="Asil Nun X" />
+      <Banner
+        imageSrc="/assets/images/htbkbanner.png"
+        title="Halatlı Tel Beton Kesme"
+      />
       <br />
-      <AsilNunXInfo></AsilNunXInfo>
+      <HtbkInfo></HtbkInfo>
       <Gallery></Gallery>
       <ContactSection></ContactSection>
       <br></br>
@@ -22,4 +25,4 @@ function ServicesPage() {
   );
 }
 
-export default ServicesPage;
+export default HalatliTelBetonKesme;

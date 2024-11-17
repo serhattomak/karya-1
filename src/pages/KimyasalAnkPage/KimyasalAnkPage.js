@@ -2,18 +2,21 @@
 import React from "react";
 import Navbar from "../../components/Navbar/navbar";
 import Banner from "../../components/Banner/Banner";
-import AsilNunXInfo from "../../components/AsilNunXInfo/AsilNunXInfo";
+import KimyasalAnkrajInfo from "../../components/KimyasalAnkrajInfo/KimyasalAnkrajInfo";
 import Gallery from "../../components/Gallery/Gallery";
 import ContactSection from "../../components/ContactSection/ContactSection";
 import Footer from "../../components/Footer/Footer";
 
-function ServicesPage() {
+function KimyasalAnkraj() {
   return (
     <div>
       <Navbar />
-      <Banner imageSrc="/assets/images/Asilnunxbanner.png" title="Asil Nun X" />
+      <Banner
+        imageSrc="/assets/images/kimankbanner.png"
+        title="Kimyasal Ankraj Filiz Ekim"
+      />
       <br />
-      <AsilNunXInfo></AsilNunXInfo>
+      <KimyasalAnkrajInfo></KimyasalAnkrajInfo>
       <Gallery></Gallery>
       <ContactSection></ContactSection>
       <br></br>
@@ -22,4 +25,4 @@ function ServicesPage() {
   );
 }
 
-export default ServicesPage;
+export default KimyasalAnkraj;
