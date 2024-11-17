@@ -1,16 +1,15 @@
 import React from "react";
 import "./Gallery.css";
 
-const Gallery = () => {
+const Gallery = ({ images, title }) => {
   return (
     <div className="gallery-container">
       <div className="gallery-content">
-        <h2 className="gallery-title">Görseller</h2>
+        <h2 className="gallery-title">{title}</h2>
         <div className="gallery-images">
-          <img src="/assets/images/asilnunx.png" alt="Asil Nun X 1" />
-          <img src="/assets/images/asilnunx.png" alt="Asil Nun X 2" />
-          <img src="/assets/images/asilnunx.png" alt="Asil Nun X 3" />
-          <img src="/assets/images/asilnunx.png" alt="Asil Nun X 4" />
+          {images.map((image, index) => (
+            <img key={index} src={image.src} alt={image.alt} />
+          ))}
         </div>
       </div>
     </div>
