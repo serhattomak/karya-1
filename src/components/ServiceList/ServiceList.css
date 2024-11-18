@@ -1,6 +1,7 @@
 .service-list {
   width: 50%;
   padding: 20px;
+  margin: 0 auto; /* Ortalamak için */
 }
 
 .service-title {
@@ -14,7 +15,6 @@
   width: 80px;
   height: 4px;
   background-color: #ff6600;
-  margin-bottom: 1rem;
 }
 
 .service-items {
@@ -28,7 +28,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  padding-left: 45px; /* Ensure text starts after the bullet */
+  padding-left: 45px;
   position: relative;
   font-size: 1rem;
   line-height: 32px;
@@ -38,16 +38,69 @@
 .service-items li::before {
   content: "➜";
   color: #212121;
-  background-color: #d9d9d9; /* Bullet color */
-  border-radius: 50%; /* Make it circular */
-  width: 30px; /* Fixed width for the bullet */
-  height: 30px; /* Fixed height for the bullet */
+  background-color: #d9d9d9;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem; /* Bullet size */
+  font-size: 1rem;
   position: absolute;
-  left: 0; /* Position bullet at the start of the list item */
+  left: 0;
   top: 50%;
-  transform: translateY(-50%); /* Vertically center the bullet */
+  transform: translateY(-50%);
+}
+
+/* Responsive tasarım için */
+@media (max-width: 768px) {
+  .service-list {
+    width: 90%; /* Daha dar ekranlar için genişliği azalt */
+    padding: 10px; /* İç boşluğu küçült */
+  }
+
+  .service-title {
+    font-size: 0.875rem; /* Başlık boyutunu küçült */
+    text-align: left; /* Mobilde başlığı ortala */
+  }
+
+  .service-items {
+    text-align: left; /* Listeyi sola hizala */
+  }
+
+  .service-items li {
+    font-size: 0.9rem; /* Yazı boyutunu küçült */
+    line-height: 28px; /* Satır yüksekliğini ayarla */
+    padding-left: 40px; /* Bullet ile metin arasındaki boşluğu azalt */
+  }
+
+  .service-items li::before {
+    width: 25px; /* Bullet boyutunu küçült */
+    height: 25px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Daha küçük ekranlar (telefonlar) için */
+@media (max-width: 480px) {
+  .service-list {
+    width: 100%; /* Tam genişlik kullan */
+    padding: 5px; /* Daha az iç boşluk */
+  }
+
+  .service-title {
+    font-size: 1rem; /* Daha küçük başlık */
+  }
+
+  .service-items li {
+    font-size: 0.85rem; /* Metin boyutunu iyice küçült */
+    line-height: 24px;
+    padding-left: 35px; /* Bullet ile metin arasındaki boşluğu daha da azalt */
+  }
+
+  .service-items li::before {
+    width: 20px; /* Bullet boyutunu küçült */
+    height: 20px;
+    font-size: 0.8rem;
+  }
 }

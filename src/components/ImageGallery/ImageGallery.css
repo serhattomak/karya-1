@@ -50,3 +50,40 @@
   object-fit: cover;
   border-radius: 10px;
 }
+
+@media (max-width: 768px) {
+  .image-gallery {
+    position: relative;
+    width: 100%; /* İsteğinize göre genişlik ayarlayın */
+    height: 400px; /* Galerinin yüksekliğini içerik yüksekliğine göre ayarlayın */
+  }
+
+  .image-container:nth-child(1) {
+    top: 0;
+    left: 0;
+    width: 85%;
+    height: 30%;
+  }
+
+  .image-container:nth-child(2) {
+    top: 20%;
+    right: 5%;
+    width: 45%;
+    height: 20%;
+  }
+
+  .image-container:nth-child(3) {
+    top: 30%;
+    left: 4%;
+    width: 50%;
+    height: 40%;
+  }
+
+  .image-container:nth-child(4) {
+    top: 40%;
+    right: 10px;
+
+    width: 45%;
+    height: 30%;
+  }
+}

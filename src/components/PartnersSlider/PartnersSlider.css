@@ -49,3 +49,7 @@
   width: 100%;
   padding: 1rem;
 }
+
+@media screen (max-width: 768px) {
+  
+}

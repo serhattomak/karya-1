@@ -39,7 +39,7 @@ const PartnersSlider = () => {
                 key={`${trackIndex}-${imageIndex}`}
                 className="PartnersSlider"
               >
-                <img src={url} height="130" width="300" alt="" />
+                <img src={url} alt="" />
               </div>
             ))}
           </React.Fragment>

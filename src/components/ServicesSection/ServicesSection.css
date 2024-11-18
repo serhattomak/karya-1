@@ -5,3 +5,10 @@
   padding: 2rem;
   width: 100%;
 }
+
+@media (max-width: 768px) {
+  .services-section {
+    flex-direction: column;
+    display: flex;
+  }
+}

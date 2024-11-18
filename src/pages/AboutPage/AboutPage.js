@@ -14,9 +14,11 @@ function AboutPage() {
         imageSrc="/assets/images/aboutbanner.png"
         title="Hakkımızda"
       />{" "}
-      {/* Resim ve başlık props olarak geçiliyor */}
+      <br></br>
       <AboutUsInfo />
+      <br></br>
       <ServiceSection />
+      <br></br>
       <PartnersSlider></PartnersSlider>
       <br></br>
       <Footer></Footer>

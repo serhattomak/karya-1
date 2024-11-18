@@ -71,7 +71,7 @@
 }
 
 .footer-right {
-  text-align: right;
+  text-align: left;
   flex: 1;
 }
 
@@ -95,19 +95,27 @@
 
 @media (max-width: 768px) {
   .footer-container {
-    flex-direction: column;
+    flex-direction: column; /* Bileşenleri dikey olarak hizala */
     text-align: center;
   }
 
-  .footer-left,
-  .footer-center,
+  .footer-left {
+    order: 3; /* Logoyu en alt sıraya taşı */
+  }
+
+  .footer-center {
+    order: 1; /* Ortadaki içerik üstte kalacak */
+  }
+
   .footer-right {
-    text-align: center;
-    margin: 10px 0;
+    order: 2; /* Sağdaki içerik en üstte olacak */
+    margin-top: 20px; /* Üst kısımdan boşluk ekle */
   }
 
-  .footer-links {
+  .footer-left {
+    margin-top: 20px; /* Üst kısımdan boşluk ekle */
+  }
+  .footer-center {
     flex-direction: column;
-    gap: 10px;
   }
 }
