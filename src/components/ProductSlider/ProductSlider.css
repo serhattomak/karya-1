@@ -57,9 +57,24 @@
 
   padding: 1rem;
   margin: 0.5rem;
-  backdrop-filter: blur(7px) brightness(1); /* Parlaklık ve bulanıklık eklendi */
-
+  backdrop-filter: blur(7px) brightness(1);
   text-align: center;
+
+  /* Tıklama ve hover efektine hazırlık */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+/* Hover sırasında büyütme efekti */
+.slide:hover {
+  transform: translateY(-5px) scale(1.03); /* Kutuyu hafifçe yukarı kaldır ve büyüt */
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); /* Hover sırasında gölge efekti */
+}
+
+/* Tıklama efekti */
+.slide:active {
+  transform: translateY(0) scale(0.98); /* Tıklama sırasında hafifçe küçült */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Daha küçük gölge efekti */
 }
 
 .product-image {
@@ -67,6 +82,9 @@
   height: auto;
   border-radius: 4px;
   margin-bottom: 1rem;
+
+  /* Hover sırasında hareketli efekt */
+  transition: transform 0.3s ease;
 }
 
 .product-title {
