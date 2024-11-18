@@ -6,6 +6,7 @@
   width: 100%;
   padding: 30px;
   background-color: #ffffff;
+  flex-direction: row;
 }
 
 .asil-nun-x-content {
@@ -87,4 +88,57 @@
   border-radius: 5px;
   position: relative;
   z-index: 1;
+}
+
+/* Mobil ekranlar için responsive düzenlemeler */
+@media screen and (max-width: 768px) {
+  .asil-nun-x-container {
+    flex-direction: column; /* Dikey hizalama */
+    padding: 20px; /* İçerik alanına daha fazla boşluk bırak */
+  }
+
+  .asil-nun-x-content {
+    flex-direction: column; /* İçeriği dikeyde hizala */
+    align-items: center; /* İçeriği ortala */
+  }
+
+  .asil-nun-x-text {
+    text-align: left; /* Metni ortala */
+    max-width: 100%; /* Metin kutusunu ekran boyutuna göre genişlet */
+    margin-bottom: 20px; /* Alt boşluk ekle */
+  }
+
+  .asil-nun-x-title {
+    font-size: 24px; /* Başlık boyutunu küçült */
+  }
+
+  .asil-nun-x-description,
+  .asil-nun-x-details,
+  .asil-nun-x-info {
+    font-size: 14px; /* Yazı boyutunu küçült */
+  }
+
+  .asil-nun-x-documents {
+    flex-direction: row; /* Belge görsellerini alt alta diz */
+    gap: 10px; /* Görseller arasına boşluk ekle */
+    align-items: CENTER; /* Görselleri ortala */
+  }
+
+  .asil-nun-x-documents img {
+    width: 60px;
+  }
+  .asil-nun-x-image {
+    width: 100%; /* Görseli ekran boyutuna göre uyumlu hale getir */
+    max-width: 500px; /* Görselin maksimum genişliğini ayarla */
+    margin-top: 20px; /* Üstten boşluk ekle */
+  }
+
+  .asil-nun-x-image img {
+    max-width: 100%; /* Görselin genişliğini ekran boyutuna göre sınırlama */
+  }
+
+  .asil-nun-x-contact {
+    font-size: 14px; /* Metin boyutunu küçült */
+    margin-top: 10px;
+  }
 }
