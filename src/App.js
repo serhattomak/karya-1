@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage/HomePage";
 import AboutPage from "./pages/AboutPage/AboutPage"; // AboutPage'i içe aktarın
 import HalatliTelBetonKesmePage from "./pages/HalatliTelBetonKesme/HTBKPage";
 import KimyasalAnkPage from "./pages/KimyasalAnkPage/KimyasalAnkPage";
+import PoliuretanPage from "./pages/PoliuretanPage/PoliuretanPage";
 
 import AslilNunXPage from "./pages/AsilnunXPage/AsilNunXPage";
 import "./App.css";
@@ -17,7 +18,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/AsilNunX" element={<AslilNunXPage />} />
-          {/* <Route path="/PoliuretanEnjeksiyon" element={<PoliuretanEnjeksiyonPage />} />*/}
+          <Route path="/PoliuretanEnjeksiyon" element={<PoliuretanPage />} />
           <Route
             path="/HalatliTelBetonKesme"
             element={<HalatliTelBetonKesmePage />}

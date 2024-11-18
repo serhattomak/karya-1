@@ -1,0 +1,88 @@
+/* Ana Konteyner */
+.injection-details-container {
+  display: flex;
+  justify-content: center; /* Yatayda ortala */
+  align-items: center; /* Dikeyde ortala */
+  height: 70vh; /* Tam ekran yüksekliği */
+  width: 100%; /* Tam ekran genişliği */
+  box-sizing: border-box; /* Padding ve border dahil */
+}
+
+/* İçerik Konteyneri */
+.injection-details-content {
+  display: flex;
+  justify-content: space-around; /* İçerik elemanları arasına boşluk koy */
+  align-items: flex-start; /* Elemanları dikeyde ortala */
+  width: 95%; /* Genel genişlik %90 */
+  max-width: 1200px; /* Maksimum genişlik (isteğe bağlı) */
+  gap: 40px; /* Metin ve video arasındaki boşluk */
+}
+
+/* Sol Taraf: Metin Alanı */
+.text-section {
+  flex: 1;
+  max-width: 500px; /* Metin kısmını sınırla */
+  text-align: left;
+}
+
+.text-section .title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+.text-section .title span {
+  display: inline-block;
+  margin-top: 5px;
+  color: #f57c00; /* Başlık alt çizgi rengi */
+  border-bottom: 3px solid #f57c00;
+  padding-bottom: 3px;
+}
+
+.text-section .description {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.8;
+  margin-top: 15px;
+}
+
+/* Sağ Taraf: Video Alanı */
+.video-section {
+  flex: 1;
+  display: flex;
+  justify-content: center; /* Video bölümünü ortala */
+}
+
+.video-thumbnail {
+  width: 100%;
+  max-width: 685px; /* Video genişliğini sınırla */
+  height: 420px; /* Video yüksekliği */
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Duyarlı Tasarım (Mobil Cihazlar) */
+@media (max-width: 768px) {
+  .injection-details-container {
+    flex-direction: column; /* Elemanları dikey hizala */
+    gap: 20px;
+  }
+
+  .injection-details-content {
+    width: 90%;
+    flex-direction: column; /* Mobilde elemanları alt alta getir */
+    align-items: center; /* Ortala */
+  }
+
+  .text-section {
+    max-width: 100%; /* Tam genişlik yap */
+    text-align: center; /* Metni ortala */
+  }
+
+  .video-thumbnail {
+    max-width: 100%; /* Tam genişlik yap */
+    height: auto; /* Yüksekliği orantılı olarak ayarla */
+  }
+}
