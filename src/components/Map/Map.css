@@ -1,0 +1,42 @@
+.location-section {
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+  display: flex;
+  justify-content: center; /* Ekranın yatay merkezinde */
+  align-items: center; /* Ekranın dikey merkezinde */
+  width: 95%;
+}
+
+.map-content {
+  width: 60%; /* Tüm içerik genişliğini ayarla */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Tüm içeriği ortala */
+}
+
+.map-title {
+  width: 100%; /* Başlık ve çizgi tüm genişliğe yayılsın */
+  text-align: left; /* Başlığı sola hizala */
+  margin-bottom: 10px;
+}
+
+.location-section h2 {
+  font-size: 24px; /* Daha büyük yazı boyutu */
+  color: #333;
+  margin-bottom: 5px; /* Çizgiyle arasındaki mesafe */
+  font-weight: bold; /* Kalın yazı */
+}
+
+.location-section hr {
+  width: 50px; /* Çizgi genişliği */
+  border: 2px solid #ff9800;
+  margin: 0; /* Başlıkla arasında boşluk bırakma */
+}
+
+.map-container {
+  overflow: hidden;
+  border-radius: 10px;
+  height: 470px; /* Harita yüksekliği */
+  width: 1070px; /* Harita genişliği */
+}

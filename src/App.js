@@ -6,7 +6,7 @@ import AboutPage from "./pages/AboutPage/AboutPage"; // AboutPage'i içe aktarı
 import HalatliTelBetonKesmePage from "./pages/HalatliTelBetonKesme/HTBKPage";
 import KimyasalAnkPage from "./pages/KimyasalAnkPage/KimyasalAnkPage";
 import PoliuretanPage from "./pages/PoliuretanPage/PoliuretanPage";
-
+import ContactPage from "./pages/ContactPage/ContactPage";
 import AslilNunXPage from "./pages/AsilnunXPage/AsilNunXPage";
 import "./App.css";
 function App() {
@@ -24,6 +24,7 @@ function App() {
             element={<HalatliTelBetonKesmePage />}
           />
           <Route path="/KimyasalAnkraj" element={<KimyasalAnkPage />} />
+          <Route path="/contact" element={<ContactPage />} />
         </Routes>
       </div>
     </Router>
