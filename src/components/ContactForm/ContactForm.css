@@ -1,3 +1,4 @@
+/* Genel Konteyner */
 .contact-container {
   background-color: #f8f8f8;
   display: flex;
@@ -5,6 +6,7 @@
   padding: 40px;
 }
 
+/* Ana Kontener (section) */
 .contact-section {
   display: flex;
   justify-content: space-between;
@@ -13,20 +15,23 @@
   max-width: 1200px;
 }
 
+/* İçerik Konteyneri */
 .contact-content {
   display: flex;
   gap: 20px;
+  width: 100%;
 }
 
+/* İletişim Detayları Konteyneri */
 .contact-details {
   border-radius: 10px;
-
   display: flex;
   flex-direction: column;
   gap: 25px;
   flex: 1;
 }
 
+/* İletişim Detayları */
 .contact-detail {
   display: flex;
   align-items: center;
@@ -64,6 +69,7 @@
   font-weight: 400;
 }
 
+/* Form Konteyneri */
 .contact-form {
   background-color: #fff;
   padding: 40px;
@@ -100,6 +106,7 @@
   flex-direction: column;
   width: 50%;
 }
+
 .form-item-message {
   display: flex;
   flex-direction: column;
@@ -112,6 +119,7 @@
   font-size: 0.875rem;
   font-weight: 600;
 }
+
 .contact-form .form-row {
   display: flex;
   gap: 10px;
@@ -147,4 +155,48 @@
 
 .contact-form button:hover {
   background-color: #e68900;
+}
+
+/* Responsive Düzenlemeler */
+@media screen and (max-width: 768px) {
+  /* Kontener için düzenleme */
+  .contact-container {
+    padding: 20px;
+  }
+
+  /* İletişim bölümünü alt alta yerleştir */
+  .contact-section {
+    flex-direction: column; /* Dikey hizalama */
+    gap: 30px; /* Aralarındaki boşluk */
+  }
+
+  /* Form ve detayları alt alta hizala */
+  .contact-content {
+    flex-direction: column;
+    gap: 20px; /* Aralarındaki boşluk */
+  }
+
+  /* İletişim detayları */
+  .contact-details {
+    width: 100%;
+  }
+
+  /* Form için düzenlemeler */
+  .contact-form {
+    width: 100%; /* Mobilde form genişliği %100 */
+    height: auto; /* Yüksekliği otomatik ayarlıyoruz */
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+  /* Form öğeleri için düzenlemeler */
+  .form-item {
+    width: 100%; /* Mobilde form elemanlarının tamamı genişleyecek */
+  }
+
+  /* Buton boyutunu optimize et */
+  .contact-form button {
+    width: 100%; /* Butonu tam genişlikte yap */
+  }
 }

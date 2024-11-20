@@ -1,8 +1,8 @@
 /* Galeri Konteyneri */
 .p-gallery-container {
-  width: 90%;
-  margin: 0 auto;
-  padding: 40px;
+  width: 80%; /* Galeri genişliğini %80 olarak ayarladık */
+  margin: 0 auto; /* Ortaya hizalama */
+  padding: 50px;
   text-align: left;
 }
 
@@ -13,7 +13,6 @@
   margin-bottom: 20px;
   color: #333;
   text-align: left;
-  margin-left: 0;
 }
 
 .p-gallery-title span {
@@ -21,13 +20,15 @@
   border-bottom: 3px solid #f57c00;
   padding-bottom: 3px;
 }
+
 /* Galeri Ana Konteyner */
 .p-gallery-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* Her sırada 4 sütun */
-  gap: 15px; /* Görseller arasındaki boşluk */
+  gap: 10px; /* Görseller arasındaki boşluğu daraltmak için 15px yerine 10px */
   justify-items: center;
   align-items: center;
+  margin-top: 20px; /* Başlık ve görseller arasında mesafe */
 }
 
 /* Üst Sıradaki Resimler */
@@ -52,9 +53,11 @@
   transition: transform 0.3s ease-in-out;
 }
 
+/* Mobil Düzenlemeler */
 @media screen and (max-width: 768px) {
   .p-gallery-container {
-    width: 100%;
+    width: 100%; /* Mobilde genişlik tam ekran olacak */
+    padding: 20px;
   }
 
   .p-gallery-title {
@@ -63,10 +66,9 @@
 
   .p-gallery-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Her sırada 4 sütun */
-    gap: 15px; /* Görseller arasındaki boşluk */
+    grid-template-columns: repeat(2, 1fr); /* Her sırada 2 sütun */
+    gap: 10px; /* Görseller arasındaki boşluk */
     justify-items: center;
-    align-items: center;
   }
 
   .p-gallery-item.bottom-row img {

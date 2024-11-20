@@ -1,10 +1,11 @@
 /* Genel container ve başlık */
 .gallery-container {
   width: 100%;
-  padding: 20px;
+
   display: flex;
   align-items: center; /* Yazı ve görseller aynı hizaya gelir */
   flex-direction: column;
+  margin-bottom: 2rem;
 }
 
 /* Yazı alanı */

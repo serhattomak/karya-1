@@ -1,7 +1,7 @@
 .home-background {
   background-size: cover;
   background-position: center;
-  height: 100vh;
+  height: 110vh;
   position: relative;
   z-index: 1;
 }
