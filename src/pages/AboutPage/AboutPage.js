@@ -9,11 +9,7 @@ import Footer from "../../components/Footer/Footer";
 function AboutPage() {
   return (
     <div>
-      <Navbar />
-      <Banner
-        imageSrc="/assets/images/aboutbanner.png"
-        title="Hakkımızda"
-      />{" "}
+      <Banner imageSrc="/assets/images/aboutbanner.png" title="Hakkımızda" />{" "}
       <br></br>
       <AboutUsInfo />
       <br></br>
