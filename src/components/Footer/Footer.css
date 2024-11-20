@@ -97,25 +97,34 @@
   .footer-container {
     flex-direction: column; /* Bileşenleri dikey olarak hizala */
     text-align: center;
+    font-size: 0.875rem;
   }
 
   .footer-left {
     order: 3; /* Logoyu en alt sıraya taşı */
+    margin-top: 20px; /* Üst kısımdan boşluk ekle */
   }
 
   .footer-center {
     order: 1; /* Ortadaki içerik üstte kalacak */
+    flex-direction: column; /* Dikey hizalama */
+    gap: 20px; /* Footer links arasına boşluk ekle */
+  }
+
+  .footer-links {
+    gap: 10px; /* Her grup arasında boşluk */
   }
 
   .footer-right {
-    order: 2; /* Sağdaki içerik en üstte olacak */
-    margin-top: 20px; /* Üst kısımdan boşluk ekle */
+    order: 2; /* Sağdaki içerik orta sırada */
+    margin-top: 20px;
+    text-align: center; /* Mobilde içeriği ortala */
   }
 
-  .footer-left {
-    margin-top: 20px; /* Üst kısımdan boşluk ekle */
-  }
-  .footer-center {
-    flex-direction: column;
+  .social-icon {
+    display: block;
+    margin: 0 auto; /* Instagram ikonunu ortala */
+    width: 32px; /* Mobilde biraz daha büyük görünmesi için boyutu artır */
+    height: 32px;
   }
 }

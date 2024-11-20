@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./navbar.css";
-import { IoClose, IoMail } from "react-icons/io5";
+import { IoClose, IoMail, IoLogoInstagram } from "react-icons/io5"; // Instagram ikonu eklendi
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef(null); // Menüye referans oluşturuyoruz.
+  const menuRef = useRef(null);
 
   const toggleMenu = (event) => {
-    event.stopPropagation(); // Menü açma sırasında tıklamayı durdur
+    event.stopPropagation();
     setMenuOpen(!isMenuOpen);
   };
 
@@ -17,19 +17,15 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    // Menü dışına tıklamayı dinleyen event
     const handleOutsideClick = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        // Eğer tıklanan alan menü değilse menüyü kapat
         closeMenu();
       }
     };
 
-    // Event listener ekle
     document.addEventListener("click", handleOutsideClick);
 
     return () => {
-      // Component unmount olduğunda listener'ı kaldır
       document.removeEventListener("click", handleOutsideClick);
     };
   }, []);
@@ -40,7 +36,6 @@ const Navbar = () => {
         <div className="logo">
           <img src="/assets/images/KaryaLogo.png" alt="Logo" />
         </div>
-        {/* Desktop Menüsü */}
         <div className="main_list desktop">
           <ul className="navlinks">
             <li>
@@ -57,12 +52,11 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-        {/* Mobil Menü */}
         <div
           id="mainListDiv"
-          ref={menuRef} // Menü elementine referans atandı
+          ref={menuRef}
           className={`main_list mobile ${isMenuOpen ? "show_list" : ""}`}
-          onClick={(e) => e.stopPropagation()} // Menü içi tıklamaları durdur
+          onClick={(e) => e.stopPropagation()}
         >
           <span className="navClose" onClick={closeMenu}>
             <IoClose />
@@ -78,21 +72,24 @@ const Navbar = () => {
                 Karya Yapı Hakkında
               </Link>
             </li>
+
             <li className="contact-button">
-              <Link to="/contact" onClick={closeMenu}>
+              <Link to="/contact" className="contact-word" onClick={closeMenu}>
                 İletişim
+                <IoMail className="contact-icon" />
               </Link>
-              <IoMail className="contact-icon" />
             </li>
-            <li>
+            <li className="social-media">
               <a href="#" onClick={closeMenu}>
                 Bizi Sosyal Medyada Takip Et!
+              </a>
+              <a>
+                <IoLogoInstagram className="instagram-icon" />
               </a>
             </li>
           </ul>
         </div>
-        {/* Hamburger Menü */}
-        <span className="navTrigger" onClick={toggleMenu}>  
+        <span className="navTrigger" onClick={toggleMenu}>
           <i></i>
           <i></i>
           <i></i>

@@ -48,9 +48,6 @@
   text-align: left;
   align-items: flex-start;
   padding-top: 5rem;
-  padding-left: 2rem;
-  transition: transform 0.3s ease;
-  transform: translateX(100%);
 }
 
 .main_list.mobile.show_list {
@@ -69,7 +66,7 @@
   font-size: 1rem;
   align-items: center;
   display: flex;
-  padding: 0.2rem 2rem;
+  padding: 0.2rem 1rem;
 }
 
 .contact-button {
@@ -78,7 +75,7 @@
 }
 
 .contact-word {
-  background-color: rgba(246, 139, 31, 1);
+  background-color: #f68b1f;
   color: white;
   border-radius: 20px;
   font-size: 1rem;
@@ -117,6 +114,17 @@
   z-index: 9; /* Mobil menüden daha düşük */
 }
 
+.social-media {
+  display: flex;
+  flex-direction: column;
+}
+
+.social-media .instagram-icon {
+  font-size: 2rem; /* İkon boyutu */
+  color: white;
+  cursor: pointer;
+}
+
 /* Mobil Menü (Z-index güncellemesi) */
 .main_list.mobile {
   z-index: 10; /* Overlay'den daha üstte */
@@ -149,6 +157,9 @@
   .navlinks {
     flex-direction: column;
     gap: 3rem;
+  }
+  .contact-button {
+    padding-left: 1rem;
   }
 }
 
