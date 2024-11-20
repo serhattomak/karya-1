@@ -8,7 +8,7 @@ import Footer from "../../components/Footer/Footer";
 function ContactPage() {
   return (
     <div>
-      <Navbar />
+     
       <Banner imageSrc="/assets/images/contactbanner.png" title="Asil Nun X" />
       <ContactForm />
       <Map />
