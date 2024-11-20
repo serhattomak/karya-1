@@ -33,6 +33,7 @@
   position: absolute;
   top: 75%;
   left: 50%;
+  width: 100%;
   transform: translate(-50%, -50%);
   color: rgb(255, 255, 255);
   font-size: 2.125rem;
@@ -44,4 +45,18 @@
   z-index: 2; /* Metnin önde görünmesi için */
 }
 
+@media (max-width: 768px) {
+  .banner-text-about {
+    font-size: 1.5rem; /* Mobil cihazlarda daha küçük boyut */
+    line-height: 50px; /* Yazı aralığını da mobil uyumlu yap */
+    font-weight: 600;
+  }
+}
 
+@media (max-width: 480px) {
+  .banner-text-about {
+    font-size: 1.25rem; /* Daha küçük ekranlar için daha küçük boyut */
+    line-height: 40px;
+    font-weight: 600;
+  }
+}

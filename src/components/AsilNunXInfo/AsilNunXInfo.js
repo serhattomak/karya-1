@@ -23,10 +23,30 @@ const AsilNunXInfo = () => {
             inceleyebilirsiniz.
           </p>
           <div className="asil-nun-x-documents">
-            <img src="/assets/images/doc1.png" alt="Document 1" />
-            <img src="/assets/images/doc2.png" alt="Document 2" />
-            <img src="/assets/images/doc3.png" alt="Document 3" />
-            <img src="/assets/images/doc4.png" alt="Document 4" />
+            <a
+              href="https://drive.google.com/file/d/1L23Ab1CyR0NyxvLQ2a01rHpgRnOsaC3_/view?usp=sharing"
+              target="_blank"
+            >
+              <img src="/assets/images/Documents/doc1.png" alt="Document 1" />
+            </a>
+            <a
+              href="https://drive.google.com/file/d/1ab85ozocvtJPb3S2BDnQk9F0cS7swdV1/view?usp=sharing"
+              target="_blank"
+            >
+              <img src="/assets/images/Documents/doc2.png" alt="Document 2" />
+            </a>
+            <a
+              href="https://drive.google.com/file/d/1s2oVR4a_ntQ1fFN9iccufA3bRNupf5As/view?usp=sharing"
+              target="_blank"
+            >
+              <img src="/assets/images/Documents/doc3.png" alt="Document 3" />
+            </a>
+            <a
+              href="https://drive.google.com/file/d/13EuVDDNJI33NWbEFiO5ifyCOgueqVdv7/view?usp=sharing"
+              target="_blank"
+            >
+              <img src="/assets/images/Documents/doc4.png" alt="Document 4" />
+            </a>
           </div>
           <p className="asil-nun-x-contact">
             AŞİL NUN X Hakkında Daha Fazla Bilgi Almak İçin{" "}

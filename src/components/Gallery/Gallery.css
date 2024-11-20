@@ -42,7 +42,6 @@
   gap: 3rem;
   width: 100%;
 }
-
 /* Her bir görsel */
 .gallery-images img {
   width: 100%;
@@ -57,23 +56,33 @@
   transform: scale(1.05);
 }
 
-/* Responsive düzen */
+/* Görsel galerisi alanı */
+.gallery-images {
+  display: flex;
+  justify-content: space-between; /* Görseller arası boşluk */
+  align-items: center;
+  flex-wrap: wrap; /* Görselleri birden fazla satıra yerleştir */
+  gap: 1rem; /* Görseller arasındaki boşluk */
+  width: 100%;
+}
+
+/* Mobil düzen */
 @media (max-width: 768px) {
-  .gallery-container {
-    flex-direction: column; /* Mobilde yazı ve görseller alt alta */
-    align-items: center;
-  }
-
-  .gallery-content {
-    align-items: center;
-    text-align: center; /* Mobilde yazıyı ortala */
-  }
-
   .gallery-images {
-    justify-content: center; /* Görselleri mobilde ortala */
+    gap: 1rem; /* Daha küçük boşluk */
   }
 
   .gallery-images img {
-    max-width: 90%; /* Mobilde görseller tam genişlik */
+    max-width: calc(50% - 0.5rem); /* İki sütun düzeni için genişlik */
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1475px) {
+  .gallery-images {
+    gap: 0.5rem; /* Boşlukları daha kontrollü hale getir */
+  }
+
+  .gallery-images img {
+    max-width: calc(25% - 1rem); /* Üç sütun düzeni */
   }
 }

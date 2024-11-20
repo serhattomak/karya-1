@@ -51,3 +51,28 @@
   transform: scale(1.05); /* Hover sırasında görsel büyür */
   transition: transform 0.3s ease-in-out;
 }
+
+@media screen and (max-width: 768px) {
+  .gallery-container {
+    width: 100%;
+  }
+
+  .gallery-title {
+    font-size: 1.5rem;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Her sırada 4 sütun */
+    gap: 15px; /* Görseller arasındaki boşluk */
+    justify-items: center;
+    align-items: center;
+  }
+
+  .gallery-item.bottom-row img {
+    height: 150px; /* Alt sıradaki görsellerin yüksekliği */
+  }
+  .gallery-item.top-row img {
+    height: 150px; /* Üst sıradaki görsellerin yüksekliği */
+  }
+}

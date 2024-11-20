@@ -71,18 +71,23 @@
   }
 
   .injection-details-content {
-    width: 90%;
+    width: 80%;
     flex-direction: column; /* Mobilde elemanları alt alta getir */
     align-items: center; /* Ortala */
   }
 
   .text-section {
     max-width: 100%; /* Tam genişlik yap */
-    text-align: center; /* Metni ortala */
+    text-align: left; /* Metni ortala */
   }
 
   .video-thumbnail {
     max-width: 100%; /* Tam genişlik yap */
     height: auto; /* Yüksekliği orantılı olarak ayarla */
+  }
+
+  .text-section .title {
+    font-size: 1.5rem;
+    text-align: left;
   }
 }

@@ -50,8 +50,8 @@
 }
 
 .asil-nun-x-documents img {
-  width: 80px;
-  height: auto;
+  width: 150px;
+  height: 90px;
   border: 1px solid #ddd;
   border-radius: 5px;
 }
@@ -60,13 +60,12 @@
 .asil-nun-x-contact {
   margin-top: 20px;
   font-weight: bold;
-  color: #e67e22;
+
   font-size: 16px;
   cursor: pointer;
 }
 
 .asil-nun-x-contact span {
-  color: #007acc;
   text-decoration: underline;
 }
 
