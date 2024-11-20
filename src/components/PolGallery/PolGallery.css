@@ -1,5 +1,5 @@
 /* Galeri Konteyneri */
-.gallery-container {
+.p-gallery-container {
   width: 90%;
   margin: 0 auto;
   padding: 40px;
@@ -7,7 +7,7 @@
 }
 
 /* Başlık */
-.gallery-title {
+.p-gallery-title {
   font-size: 1.8rem;
   font-weight: bold;
   margin-bottom: 20px;
@@ -16,13 +16,13 @@
   margin-left: 0;
 }
 
-.gallery-title span {
+.p-gallery-title span {
   color: #f57c00; /* Başlık alt çizgi rengi */
   border-bottom: 3px solid #f57c00;
   padding-bottom: 3px;
 }
 /* Galeri Ana Konteyner */
-.gallery-grid {
+.p-gallery-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* Her sırada 4 sütun */
   gap: 15px; /* Görseller arasındaki boşluk */
@@ -31,7 +31,7 @@
 }
 
 /* Üst Sıradaki Resimler */
-.gallery-item.top-row img {
+.p-gallery-item.top-row img {
   width: 300px; /* Üst sıradaki görsellerin genişliği */
   height: 250px; /* Üst sıradaki görsellerin yüksekliği */
   object-fit: cover; /* Görsellerin düzgün kesilmesi */
@@ -39,7 +39,7 @@
 }
 
 /* Alt Sıradaki Resimler */
-.gallery-item.bottom-row img {
+.p-gallery-item.bottom-row img {
   width: 260px; /* Alt sıradaki görsellerin genişliği */
   height: 220px; /* Alt sıradaki görsellerin yüksekliği */
   object-fit: cover; /* Görsellerin düzgün kesilmesi */
@@ -47,21 +47,21 @@
 }
 
 /* Hover Efekti (İsteğe Bağlı) */
-.gallery-item img:hover {
+.p-gallery-item img:hover {
   transform: scale(1.05); /* Hover sırasında görsel büyür */
   transition: transform 0.3s ease-in-out;
 }
 
 @media screen and (max-width: 768px) {
-  .gallery-container {
+  .p-gallery-container {
     width: 100%;
   }
 
-  .gallery-title {
+  .p-gallery-title {
     font-size: 1.5rem;
   }
 
-  .gallery-grid {
+  .p-gallery-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Her sırada 4 sütun */
     gap: 15px; /* Görseller arasındaki boşluk */
@@ -69,10 +69,10 @@
     align-items: center;
   }
 
-  .gallery-item.bottom-row img {
+  .p-gallery-item.bottom-row img {
     height: 150px; /* Alt sıradaki görsellerin yüksekliği */
   }
-  .gallery-item.top-row img {
+  .p-gallery-item.top-row img {
     height: 150px; /* Üst sıradaki görsellerin yüksekliği */
   }
 }

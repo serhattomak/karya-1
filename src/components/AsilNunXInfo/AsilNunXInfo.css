@@ -11,8 +11,8 @@
 
 .asil-nun-x-content {
   display: flex;
-  width: 90%;
-  justify-content: space-around;
+  width: 80%;
+  justify-content: space-between;
 }
 
 /* Sol kısımdaki metin bölümü */

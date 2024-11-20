@@ -23,7 +23,7 @@ function HalatliTelBetonKesme() {
       />
       <br />
       <HtbkInfo />
-      <Gallery images={htbkImages} title="Uygulama Alanlarına ait Görseller" />
+      <Gallery images={htbkImages} title="Uygulama Alanlarına Ait Görseller" />
       <ContactSection />
       <br />
       <Footer />
