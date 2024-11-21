@@ -1,21 +1,7 @@
 import React from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-import markerIcon from "leaflet/dist/images/marker-icon.png"; // Varsayılan işaretçi simgesi
-import markerShadow from "leaflet/dist/images/marker-shadow.png"; // İşaretçi gölgesi
 import "./Map.css";
 
-// Leaflet varsayılan ikonu düzeltme
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-});
-
 const Map = () => {
-  const position = [40.9302858, 29.1388598]; // Lokasyon (enlem, boylam)
-
   return (
     <div className="location-section">
       <div className="map-content">
@@ -24,19 +10,16 @@ const Map = () => {
           <hr />
         </div>
         <div className="map-container">
-          <MapContainer
-            center={position}
-            zoom={25}
-            style={{ height: "470px", width: "100%", borderRadius: "10px" }}
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            <Marker position={position}>
-              <Popup>Asil Nun X Lokasyonu</Popup>
-            </Marker>
-          </MapContainer>
+          {/* Google Maps Embed iframe kullanımı */}
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d96391.4082534174!2d28.986256236334658!3d40.97641120741837!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cac77b58fb2e15%3A0xed16d396fed2dce1!2sKarya%20Yap%C4%B1!5e0!3m2!1str!2str!4v1732201212766!5m2!1str!2str"
+            width="100%"
+            height="470"
+            style={{ border: "0", borderRadius: "10px" }}
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe>
         </div>
       </div>
     </div>

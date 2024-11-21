@@ -52,12 +52,31 @@
 
 .main_list.mobile.show_list {
   display: flex;
-  transform: translateX(0); /* Menü açıldığında görünür hale gelsin */
+  transform: translateX(0);
 }
 
 .navlinks {
   list-style: none;
   display: flex;
+}
+
+.navlinks li a:hover {
+  color: #f68b1f;
+  transform: scale(1.05);
+  transition: all 0.3s ease-in-out;
+}
+
+.contact-button .contact-word:hover {
+  background-color: #fff5f6;
+  transform: scale(1.05);
+  transition: all 0.3s ease-in-out;
+}
+
+.social-media .instagram-icon:hover {
+  color: #f5a623;
+
+  transform: scale(1.5);
+  transition: all 0.3s ease-in-out;
 }
 
 .navlinks li a {

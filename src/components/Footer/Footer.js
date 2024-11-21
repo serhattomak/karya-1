@@ -19,23 +19,23 @@ const Footer = () => {
               <a href="/">Anasayfa</a>
             </li>
             <li>
-              <a href="/">Karya Yapı Hakkında</a>
+              <a href="/about">Karya Yapı Hakkında</a>
             </li>
           </ul>
           <ul className="footer-links">
             <li>
-              <a href="/">AŞİL NUN X</a>
+              <a href="/AsilNunX">AŞİL NUN X</a>
             </li>
             <li>
-              <a href="/">Poliüretan Enjeksiyon</a>
+              <a href="/PoliuretanEnjeksiyon">Poliüretan Enjeksiyon</a>
             </li>
           </ul>
           <ul className="footer-links">
             <li>
-              <a href="/">Halatlı Tel- Beton Kesme</a>
+              <a href="/HalatliTelBetonKesme">Halatlı Tel- Beton Kesme</a>
             </li>
             <li>
-              <a href="/">Kimyasal Ankraj Filiz Ekim</a>
+              <a href="/KimyasalAnkraj">Kimyasal Ankraj Filiz Ekim</a>
             </li>
           </ul>
         </div>

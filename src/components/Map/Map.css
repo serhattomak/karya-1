@@ -6,12 +6,12 @@
   display: flex;
   justify-content: center; /* Ekranın yatay merkezinde */
   align-items: center; /* Ekranın dikey merkezinde */
-  width: 95%;
+  width: 100%;
 }
 
 /* Harita içeriği */
 .map-content {
-  width: 60%; /* Başlangıçta genişlik ayarı */
+  width: 80%; /* Başlangıçta genişlik ayarı */
   display: flex;
   flex-direction: column;
   align-items: center; /* Tüm içeriği ortala */
@@ -42,7 +42,7 @@
   overflow: hidden;
   border-radius: 10px;
   height: 470px; /* Harita yüksekliği */
-  width: 1070px; /* Harita genişliği */
+  width: 100%; /* Harita genişliği */
 }
 
 @media screen and (max-width: 768px) {

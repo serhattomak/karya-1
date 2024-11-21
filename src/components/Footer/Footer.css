@@ -53,6 +53,7 @@
   list-style-type: none;
   padding: 0;
   margin: 0;
+  text-align: left;
 }
 
 .footer-links li {
@@ -67,7 +68,9 @@
 }
 
 .footer-links a:hover {
-  text-decoration: underline;
+  color: #f68b1f;
+  transform: scale(1.05);
+  transition: all 0.3s ease-in-out;
 }
 
 .footer-right {
@@ -113,6 +116,7 @@
 
   .footer-links {
     gap: 10px; /* Her grup arasında boşluk */
+    text-align: center;
   }
 
   .footer-right {

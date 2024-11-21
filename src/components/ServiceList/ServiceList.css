@@ -27,11 +27,11 @@
 .service-items li {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   padding-left: 45px;
   position: relative;
   font-size: 1rem;
-  line-height: 32px;
+
   color: #212121;
 }
 

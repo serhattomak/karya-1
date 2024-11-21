@@ -11,10 +11,10 @@ const PoliuretanInfo = () => {
           <p>
             Yeraltı yapılarının su sızıntılarına çözümdür. Hızlı, temiz ve
             gürültüsüzdür. Tek kompenantlı, düşük viskoziteli, su ile reaksiyona
-            geçen, yarı esnek olan poliüretan enjeksiyonu uygulaması. Su ile temas
-            ettiği zaman hızla genleşen çevre aşındırmalarından fazla etkilenmeyen
-            katı, yarı esnek kapalı hücreli poliüretan bir conta şekline dönüşür.
-            Yanıcı değildir, solvent içermez.
+            geçen, yarı esnek olan poliüretan enjeksiyonu uygulaması. Su ile
+            temas ettiği zaman hızla genleşen çevre aşındırmalarından fazla
+            etkilenmeyen katı, yarı esnek kapalı hücreli poliüretan bir conta
+            şekline dönüşür. Yanıcı değildir, solvent içermez.
           </p>
           <p>
             Betonarme içerisinde oluşan boşluklar, çatlaklar, segregasyonlu
@@ -34,11 +34,12 @@ const PoliuretanInfo = () => {
             <li>Tünel</li>
             <li>Metro</li>
             <li>Su depoları</li>
+
+            <li>Yüksek basınçlı veya yüksek debili su sızıntıları.</li>
             <li>
               Arıtma tesisleri gibi yapıların betonarmede her türlü oluşan su
               sızıntılarının durdurulması.
             </li>
-            <li>Yüksek basınçlı veya yüksek debili su sızıntıları.</li>
           </ul>
         </div>
       </div>

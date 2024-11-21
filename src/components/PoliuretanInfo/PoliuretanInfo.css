@@ -47,11 +47,11 @@
 .p-right-content li {
   display: flex;
   align-items: center;
-  margin-bottom: 5px;
+  margin-bottom: 20px;
   padding-left: 45px; /* Ensure text starts after the bullet */
   position: relative;
   font-size: 1rem;
-  line-height: 40px;
+
   color: #212121;
 }
 
