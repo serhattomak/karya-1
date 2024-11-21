@@ -16,7 +16,6 @@ function AsilNunX() {
 
   return (
     <div>
-      <Navbar />
       <Banner imageSrc="/assets/images/Asilnunxbanner.png" title="Asil Nun X" />
       <br />
       <AsilNunXInfo />

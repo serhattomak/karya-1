@@ -16,7 +16,7 @@ function HalatliTelBetonKesme() {
 
   return (
     <div>
-      <Navbar />
+     
       <Banner
         imageSrc="/assets/images/htbkbanner.png"
         title="Halatlı Tel Beton Kesme"

@@ -21,7 +21,6 @@ function PoliuretanPage() {
 
   return (
     <div>
-      <Navbar />
       <Banner
         imageSrc="/assets/images/poliüretanbanner.png"
         title="Poliuretan Enjeksiyon "
