@@ -1,7 +1,31 @@
 import React from "react";
+import emailjs from "emailjs-com";
 import "./ContactForm.css";
 
 const ContactForm = () => {
+  // Form gönderim işlemi
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm(
+        "service_8xzxo29", // EmailJS'den aldığınız Service ID
+        "template_gnry9cs", // EmailJS'den aldığınız Template ID
+        e.target,
+        "xf3Z8XCLHnlZhZSiI" // EmailJS hesabınızın Public Key'i
+      )
+      .then(
+        (result) => {
+          alert("Mesajınız başarıyla gönderildi!");
+        },
+        (error) => {
+          alert("Bir hata oluştu. Lütfen tekrar deneyin.");
+        }
+      );
+
+    e.target.reset(); // Form alanlarını temizle
+  };
+
   return (
     <div className="contact-container">
       <div className="contact-section">
@@ -37,30 +61,30 @@ const ContactForm = () => {
                 aşağıda bulunan form üzerinden bize ulaştırabilirsin.
               </p>
             </div>
-            <form>
+            <form onSubmit={sendEmail}>
               <div className="form-row">
                 <div className="form-item">
                   <label>İsim</label>
-                  <input type="text" />
-                </div>
+                  <input type="text" name="isim" required />
+                  </div>
                 <div className="form-item">
                   <label>Soyisim</label>
-                  <input type="text" />
+                  <input type="text" name="soyisim" required />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-item">
                   <label>Telefon Numarası</label>
-                  <input type="text" />
+                  <input type="text" name="telefon" required />
                 </div>
                 <div className="form-item">
                   <label>Sektör</label>
-                  <input type="text" />
+                  <input type="text" name="sektor" required />
                 </div>
               </div>
               <div className="form-item-message">
                 <label>Mesajınızı Yazın </label>
-                <textarea></textarea>
+                <textarea name="mesaj" required></textarea>
               </div>
               <button type="submit">Gönder</button>
             </form>
