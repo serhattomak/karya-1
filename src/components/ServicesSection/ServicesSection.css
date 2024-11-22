@@ -12,6 +12,7 @@
   display: flex;
   align-items: center;
 }
+
 @media (max-width: 768px) {
   .services-section {
     flex-direction: column;
@@ -25,11 +26,14 @@
   }
 }
 
-@media (min-width: 769px) and (max-width: 1366px) {
+@media screen and (min-width: 769px) and (max-width: 1366px) {
   .services-section {
-    flex-direction: row;
+    display: flex;
   }
+
   .service-content {
-    width: 90%;
+    width: 100%;
+    padding: 2rem;
+    flex-direction: column;
   }
 }

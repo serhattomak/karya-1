@@ -52,6 +52,13 @@
   transform: translateY(-50%);
 }
 
+@media screen and (min-width: 769px) and (max-width: 1366px) {
+  .service-list {
+    width: 90%; /* Daha dar ekranlar için genişliği azalt */
+    padding: 10px; /* İç boşluğu küçült */
+  }
+}
+
 /* Responsive tasarım için */
 @media (max-width: 768px) {
   .service-list {

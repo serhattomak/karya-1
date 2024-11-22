@@ -1,89 +1,65 @@
 .image-gallery {
   position: relative;
-  width: 40%; /* İsteğinize göre genişlik ayarlayın */
-  height: 600px; /* Galerinin yüksekliğini içerik yüksekliğine göre ayarlayın */
+  width: 50%; /* Webde daha küçük genişlik */
+  margin: auto; /* Ortalamak için */
+  display: grid; /* Grid layout */
+  grid-template-columns: repeat(2, 1fr); /* 2 sütun */
+  gap: 15px; /* Görseller arası boşluk */
+  height: auto; /* Yükseklik dinamik */
 }
 
 .image-container {
-  position: absolute;
-  border-radius: 10px;
+  position: relative;
+  border-radius: 10px; /* Yuvarlak köşeler */
   overflow: hidden;
-  background: rgba(199, 199, 199, 0.1);
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  background: #c7c7c7; /* Arka plan rengi */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 10px;
-  transition: transform 0.2s ease;
+  border-radius: 30px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animasyon ekledik */
 }
 
-/* Her bir resmin konumunu ayarlamak için */
-.image-container:nth-child(1) {
-  top: 0;
-  left: 0;
-  width: 45%;
-  height: 45%;
-}
-
-.image-container:nth-child(2) {
-  top: 10%;
-  right: 5%;
-  width: 45%;
-  height: 45%;
-}
-
-.image-container:nth-child(3) {
-  bottom: 5%;
-  left: 10%;
-  width: 40%;
-  height: 50%;
-}
-
-.image-container:nth-child(4) {
-  bottom: 0;
-  right: 10px;
-
-  width: 45%;
-  height: 45%;
+.image-container:hover {
+  transform: scale(1.05); /* Hover üzerinde büyüme efekti */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Gölge efekti */
 }
 
 .gallery-image {
-  width: 100%;
+  width: 100%; /* Tam genişlik */
   height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
+  object-fit: cover; /* Görsellerin düzgün oranı */
+  transition: transform 0.3s ease; /* Resim üzerinde animasyon */
 }
 
+/* Mobil ve tablet için düzenleme */
 @media (max-width: 768px) {
+  .image-container {
+    padding: 10px;
+    border-radius: 20px;
+  }
   .image-gallery {
-    position: relative;
-    width: 100%; /* İsteğinize göre genişlik ayarlayın */
-    height: 400px; /* Galerinin yüksekliğini içerik yüksekliğine göre ayarlayın */
+    grid-template-columns: 1fr; /* Mobilde 1 sütun */
+    gap: 10px; /* Görseller arası boşluk biraz küçültülmüş */
   }
 
-  .image-container:nth-child(1) {
-    top: 0;
-    left: 0;
-    width: 85%;
-    height: 30%;
-  }
-
-  .image-container:nth-child(2) {
-    top: 20%;
-    right: 5%;
-    width: 45%;
-    height: 20%;
-  }
-
-  .image-container:nth-child(3) {
-    top: 30%;
-    left: 4%;
-    width: 50%;
-    height: 40%;
-  }
-
-  .image-container:nth-child(4) {
-    top: 40%;
-    right: 10px;
-
-    width: 45%;
-    height: 30%;
+  .gallery-image {
+    width: 100%; /* Görsellerin tam genişliği */
+    height: auto; /* Görsellerin yüksekliğini oranla ayarla */
   }
 }
+
+@media (max-width: 1024px) {
+  .image-gallery {
+    width: 90%; /* Tablet için genişlik ayarlandı */
+    grid-template-columns: repeat(2, 1fr); /* Tablet için 2 sütun */
+    gap: 12px; /* Tablet görseller arası boşluk */
+  }
+
+  .gallery-image {
+    width: 100%; /* Görsellerin tam genişliği */
+    height: auto; /* Görsellerin yüksekliğini oranla ayarla */
+  }
+}
+
