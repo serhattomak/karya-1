@@ -1,6 +1,6 @@
 .service-list {
   width: 50%;
-  padding: 20px;
+
   margin: 0 auto; /* Ortalamak için */
 }
 
@@ -70,7 +70,6 @@
 
   .service-items li {
     font-size: 0.9rem; /* Yazı boyutunu küçült */
-    line-height: 28px; /* Satır yüksekliğini ayarla */
     padding-left: 40px; /* Bullet ile metin arasındaki boşluğu azalt */
   }
 
@@ -94,7 +93,6 @@
 
   .service-items li {
     font-size: 0.85rem; /* Metin boyutunu iyice küçült */
-    line-height: 24px;
     padding-left: 35px; /* Bullet ile metin arasındaki boşluğu daha da azalt */
   }
 

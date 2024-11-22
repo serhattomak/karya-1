@@ -28,3 +28,9 @@
   font-size: 0.75rem;
   margin-top: 1rem;
 }
+
+@media screen and (max-width: 768px) {
+  .banner-info {
+    display: none;
+  }
+}

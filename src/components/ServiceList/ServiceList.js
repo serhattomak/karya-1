@@ -9,18 +9,17 @@ const ServiceList = () => {
       </h2>
       <hr className="line" />
       <ul className="service-items">
-        <li>
-          Her türlü negatif yönden gelen su sızıntılarına karşı Poliüretan
-          Enjeksiyon uygulaması.
-          <br></br>(Hidrolik raylı sistemler ile beton kesme uygulaması.)
-        </li>
-
         <li>Halatlı-tel beton kesme uygulaması.</li>
         <li>Kimyasal dübelle ankraj uygulamaları.</li>
         <li>Sanayi makinaları montajları.</li>
         <li>Endüstriyel vinç rayları ankrajları ve montajları.</li>
         <li>Karot makineleri ile beton delme uygulamaları.</li>
         <li>Montaj sistemleri.</li>
+        <li>
+          Her türlü negatif yönden gelen su sızıntılarına karşı Poliüretan
+          Enjeksiyon uygulaması.
+          <br></br>(Hidrolik raylı sistemler ile beton kesme uygulaması.)
+        </li>
         <li>
           Mevcut betonlara çelik konstrüksiyonların ankrajlar ile montajı.
         </li>

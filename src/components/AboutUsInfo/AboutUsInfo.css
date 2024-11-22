@@ -1,14 +1,15 @@
 .info-container {
   display: flex;
   align-items: center;
-  padding: 2rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
   width: 100%;
   justify-content: space-around;
 }
 
 .info-content {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   width: 90%;
   font-family: Montserrat;
 }
@@ -19,7 +20,7 @@
     rgba(199, 199, 199, 0.8) 0%,
     rgba(199, 199, 199, 0.1) 100%
   );
-  width: 35%;
+  width: 40%;
   border-radius: 20px;
   height: 100%;
 }
@@ -32,7 +33,7 @@
 }
 
 .info-text {
-  max-width: 600px;
+  width: 50%;
   text-align: left;
 }
 
@@ -66,7 +67,8 @@
   .info-content {
     flex-direction: column;
     width: 100%;
-    align-items: center;
+    align-items: left;
+    padding: 2rem;
   }
 
   .info-image-container {
@@ -80,7 +82,7 @@
   }
 
   .info-text {
-    max-width: 100%;
+    width: 100%;
     text-align: left; /* Metni ortala */
   }
 

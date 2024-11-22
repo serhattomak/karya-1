@@ -1,14 +1,35 @@
 .services-section {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
-  padding: 2rem;
-  width: 100%;
-}
 
+  width: 100%;
+  flex-direction: column;
+}
+.service-content {
+  width: 90%;
+  justify-content: space-around;
+  display: flex;
+  align-items: center;
+}
 @media (max-width: 768px) {
   .services-section {
     flex-direction: column;
     display: flex;
+  }
+
+  .service-content {
+    width: 100%;
+    padding: 2rem;
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1366px) {
+  .services-section {
+    flex-direction: row;
+  }
+  .service-content {
+    width: 90%;
   }
 }
