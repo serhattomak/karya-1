@@ -1,9 +1,10 @@
 .home-background {
   background-size: cover;
   background-position: center;
-  height: 100vh;
+  height: 100vh; /* Mobilde yüksekliği sınırlamak için vh kullanabilirsiniz */
   position: relative;
   z-index: 1;
+  overflow: hidden; /* Kaydırmayı engeller */
 }
 
 .home-background::before {
@@ -13,24 +14,31 @@
   left: 0;
   right: 0;
   bottom: 0;
-
   background: radial-gradient(
     97.57% 210.75% at 0.9% 2.98%,
     rgba(7, 7, 7, 0.6) 0.22%,
     rgba(3, 3, 3, 0.343874) 28.25%,
     rgba(0, 0, 0, 0.1) 100%
   );
-
   backdrop-filter: blur(10px);
   z-index: -1;
 }
+
+/* Banner altındaki metni mobilde gizleyelim */
 .banner-info {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   margin-top: 1rem;
 }
 
+/* Mobil görünümde kaydırmayı engelle */
 @media screen and (max-width: 768px) {
-  .banner-info {
-    display: none;
+  body,
+  html {
+    height: 100%;
+    overflow: hidden; /* Mobilde kaydırmayı tamamen engelle */
+  }
+
+  .home-background {
+    height: 100vh; /* Yüksekliği sınırlı tutuyoruz */
   }
 }
