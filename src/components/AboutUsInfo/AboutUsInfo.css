@@ -20,7 +20,7 @@
     rgba(199, 199, 199, 0.8) 0%,
     rgba(199, 199, 199, 0.1) 100%
   );
-  width: 40%;
+  width: 30%;
   border-radius: 20px;
   height: 100%;
 }
@@ -73,12 +73,14 @@
 
   .info-image-container {
     width: 100%; /* Mobilde daha dar yap */
+   
     margin-bottom: 1rem;
   }
 
   .info-image img {
     width: 100%; /* Resmi tam genişlik yap */
     padding: 1rem; /* Mobilde paddingi azalt */
+    height: 20%;
   }
 
   .info-text {
@@ -101,6 +103,7 @@
     width: 100%;
     align-items: center;
     gap: 2rem;
+    padding: 1rem;
   }
 
   .info-image-container {
@@ -133,7 +136,7 @@
   }
 
   .info-image-container {
-    width: 50%; /* Mobilde daha dar yap */
+    width: 40%; /* Mobilde daha dar yap */
     margin-bottom: 1rem;
   }
 

@@ -1,6 +1,13 @@
 import React from "react";
 import emailjs from "emailjs-com";
 import "./ContactForm.css";
+// React Icons'tan gerekli ikonları import edin
+import {
+  FaPhone,
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaInstagram,
+} from "react-icons/fa";
 
 const ContactForm = () => {
   // Form gönderim işlemi
@@ -9,10 +16,10 @@ const ContactForm = () => {
 
     emailjs
       .sendForm(
-        "service_8xzxo29", // EmailJS'den aldığınız Service ID
-        "template_gnry9cs", // EmailJS'den aldığınız Template ID
+        "service_ryy5urc", // EmailJS'den aldığınız Service ID
+        "template_xgg8bns", // EmailJS'den aldığınız Template ID
         e.target,
-        "xf3Z8XCLHnlZhZSiI" // EmailJS hesabınızın Public Key'i
+        "0kX-HdVgnL6ZzjCJU" // EmailJS hesabınızın Public Key'i
       )
       .then(
         (result) => {
@@ -32,22 +39,22 @@ const ContactForm = () => {
         <div className="contact-content">
           <div className="contact-details">
             <ContactDetail
-              icon="phone"
+              icon={<FaPhone />}
               title="Telefon"
               content="0216 399 39 91-92"
             />
             <ContactDetail
-              icon="envelope"
+              icon={<FaEnvelope />}
               title="E-posta adresi"
               content="info@karyayapicim.com"
             />
             <ContactDetail
-              icon="map-marker-alt"
+              icon={<FaMapMarkerAlt />}
               title="Lokasyon"
               content="Bağlarbaşı Mah. İhlamur sok. No:24A - Dükkan Maltepe/İstanbul"
             />
             <ContactDetail
-              icon="instagram"
+              icon={<FaInstagram />}
               title="Instagram"
               content="karyayapi"
             />
@@ -66,7 +73,7 @@ const ContactForm = () => {
                 <div className="form-item">
                   <label>İsim</label>
                   <input type="text" name="isim" required />
-                  </div>
+                </div>
                 <div className="form-item">
                   <label>Soyisim</label>
                   <input type="text" name="soyisim" required />
@@ -83,7 +90,7 @@ const ContactForm = () => {
                 </div>
               </div>
               <div className="form-item-message">
-                <label>Mesajınızı Yazın </label>
+                <label>Mesajınızı Yazın</label>
                 <textarea name="mesaj" required></textarea>
               </div>
               <button type="submit">Gönder</button>
@@ -98,9 +105,7 @@ const ContactForm = () => {
 // Contact Detail Component
 const ContactDetail = ({ icon, title, content }) => (
   <div className="contact-detail">
-    <div className="icon">
-      <i className={`fas fa-${icon}`}></i> {/* Font Awesome ikonları */}
-    </div>
+    <div className="icon">{icon}</div> {/* Dinamik olarak ikon */}
     <div>
       <h4>{title}</h4>
       <p>{content}</p>

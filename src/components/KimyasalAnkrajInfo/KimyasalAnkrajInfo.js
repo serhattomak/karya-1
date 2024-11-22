@@ -8,6 +8,7 @@ const KimyasalAnkrajInfo = () => {
           <h2 className="KimyasalAnkrajInfo-title">
             Kimyasal Ankraj Filiz Ekim
           </h2>
+          <hr className="line"></hr>
           <p className="KimyasalAnkrajInfo-description">
             Genellikle plan proje değişikliklerinde mevcut betonların yeniden
             filizlendirilerek güçlendirilmesi, çelik konstrüksiyonların
