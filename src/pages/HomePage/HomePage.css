@@ -4,7 +4,7 @@
   height: 100vh; /* Mobilde yüksekliği sınırlamak için vh kullanabilirsiniz */
   position: relative;
   z-index: 1;
-  overflow: hidden; /* Kaydırmayı engeller */
+  overflow: hidden; /* Kaydırmayı engeller, sadece bu öğe için geçerli */
 }
 
 .home-background::before {
@@ -26,7 +26,7 @@
 
 /* Banner altındaki metni mobilde gizleyelim */
 .banner-info {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   margin-top: 1rem;
 }
 
@@ -34,5 +34,6 @@
 @media screen and (max-width: 768px) {
   .home-background {
     height: 100vh; /* Yüksekliği sınırlı tutuyoruz */
+    overflow: hidden; /* Kaydırmayı sadece bu öğede engelliyoruz */
   }
 }
