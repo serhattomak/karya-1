@@ -2,15 +2,17 @@
   display: flex;
   align-items: center;
   padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-bottom: 4rem;
   width: 100%;
-  justify-content: space-around;
+  justify-content: center;
 }
 
 .info-content {
   display: flex;
-  justify-content: space-between;
-  width: 90%;
+
+  justify-content: center;
+  gap: 10rem;
+  width: 100%;
   font-family: Montserrat;
 }
 
@@ -20,7 +22,7 @@
     rgba(199, 199, 199, 0.8) 0%,
     rgba(199, 199, 199, 0.1) 100%
   );
-  width: 30%;
+  width: 35%;
   border-radius: 20px;
   height: 100%;
 }
@@ -33,7 +35,8 @@
 }
 
 .info-text {
-  width: 50%;
+  max-width: 610px;
+
   text-align: left;
 }
 
@@ -73,7 +76,7 @@
 
   .info-image-container {
     width: 100%; /* Mobilde daha dar yap */
-   
+
     margin-bottom: 1rem;
   }
 
@@ -126,26 +129,5 @@
 
   .info-text p {
     font-size: 0.875rem; /* Metin boyutunu küçült */
-  }
-}
-
-@media (min-width: 1921px) {
-  .info-content {
-    width: 100%;
-    align-items: center;
-  }
-
-  .info-image-container {
-    width: 40%; /* Mobilde daha dar yap */
-    margin-bottom: 1rem;
-  }
-
-  .info-image img {
-    width: 100%; /* Resmi tam genişlik yap */
-  }
-
-  .info-text {
-    max-width: 70%;
-    text-align: left; /* Metni ortala */
   }
 }

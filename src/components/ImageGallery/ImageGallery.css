@@ -12,7 +12,11 @@
   position: relative;
   border-radius: 10px; /* Yuvarlak köşeler */
   overflow: hidden;
-  background: #c7c7c7; /* Arka plan rengi */
+  background: radial-gradient(
+    97.57% 210.75% at 0.9% 2.98%,
+    rgba(199, 199, 199, 0.8) 0%,
+    rgba(199, 199, 199, 0.1) 100%
+  );
   display: flex;
   justify-content: center;
   align-items: center;
@@ -62,4 +66,3 @@
     height: auto; /* Görsellerin yüksekliğini oranla ayarla */
   }
 }
-
