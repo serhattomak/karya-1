@@ -32,12 +32,6 @@
 
 /* Mobil görünümde kaydırmayı engelle */
 @media screen and (max-width: 768px) {
-  body,
-  html {
-    height: 100%;
-    overflow: hidden; /* Mobilde kaydırmayı tamamen engelle */
-  }
-
   .home-background {
     height: 100vh; /* Yüksekliği sınırlı tutuyoruz */
   }
