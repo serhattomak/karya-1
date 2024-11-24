@@ -57,7 +57,7 @@ const ProductSlider = () => {
   const products = [
     {
       image: "/assets/images/asilnunx.png",
-      title: "AŞIL NUN X",
+      title: "AŞİL NUN X Poliüretan Enjeksiyon Reçinesi",
       path: "/AsilNunX", // Yönlendirme yapılacak path
     },
     {

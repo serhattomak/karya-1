@@ -1,6 +1,5 @@
 .banner {
-  background-size: cover;
-  background-position: center;
+  background-size: 130%;
   height: 100vh;
   position: relative;
   z-index: 1;
@@ -11,21 +10,25 @@
   color: white;
   text-align: center;
   flex-direction: column;
+  background-position: 10% 65%;
 }
 
-.banner::before {
+@media (max-width: 768px) {
+  .banner {
+    background-size: cover;
+    background-position: center;
+  }
+}
+
+.banner::after {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(
-    97.57% 210.75% at 0.9% 2.98%,
-    rgba(7, 7, 7, 0.4) 0.22%,
-    /* Opaklığı azalttık */ rgba(3, 3, 3, 0.343874) 28.25%,
-    rgba(255, 255, 255, 0.1) 100% /* Parlaklık için beyaz tonu ekledik */
-  );
+  background: rgba(255, 255, 255, 0.1); /* Hafif parlak beyaz katman */
+  mix-blend-mode: overlay; /* Parlaklık artırıcı blend mode */
   z-index: -1;
 }
 

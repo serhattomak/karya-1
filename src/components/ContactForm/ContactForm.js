@@ -46,7 +46,7 @@ const ContactForm = () => {
             <ContactDetail
               icon={<FaEnvelope />}
               title="E-posta adresi"
-              content="info@karyayapicim.com"
+              content="info@karyayapi.com"
             />
             <ContactDetail
               icon={<FaMapMarkerAlt />}

@@ -8,7 +8,7 @@ const AboutUsInfo = () => {
         <div className="info-image-container">
           <div className="info-image">
             {" "}
-            <img src="/assets/images/asilnunx.png" />
+            <img src="/assets/images/hk.jpeg" />
           </div>
         </div>
         <div className="info-text">

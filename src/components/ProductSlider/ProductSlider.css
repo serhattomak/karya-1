@@ -94,7 +94,7 @@
   color: #ffffff;
   text-align: left; /* Yazıyı sola hizala */
   align-self: flex-start; /* Kutunun içeriğini sola yasla */
-  margin-bottom: 2rem; /* Başlık üst kısmında boşluk bırak */
+  margin-bottom: 0.8rem; /* Başlık üst kısmında boşluk bırak */
 }
 
 /* Mobil ekranda iki kutuyu yan yana göstermek için */

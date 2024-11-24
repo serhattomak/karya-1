@@ -18,7 +18,7 @@ function KimyasalAnkraj() {
   return (
     <div>
       <Banner
-        imageSrc="/assets/images/kimankbanner.png"
+        imageSrc="/assets/images/kbanner.jpg"
         title="Kimyasal Ankraj Filiz Ekim"
       />
       <br />
