@@ -36,8 +36,7 @@ const ServiceList = () => {
         <li>Poliüretan enjeksiyon reçine satışı.</li>
         <li>
           Her türlü negatif yönden gelen su sızıntılarına karşı Poliüretan
-          Enjeksiyon uygulaması.Her türlü negatif yönden su sızıntılarına karşı
-          poliüretan enjeksiyon reçinesi ile su yalıtımı
+          Enjeksiyon uygulaması.
         </li>
         <li>Epoksi enjeksiyon reçinesi ile yapısal çatlak tamiri</li>
         <li> Epoksi ile demir filiz ekimi.</li>
