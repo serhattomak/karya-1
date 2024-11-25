@@ -102,7 +102,7 @@
 
 /* subtitle içeren kartlar için alt başlık düzenlemesi */
 .slide.with-subtitle .product-subtitle {
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
   margin-top: 0.25rem;
 }
