@@ -1,5 +1,5 @@
 .banner {
-  background-size: 130%;
+  background-size: cover;
   height: 100vh;
   position: relative;
   z-index: 1;
@@ -10,19 +10,7 @@
   color: white;
   text-align: center;
   flex-direction: column;
-  background-position: 10% 65%;
-}
-
-@media (max-width: 768px) {
-  .banner {
-    background-size: cover;
-    background-position: center;
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .banner {
-  }
+  background-position: center;
 }
 
 .banner::after {

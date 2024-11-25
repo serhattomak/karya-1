@@ -94,13 +94,14 @@
   color: #ffffff;
   text-align: left; /* Yazıyı sola hizala */
   align-self: flex-start; /* Kutunun içeriğini sola yasla */
+  margin-bottom: 2rem; /* Başlık üst kısmında boşluk bırak */
 }
 
 /* Mobil ekranda iki kutuyu yan yana göstermek için */
 @media (max-width: 768px) {
   .slider-container {
     padding: 0.5rem;
-    margin-top: 2rem; /* Reduce top margin for mobile */
+    margin-top: 0.5rem; /* Reduce top margin for mobile */
   }
 
   .slider-title {
