@@ -16,6 +16,12 @@
   font-family: Montserrat;
 }
 
+@media (max-width: 768px) {
+  .info-content {
+    gap: 2rem;
+  }
+}
+
 .info-image-container {
   background: radial-gradient(
     97.57% 210.75% at 0.9% 2.98%,
