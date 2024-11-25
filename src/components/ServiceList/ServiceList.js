@@ -35,10 +35,10 @@ const ServiceList = () => {
       <ul className="service-items">
         <li>Poliüretan enjeksiyon reçine satışı.</li>
         <li>
-          Her türlü negatif yönden gelen su sızıntılarına karşı Poliüretan
-          Enjeksiyon uygulaması.
+          Her türlü negatif yönden su sızıntılarına karşı poliüretan enjeksiyon
+          reçinesi ile su yalıtımı.
         </li>
-        <li>Epoksi enjeksiyon reçinesi ile yapısal çatlak tamiri</li>
+        <li>Epoksi enjeksiyon reçinesi ile yapısal çatlak tamiri.</li>
         <li> Epoksi ile demir filiz ekimi.</li>
         <li>Epoksi ile rot montajı. </li>
         <li>Karot makineleri ile beton delme.</li>
