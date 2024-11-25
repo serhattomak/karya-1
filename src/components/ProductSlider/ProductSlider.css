@@ -31,6 +31,7 @@
   list-style-type: none;
   margin: 0;
   scrollbar-width: none; /* Firefox */
+  gap: 1rem;
 }
 
 .slider__track::-webkit-scrollbar {
@@ -49,25 +50,18 @@
   background: radial-gradient(
     97.57% 210.75% at 0.9% 2.98%,
     rgba(7, 7, 7, 0.8) 0%,
-    rgba(0, 0, 0, 0.1) 100%
+    rgba(0, 0, 0, 0.2) 100%
   );
   border-radius: 20px;
   padding: 1rem;
 
-  text-align: left; /* Varsayılan olarak tüm metin sola hizalanır */
+  text-align: left;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
 }
 
 .slide:hover {
-  transform: translateY(-5px) scale(1.03);
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
-}
-
-.slide:active {
-  transform: translateY(0) scale(0.98);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  transform: scale(1.01);
 }
 
 .product-image {
