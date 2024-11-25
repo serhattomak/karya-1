@@ -56,7 +56,7 @@ const ProductSlider = () => {
   // Her bir ürün için route path tanımlıyoruz
   const products = [
     {
-      image: "/assets/images/asilnunx.png",
+      image: "/assets/images/asilnun.png",
       title: "AŞİL NUN X Poliüretan Enjeksiyon Reçinesi",
       path: "/AsilNunX", // Yönlendirme yapılacak path
     },
