@@ -95,14 +95,14 @@
 
 /* subtitle içeren kartlar için özel düzenleme */
 .slide.with-subtitle .product-title {
-  font-size: 0.9rem;
+  font-size: 1.4rem;
   margin-bottom: 0.5rem; /* Subtitle ile aralığı arttır */
   font-weight: 600;
 }
 
 /* subtitle içeren kartlar için alt başlık düzenlemesi */
 .slide.with-subtitle .product-subtitle {
-  font-size: 0.6rem;
+  font-size: 0.9rem;
   font-weight: 600;
   margin-top: 0.25rem;
 }
@@ -111,7 +111,7 @@
 @media (max-width: 768px) {
   .slide {
     flex: 0 0 45%;
-    height: 200px;
+    height: 210px;
     margin: 0.5rem;
     padding: 0.5rem;
   }
@@ -119,7 +119,7 @@
   .product-image {
     height: 140px;
     border-radius: 4px;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0rem;
   }
 
   .product-title {
@@ -128,6 +128,17 @@
 
   .product-subtitle {
     font-size: 0.8rem;
+  }
+
+  .slide.with-subtitle .product-title {
+    font-size: 0.9rem;
+    margin-bottom: 0rem; /* Subtitle ile aralığı arttır */
+    font-weight: 600;
+  }
+  .slide.with-subtitle .product-subtitle {
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-top: 0rem;
   }
 }
 
@@ -141,7 +152,7 @@
   }
 
   .product-image {
-    height: 180px;
+    height: 210px;
   }
 
   .product-title {

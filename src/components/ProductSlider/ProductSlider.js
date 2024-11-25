@@ -65,11 +65,7 @@ const ProductSlider = () => {
               className={`slide ${product.subtitle ? "with-subtitle" : ""}`} // subtitle varsa ek sınıf
               onClick={() => handleProductClick(product.path)}
             >
-              <img
-                src={product.image}
-                className="product-image"
-                alt={product.title}
-              />
+              <img src={product.image} className="product-image" />
               <h3 className="product-title">{product.title}</h3>
               {/* subtitle varsa göster */}
               {product.subtitle && (
