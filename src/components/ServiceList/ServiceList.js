@@ -43,7 +43,7 @@ const ServiceList = () => {
         <li>Epoksi ile rot montajı. </li>
         <li>Karot makineleri ile beton delme.</li>
         <li>Hidrolik raylı sistemler ile beton kesme.</li>
-        <li>Halatlı - tel beton kesme uygulaması.</li>
+        <li>Halatlı - tel beton kesme.</li>
       </ul>
     </div>
   );

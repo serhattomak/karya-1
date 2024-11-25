@@ -8,10 +8,11 @@ import Footer from "../../components/Footer/Footer";
 
 function HalatliTelBetonKesme() {
   const htbkImages = [
-    { src: "/assets/images/Rectangle 39-2.png", alt: "Kimyasal Ankraj 1" },
-    { src: "/assets/images/Rectangle 40-2.png", alt: "Kimyasal Ankraj 2" },
-    { src: "/assets/images/Rectangle 41-2.png", alt: "Kimyasal Ankraj 3" },
-    { src: "/assets/images/Rectangle 42-2.png", alt: "Kimyasal Ankraj 4" },
+    { src: "/assets/images/Rectangle 39-1.png", alt: "Kimyasal Ankraj 1" },
+    { src: "/assets/images/Rectangle 40-1.png", alt: "Kimyasal Ankraj 2" },
+    { src: "/assets/images/Rectangle 41-1.png", alt: "Kimyasal Ankraj 3" },
+    { src: "/assets/images/Rectangle 42-1.png", alt: "Kimyasal Ankraj 4" },
+
   ];
 
   return (
