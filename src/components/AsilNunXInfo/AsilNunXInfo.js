@@ -50,7 +50,9 @@ const AsilNunXInfo = () => {
           </div>
           <p className="asil-nun-x-contact">
             AŞİL NUN X Hakkında Daha Fazla Bilgi Almak İçin{" "}
-            <span>Bize Ulaşın!</span>
+            <a href="/contact">
+              <span>Bize Ulaşın!</span>
+            </a>{" "}
           </p>
         </div>
         <div className="asil-nun-x-image">
