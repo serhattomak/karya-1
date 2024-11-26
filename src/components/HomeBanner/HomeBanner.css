@@ -1,5 +1,5 @@
 .banner {
-  background-size: 100% 140%;
+  background-size: cover;
   background-position: left;
   height: 100vh;
   width: 100%;
@@ -48,12 +48,15 @@
   font-size: 4rem;
   margin-bottom: 10px;
   font-weight: 700;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Gölge ekleniyor */
+
 }
 
 .banner p {
   font-size: 1.87rem;
   font-weight: 400;
   max-width: 850px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Gölge ekleniyor */
 }
 
 @media (max-width: 768px) {

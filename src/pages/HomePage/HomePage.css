@@ -28,6 +28,8 @@
 .banner-info {
   font-size: 0.95rem;
   margin: 1rem;
+  font-weight: 600;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Gölge ekleniyor */
 }
 
 /* Mobil görünümde kaydırmayı engelle */
