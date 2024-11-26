@@ -54,7 +54,7 @@
   );
   border-radius: 20px;
   padding: 1rem;
-
+  backdrop-filter: blur(10px);
   text-align: left;
   overflow: hidden;
   cursor: pointer;
