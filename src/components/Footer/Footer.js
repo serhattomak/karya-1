@@ -42,7 +42,7 @@ const Footer = () => {
         <div className="footer-right">
           <p>Bizi Sosyal Medyada Takip Et!</p>
           <a
-            href="https://www.instagram.com/"
+            href="https://www.instagram.com/karyayapi?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
             target="_blank"
             rel="noopener noreferrer"
           >

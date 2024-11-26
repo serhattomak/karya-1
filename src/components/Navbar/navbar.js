@@ -81,11 +81,17 @@ const Navbar = () => {
                 <IoMail className="contact-icon" />
               </Link>
             </li>
+
             <li className="social-media">
-              <a href="#" onClick={closeMenu}>
+              <a href="" onClick={closeMenu}>
                 Bizi Sosyal Medyada Takip Et!
               </a>
-              <a>
+              <a
+                href="https://www.instagram.com/karyayapi?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={closeMenu}
+              >
                 <IoLogoInstagram className="instagram-icon" />
               </a>
             </li>
