@@ -1,6 +1,6 @@
 .banner {
   background-size: cover;
-  background-position: left;
+  background-position: center;
   height: 100vh;
   width: 100%;
   position: relative;
@@ -48,7 +48,6 @@
   margin-bottom: 10px;
   font-weight: 700;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Gölge ekleniyor */
-
 }
 
 .banner p {
