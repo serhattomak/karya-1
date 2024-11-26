@@ -1,6 +1,6 @@
 /* Galeri Konteyneri */
 .p-gallery-container {
-  width: 80%; /* Galeri genişliğini %80 olarak ayarladık */
+  width: 70%; /* Galeri genişliğini %80 olarak ayarladık */
   margin: 0 auto; /* Ortaya hizalama */
   padding: 50px;
   text-align: left;
@@ -20,29 +20,20 @@
   border-bottom: 3px solid #f57c00;
   padding-bottom: 3px;
 }
-
 /* Galeri Ana Konteyner */
 .p-gallery-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* Her sırada 4 sütun */
-  gap: 10px; /* Görseller arasındaki boşluğu daraltmak için 15px yerine 10px */
+  gap: 10px; /* Görseller arasındaki boşluğu daraltmak için 10px */
   justify-items: center;
   align-items: center;
   margin-top: 20px; /* Başlık ve görseller arasında mesafe */
 }
 
-/* Üst Sıradaki Resimler */
-.p-gallery-item.top-row img {
-  width: 300px; /* Üst sıradaki görsellerin genişliği */
-  height: 250px; /* Üst sıradaki görsellerin yüksekliği */
-  object-fit: cover; /* Görsellerin düzgün kesilmesi */
-  border-radius: 20px;
-}
-
-/* Alt Sıradaki Resimler */
-.p-gallery-item.bottom-row img {
-  width: 260px; /* Alt sıradaki görsellerin genişliği */
-  height: 220px; /* Alt sıradaki görsellerin yüksekliği */
+/* Üst ve Alt Sıradaki Resimler İçin Ortak Stil */
+.p-gallery-item img {
+  width: 300px; /* Tüm görsellerin genişliği */
+  height: 250px; /* Tüm görsellerin yüksekliği */
   object-fit: cover; /* Görsellerin düzgün kesilmesi */
   border-radius: 20px;
 }
@@ -66,15 +57,13 @@
 
   .p-gallery-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Her sırada 2 sütun */
+    grid-template-columns: repeat(2, 1fr); /* Her sıradaki 2 sütun */
     gap: 10px; /* Görseller arasındaki boşluk */
     justify-items: center;
   }
 
-  .p-gallery-item.bottom-row img {
-    height: 150px; /* Alt sıradaki görsellerin yüksekliği */
-  }
-  .p-gallery-item.top-row img {
-    height: 150px; /* Üst sıradaki görsellerin yüksekliği */
+  /* Mobilde tüm resimler aynı boyutta olacak */
+  .p-gallery-item img {
+    height: 150px; /* Görsellerin yüksekliği */
   }
 }

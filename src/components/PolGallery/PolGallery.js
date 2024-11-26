@@ -5,6 +5,7 @@ const PolGallery = ({ title, images }) => {
   return (
     <div className="p-gallery-container">
       <h2 className="p-gallery-title">{title}</h2>
+      <hr className="line"></hr>
       <div className="p-gallery-grid">
         {images.map((image, index) => (
           <div
