@@ -25,13 +25,13 @@ const ProductSlider = () => {
     {
       image: "/assets/images/asilnun.png",
       title: "AŞİL NUN X",
-      subtitle: "Poliüretan Enjeksiyon Reçinesi", // Bu kartın subtitle'ı var
+      subtitle: "Poliüretan Enjeksiyon Reçinesi",
       path: "/AsilNunX",
     },
     {
       image: "/assets/images/poliuretanenjeksiyon.png",
       title: "Poliüretan Enjeksiyon",
-      path: "/PoliuretanEnjeksiyon", // Bu kartın subtitle'ı yok
+      path: "/PoliuretanEnjeksiyon",
     },
     {
       image: "/assets/images/halatlıtelbetonkesme.png",
@@ -41,7 +41,7 @@ const ProductSlider = () => {
     {
       image: "/assets/images/kimyasalankraj.png",
       title: "Kimyasal Ankraj Filiz Ekim",
-      path: "/KimyasalAnkraj", // Bu kartın subtitle'ı yok
+      path: "/KimyasalAnkraj",
     },
   ];
 

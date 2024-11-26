@@ -12,6 +12,7 @@
   color: white;
   text-align: center;
   flex-direction: column;
+
 }
 
 .banner::after {
