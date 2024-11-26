@@ -84,7 +84,7 @@ const Navbar = () => {
 
             <li className="social-media">
               <a href="" onClick={closeMenu}>
-                Bizi Sosyal Medyada Takip Et!
+                Bizi Sosyal Medyada <br></br>Takip Et!
               </a>
               <a
                 href="https://www.instagram.com/karyayapi?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="

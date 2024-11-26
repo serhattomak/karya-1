@@ -41,12 +41,14 @@ const ContactForm = () => {
             <ContactDetail
               icon={<FaPhone />}
               title="Telefon"
-              content="0216 399 39 91-92"
+              content={<a href="tel:+90216399399192">0216 399 39 91-92</a>}
             />
             <ContactDetail
               icon={<FaEnvelope />}
               title="E-posta adresi"
-              content="info@karyayapi.com"
+              content={
+                <a href="mailto:info@karyayapi.com">info@karyayapi.com</a>
+              }
             />
             <ContactDetail
               icon={<FaMapMarkerAlt />}
