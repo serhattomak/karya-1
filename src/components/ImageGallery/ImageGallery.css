@@ -32,7 +32,7 @@
 
 .gallery-image {
   width: 100%; /* Tam genişlik */
-  height: 100%;
+  height: auto;
   border-radius: 35px;
   object-fit: cover; /* Görsellerin düzgün oranı */
   transition: transform 0.3s ease; /* Resim üzerinde animasyon */
@@ -69,6 +69,5 @@
     width: 100%; /* Görsellerin tam genişliği */
     height: auto; /* Görsellerin yüksekliğini oranla ayarla */
     border-radius: 20px;
-
   }
 }
