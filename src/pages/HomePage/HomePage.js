@@ -9,7 +9,7 @@ function HomePage() {
       <HomeBanner>
         <ProductSlider />{" "}
         <div className="banner-info">
-          <a>www.karyayapi.com © 2007 - 2024 Karya Yapı San. Tic. Ltd. Şti.</a>
+          <a>www.karyayapi.com © Karya Yapı San. Tic. Ltd. Şti.</a>
         </div>
       </HomeBanner>
     </div>

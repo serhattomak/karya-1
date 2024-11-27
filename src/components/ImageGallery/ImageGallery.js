@@ -7,7 +7,7 @@ const ImageGallery = () => {
 
     "/assets/images/kimyasalankraj.png",
 
-    "/assets/images/halatlıtelbetonkesme.png",
+    "/assets/images/htbk.jpg",
     "/assets/images/asilnunx.png",
   ];
 

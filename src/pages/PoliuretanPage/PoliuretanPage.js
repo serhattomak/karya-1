@@ -16,7 +16,7 @@ function PoliuretanPage() {
     { src: "/assets/images/5.png", alt: "Görsel 5" },
     { src: "/assets/images/6.png", alt: "Görsel 6" },
     { src: "/assets/images/7.png", alt: "Görsel 7" },
-    { src: "/assets/images/8.png", alt: "Görsel 8" },
+    { src: "/assets/images/poliüretan3.jpg", alt: "Görsel 8" },
   ];
 
   return (

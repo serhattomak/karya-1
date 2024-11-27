@@ -34,7 +34,7 @@ const ProductSlider = () => {
       path: "/PoliuretanEnjeksiyon",
     },
     {
-      image: "/assets/images/halatlıtelbetonkesme.png",
+      image: "/assets/images/htbk.jpg",
       title: "Halatlı Tel - Beton Kesme",
       path: "/HalatliTelBetonKesme",
     },
