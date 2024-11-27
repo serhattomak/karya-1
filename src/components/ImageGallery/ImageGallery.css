@@ -54,6 +54,7 @@
   .gallery-image {
     width: 100%; /* Görsellerin tam genişliği */
     height: auto; /* Görsellerin yüksekliğini oranla ayarla */
+    border-radius: 15px;
   }
 }
 
@@ -67,5 +68,7 @@
   .gallery-image {
     width: 100%; /* Görsellerin tam genişliği */
     height: auto; /* Görsellerin yüksekliğini oranla ayarla */
+    border-radius: 20px;
+
   }
 }
