@@ -9,7 +9,7 @@
 }
 
 .slider-title {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #ffffff;
   margin-bottom: 1rem;
@@ -26,7 +26,7 @@
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  padding: 0.5rem;
+
   scroll-behavior: smooth;
   list-style-type: none;
   margin: 0;
@@ -106,21 +106,24 @@
 
 /* Mobil ekran */
 @media (max-width: 768px) {
+  .slider__track {
+    gap: 0.4rem;
+  }
   .slide {
-    flex: 0 0 45%;
-    height: 210px;
+    flex: 0 0 38%;
+    height: 200px;
     margin: 0.5rem;
     padding: 0.5rem;
   }
 
   .product-image {
-    height: 140px;
+    height: 120px;
     border-radius: 20px;
     margin-bottom: 0rem;
   }
 
   .product-title {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 
   .product-subtitle {
@@ -128,7 +131,7 @@
   }
 
   .slide.with-subtitle .product-title {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     margin-bottom: 0rem; /* Subtitle ile aralığı arttır */
     font-weight: 600;
   }
