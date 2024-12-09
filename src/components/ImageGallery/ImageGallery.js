@@ -15,7 +15,7 @@ const ImageGallery = () => {
     <div className="image-gallery">
       {images.map((image, index) => (
         <div key={index} className="image-container">
-          <img src={image} className="gallery-image" />
+          <img src={image} className="gallery-image"  loading="lazy"/>
         </div>
       ))}
     </div>

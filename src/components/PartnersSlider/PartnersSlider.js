@@ -32,7 +32,7 @@ const PartnersSlider = () => {
           <React.Fragment key={trackIndex}>
             {imageUrls.map((url, imageIndex) => (
               <div key={`${trackIndex}-${imageIndex}`}>
-                <img src={url} alt={`Partner ${imageIndex + 1}`} />
+                <img src={url} alt={`Partner ${imageIndex + 1}`} loading="lazy" />
               </div>
             ))}
           </React.Fragment>

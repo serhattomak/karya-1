@@ -9,6 +9,7 @@ const Banner = ({ imageSrc, title }) => {
         src={imageSrc} // Dinamik resim kaynağı
         alt="Banner"
         className="banner-image-about"
+        loading="lazy"
       />
       <h1 className="banner-text-about">{title}</h1> {/* Dinamik başlık */}
     </div>

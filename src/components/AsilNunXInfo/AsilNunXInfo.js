@@ -27,25 +27,25 @@ const AsilNunXInfo = () => {
               href="https://drive.google.com/file/d/1K1qPm_HABMe_ERpmlU3lb8rw56GNbg9w/view?usp=sharing"
               target="_blank"
             >
-              <img src="/assets/images/Documents/doc1.png" alt="Document 1" />
+              <img src="/assets/images/Documents/doc1.png" alt="Document 1" loading="lazy" />
             </a>
             <a
               href="https://drive.google.com/file/d/1SyVRZSjI5_O7blFuaneutbVtFY21VJXi/view?usp=sharing"
               target="_blank"
             >
-              <img src="/assets/images/Documents/doc2.png" alt="Document 2" />
+              <img src="/assets/images/Documents/doc2.png" alt="Document 2" loading="lazy" />
             </a>
             <a
               href="https://drive.google.com/file/d/1BbiYdgQgt5stRpDGNzMUyfVO40R8Okpk/view?usp=sharing"
               target="_blank"
             >
-              <img src="/assets/images/Documents/doc3.png" alt="Document 3" />
+              <img src="/assets/images/Documents/doc3.png" alt="Document 3"  loading="lazy"/>
             </a>
             <a
               href="https://drive.google.com/file/d/1woCHVqx68AmgOzBBvQebxZmFitIrpky_/view?usp=sharing"
               target="_blank"
             >
-              <img src="/assets/images/Documents/doc4.png" alt="Document 4" />
+              <img src="/assets/images/Documents/doc4.png" alt="Document 4" loading="lazy" />
             </a>
           </div>
           <p className="asil-nun-x-contact">

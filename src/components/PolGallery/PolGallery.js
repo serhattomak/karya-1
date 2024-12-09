@@ -14,7 +14,7 @@ const PolGallery = ({ title, images }) => {
             }`}
             key={index}
           >
-            <img src={image.src} alt={image.alt} />
+            <img src={image.src} alt={image.alt}  loading="lazy"/>
           </div>
         ))}
       </div>

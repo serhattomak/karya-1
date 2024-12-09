@@ -11,6 +11,7 @@ const Footer = () => {
             src="/assets/images/whitelogo.png"
             alt="Karya Logo"
             className="footer-logo"
+            loading="lazy"
           />
         </div>
         <div className="footer-center">

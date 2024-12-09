@@ -35,7 +35,7 @@ const Navbar = () => {
       <div className="container">
         <div className="logo">
           <Link to="/">
-            <img src="/assets/images/KaryaLogo.png" alt="Logo" />
+            <img src="/assets/images/KaryaLogo.png" alt="Logo" loading="lazy" />
           </Link>
         </div>
         <div className="main_list desktop">
