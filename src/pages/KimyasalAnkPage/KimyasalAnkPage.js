@@ -9,16 +9,16 @@ import Footer from "../../components/Footer/Footer";
 
 function KimyasalAnkraj() {
   const kimyasalAnkrajImages = [
-    { src: "/assets/images/Rectangle 39-2.png", alt: "Kimyasal Ankraj 1" },
-    { src: "/assets/images/Rectangle 40-2.png", alt: "Kimyasal Ankraj 2" },
-    { src: "/assets/images/Rectangle 41-2.png", alt: "Kimyasal Ankraj 3" },
-    { src: "/assets/images/Rectangle 42-2.png", alt: "Kimyasal Ankraj 4" },
+    { src: "/assets/images/Rectangle 39-2.webp", alt: "Kimyasal Ankraj 1" },
+    { src: "/assets/images/Rectangle 40-2.webp", alt: "Kimyasal Ankraj 2" },
+    { src: "/assets/images/Rectangle 41-2.webp", alt: "Kimyasal Ankraj 3" },
+    { src: "/assets/images/Rectangle 42-2.webp", alt: "Kimyasal Ankraj 4" },
   ];
 
   return (
     <div>
       <Banner
-        imageSrc="/assets/images/kbanner.jpg"
+        imageSrc="/assets/images/kbanner.webp"
         title="Kimyasal Ankraj Filiz Ekim"
       />
       <br />

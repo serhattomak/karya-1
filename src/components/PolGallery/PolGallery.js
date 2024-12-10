@@ -5,16 +5,16 @@ const PolGallery = ({ title, images }) => {
   return (
     <div className="p-gallery-container">
       <h2 className="p-gallery-title">{title}</h2>
-      <hr className="line"></hr>
+      <hr className="line" />
       <div className="p-gallery-grid">
         {images.map((image, index) => (
-          <div
-            className={`p-gallery-item ${
-              index < 4 ? "top-row" : "bottom-row" // İlk 4 resim "top-row", diğerleri "bottom-row"
-            }`}
-            key={index}
-          >
-            <img src={image.src} alt={image.alt}  loading="lazy"/>
+          <div className="p-gallery-item" key={index}>
+            <img
+              src={image.src}
+              alt={image.alt}
+              className="p-gallery-image"
+              loading="lazy" // Lazy loading
+            />
           </div>
         ))}
       </div>

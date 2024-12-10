@@ -23,23 +23,23 @@ const ProductSlider = () => {
   // Ürünler listesi
   const products = [
     {
-      image: "/assets/images/asilnun.png",
+      image: "/assets/images/asilnun.webp",
       title: "AŞİL NUN X",
       subtitle: "Poliüretan Enjeksiyon Reçinesi",
       path: "/AsilNunX",
     },
     {
-      image: "/assets/images/poliuretanenjeksiyon.png",
+      image: "/assets/images/poliuretanenjeksiyon.webp",
       title: "Poliüretan Enjeksiyon",
       path: "/PoliuretanEnjeksiyon",
     },
     {
-      image: "/assets/images/htbk.jpg",
+      image: "/assets/images/htbk.webp",
       title: "Halatlı Tel - Beton Kesme",
       path: "/HalatliTelBetonKesme",
     },
     {
-      image: "/assets/images/kimyasalankraj.png",
+      image: "/assets/images/kimyasalankraj.webp",
       title: "Kimyasal Ankraj Filiz Ekim",
       path: "/KimyasalAnkraj",
     },
@@ -65,11 +65,7 @@ const ProductSlider = () => {
               className={`slide ${product.subtitle ? "with-subtitle" : ""}`} // subtitle varsa ek sınıf
               onClick={() => handleProductClick(product.path)}
             >
-              <img
-                src={product.image}
-                className="product-image"
-                loading="lazy"
-              />
+              <img src={product.image} className="product-image" />
               <h3 className="product-title">{product.title}</h3>
               {/* subtitle varsa göster */}
               {product.subtitle && (

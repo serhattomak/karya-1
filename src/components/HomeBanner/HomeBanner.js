@@ -6,7 +6,7 @@ const HomeBanner = ({ children }) => {
     <div
       className="banner"
       style={{
-        backgroundImage: "url('/assets/images/3.jpg')",
+        backgroundImage: "url('/assets/images/3.webp')",
       }}
     >
       <div className="banner-container">

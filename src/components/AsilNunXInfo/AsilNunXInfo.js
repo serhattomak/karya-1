@@ -56,7 +56,7 @@ const AsilNunXInfo = () => {
           </p>
         </div>
         <div className="asil-nun-x-image">
-          <img src="/assets/images/Group 300.png" alt="Asil Nun X Main" />
+          <img src="/assets/images/Group 300.webp" alt="Asil Nun X Main" />
         </div>
       </div>
     </div>

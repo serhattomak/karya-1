@@ -8,18 +8,16 @@ import Footer from "../../components/Footer/Footer";
 
 function HalatliTelBetonKesme() {
   const htbkImages = [
-    { src: "/assets/images/Rectangle 39-1.png", alt: "Kimyasal Ankraj 1" },
-    { src: "/assets/images/Rectangle 40-1.png", alt: "Kimyasal Ankraj 2" },
-    { src: "/assets/images/Rectangle 41-1.png", alt: "Kimyasal Ankraj 3" },
-    { src: "/assets/images/Rectangle 42-1.png", alt: "Kimyasal Ankraj 4" },
-
+    { src: "/assets/images/Rectangle 39-1.webp", alt: "Kimyasal Ankraj 1" },
+    { src: "/assets/images/Rectangle 40-1.webp", alt: "Kimyasal Ankraj 2" },
+    { src: "/assets/images/Rectangle 41-1.webp", alt: "Kimyasal Ankraj 3" },
+    { src: "/assets/images/Rectangle 42-1.webp", alt: "Kimyasal Ankraj 4" },
   ];
 
   return (
     <div>
-     
       <Banner
-        imageSrc="/assets/images/htbkbanner.png"
+        imageSrc="/assets/images/htbkbanner.webp"
         title="Halatlı Tel Beton Kesme"
       />
       <br />

@@ -9,7 +9,7 @@ function ContactPage() {
   return (
     <div>
      
-      <Banner imageSrc="/assets/images/contactbanner.png" title="Asil Nun X" />
+      <Banner imageSrc="/assets/images/contactbanner.webp" title="Asil Nun X" />
       <ContactForm />
       <Map />
       <Footer />

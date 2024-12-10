@@ -9,25 +9,24 @@ import Footer from "../../components/Footer/Footer";
 
 function PoliuretanPage() {
   const images = [
-    { src: "/assets/images/1.png", alt: "Görsel 1" },
-    { src: "/assets/images/2.png", alt: "Görsel 2" },
-    { src: "/assets/images/3.png", alt: "Görsel 3" },
-    { src: "/assets/images/4.png", alt: "Görsel 4" },
-    { src: "/assets/images/5.png", alt: "Görsel 5" },
-    { src: "/assets/images/6.png", alt: "Görsel 6" },
-    { src: "/assets/images/7.png", alt: "Görsel 7" },
-    { src: "/assets/images/poliüretan3.jpg", alt: "Görsel 8" },
+    { src: "/assets/images/1.webp", alt: "Görsel 1" },
+    { src: "/assets/images/2.webp", alt: "Görsel 2" },
+    { src: "/assets/images/3 (1).webp", alt: "Görsel 3" },
+    { src: "/assets/images/4.webp", alt: "Görsel 4" },
+    { src: "/assets/images/5.webp", alt: "Görsel 5" },
+    { src: "/assets/images/6.webp", alt: "Görsel 6" },
+    { src: "/assets/images/7.webp", alt: "Görsel 7" },
+    { src: "/assets/images/poliüretan3.webp", alt: "Görsel 8" },
   ];
 
   return (
     <div>
       <Banner
-        imageSrc="/assets/images/poliüretanbanner.png"
-        title="Poliuretan Enjeksiyon "
+        imageSrc="/assets/images/poliüretanbanner.webp"
+        title="Poliuretan Enjeksiyon"
       />
-      <PoliuretanInfo></PoliuretanInfo>
+      <PoliuretanInfo />
       <PolGallery title="Uygulama Alanlarına Ait Görseller" images={images} />
-
       <PolDetails
         title="Poliüretan Enjeksiyon Detayları"
         description="Türkiye’de bir ilk. Yeni nesil, yarı esnek, CE Belgeli AŞIL NUNX. 
@@ -35,7 +34,6 @@ function PoliuretanPage() {
         videoSrc="path/to/your/image.png"
         videoAlt="Poliüretan Enjeksiyon Videosu"
       />
-
       <ContactSection />
       <br />
       <Footer />

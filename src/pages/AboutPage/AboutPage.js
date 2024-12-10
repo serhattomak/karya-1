@@ -9,7 +9,7 @@ import Footer from "../../components/Footer/Footer";
 function AboutPage() {
   return (
     <div>
-      <Banner imageSrc="/assets/images/aboutbanner.png" title="Hakkımızda" />{" "}
+      <Banner imageSrc="/assets/images/aboutbanner.webp" title="Hakkımızda" />{" "}
       <br></br>
       <AboutUsInfo />
       <br></br>
