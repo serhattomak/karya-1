@@ -83,7 +83,7 @@ const Navbar = () => {
             </li>
 
             <li className="social-media">
-              <a href="" onClick={closeMenu}>
+              <a href="">
                 Bizi Sosyal Medyada <br></br>Takip Et!
               </a>
               <a
