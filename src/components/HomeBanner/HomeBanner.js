@@ -1,23 +1,20 @@
 import React from "react";
 import "./HomeBanner.css";
 
-const HomeBanner = ({ children }) => {
+const HomeBanner = ({ title, subtitle, children }) => {
   return (
     <div
       className="banner"
       style={{
-        backgroundImage: "url('/assets/images/3.webp')",
+        backgroundImage: "url('/assets/images/3.webp')", // Statik arka plan resmi
       }}
     >
       <div className="banner-container">
         <div className="banner-content">
-          <h1>Güvenli Yapılar, Kalıcı Çözümler!</h1>
-          <p>
-            Betonarme yapılarda Poliüretan Enjeksiyon Sistemleriyle Su
-            Sızıntılarına Son!
-          </p>
+          <h1>{title}</h1>
+          <p>{subtitle}</p>
         </div>
-        {children} {/* ProductSlider burada gösterilecek */}
+        {children}
       </div>
     </div>
   );

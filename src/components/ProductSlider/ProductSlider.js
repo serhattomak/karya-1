@@ -1,55 +1,11 @@
-import React, { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Yönlendirme için useNavigate
+import React, { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "./ProductSlider.css";
 
-const ProductSlider = () => {
+const ProductSlider = ({ products }) => {
   const trackRef = useRef(null);
-  const [isScrollable, setIsScrollable] = useState(false);
-  const navigate = useNavigate(); // useNavigate kullanarak yönlendirme işlevi
+  const navigate = useNavigate();
 
-  const handleScroll = () => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    const trackScrollWidth = track.scrollWidth;
-    const trackOuterWidth = track.clientWidth;
-
-    setIsScrollable(
-      track.scrollLeft > 0 &&
-        track.scrollLeft < trackScrollWidth - trackOuterWidth
-    );
-  };
-
-  // Ürünler listesi
-  const products = [
-    {
-      image: "/assets/images/asilnun.webp",
-      title: "AŞİL NUN X",
-      subtitle: "Poliüretan Enjeksiyon Reçinesi",
-      path: "/AsilNunX",
-    },
-    {
-      image: "/assets/images/poliuretanenjeksiyon.webp",
-      title: "Poliüretan Enjeksiyon",
-      path: "/PoliuretanEnjeksiyon",
-    },
-    {
-      image: "/assets/images/htbk.webp",
-      title: "Halatlı Tel - Beton Kesme",
-      path: "/HalatliTelBetonKesme",
-    },
-    {
-      image: "/assets/images/kimyasalankraj.webp",
-      title: "Kimyasal Ankraj Filiz Ekim",
-      path: "/KimyasalAnkraj",
-    },
-  ];
-
-  useEffect(() => {
-    setIsScrollable(false);
-  }, []);
-
-  // Ürüne tıklandığında yönlendirme fonksiyonu
   const handleProductClick = (path) => {
     navigate(path);
   };
@@ -58,16 +14,19 @@ const ProductSlider = () => {
     <div className="slider-container">
       <div className="slider-title">Ürün ve Hizmetlerimiz</div>
       <div className="slider">
-        <ul className="slider__track" ref={trackRef} onScroll={handleScroll}>
+        <ul className="slider__track" ref={trackRef}>
           {products.map((product, index) => (
             <li
               key={index}
-              className={`slide ${product.subtitle ? "with-subtitle" : ""}`} // subtitle varsa ek sınıf
+              className={`slide ${product.subtitle ? "with-subtitle" : ""}`}
               onClick={() => handleProductClick(product.path)}
             >
-              <img src={product.image} className="product-image" />
+              <img
+                src={product.image}
+                className="product-image"
+                alt={product.title}
+              />
               <h3 className="product-title">{product.title}</h3>
-              {/* subtitle varsa göster */}
               {product.subtitle && (
                 <p className="product-subtitle">{product.subtitle}</p>
               )}

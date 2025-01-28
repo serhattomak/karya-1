@@ -1,0 +1,29 @@
+{
+  "banner": {
+    "background": "",
+    "title": "Güvenli Yapılar, Kalıcı Çözümler!",
+    "subtitle": "Betonarme yapılarda Poliüretan Enjeksiyon Sistemleriyle Su Sızıntılarına Son! "
+  },
+  "boxes": [
+    {
+      "title": "AŞİL NUN X ",
+      "subtitle": "Poliüretan Enjeksiyon Reçinesi",
+      "image": "blob:http://localhost:3000/27183c7d-7e5d-452a-a050-12b4c257c176"
+    },
+    {
+      "title": "Poliüretan Enjeksiyon",
+      "subtitle": "",
+      "image": "blob:http://localhost:3000/9524bfd5-66d0-4b7c-99d9-6baa6d817e7c"
+    },
+    {
+      "title": "Halatlı Tel-Beton Kesme",
+      "subtitle": "",
+      "image": "blob:http://localhost:3000/07cdd1ae-7fc4-47b6-8484-c16593fa9a07"
+    },
+    {
+      "title": "Kimyasal ankraj Filiz Ekimi",
+      "subtitle": "",
+      "image": "blob:http://localhost:3000/9968c798-7ff4-48f8-a733-d977ea7ac64f"
+    }
+  ]
+}
