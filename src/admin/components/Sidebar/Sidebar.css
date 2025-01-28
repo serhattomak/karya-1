@@ -1,0 +1,106 @@
+/* src/components/Admin/Sidebar/Sidebar.css */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.sidebar-logo {
+  width: 40px; /* Logonun boyutunu ayarlayın */
+  height: auto;
+  margin-right: 10px; /* Admin Panel yazısına boşluk bırakmak için */
+}
+.sidebar h2 {
+  font-weight: 700;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column; /* Dikey yönlendirme */
+  align-items: flex-start; /* Maddeleri sola hizalayın */
+}
+.sidebar h2 {
+  color: white;
+}
+.sidebar a {
+  text-decoration: none;
+  color: white;
+  padding: 10px 10px;
+  border-radius: 5px; /* Köşeleri yuvarlat */
+  transition: background-color 0.3s ease;
+  margin: 5px 0; /* Maddeler arası boşluk */
+  width: 100%; /* Tam genişlik kaplasın */
+  box-sizing: border-box; /* Genişlik hesaplamasını düzgün yap */
+}
+.sidebar a:hover {
+  color: #b8c5d1;
+}
+.sidebar {
+  width: 250px;
+  background-color: #343a40; /* Koyu gri arka plan */
+  color: white;
+  padding: 20px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  transition: transform 0.3s ease;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5); /* Kenar gölgesi ekleyin */
+  transform: translateX(-100%); /* Başlangıçta gizli */
+  z-index: 1000; /* Üstte görünmesi için z-index */
+  font-size: 16px !important;
+}
+
+.sidebar.open {
+  transform: translateX(0); /* Açık durumda yanına kaydır */
+}
+
+.menu-toggle {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background-color: #343a40; /* Mavi arka plan */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 5px;
+  z-index: 1001; /* Menü butonunu üstte göster */
+  transition: background-color 0.3s ease;
+}
+
+.menu-toggle:hover {
+  background-color: #343a40; /* Hover durumunda daha koyu mavi */
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    transform: translateX(0); /* Geniş ekranlarda her zaman açık */
+  }
+
+  .menu-toggle {
+    display: none; /* Menü butonunu gizle */
+  }
+
+  .app-container {
+    padding-left: 250px; /* İçerik alanını yana kaydır */
+  }
+
+  .content-area {
+    margin-left: 250px;
+    padding: 20px; /* İçerik alanı için boşluk ekleyin */
+  }
+}
+
+/* Küçük ekranlar için stil */
+@media (max-width: 767px) {
+  .app-container {
+    padding-left: 0; /* Küçük ekranlarda içerik alanını sola kaydır */
+  }
+
+  .content-area {
+    margin-left: 0; /* Küçük ekranlarda içerik alanı için margin kaldır */
+    padding: 20px; /* İçerik alanı için boşluk ekleyin */
+  }
+}
