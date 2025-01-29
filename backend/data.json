@@ -1,29 +1,29 @@
 {
   "banner": {
-    "background": "",
+    "background": "yeni arka plan URL",
     "title": "Güvenli Yapılar, Kalıcı Çözümler!",
-    "subtitle": "Betonarme yapılarda Poliüretan Enjeksiyon Sistemleriyle Su Sızıntılarına Son! "
+    "subtitle": "Betonarme yapılarda Poliüretan Enjeksiyon Sistemleriyle Su Sızıntılarına Son!"
   },
   "boxes": [
     {
-      "title": "AŞİL NUN X ",
+      "title": "AŞİL NUN X",
       "subtitle": "Poliüretan Enjeksiyon Reçinesi",
-      "image": "blob:http://localhost:3000/8b8853bd-367a-4b2f-a615-f738bbe0f697"
+      "image": "blob:http://localhost:3000/5d59845a-4285-4aaa-a3a8-7ae0e0cb521e"
     },
     {
       "title": "Poliüretan Enjeksiyon",
       "subtitle": "",
-      "image": "blob:http://localhost:3000/d25d2aa5-3859-4f86-bafa-4901df649c34"
+      "image": "blob:http://localhost:3000/b9dedcf1-55f8-4ae5-8b3c-a44dbf59d958"
     },
     {
-      "title": "Halatlı Tel-Beton Kesme",
+      "title": "Halatlı Tel - Beton Kesme ",
       "subtitle": "",
-      "image": "blob:http://localhost:3000/f2ddca23-ca0e-413b-951b-010e577a1286"
+      "image": "blob:http://localhost:3000/f020661a-b272-4d4f-822c-f984ebd2d953"
     },
     {
-      "title": "Kimyasal ankraj Filiz Ekimi",
+      "title": "Kimyasal Ankraj Filiz Ekim ",
       "subtitle": "",
-      "image": "blob:http://localhost:3000/4ab9a09e-a91e-4b78-8763-6a7b78cc123e"
+      "image": "blob:http://localhost:3000/79a14b4f-4b13-4aa6-b199-c93e0ec843c8"
     }
   ]
 }

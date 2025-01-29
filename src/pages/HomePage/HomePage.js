@@ -32,10 +32,7 @@ function HomePage() {
 
   return (
     <div className="home-container">
-      <HomeBanner
-        title={bannerData.title}
-        subtitle={bannerData.subtitle}
-      >
+      <HomeBanner title={bannerData.title} subtitle={bannerData.subtitle}>
         <ProductSlider products={productData} />
         <div className="banner-info">
           <a>www.karyayapi.com © Karya Yapı San. Tic. Ltd. Şti.</a>
