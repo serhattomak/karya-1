@@ -6,8 +6,16 @@ const ProductSlider = ({ products }) => {
   const trackRef = useRef(null);
   const navigate = useNavigate();
 
-  const handleProductClick = (path) => {
-    navigate(path);
+  // Statik bağlantılar dizisi (kartların sırasına göre)
+  const staticLinks = [
+    "/AsilNunX",
+    "/PoliuretanEnjeksiyon",
+    "/HalatliTelBetonKesme",
+    "/KimyasalAnkraj",
+  ];
+
+  const handleProductClick = (index) => {
+    navigate(staticLinks[index] || "/");
   };
 
   return (
@@ -19,7 +27,7 @@ const ProductSlider = ({ products }) => {
             <li
               key={index}
               className={`slide ${product.subtitle ? "with-subtitle" : ""}`}
-              onClick={() => handleProductClick(product.path)}
+              onClick={() => handleProductClick(index)}
             >
               <img
                 src={product.image}
