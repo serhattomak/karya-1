@@ -1,6 +1,6 @@
 .page-editor {
   max-width: 80%;
-  margin: 50px auto;
+  margin: 0px auto;
   padding: 30px;
   border-radius: 10px;
   background-color: #ffffff;
@@ -8,10 +8,9 @@
 }
 
 .page-editor h2 {
-  text-align: center;
+  text-align: left;
   margin-bottom: 25px;
   color: #343a40;
-  font-family: "Arial", sans-serif;
 }
 
 .form-group {

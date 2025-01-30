@@ -129,34 +129,36 @@ const Home = () => {
       {isAuthenticated ? (
         <>
           <h2 className="panel-title">Banner</h2>
-          <form onSubmit={handleSave} className="banner-form">
-            <div className="form-group">
-              <label htmlFor="bannerTitle">Banner Başlık:</label>
-              <input
-                type="text"
-                id="bannerTitle"
-                value={bannerTitle}
-                onChange={(e) => setBannerTitle(e.target.value)}
-                placeholder="Başlık ekleyin"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="bannerSubtitle">Banner Alt Başlık:</label>
-              <input
-                type="text"
-                id="bannerSubtitle"
-                value={bannerSubtitle}
-                onChange={(e) => setBannerSubtitle(e.target.value)}
-                placeholder="Alt başlık ekleyin"
-              />
+          <form onSubmit={handleSave}>
+            <div className="banner-form">
+              <div className="form-group">
+                <label htmlFor="bannerTitle">Banner Başlık:</label>
+                <input
+                  type="text"
+                  id="bannerTitle"
+                  value={bannerTitle}
+                  onChange={(e) => setBannerTitle(e.target.value)}
+                  placeholder="Başlık ekleyin"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="bannerSubtitle">Banner Alt Başlık:</label>
+                <input
+                  type="text"
+                  id="bannerSubtitle"
+                  value={bannerSubtitle}
+                  onChange={(e) => setBannerSubtitle(e.target.value)}
+                  placeholder="Alt başlık ekleyin"
+                />
+              </div>
             </div>
 
-            <h2 className="panel-title">Kutu Başlıkları ve Alt Başlıkları</h2>
+            <h2 className="panel-title">Ürün Listesi </h2>
             {boxes.map((box, index) => (
               <div key={index} className="box">
                 <div className="form-group">
                   <label htmlFor={`boxTitle${index}`}>
-                    Kutu {index + 1} Başlığı:
+                    Ürün {index + 1} Başlık :
                   </label>
                   <input
                     type="text"
@@ -168,7 +170,7 @@ const Home = () => {
                 </div>
                 <div className="form-group">
                   <label htmlFor={`boxSubtitle${index}`}>
-                    Kutu {index + 1} Alt Başlık:
+                    Ürün {index + 1} Alt Başlık :
                   </label>
                   <input
                     type="text"
@@ -182,7 +184,7 @@ const Home = () => {
                 </div>
                 <div className="form-group">
                   <label htmlFor={`boxImage${index}`}>
-                    Kutu {index + 1} Fotoğraf Yükle:
+                    Ürün {index + 1} Fotoğraf :
                   </label>
                   <input
                     type="file"
@@ -194,7 +196,7 @@ const Home = () => {
                 {box.image && (
                   <img
                     src={box.image}
-                    alt={`Kutu ${index + 1}`}
+                    // alt={`Ürün ${index + 1}`}
                     className="preview-image"
                   />
                 )}
