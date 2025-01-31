@@ -1,5 +1,3 @@
-
-
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
@@ -12,8 +10,7 @@ const PORT = 5001;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "uploads"))); // Resimleri statik olarak servis etmek için
-
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Kullanıcılar (örnek)
 const users = [
   { username: "admin", password: "1234", id: 1 }, // Örnek kullanıcı
@@ -22,7 +19,7 @@ const users = [
 // Multer ayarları
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, "uploads/"); // Yükleme klasörü
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname)); // Benzersiz isim
@@ -66,42 +63,47 @@ app.get("/api/home", (req, res) => {
 });
 
 // PUT endpoint
-app.put(
-  "/api/home",
-  upload.array("images", 4),
-  (req, res) => {
-    const newData = req.body;
-    const currentData = readData();
+app.put("/api/home", upload.array("images", 4), (req, res) => {
+  const newData = req.body;
+  const currentData = readData();
 
-    if (!currentData) {
-      return res.status(500).json({ error: "Veri okunamadı." });
-    }
-
-    // Resimlerin yolunu almak
-    const updatedBoxes = newData.boxes.map((box, index) => {
-      if (req.files && req.files[index]) {
-        box.image = `http://localhost:5001/uploads/${req.files[index].filename}`;
-      }
-      return box;
-    });
-
-    try {
-      const updatedData = {
-        ...currentData,
-        banner: {
-          ...currentData.banner,
-          ...newData.banner,
-        },
-        boxes: updatedBoxes,
-      };
-
-      writeData(updatedData);
-      res.json({ message: "Veri başarıyla güncellendi." });
-    } catch (error) {
-      res.status(500).json({ error: "Veri güncellenirken hata oluştu." });
-    }
+  if (!currentData) {
+    return res.status(500).json({ error: "Veri okunamadı." });
   }
-);
+
+  const updatedBoxes = newData.boxes.map((box, index) => {
+    if (req.files && req.files[index]) {
+      box.image = `http://localhost:5001/uploads/${req.files[index].filename}`;
+    }
+    return box;
+  });
+
+  try {
+    const updatedData = {
+      ...currentData,
+      banner: {
+        ...currentData.banner,
+        ...newData.banner,
+      },
+      boxes: updatedBoxes,
+    };
+
+    writeData(updatedData);
+    res.json({ message: "Veri başarıyla güncellendi." });
+  } catch (error) {
+    res.status(500).json({ error: "Veri güncellenirken hata oluştu." });
+  }
+});
+
+// **Yeni endpoint burada ekleniyor**
+app.post("/api/upload-image", upload.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "Resim yüklenemedi." });
+  }
+
+  const imageUrl = `http://localhost:5001/uploads/${req.file.filename}`;
+  res.json({ imageUrl }); // Resim URL'sini frontend'e döndürüyoruz
+});
 
 // Sunucuyu başlat
 app.listen(PORT, () => {

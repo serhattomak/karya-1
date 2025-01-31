@@ -75,14 +75,33 @@ const Home = () => {
     // localStorage'ı güncelle
     localStorage.setItem("boxes", JSON.stringify(updatedBoxes));
   };
-
-  const handleImageUpload = (index, event) => {
+  const handleImageUpload = async (index, event) => {
     const image = event.target.files[0];
-    const updatedBoxes = [...boxes];
-    updatedBoxes[index].image = URL.createObjectURL(image);
-    setBoxes(updatedBoxes);
-    // localStorage'ı güncelle
-    localStorage.setItem("boxes", JSON.stringify(updatedBoxes));
+    const formData = new FormData();
+    formData.append("image", image); // Yüklemek için resim verisi
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5001/api/upload-image",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const imageUrl = response.data.imageUrl; // Server'dan gelen resim URL'si
+      const updatedBoxes = [...boxes];
+      updatedBoxes[index].image = imageUrl; // Resim URL'ini güncelle
+
+      setBoxes(updatedBoxes);
+
+      // localStorage'ı güncelle
+      localStorage.setItem("boxes", JSON.stringify(updatedBoxes));
+    } catch (error) {
+      console.error("Resim yüklenirken hata oluştu:", error);
+    }
   };
 
   const handleSave = async (event) => {
@@ -196,7 +215,7 @@ const Home = () => {
                 {box.image && (
                   <img
                     src={box.image}
-                    // alt={`Ürün ${index + 1}`}
+                    alt={`Ürün ${index + 1}`}
                     className="preview-image"
                   />
                 )}
