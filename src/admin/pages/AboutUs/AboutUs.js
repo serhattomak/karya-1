@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./AboutUs.css";
 
-const AboutUsInfo = () => {
+const AboutUs = () => {
   const [formData, setFormData] = useState({
     title: "",
     subtitle: "",
@@ -126,4 +126,4 @@ const AboutUsInfo = () => {
   );
 };
 
-export default AboutUsInfo;
+export default AboutUs;
