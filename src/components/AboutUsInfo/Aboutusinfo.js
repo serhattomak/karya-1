@@ -1,36 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./AboutUsInfo.css";
 
 const AboutUsInfo = () => {
+  const [aboutData, setAboutData] = useState(null);
+
+  useEffect(() => {
+    axios.get("http://localhost:5001/api/about")
+      .then(response => {
+        setAboutData(response.data);
+      })
+      .catch(error => console.error("Veri çekme hatası: ", error));
+  }, []);
+
   return (
     <div className="info-container">
-      <div className="info-content">
-        <div className="info-image-container">
-          <div className="info-image">
-            {" "}
-            <img src="/assets/images/hk.jpeg" loading="lazy" />
+      {aboutData && (
+        <div className="info-content">
+          <div className="info-image-container">
+            <div className="info-image">
+              <img src={aboutData.image || "/assets/images/hk.jpeg"} alt="Hakkımızda" loading="lazy" />
+            </div>
+          </div>
+          <div className="info-text">
+            <p className="about-title">{aboutData.title}</p>
+            <hr className="line"></hr>
+            <p className="about-subtitle">{aboutData.subtitle}</p>
+            <p>{aboutData.content}</p>
           </div>
         </div>
-        <div className="info-text">
-          <p className="about-title">Karya Yapı</p>
-          <hr className="line"></hr>
-          <p className="about-subtitle">Şirket Profili</p>
-          <p>
-            1999 yılından itibaren devam etmekte olan çalışmalar, 2004 yılında
-            karya yapı olarak inşaat sektöründeki yerini almıştır. 2007 yılına
-            kadar şahıs firması olarak faaliyet gösteren karya yapı 2007 yılında
-            karya yapı san.tic.ltd.şti olarak şirketleşmiştir.
-          </p>
-          <br></br>
-          <p>
-            Şirketimiz, güçlü, araştırmacı, yeni nesil markaların ürünleri,
-            tecrübeli ve profesyonel uygulama ekipleri ile hizmet sunmaktadır.
-            Kuruluşumuzdan bugüne prensibimiz satış yaptığımız ürünlerle ve
-            hizmet verdiğimiz alanlarla ilgili teknik desteği tam olarak
-            müşteriye sunmak ve koşulsuz müşteri memnuniyetini sağlamaktır.
-          </p>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

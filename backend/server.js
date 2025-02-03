@@ -3,35 +3,38 @@ const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
 const multer = require("multer");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
 const app = express();
-const PORT = 5001;
+const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-// Kullanıcılar (örnek)
-const users = [
-  { username: "admin", password: "1234", id: 1 }, // Örnek kullanıcı
-];
 
-// Multer ayarları
+// MongoDB'ye bağlan
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ MongoDB'ye bağlandı!"))
+  .catch((err) => console.error("❌ MongoDB bağlantı hatası:", err));
+
+// Multer ile resim yükleme ayarları
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Yükleme klasörü
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Benzersiz isim
+    cb(null, Date.now() + path.extname(file.originalname));
   },
 });
-
 const upload = multer({ storage });
 
-// JSON dosyasının yolu
+// **JSON dosyası ile Home Page verilerini saklama**
 const dataFilePath = path.join(__dirname, "data.json");
 
-// Veriyi JSON dosyasından oku
+// JSON dosyasından veriyi oku
 const readData = () => {
   try {
     const jsonData = fs.readFileSync(dataFilePath, "utf-8");
@@ -42,17 +45,17 @@ const readData = () => {
   }
 };
 
-// Veriyi JSON dosyasına yaz
+// JSON dosyasına veriyi yaz
 const writeData = (data) => {
   try {
     fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), "utf-8");
-    console.log("Veri başarıyla güncellendi.");
+    console.log("✅ Veri başarıyla güncellendi.");
   } catch (error) {
-    console.error("Veri yazılırken hata oluştu:", error);
+    console.error("❌ Veri yazılırken hata oluştu:", error);
   }
 };
 
-// GET endpoint
+// **🏠 Home Sayfası API'leri**
 app.get("/api/home", (req, res) => {
   const data = readData();
   if (data) {
@@ -62,7 +65,6 @@ app.get("/api/home", (req, res) => {
   }
 });
 
-// PUT endpoint
 app.put("/api/home", upload.array("images", 4), (req, res) => {
   const newData = req.body;
   const currentData = readData();
@@ -95,17 +97,67 @@ app.put("/api/home", upload.array("images", 4), (req, res) => {
   }
 });
 
-// **Yeni endpoint burada ekleniyor**
-app.post("/api/upload-image", upload.single("image"), (req, res) => {
+// **🏠 Home için Resim Yükleme**
+app.post("/api/home/upload-image", upload.single("image"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "Resim yüklenemedi." });
   }
 
   const imageUrl = `http://localhost:5001/uploads/${req.file.filename}`;
-  res.json({ imageUrl }); // Resim URL'sini frontend'e döndürüyoruz
+  res.json({ imageUrl });
 });
 
-// Sunucuyu başlat
+// **📌 About Sayfası - MongoDB Model**
+const AboutUs = require("./models/AboutUs");
+
+// **📌 About Verisini Getir**
+app.get("/api/about", async (req, res) => {
+  try {
+    const aboutus = await AboutUs.findOne();
+    if (!aboutus) {
+      return res.status(404).json({ message: "Hakkımızda verisi bulunamadı." });
+    }
+    res.json(aboutus);
+  } catch (error) {
+    console.error("Veri alınırken hata oluştu: ", error);
+    res.status(500).json({ message: "Veri alınırken hata oluştu." });
+  }
+});
+
+// **📌 About Verisini Güncelle**
+app.put("/api/about", async (req, res) => {
+  const { title, subtitle, content, image } = req.body;
+
+  try {
+    const updatedAboutUs = await AboutUs.findOneAndUpdate(
+      {},
+      { title, subtitle, content, image },
+      { new: true, upsert: true } // Eğer veri yoksa oluştur
+    );
+    
+
+    if (!updatedAboutUs) {
+      return res.status(404).json({ message: "Hakkımızda verisi bulunamadı." });
+    }
+
+    res.json(updatedAboutUs);
+  } catch (error) {
+    console.error("Veri güncellenirken hata oluştu: ", error);
+    res.status(500).json({ message: "Veri güncellenirken hata oluştu." });
+  }
+});
+
+// **📌 About için Resim Yükleme**
+app.post("/api/about/upload-image", upload.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "Resim yüklenemedi." });
+  }
+
+  const imageUrl = `http://localhost:5001/uploads/${req.file.filename}`;
+  res.json({ imageUrl });
+});
+
+// **🚀 Sunucuyu Başlat**
 app.listen(PORT, () => {
-  console.log(`Server çalışıyor: http://localhost:${PORT}`);
+  console.log(`🚀 Server ${PORT} portunda çalışıyor`);
 });

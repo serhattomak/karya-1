@@ -151,7 +151,7 @@ const Home = () => {
           <form onSubmit={handleSave}>
             <div className="banner-form">
               <div className="form-group">
-                <label htmlFor="bannerTitle">Banner Başlık:</label>
+                <label htmlFor="formTitle">Banner Başlık:</label>
                 <input
                   type="text"
                   id="bannerTitle"

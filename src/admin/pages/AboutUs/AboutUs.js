@@ -1,136 +1,129 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./AboutUs.css";
 
-const AboutUs = () => {
-  const [bannerImage, setBannerImage] = useState("");
-  const [pageTitle, setPageTitle] = useState("Sayfa Başlığı");
-  const [contentTitle, setContentTitle] = useState("İçerik Başlığı");
-  const [bannerTitle, setBannerTitle] = useState("Banner Başlığı");
-  const [contentImage, setContentImage] = useState(null);
+const AboutUsInfo = () => {
+  const [formData, setFormData] = useState({
+    title: "",
+    subtitle: "",
+    content: "",
+    image: "",
+  });
+  const [selectedFile, setSelectedFile] = useState(null);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("Banner Resmi:", bannerImage);
-    console.log("Sayfa Başlığı:", pageTitle);
-    console.log("İçerik Başlığı:", contentTitle);
-    console.log("İçerik Resmi:", contentImage);
+  // Sayfa yüklendiğinde veriyi çek
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
+    axios
+      .get("http://localhost:5001/api/about")
+      .then((response) => {
+        setFormData(response.data);
+      })
+      .catch((error) => console.error("Veri çekme hatası: ", error));
   };
 
-  const handleBannerUpload = (event) => {
-    setBannerImage(URL.createObjectURL(event.target.files[0]));
+  // Input değişimini takip et
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleContentImageUpload = (event) => {
-    setContentImage(URL.createObjectURL(event.target.files[0]));
+  // Yeni resim seçildiğinde dosya bilgisini state'e kaydet
+  // Yeni resim seçildiğinde dosya bilgisini state'e kaydet
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]); // Yalnızca seçilen dosyanın bilgisini kaydediyoruz
+  };
+
+  // Resmi sunucuya yükleme fonksiyonu
+  const uploadImage = async () => {
+    if (!selectedFile) return formData.image; // Yeni resim seçilmediyse eskisini kullan
+
+    const formDataUpload = new FormData();
+    formDataUpload.append("image", selectedFile);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5001/api/about/upload-image",
+        formDataUpload
+      );
+      return response.data.imageUrl; // Yeni yüklenen resmin URL'sini döndür
+    } catch (error) {
+      console.error("Resim yükleme hatası:", error);
+      return formData.image; // Hata olursa eski resmi kullan
+    }
+  };
+
+  // Formu gönder
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const uploadedImageUrl = await uploadImage(); // Önce resmi yükle
+    const updatedData = { ...formData, image: uploadedImageUrl }; // Yeni resimle güncelle
+
+    axios
+      .put("http://localhost:5001/api/about", updatedData)
+      .then(() => {
+        setFormData(updatedData); // Güncellenmiş veriyi anında state'e kaydet
+        alert("Güncelleme başarılı!");
+      })
+      .catch((error) => {
+        console.error("Güncelleme hatası: ", error);
+        alert("Güncellenirken bir hata oluştu.");
+      });
   };
 
   return (
-    <div className="page-editor">
-      <h2>Hakkımızda</h2>
+    <div className="admin-panel">
+      <h2 className="panel-title">Hakkımızda</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="bannerImage">Banner Resim:</label>
-          <input
-            type="file"
-            id="bannerImage"
-            accept="image/*"
-            onChange={handleBannerUpload}
-            required
-          />
-          {bannerImage && (
-            <img
-              src={bannerImage}
-              alt="Banner Önizleme"
-              className="preview-image"
-            />
-          )}
-        </div>
-        <div className="form-group">
-          <label htmlFor="bannerTitle">Banner Başlık:</label>
+          <label>Başlık</label>
           <input
             type="text"
-            id="bannerTitle"
-            onChange={(e) => setBannerTitle(e.target.value)}
-            placeholder="Başlık ekleyin"
-            required
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            placeholder="Başlık"
           />
         </div>
-
         <div className="form-group">
-          <label htmlFor="pageTitle">Sayfa Başlık:</label>
+          <label>Alt Başlık</label>
           <input
             type="text"
-            id="pageTitle"
-            onChange={(e) => setPageTitle(e.target.value)}
-            placeholder="Sayfa başlığını girin"
-            required
+            name="subtitle"
+            value={formData.subtitle}
+            onChange={handleChange}
+            placeholder="Alt Başlık"
           />
         </div>
-
         <div className="form-group">
-          <label htmlFor="contentTitle">İçerik Başlık 1:</label>
-          <input
-            type="text"
-            id="contentTitle"
-            onChange={(e) => setContentTitle(e.target.value)}
-            placeholder="İçerik başlığını girin"
-            required
-          />
+          <label>İçerik</label>
+          <textarea
+            className="text-area"
+            name="content"
+            value={formData.content}
+            onChange={handleChange}
+            placeholder="İçerik"
+          ></textarea>
         </div>
-
         <div className="form-group">
-          <label htmlFor="contentImage">İçerik Resim 1:</label>
-          <input
-            type="file"
-            id="contentImage"
-            accept="image/*"
-            onChange={handleContentImageUpload}
-            required
-          />
-          {contentImage && (
-            <img
-              src={contentImage}
-              alt="İçerik Önizleme"
-              className="preview-image"
-            />
-          )}
+          <label>Resim Yükle</label>
+          <input type="file" accept="image/*" onChange={handleFileChange} />
         </div>
-
-        <div className="form-group">
-          <label htmlFor="contentTitle">İçerik Başlık 2:</label>
-          <input
-            type="text"
-            id="contentTitle"
-            onChange={(e) => setContentTitle(e.target.value)}
-            placeholder="İçerik başlığını girin"
-            required
+        {formData.image && (
+          <img
+            className="preview-image"
+            src={formData.image}
+            alt="Önizleme"
+            style={{ width: "150px", marginTop: "10px" }}
           />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="contentImage">İçerik Resim 2:</label>
-          <input
-            type="file"
-            id="contentImage"
-            accept="image/*"
-            onChange={handleContentImageUpload}
-            required
-          />
-          {contentImage && (
-            <img
-              src={contentImage}
-              alt="İçerik Önizleme"
-              className="preview-image"
-            />
-          )}
-        </div>
-
-        <button type="submit" className="submit-btn">
-          Sayfa Kaydet
-        </button>
+        )}
+        <button type="submit">Kaydet</button>
       </form>
     </div>
   );
 };
 
-export default AboutUs;
+export default AboutUsInfo;

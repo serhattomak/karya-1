@@ -1,4 +1,4 @@
-.page-editor {
+.admin-panel {
   max-width: 80%;
   margin: 0px auto;
   padding: 30px;
@@ -7,61 +7,23 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-.page-editor h2 {
-  text-align: left;
-  margin-bottom: 25px;
-  color: #343a40;
+.panel-title {
+  text-align: center;
+  font-weight: 600;
+  margin: 25px 0;
+  color: #333;
 }
 
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-  color: #555;
-}
-
-.form-group input[type="text"],
-.form-group input[type="file"] {
+.text-area {
   width: 100%;
+}
+
+.form-group textarea {
+  width: 100%;
+  min-height: 200px; /* Minimum yükseklik */
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-sizing: border-box;
   transition: border-color 0.3s;
-}
-
-.form-group input[type="text"]:focus {
-  border-color: #343a40;
-  outline: none;
-}
-
-.preview-image {
-  display: block;
-  margin-top: 10px;
-  max-width: 100%;
-  height: auto;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  padding: 5px;
-}
-
-.submit-btn {
-  display: block;
-  width: 100%;
-  padding: 12px;
-  background-color: #343a40;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-}
-
-.submit-btn:hover {
-  background-color: #ff7d19;
 }
