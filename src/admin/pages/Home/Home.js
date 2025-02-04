@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // navigate için
 import axios from "axios";
 import "./Home.css";
 
 const Home = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Varsayılan olarak giriş yapılmış kabul ediliyor
-  const navigate = useNavigate();
-
-  // Banner ve kutular için state'ler
-  const [bannerBackground, setBannerBackground] = useState("");
   const [bannerTitle, setBannerTitle] = useState("");
   const [bannerSubtitle, setBannerSubtitle] = useState("");
-
   const [boxes, setBoxes] = useState([
     { title: "", subtitle: "", image: null },
     { title: "", subtitle: "", image: null },
@@ -19,52 +12,20 @@ const Home = () => {
     { title: "", subtitle: "", image: null },
   ]);
 
-  // Başlangıç verilerini API'den al veya localStorage'dan yükle
   useEffect(() => {
-    const loadData = () => {
-      const localBannerTitle = localStorage.getItem("bannerTitle");
-      const localBannerSubtitle = localStorage.getItem("bannerSubtitle");
-      const localBoxes = JSON.parse(localStorage.getItem("boxes")) || boxes;
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5001/api/home");
+        const { banner, boxes } = response.data;
 
-      // localStorage'dan alınan verilerle state güncelleme
-      setBannerTitle(localBannerTitle || "");
-      setBannerSubtitle(localBannerSubtitle || "");
-      setBoxes(localBoxes);
+        setBannerTitle(banner.title || "");
+        setBannerSubtitle(banner.subtitle || "");
+        setBoxes(boxes || []);
+      } catch (error) {
+        console.error("Home verisi alınırken hata oluştu:", error);
+      }
     };
 
-    loadData();
-  }, []); // Bu useEffect yalnızca component mount edildiğinde çalışacak
-
-  // Verileri API'den al ve localStorage'a kaydet
-  const fetchData = async () => {
-    try {
-      const response = await axios.get("http://localhost:5001/api/home");
-
-      const { banner, boxes } = response.data;
-
-      // localStorage'a kaydet
-      localStorage.setItem("bannerBackground", banner.background || "");
-      localStorage.setItem("bannerTitle", banner.title || "");
-      localStorage.setItem("bannerSubtitle", banner.subtitle || "");
-      localStorage.setItem("boxes", JSON.stringify(boxes));
-
-      setBannerBackground(banner.background || "");
-      setBannerTitle(banner.title || "");
-      setBannerSubtitle(banner.subtitle || "");
-      setBoxes(
-        boxes.map((box) => ({
-          title: box.title || "",
-          subtitle: box.subtitle || "",
-          image: box.image || null,
-        }))
-      );
-    } catch (error) {
-      console.error("Veri alırken hata:", error);
-    }
-  };
-
-  // component mount edildiğinde verileri API'den yükle
-  useEffect(() => {
     fetchData();
   }, []);
 
@@ -72,164 +33,128 @@ const Home = () => {
     const updatedBoxes = [...boxes];
     updatedBoxes[index][field] = value;
     setBoxes(updatedBoxes);
-    // localStorage'ı güncelle
-    localStorage.setItem("boxes", JSON.stringify(updatedBoxes));
   };
+
   const handleImageUpload = async (index, event) => {
     const image = event.target.files[0];
     const formData = new FormData();
-    formData.append("image", image); // Yüklemek için resim verisi
+    formData.append("image", image);
 
     try {
       const response = await axios.post(
-        "http://localhost:5001/api/upload-image",
+        "http://localhost:5001/api/home/upload-image",
         formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      const imageUrl = response.data.imageUrl; // Server'dan gelen resim URL'si
+      const imageUrl = response.data.imageUrl;
       const updatedBoxes = [...boxes];
-      updatedBoxes[index].image = imageUrl; // Resim URL'ini güncelle
-
+      updatedBoxes[index].image = imageUrl;
       setBoxes(updatedBoxes);
-
-      // localStorage'ı güncelle
-      localStorage.setItem("boxes", JSON.stringify(updatedBoxes));
     } catch (error) {
       console.error("Resim yüklenirken hata oluştu:", error);
     }
   };
 
   const handleSave = async (event) => {
-    event.preventDefault(); // Sayfanın yenilenmesini engeller
+    event.preventDefault();
 
     const updatedData = {
-      banner: {
-        background: bannerBackground,
-        title: bannerTitle,
-        subtitle: bannerSubtitle,
-      },
+      banner: { title: bannerTitle, subtitle: bannerSubtitle },
       boxes: boxes,
     };
 
     try {
-      const response = await axios.put(
-        "http://localhost:5001/api/home",
-        updatedData
-      );
-
-      if (response.status === 200) {
-        alert("Değişiklikler başarıyla kaydedildi!");
-
-        // Verileri localStorage'a kaydet
-        localStorage.setItem("bannerTitle", bannerTitle);
-        localStorage.setItem("bannerSubtitle", bannerSubtitle);
-        localStorage.setItem("bannerBackground", bannerBackground);
-        localStorage.setItem("boxes", JSON.stringify(boxes));
-
-        // Kaydedilen verileri yüklemek için verileri tekrar al
-        fetchData();
-      }
+      await axios.put("http://localhost:5001/api/home", updatedData);
+      alert("Değişiklikler başarıyla kaydedildi!");
     } catch (error) {
-      console.error(
-        "Veriler kaydedilirken hata oluştu:",
-        error.response || error.message || error
-      );
+      console.error("Veriler kaydedilirken hata oluştu:", error);
       alert("Bir hata oluştu. Lütfen tekrar deneyin.");
     }
   };
 
   return (
     <div className="admin-panel">
-      {isAuthenticated ? (
-        <>
-          <h2 className="panel-title">Banner</h2>
-          <form onSubmit={handleSave}>
-            <div className="banner-form">
+      {/* {isAuthenticated ? ( */}
+      <>
+        <h2 className="panel-title">Banner</h2>
+        <form onSubmit={handleSave}>
+          <div className="banner-form">
+            <div className="form-group">
+              <label htmlFor="formTitle">Banner Başlık:</label>
+              <input
+                type="text"
+                id="bannerTitle"
+                value={bannerTitle}
+                onChange={(e) => setBannerTitle(e.target.value)}
+                placeholder="Başlık ekleyin"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="bannerSubtitle">Banner Alt Başlık:</label>
+              <input
+                type="text"
+                id="bannerSubtitle"
+                value={bannerSubtitle}
+                onChange={(e) => setBannerSubtitle(e.target.value)}
+                placeholder="Alt başlık ekleyin"
+              />
+            </div>
+          </div>
+
+          <h2 className="panel-title">Ürün Listesi </h2>
+          {boxes.map((box, index) => (
+            <div key={index} className="box">
               <div className="form-group">
-                <label htmlFor="formTitle">Banner Başlık:</label>
+                <label htmlFor={`boxTitle${index}`}>
+                  Ürün {index + 1} Başlık :
+                </label>
                 <input
                   type="text"
-                  id="bannerTitle"
-                  value={bannerTitle}
-                  onChange={(e) => setBannerTitle(e.target.value)}
+                  id={`boxTitle${index}`}
+                  value={box.title}
+                  onChange={(e) => updateBox(index, "title", e.target.value)}
                   placeholder="Başlık ekleyin"
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="bannerSubtitle">Banner Alt Başlık:</label>
+                <label htmlFor={`boxSubtitle${index}`}>
+                  Ürün {index + 1} Alt Başlık :
+                </label>
                 <input
                   type="text"
-                  id="bannerSubtitle"
-                  value={bannerSubtitle}
-                  onChange={(e) => setBannerSubtitle(e.target.value)}
-                  placeholder="Alt başlık ekleyin"
+                  id={`boxSubtitle${index}`}
+                  value={box.subtitle}
+                  onChange={(e) => updateBox(index, "subtitle", e.target.value)}
+                  placeholder="Alt Başlık ekleyin"
                 />
               </div>
-            </div>
-
-            <h2 className="panel-title">Ürün Listesi </h2>
-            {boxes.map((box, index) => (
-              <div key={index} className="box">
-                <div className="form-group">
-                  <label htmlFor={`boxTitle${index}`}>
-                    Ürün {index + 1} Başlık :
-                  </label>
-                  <input
-                    type="text"
-                    id={`boxTitle${index}`}
-                    value={box.title}
-                    onChange={(e) => updateBox(index, "title", e.target.value)}
-                    placeholder="Başlık ekleyin"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor={`boxSubtitle${index}`}>
-                    Ürün {index + 1} Alt Başlık :
-                  </label>
-                  <input
-                    type="text"
-                    id={`boxSubtitle${index}`}
-                    value={box.subtitle}
-                    onChange={(e) =>
-                      updateBox(index, "subtitle", e.target.value)
-                    }
-                    placeholder="Alt Başlık ekleyin"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor={`boxImage${index}`}>
-                    Ürün {index + 1} Fotoğraf :
-                  </label>
-                  <input
-                    type="file"
-                    id={`boxImage${index}`}
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload(index, e)}
-                  />
-                </div>
-                {box.image && (
-                  <img
-                    src={box.image}
-                    alt={`Ürün ${index + 1}`}
-                    className="preview-image"
-                  />
-                )}
+              <div className="form-group">
+                <label htmlFor={`boxImage${index}`}>
+                  Ürün {index + 1} Fotoğraf :
+                </label>
+                <input
+                  type="file"
+                  id={`boxImage${index}`}
+                  accept="image/*"
+                  onChange={(e) => handleImageUpload(index, e)}
+                />
               </div>
-            ))}
+              {box.image && (
+                <img
+                  src={box.image}
+                  alt={`Ürün ${index + 1}`}
+                  className="preview-image"
+                />
+              )}
+            </div>
+          ))}
 
-            <button type="submit" className="submit-btn">
-              Kaydet
-            </button>
-          </form>
-        </>
-      ) : (
-        <h2>Yükleniyor...</h2>
-      )}
+          <button type="submit" className="submit-btn">
+            Kaydet
+          </button>
+        </form>
+      </>
     </div>
   );
 };

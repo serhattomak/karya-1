@@ -134,7 +134,6 @@ app.put("/api/about", async (req, res) => {
       { title, subtitle, content, image },
       { new: true, upsert: true } // Eğer veri yoksa oluştur
     );
-    
 
     if (!updatedAboutUs) {
       return res.status(404).json({ message: "Hakkımızda verisi bulunamadı." });
@@ -154,6 +153,25 @@ app.post("/api/about/upload-image", upload.single("image"), (req, res) => {
   }
 
   const imageUrl = `http://localhost:5001/uploads/${req.file.filename}`;
+
+  // JSON verisini güncelleme işlemi
+  const currentData = readData();
+  if (!currentData) {
+    return res.status(500).json({ error: "Veri okunamadı." });
+  }
+
+  // Yüklenen resmin URL'sini data.json dosyasına kaydet
+  const updatedAboutData = {
+    ...currentData,
+    aboutUs: {
+      ...currentData.aboutUs,
+      image: imageUrl, // Yüklenen resmin URL'sini güncelle
+    },
+  };
+
+  // JSON dosyasına yazma
+  writeData(updatedAboutData);
+
   res.json({ imageUrl });
 });
 

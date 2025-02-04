@@ -8,7 +8,7 @@
     {
       "title": "AŞİL NUN X",
       "subtitle": "Poliüretan Enjeksiyon Reçinesi",
-      "image": "http://localhost:5001/uploads/1738334965848.webp"
+      "image": "http://localhost:5001/uploads/1738683446374.webp"
     },
     {
       "title": "Poliüretan Enjeksiyon",
@@ -18,12 +18,15 @@
     {
       "title": "Halatlı Tel - Beton Kesme",
       "subtitle": "",
-      "image": "http://localhost:5001/uploads/1738335222426.webp"
+      "image": "http://localhost:5001/uploads/1738683455065.webp"
     },
     {
       "title": "Kimyasal Ankraj Filiz Ekim",
       "subtitle": "",
       "image": "http://localhost:5001/uploads/1738334231035.webp"
     }
-  ]
+  ],
+  "aboutUs": {
+    "image": "http://localhost:5001/uploads/1738690145921.jpeg"
+  }
 }
