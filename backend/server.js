@@ -1,9 +1,11 @@
+// server.js
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
 const multer = require("multer");
 const mongoose = require("mongoose");
+const Home = require("./models/Home"); // MongoDB modelini dahil et
 require("dotenv").config();
 
 const app = express();
@@ -30,9 +32,45 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
-
-// **JSON dosyası ile Home Page verilerini saklama**
 const dataFilePath = path.join(__dirname, "data.json");
+
+// **🏠 Home Sayfası API'leri**
+app.get("/api/home", async (req, res) => {
+  try {
+    const homeData = await Home.findOne();
+    if (!homeData) {
+      return res.status(404).json({ error: "Home verisi bulunamadı." });
+    }
+    res.json(homeData);
+  } catch (error) {
+    console.error("Veri alınırken hata oluştu:", error);
+    res.status(500).json({ error: "Veri alınamadı." });
+  }
+});
+
+app.put("/api/home", upload.array("images", 4), async (req, res) => {
+  const { banner, boxes } = req.body;
+
+  try {
+    const updatedBoxes = boxes.map((box, index) => {
+      if (req.files && req.files[index]) {
+        box.image = `http://localhost:5001/uploads/${req.files[index].filename}`;
+      }
+      return box;
+    });
+
+    const updatedHome = await Home.findOneAndUpdate(
+      {},
+      { banner, boxes: updatedBoxes },
+      { new: true, upsert: true }
+    );
+
+    res.json({ message: "Veri başarıyla güncellendi.", data: updatedHome });
+  } catch (error) {
+    console.error("Veri güncellenirken hata oluştu:", error);
+    res.status(500).json({ error: "Veri güncellenirken hata oluştu." });
+  }
+});
 
 // JSON dosyasından veriyi oku
 const readData = () => {
@@ -45,7 +83,6 @@ const readData = () => {
   }
 };
 
-// JSON dosyasına veriyi yaz
 const writeData = (data) => {
   try {
     fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), "utf-8");
@@ -54,48 +91,6 @@ const writeData = (data) => {
     console.error("❌ Veri yazılırken hata oluştu:", error);
   }
 };
-
-// **🏠 Home Sayfası API'leri**
-app.get("/api/home", (req, res) => {
-  const data = readData();
-  if (data) {
-    res.json(data);
-  } else {
-    res.status(500).json({ error: "Veri okunamadı." });
-  }
-});
-
-app.put("/api/home", upload.array("images", 4), (req, res) => {
-  const newData = req.body;
-  const currentData = readData();
-
-  if (!currentData) {
-    return res.status(500).json({ error: "Veri okunamadı." });
-  }
-
-  const updatedBoxes = newData.boxes.map((box, index) => {
-    if (req.files && req.files[index]) {
-      box.image = `http://localhost:5001/uploads/${req.files[index].filename}`;
-    }
-    return box;
-  });
-
-  try {
-    const updatedData = {
-      ...currentData,
-      banner: {
-        ...currentData.banner,
-        ...newData.banner,
-      },
-      boxes: updatedBoxes,
-    };
-
-    writeData(updatedData);
-    res.json({ message: "Veri başarıyla güncellendi." });
-  } catch (error) {
-    res.status(500).json({ error: "Veri güncellenirken hata oluştu." });
-  }
-});
 
 // **🏠 Home için Resim Yükleme**
 app.post("/api/home/upload-image", upload.single("image"), (req, res) => {
