@@ -30,15 +30,27 @@ const AboutUs = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Yeni resim seçildiğinde dosya bilgisini state'e kaydet
-  // Yeni resim seçildiğinde dosya bilgisini state'e kaydet
   const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]); // Yalnızca seçilen dosyanın bilgisini kaydediyoruz
+    const file = e.target.files[0];
+
+    if (file) {
+      setSelectedFile(file);
+
+      // Resmi hemen base64 formatında göstermek için FileReader'ı kullan
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prevData) => ({
+          ...prevData,
+          image: reader.result, // Base64 formatındaki resmi hemen göster
+        }));
+      };
+      reader.readAsDataURL(file); // Dosyayı base64 formatına çevir
+    }
   };
 
   // Resmi sunucuya yükleme fonksiyonu
   const uploadImage = async () => {
-    if (!selectedFile) return formData.image; // Yeni resim seçilmediyse eskisini kullan
+    if (!selectedFile) return formData.image; // Yeni resim seçilmemişse eski resmi kullan
 
     const formDataUpload = new FormData();
     formDataUpload.append("image", selectedFile);
@@ -48,7 +60,7 @@ const AboutUs = () => {
         "http://localhost:5001/api/about/upload-image",
         formDataUpload
       );
-      return response.data.imageUrl; // Yeni yüklenen resmin URL'sini döndür
+      return response.data.imageUrl; // Resmin yeni URL'sini döndür
     } catch (error) {
       console.error("Resim yükleme hatası:", error);
       return formData.image; // Hata olursa eski resmi kullan
@@ -59,13 +71,16 @@ const AboutUs = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const uploadedImageUrl = await uploadImage(); // Önce resmi yükle
-    const updatedData = { ...formData, image: uploadedImageUrl }; // Yeni resimle güncelle
+    // Resmi yükle ve URL'ini al
+    const uploadedImageUrl = await uploadImage();
+    // Form verisini yeni resimle birlikte güncelle
+    const updatedData = { ...formData, image: uploadedImageUrl };
 
+    // Veriyi backend'e gönder
     axios
       .put("http://localhost:5001/api/about", updatedData)
       .then(() => {
-        setFormData(updatedData); // Güncellenmiş veriyi anında state'e kaydet
+        setFormData(updatedData); // Backend'den dönen veriyi anında güncelle
         alert("Güncelleme başarılı!");
       })
       .catch((error) => {
