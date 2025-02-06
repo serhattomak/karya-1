@@ -6,6 +6,7 @@ const cors = require("cors");
 const multer = require("multer");
 const mongoose = require("mongoose");
 const Home = require("./models/Home"); // MongoDB modelini dahil et
+const AsilNunX = require("./models/Asilnunx");
 require("dotenv").config();
 
 const app = express();
@@ -168,6 +169,57 @@ app.post("/api/about/upload-image", upload.single("image"), (req, res) => {
   writeData(updatedAboutData);
 
   res.json({ imageUrl });
+});
+
+//** asil nun x sayfası  */
+// AsilNunX Modeli dahil et
+
+// **📌 AsilNunX Verisini Getir**
+app.get("/api/asilnunx", async (req, res) => {
+  try {
+    const asilNunXData = await AsilNunX.findOne();
+    if (!asilNunXData) {
+      return res.status(404).json({ message: "Veri bulunamadı." });
+    }
+    res.json(asilNunXData);
+  } catch (error) {
+    console.error("Veri alınırken hata oluştu: ", error);
+    res.status(500).json({ message: "Veri alınırken hata oluştu." });
+  }
+});
+
+// **📌 AsilNunX Verisini Güncelle**
+app.put("/api/asilnunx", upload.single("image"), async (req, res) => {
+  const { title, description, details, info, text, linkText, link, documents } =
+    req.body;
+  let image = req.body.image || "";
+
+  if (req.file) {
+    image = `http://localhost:5001/uploads/${req.file.filename}`;
+  }
+
+  try {
+    const updatedAsilNunX = await AsilNunX.findOneAndUpdate(
+      {},
+      {
+        title,
+        description,
+        details,
+        info,
+        text,
+        linkText,
+        link,
+        documents,
+        image,
+      },
+      { new: true, upsert: true }
+    );
+
+    res.json(updatedAsilNunX);
+  } catch (error) {
+    console.error("Veri güncellenirken hata oluştu: ", error);
+    res.status(500).json({ message: "Veri güncellenirken hata oluştu." });
+  }
 });
 
 // **🚀 Sunucuyu Başlat**

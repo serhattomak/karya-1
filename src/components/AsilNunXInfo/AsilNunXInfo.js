@@ -1,62 +1,85 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./AsilNunXInfo.css";
 
 const AsilNunXInfo = () => {
+  const [asilNunXData, setAsilNunXData] = useState({
+    title: "",
+    description: "",
+    details: "",
+    info: "",
+    documents: [],
+    image: "",
+    text: "",
+    linkText: "",
+    link: "",
+  });
+  const [loading, setLoading] = useState(true); // Loading state ekleyelim
+
+  // API'den veri almak için useEffect kullanıyoruz
+  useEffect(() => {
+    const fetchAsilNunXData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5001/api/asilnunx");
+        console.log("API'den alınan veri:", response.data); // Veriyi konsola yazdırıyoruz
+        setAsilNunXData(response.data); // API'den alınan verileri state'e ekliyoruz
+        setLoading(false); // Veriler geldikten sonra loading'i false yapıyoruz
+      } catch (error) {
+        console.error("Veri alınırken hata oluştu: ", error);
+        setLoading(false); // Hata durumunda da loading'i false yapıyoruz
+      }
+    };
+
+    fetchAsilNunXData();
+  }, []);
+
+  // Eğer veri yükleniyorsa "Yükleniyor..." mesajı göster
+  if (loading) {
+    return <div>Yükleniyor...</div>;
+  }
+
+  console.log("asilNunXData:", asilNunXData); // Veriyi konsola yazdırıyoruz
+
   return (
     <div className="asil-nun-x-container">
       <div className="asil-nun-x-content">
         <div className="asil-nun-x-text">
-          <h2 className="asil-nun-x-title">AŞİL NUN X</h2>
-          <p className="asil-nun-x-description">
-            Karya yapı on beş seneyi aşkın süredir poliüretan enjeksiyon
-            sektöründe faaliyet göstermektedir.
-          </p>
-          <p className="asil-nun-x-details">
-            Uzun yıllar yapılan çalışmaların sonucu, gerek saha tecrübesi, gerek
-            malzeme seçme deneyimimizle AŞİL NUN X ile karar kılmıştır.
-          </p>
-          <p className="asil-nun-x-info">
-            <strong>AŞİL NUNX CE Belgesi</strong> taşıyan, solvent içermeyen,
-            yarı esnek yeni nesil poliüretan enjeksiyon reçinesi olması ile ön
-            plana çıkmıştır. Teknik özellikler aşağıda yer alan dökümanda
-            detaylıca paylaşılmıştır. Dökümana tıklayıp indirerek
-            inceleyebilirsiniz.
-          </p>
+          <h2 className="asil-nun-x-title">{asilNunXData.title}</h2>
+          <p className="asil-nun-x-description">{asilNunXData.description}</p>
+          <p className="asil-nun-x-details">{asilNunXData.details}</p>
+          <p className="asil-nun-x-info">{asilNunXData.info}</p>
+
+          {/* Dökümanlar */}
           <div className="asil-nun-x-documents">
-            <a
-              href="https://drive.google.com/file/d/1K1qPm_HABMe_ERpmlU3lb8rw56GNbg9w/view?usp=sharing"
-              target="_blank"
-            >
-              <img src="/assets/images/Documents/doc1.png" alt="Document 1" loading="lazy" />
-            </a>
-            <a
-              href="https://drive.google.com/file/d/1SyVRZSjI5_O7blFuaneutbVtFY21VJXi/view?usp=sharing"
-              target="_blank"
-            >
-              <img src="/assets/images/Documents/doc2.png" alt="Document 2" loading="lazy" />
-            </a>
-            <a
-              href="https://drive.google.com/file/d/1BbiYdgQgt5stRpDGNzMUyfVO40R8Okpk/view?usp=sharing"
-              target="_blank"
-            >
-              <img src="/assets/images/Documents/doc3.png" alt="Document 3"  loading="lazy"/>
-            </a>
-            <a
-              href="https://drive.google.com/file/d/1woCHVqx68AmgOzBBvQebxZmFitIrpky_/view?usp=sharing"
-              target="_blank"
-            >
-              <img src="/assets/images/Documents/doc4.png" alt="Document 4" loading="lazy" />
-            </a>
+            {asilNunXData.documents.map((doc, index) => (
+              <a
+                key={index}
+                href={doc}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={`/assets/images/Documents/doc${index + 1}.png`}
+                  alt={`Document ${index + 1}`}
+                  loading="lazy"
+                />
+              </a>
+            ))}
           </div>
           <p className="asil-nun-x-contact">
-            AŞİL NUN X Hakkında Daha Fazla Bilgi Almak İçin{" "}
-            <a href="/contact">
-              <span>Bize Ulaşın!</span>
-            </a>{" "}
+            {asilNunXData.text || ""}{" "}
+            {/* Eğer text yoksa varsayılan metni kullan */}{" "}
+            <a href={asilNunXData.link}>
+              <span>{asilNunXData.linkText || ""}</span>
+            </a>
           </p>
         </div>
+        {/* Resim */}
         <div className="asil-nun-x-image">
-          <img src="/assets/images/Group 300.webp" alt="Asil Nun X Main" />
+          <img
+            src={asilNunXData.image || "/assets/images/Group 300.webp"}
+            alt="Asil Nun X Main"
+          />
         </div>
       </div>
     </div>
