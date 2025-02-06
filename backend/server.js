@@ -26,13 +26,15 @@ mongoose
 // Multer ile resim yükleme ayarları
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, "uploads/"); // Yükleme yapılacak klasör
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+    cb(null, Date.now() + path.extname(file.originalname)); // Dosya adı, benzersiz olması için zaman damgası ekleniyor
   },
 });
-const upload = multer({ storage });
+
+const upload = multer({ storage: storage });
+
 const dataFilePath = path.join(__dirname, "data.json");
 
 // **🏠 Home Sayfası API'leri**
@@ -192,11 +194,9 @@ app.get("/api/asilnunx", async (req, res) => {
 app.put("/api/asilnunx", upload.single("image"), async (req, res) => {
   const { title, description, details, info, text, linkText, link, documents } =
     req.body;
-  let image = req.body.image || "";
-
-  if (req.file) {
-    image = `http://localhost:5001/uploads/${req.file.filename}`;
-  }
+  let image = req.file
+    ? `http://localhost:5001/uploads/${req.file.filename}`
+    : req.body.image;
 
   try {
     const updatedAsilNunX = await AsilNunX.findOneAndUpdate(
@@ -220,6 +220,59 @@ app.put("/api/asilnunx", upload.single("image"), async (req, res) => {
     console.error("Veri güncellenirken hata oluştu: ", error);
     res.status(500).json({ message: "Veri güncellenirken hata oluştu." });
   }
+});
+app.put(
+  "/api/asilnunx/upload-image",
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "Resim yüklenmedi." });
+      }
+
+      console.log("Yüklenen dosya adı:", req.file.filename);
+
+      const imageUrl = `http://localhost:5001/uploads/${req.file.filename}`;
+
+      // Eski resmi bul ve sil
+      const existingData = await AsilNunX.findOne({});
+      if (existingData && existingData.image) {
+        const oldImagePath = path.join(
+          __dirname,
+          "uploads",
+          path.basename(existingData.image)
+        );
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath); // Eski resmi sil
+          console.log("Eski resim silindi:", oldImagePath);
+        }
+      }
+
+      // Yeni resmi kaydet
+      const updatedAsilNunX = await AsilNunX.findOneAndUpdate(
+        {},
+        { $set: { image: imageUrl } }, // Sadece `image` alanını güncelle
+        { new: true, upsert: true }
+      );
+
+      res.json({
+        message: "Resim başarıyla güncellendi.",
+        image: updatedAsilNunX.image,
+      });
+    } catch (error) {
+      console.error("Resim yüklenirken hata oluştu:", error);
+      res.status(500).json({ message: "Resim yüklenirken hata oluştu." });
+    }
+  }
+);
+
+// Resim yükleme işlemi için PUT veya POST kullanabilirsiniz
+app.post("/api/asilnunx/upload-image", upload.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send("Hiçbir dosya seçilmedi.");
+  }
+  const imageUrl = `http://localhost:5001/uploads/${req.file.filename}`;
+  res.status(200).json({ image: imageUrl });
 });
 
 // **🚀 Sunucuyu Başlat**

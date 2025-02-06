@@ -15,6 +15,7 @@ const AsilNunX = () => {
     link: "", // Varsayılan link
   });
   const [loading, setLoading] = useState(true); // Yükleme durumu ekleyelim
+  const [uploading, setUploading] = useState(false); // Yükleme durumu (resim ve dökümanlar için)
 
   // Sayfa verilerini al
   useEffect(() => {
@@ -42,16 +43,24 @@ const AsilNunX = () => {
     const formData = new FormData();
     formData.append("image", event.target.files[0]);
 
+    setUploading(true); // Yükleme başladı
+
     try {
       const response = await axios.post(
         "http://localhost:5001/api/asilnunx/upload-image",
         formData
       );
-      setAsilNunXData({ ...asilNunXData, image: response.data.imageUrl }); // Resim URL'sini güncelle
+      console.log("Yüklenen resim:", response.data.image);
+      setAsilNunXData({ ...asilNunXData, image: response.data.image }); // Resim URL'sini güncelle
+      alert("Resim başarıyla yüklendi!"); // Kullanıcıyı bilgilendir
     } catch (error) {
       console.error("Resim yüklenirken hata oluştu:", error);
+      alert("Resim yüklenirken bir hata oluştu.");
+    } finally {
+      setUploading(false); // Yükleme tamamlandı
     }
   };
+  
 
   // Döküman yükleme işlemi
   const handleDocumentUpload = async (event) => {
@@ -60,14 +69,20 @@ const AsilNunX = () => {
       formData.append("documents", file);
     });
 
+    setUploading(true); // Yükleme başladı
+
     try {
       const response = await axios.put(
         "http://localhost:5001/api/asilnunx",
         formData
       );
       setAsilNunXData({ ...asilNunXData, documents: response.data.documents });
+      alert("Dökümanlar başarıyla yüklendi!"); // Kullanıcıyı bilgilendir
     } catch (error) {
       console.error("Döküman yüklenirken hata oluştu:", error);
+      alert("Döküman yüklenirken bir hata oluştu.");
+    } finally {
+      setUploading(false); // Yükleme tamamlandı
     }
   };
 
@@ -80,8 +95,10 @@ const AsilNunX = () => {
         ...asilNunXData,
       });
       console.log("Veri başarıyla güncellendi:", response.data);
+      alert("Veriler başarıyla güncellendi!"); // Kullanıcıyı bilgilendir
     } catch (error) {
       console.error("Veri güncellenirken hata oluştu:", error);
+      alert("Veri güncellenirken bir hata oluştu.");
     }
   };
 
@@ -192,7 +209,11 @@ const AsilNunX = () => {
                 accept="image/*"
               />
               {asilNunXData.image && (
-                <img src={asilNunXData.image} alt="Asil Nun X" />
+                <img
+                  src={asilNunXData.image}
+                  alt="Asil Nun X"
+                  className="uploaded-image"
+                />
               )}
             </div>
 
@@ -219,7 +240,9 @@ const AsilNunX = () => {
               </div>
             </div>
 
-            <button type="submit">Kaydet</button>
+            <button type="submit" disabled={uploading}>
+              {uploading ? "Yükleniyor..." : "Kaydet"}
+            </button>
           </div>
         </form>
       </div>
