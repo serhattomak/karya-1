@@ -60,7 +60,6 @@ const AsilNunX = () => {
       setUploading(false); // Yükleme tamamlandı
     }
   };
-  
 
   // Döküman yükleme işlemi
   const handleDocumentUpload = async (event) => {
