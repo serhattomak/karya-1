@@ -173,6 +173,8 @@ app.post("/api/about/upload-image", upload.single("image"), (req, res) => {
   res.json({ imageUrl });
 });
 
+
+
 //** asil nun x sayfası  */
 // AsilNunX Modeli dahil et
 
@@ -265,6 +267,35 @@ app.put(
     }
   }
 );
+
+
+
+const router = express.Router();
+const ContactInfo = require("../models/ContactInfo");
+
+// Tekil bir ContactInfo objesi olduğunu varsayalım (örneğin ilk kayıt)
+router.get("/", async (req, res) => {
+  try {
+    const contactInfo = await ContactInfo.findOne();
+    if (!contactInfo) return res.status(404).json({ message: "Contact info bulunamadı" });
+    res.json(contactInfo);
+  } catch (error) {
+    res.status(500).json({ message: "Sunucu hatası" });
+  }
+});
+
+// Admin panelden güncellemek için PUT endpoint
+router.put("/", async (req, res) => {
+  try {
+    const updated = await ContactInfo.findOneAndUpdate({}, req.body, { new: true, upsert: true });
+    res.json(updated);
+  } catch (error) {
+    res.status(500).json({ message: "Güncelleme hatası" });
+  }
+});
+
+module.exports = router;
+
 
 // Resim yükleme işlemi için PUT veya POST kullanabilirsiniz
 app.post("/api/asilnunx/upload-image", upload.single("image"), (req, res) => {

@@ -7,6 +7,8 @@ import AsilNunX from "../../pages/AsilNunX/AsilNunX";
 import AboutUs from "../../pages/AboutUs/AboutUs";
 import KimyasalAnkraj from "../../pages/KimyasalAnkraj/KimyasalAnkraj";
 import TelBeton from "../../pages/TelBeton/TelBeton";
+import ContactPage from "../../pages/ContactPage/ContactPage";
+import Poliuretan from "../../pages/PoliuretanEnjeksiyon/PoliuretanEnjeksiyon";
 // import diğer admin sayfalarını buraya ekle
 
 const AdminLayout = () => {
@@ -18,11 +20,11 @@ const AdminLayout = () => {
           <Route path="home" element={<Home />} />
           {/* Diğer admin rotalarını ekle */}
           <Route path="aboutus" element={<AboutUs />} />
-          <Route path="asilnunx" element={<AsilNunX />} /> 
+          <Route path="asilnunx" element={<AsilNunX />} />
           <Route path="kimyasalankraj" element={<KimyasalAnkraj />} />
           <Route path="telbeton" element={<TelBeton />} />
-          {/* <Route path="Iletisim" element={<Iletisim />} /> */}
-          {/* <Route path="Poliuretan" element={<Poliuretan />} /> */}
+          <Route path="contact" element={<ContactPage />} />
+          <Route path="Poliuretan" element={<Poliuretan />} />
         </Routes>
       </div>
     </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./AsilNunX.css";
 
-const AsilNunX = () => {
+const AsilNunX = ({ onClose }) => {
   const [asilNunXData, setAsilNunXData] = useState({
     title: "",
     description: "",
@@ -16,6 +16,26 @@ const AsilNunX = () => {
   });
   const [loading, setLoading] = useState(true); // Yükleme durumu ekleyelim
   const [uploading, setUploading] = useState(false); // Yükleme durumu (resim ve dökümanlar için)
+
+  const [tempBoxData, setTempBoxData] = useState({
+    title: "",
+    subtitle: "",
+    image: "",
+    preview: "",
+  });
+
+  // Görsel seçimi ve önizleme
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const previewURL = URL.createObjectURL(file);
+    setTempBoxData((prev) => ({
+      ...prev,
+      image: file,
+      preview: previewURL,
+    }));
+  };
 
   // Sayfa verilerini al
   useEffect(() => {
@@ -89,12 +109,21 @@ const AsilNunX = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    // tempBoxData'dan asilNunXData'ya ek veri al
+    const combinedData = {
+      ...asilNunXData,
+      boxTitle: tempBoxData.title,
+      boxSubtitle: tempBoxData.subtitle,
+      boxImagePreview: tempBoxData.preview, // Eğer direkt URL olarak saklanacaksa
+    };
+
     try {
-      const response = await axios.put("http://localhost:5001/api/asilnunx", {
-        ...asilNunXData,
-      });
+      const response = await axios.put(
+        "http://localhost:5001/api/asilnunx",
+        combinedData
+      );
       console.log("Veri başarıyla güncellendi:", response.data);
-      alert("Veriler başarıyla güncellendi!"); // Kullanıcıyı bilgilendir
+      alert("Veriler başarıyla güncellendi!");
     } catch (error) {
       console.error("Veri güncellenirken hata oluştu:", error);
       alert("Veri güncellenirken bir hata oluştu.");
@@ -102,146 +131,192 @@ const AsilNunX = () => {
   };
 
   return (
-    <div className="asil-nun-x-container">
+    <div className="asil-nun-x-admin-container">
       <div className="asil-nun-x-content">
         <form onSubmit={handleSubmit}>
-          <div className="asil-nun-x-text">
-            <h2 className="asil-nun-x-title">AŞİL NUN X</h2>
-
+          <div className="form-container">
+            <h2 className="asil-nun-x-title">Anasayfa Ürün Bilgisi</h2>
             <div className="form-group">
-              <label htmlFor="title">Başlık:</label>
-              <input
-                type="text"
-                id="title"
-                value={asilNunXData.title}
-                onChange={(e) =>
-                  setAsilNunXData({ ...asilNunXData, title: e.target.value })
-                }
-                placeholder="Başlık"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="description">Açıklama:</label>
-              <textarea
-                id="description"
-                value={asilNunXData.description}
-                onChange={(e) =>
-                  setAsilNunXData({
-                    ...asilNunXData,
-                    description: e.target.value,
-                  })
-                }
-                placeholder="Açıklama"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="details">Detaylar:</label>
-              <textarea
-                id="details"
-                value={asilNunXData.details}
-                onChange={(e) =>
-                  setAsilNunXData({ ...asilNunXData, details: e.target.value })
-                }
-                placeholder="Detaylar"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="info">Bilgi:</label>
-              <textarea
-                id="info"
-                value={asilNunXData.info}
-                onChange={(e) =>
-                  setAsilNunXData({ ...asilNunXData, info: e.target.value })
-                }
-                placeholder="Bilgi"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="text">Metin:</label>
-              <input
-                type="text"
-                id="text"
-                value={asilNunXData.text}
-                onChange={(e) =>
-                  setAsilNunXData({ ...asilNunXData, text: e.target.value })
-                }
-                placeholder="Metin"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="linkText">Buton Metni:</label>
-              <input
-                type="text"
-                id="linkText"
-                value={asilNunXData.linkText}
-                onChange={(e) =>
-                  setAsilNunXData({ ...asilNunXData, linkText: e.target.value })
-                }
-                placeholder="Buton Metni"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="link">Bağlantı:</label>
-              <input
-                type="text"
-                id="link"
-                value={asilNunXData.link}
-                onChange={(e) =>
-                  setAsilNunXData({ ...asilNunXData, link: e.target.value })
-                }
-                placeholder="Bağlantı"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="image">Ana Resim:</label>
-              <input
-                type="file"
-                id="image"
-                onChange={handleImageUpload}
-                accept="image/*"
-              />
-              {asilNunXData.image && (
-                <img
-                  src={asilNunXData.image}
-                  alt="Asil Nun X"
-                  className="uploaded-image"
+              <div className="product-banner">
+                <h3>Anasayfa Ürün Bilgileri</h3>
+                <label>Başlık</label>
+                <input
+                  type="text"
+                  value={tempBoxData.title}
+                  onChange={(e) =>
+                    setTempBoxData({ ...tempBoxData, title: e.target.value })
+                  }
                 />
-              )}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="documents">Dökümanlar:</label>
-              <input
-                type="file"
-                id="documents"
-                onChange={handleDocumentUpload}
-                accept=".pdf, .doc, .docx, .jpg, .png"
-                multiple
-              />
-              <div className="documents-list">
-                {asilNunXData.documents.map((doc, index) => (
-                  <a
-                    key={index}
-                    href={doc}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {`Döküman ${index + 1}`}
-                  </a>
-                ))}
+                <label>Alt Başlık</label>
+                <input
+                  type="text"
+                  value={tempBoxData.subtitle}
+                  onChange={(e) =>
+                    setTempBoxData({ ...tempBoxData, subtitle: e.target.value })
+                  }
+                />
+                <label>Görsel Seç</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+                {tempBoxData.preview && (
+                  <img
+                    src={tempBoxData.preview}
+                    alt="Önizleme"
+                    style={{
+                      marginTop: "10px",
+                      borderRadius: "8px",
+                      backgroundColor: "#f8f8f8",
+                    }}
+                  />
+                )}
               </div>
             </div>
+              <div className="asil-nun-x-text">
+                <h2 className="asil-nun-x-title">Ürün Sayfası</h2>
+                <div className="form-group">
+                  <label htmlFor="title">Başlık:</label>
+                  <input
+                    type="text"
+                    id="title"
+                    value={asilNunXData.title}
+                    onChange={(e) =>
+                      setAsilNunXData({ ...asilNunXData, title: e.target.value })
+                    }
+                    placeholder="Başlık"
+                  />
+                </div>
 
-            <button type="submit" disabled={uploading}>
-              {uploading ? "Yükleniyor..." : "Kaydet"}
-            </button>
+                <div className="form-group">
+                  <label htmlFor="description">Açıklama:</label>
+                  <textarea
+                    id="description"
+                    value={asilNunXData.description}
+                    onChange={(e) =>
+                      setAsilNunXData({
+                        ...asilNunXData,
+                        description: e.target.value,
+                      })
+                    }
+                    placeholder="Açıklama"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="details">Detaylar:</label>
+                  <textarea
+                    id="details"
+                    value={asilNunXData.details}
+                    onChange={(e) =>
+                      setAsilNunXData({
+                        ...asilNunXData,
+                        details: e.target.value,
+                      })
+                    }
+                    placeholder="Detaylar"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="info">Bilgi:</label>
+                  <textarea
+                    id="info"
+                    value={asilNunXData.info}
+                    onChange={(e) =>
+                      setAsilNunXData({ ...asilNunXData, info: e.target.value })
+                    }
+                    placeholder="Bilgi"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="text">Metin:</label>
+                  <input
+                    type="text"
+                    id="text"
+                    value={asilNunXData.text}
+                    onChange={(e) =>
+                      setAsilNunXData({ ...asilNunXData, text: e.target.value })
+                    }
+                    placeholder="Metin"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="linkText">Buton Metni:</label>
+                  <input
+                    type="text"
+                    id="linkText"
+                    value={asilNunXData.linkText}
+                    onChange={(e) =>
+                      setAsilNunXData({
+                        ...asilNunXData,
+                        linkText: e.target.value,
+                      })
+                    }
+                    placeholder="Buton Metni"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="link">Bağlantı:</label>
+                  <input
+                    type="text"
+                    id="link"
+                    value={asilNunXData.link}
+                    onChange={(e) =>
+                      setAsilNunXData({ ...asilNunXData, link: e.target.value })
+                    }
+                    placeholder="Bağlantı"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="image">Ana Resim:</label>
+                  <input
+                    type="file"
+                    id="image"
+                    onChange={handleImageUpload}
+                    accept="image/*"
+                  />
+                  {asilNunXData.image && (
+                    <img
+                      src={asilNunXData.image}
+                      alt="Asil Nun X"
+                      className="uploaded-image"
+                    />
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="documents">Dökümanlar:</label>
+                  <input
+                    type="file"
+                    id="documents"
+                    onChange={handleDocumentUpload}
+                    accept=".pdf, .doc, .docx, .jpg, .png"
+                    multiple
+                  />
+                  <div className="documents-list">
+                    {asilNunXData.documents.map((doc, index) => (
+                      <a
+                        key={index}
+                        href={doc}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {`Döküman ${index + 1}`}
+                      </a>
+                    ))}
+                  </div>
+              </div>
+
+              <button type="submit" disabled={uploading}>
+                {uploading ? "Yükleniyor..." : "Kaydet"}
+              </button>
+            </div>
           </div>
         </form>
       </div>

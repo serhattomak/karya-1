@@ -120,10 +120,10 @@
 }
 
 .fix-button {
-  background-color: #007bff;
+  background-color: #343a40;
 }
 .fix-button:hover {
-  background-color: #0056b3;
+  background-color: #343a40;
 }
 
 .delete-button {
@@ -164,6 +164,7 @@
   border-radius: 16px;
   max-width: 900px;
   width: 90%;
+
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
@@ -185,7 +186,7 @@
 
 .modal input:focus,
 .modal textarea:focus {
-  border-color: #4caf50;
+  border-color: #343a40;
   background-color: #fff;
   outline: none;
 }
@@ -200,7 +201,7 @@
 
 /* Save Button */
 .save-button {
-  background-color: #4caf50;
+  background-color: #343a40;
   color: white;
   padding: 10px 18px;
   border: none;
@@ -211,7 +212,7 @@
 }
 
 .save-button:hover {
-  background-color: #43a047;
+  background-color: rgb(34, 34, 23);
 }
 
 /* Close Button */

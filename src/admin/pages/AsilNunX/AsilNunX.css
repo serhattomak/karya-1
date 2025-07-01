@@ -1,13 +1,43 @@
-.page-editor {
-  max-width: 80%;
-  margin: 50px auto;
+/* AsilNunX.css */
 
+/* Genel sayfa editörü stili - eğer Home.js gibi başka yerlerde kullanılıyorsa geçerli */
+.page-editor {
+  max-width: 100%;
+  margin: 50px auto;
   padding: 30px;
   border-radius: 10px;
   background-color: #ffffff;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
+/* AsilNunX bileşeninin ana konteyneri */
+.asil-nun-x-admin-container {
+  width: 100%; /* Sayfa genişliğinin tamamını kapla (App.js'deki AdminLayout'un içinde) */
+  max-width: 1100px; /* Belirlenen maksimum genişlik */
+  margin: 10px auto; /* Üstten 10px boşluk bırak ve yatayda ortala */
+  padding: 10px; /* İç boşluk */
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+
+  /* Yeni: İçeriğin yatayda tam genişliği kaplaması için flexbox kullanıyoruz */
+  display: flex;
+  justify-content: center; /* İçeriği yatayda ortala */
+  /* Eğer dikeyde de ortalanmasını isterseniz align-items: center; ekleyebilirsiniz */
+}
+
+/* asil-nun-x-content div'ini ana konteynerin tamamını dolduracak şekilde ayarla */
+
+
+/* Formun içindeki .form-container div'i için yeni stil */
+.asil-nun-x-admin-container .form-container {
+  width: 100%; /* Üst kapsayıcısının (asil-nun-x-admin-container veya asil-nun-x-content) tam genişliğini kapla */
+  padding: 10px; /* Kenarlardan 10px iç boşluk bırak */
+  box-sizing: border-box; /* Padding'in genişliğe dahil olmasını sağlar */
+}
+
+/* Mevcut diğer CSS kurallarınız */
 .page-editor h2 {
   text-align: center;
   margin-bottom: 25px;
@@ -28,7 +58,8 @@
 }
 
 .form-group input[type="text"],
-.form-group input[type="file"] {
+.form-group input[type="file"],
+.form-group textarea {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -37,7 +68,8 @@
   transition: border-color 0.3s;
 }
 
-.form-group input[type="text"]:focus {
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
   border-color: #343a40;
   outline: none;
 }
@@ -45,7 +77,6 @@
 .preview-image {
   display: block;
   margin-top: 10px;
-
   max-width: 100%;
   height: auto;
   border-radius: 5px;
@@ -87,4 +118,78 @@ input[type="file"] {
 
 input[type="file"]::file-selector-button:hover {
   background-color: #495057;
+}
+
+.asil-nun-x-admin-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 10px auto;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+
+  display: block; /* flex kaldırdım */
+}
+
+/* .asil-nun-x-content {
+  width: 100%;
+} */
+
+.asil-nun-x-admin-container form {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.asil-nun-x-admin-container .form-container {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.asil-nun-x-text {
+  width: 100%;
+  /* max-width: 100%; */
+  box-sizing: border-box;
+  padding: 0 10px;
+}
+
+.asil-nun-x-text input[type="text"],
+.asil-nun-x-text textarea,
+.asil-nun-x-text input[type="file"] {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.uploaded-image {
+  max-width: 300px; /* Maksimum genişlik */
+  max-height: 200px; /* Maksimum yükseklik */
+  width: auto; /* Oranlı genişlik */
+  height: auto; /* Oranlı yükseklik */
+  border-radius: 8px;
+  margin-top: 10px;
+  display: block;
+  object-fit: contain; /* Resim orantılı küçülsün */
+}
+
+.documents-list {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.documents-list a {
+  padding: 8px 12px;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
