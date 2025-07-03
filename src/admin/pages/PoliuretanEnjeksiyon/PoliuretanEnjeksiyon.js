@@ -19,6 +19,10 @@ const PoliuretanEnjeksiyon = () => {
     bottomInfoTitle: "", // "Ürün hakkında daha fazla bilgi almak için..." başlığı
     bottomInfoText: "", // Alt açıklama metni
     documents: [], // Döküman URL'leri (string array)
+    // YENİ EKLENEN KISIM: Anasayfa Ürün Bilgisi için alanlar
+    homepageTitle: "",
+    homepageSubtitle: "",
+    homepageImage: "",
   });
 
   const [loading, setLoading] = useState(true);
@@ -28,6 +32,8 @@ const PoliuretanEnjeksiyon = () => {
   const [mainBannerImageFile, setMainBannerImageFile] = useState(null);
   const [galleryImageFiles, setGalleryImageFiles] = useState([]);
   const [documentFiles, setDocumentFiles] = useState([]);
+  // YENİ EKLENEN KISIM: Anasayfa Ürün Görseli önizlemesi için state
+  const [homepageImageFile, setHomepageImageFile] = useState(null);
 
   // Verileri Backend'den Çekme
   useEffect(() => {
@@ -36,7 +42,27 @@ const PoliuretanEnjeksiyon = () => {
         const response = await axios.get(
           "http://localhost:5001/api/poliuretan-enjeksiyon"
         );
-        setFormData(response.data); // Backend'den gelen tüm veriyi state'e set et
+        // Backend'den gelen veriyi ve eksikse varsayılan değerleri set et
+        setFormData({
+          mainBannerImage: response.data.mainBannerImage || "",
+          mainTitle: response.data.mainTitle || "",
+          descriptionTitle: response.data.descriptionTitle || "",
+          descriptionText: response.data.descriptionText || "",
+          applicationAreasTitle: response.data.applicationAreasTitle || "",
+          applicationAreas: response.data.applicationAreas || [],
+          galleryTitle: response.data.galleryTitle || "",
+          galleryImages: response.data.galleryImages || [],
+          detailsTitle: response.data.detailsTitle || "",
+          detailsText: response.data.detailsText || "",
+          youtubeLink: response.data.youtubeLink || "",
+          bottomInfoTitle: response.data.bottomInfoTitle || "",
+          bottomInfoText: response.data.bottomInfoText || "",
+          documents: response.data.documents || [],
+          // YENİ EKLENEN KISIM: Anasayfa Ürün Bilgisi alanlarını varsayılanlarla doldur
+          homepageTitle: response.data.homepageTitle || "",
+          homepageSubtitle: response.data.homepageSubtitle || "",
+          homepageImage: response.data.homepageImage || "",
+        });
         setLoading(false);
       } catch (error) {
         console.error(
@@ -45,6 +71,25 @@ const PoliuretanEnjeksiyon = () => {
         );
         setLoading(false);
         // Hata durumunda varsayılan boş değerlerle devam et
+        setFormData({
+          mainBannerImage: "",
+          mainTitle: "",
+          descriptionTitle: "",
+          descriptionText: "",
+          applicationAreasTitle: "",
+          applicationAreas: [],
+          galleryTitle: "",
+          galleryImages: [],
+          detailsTitle: "",
+          detailsText: "",
+          youtubeLink: "",
+          bottomInfoTitle: "",
+          bottomInfoText: "",
+          documents: [],
+          homepageTitle: "",
+          homepageSubtitle: "",
+          homepageImage: "",
+        });
       }
     };
     fetchPageData();
@@ -75,7 +120,7 @@ const PoliuretanEnjeksiyon = () => {
     setFormData((prev) => ({ ...prev, applicationAreas: newAreas }));
   };
 
-  // Resim yükleme genel fonksiyonu
+  // Resim/Döküman yükleme genel fonksiyonu
   const uploadFile = async (file, endpoint) => {
     const formData = new FormData();
     formData.append("file", file); // Backend'de 'file' olarak bekliyor varsayalım
@@ -113,6 +158,22 @@ const PoliuretanEnjeksiyon = () => {
     setUploading(false);
   };
 
+  // YENİ EKLENEN KISIM: Anasayfa Ürün Görseli Yükleme
+  const handleHomepageImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    const imageUrl = await uploadFile(file, "poliuretan-homepage-product"); // Backend endpoint'i
+    if (imageUrl) {
+      setFormData((prev) => ({ ...prev, homepageImage: imageUrl }));
+      setHomepageImageFile(file); // Önizleme için dosya objesini sakla
+      alert("Anasayfa ürün görseli başarıyla yüklendi!");
+    }
+    setUploading(false);
+  };
+  // YENİ EKLENEN KISIM SONU
+
   // Galeri Görselleri Yükleme (Çoklu)
   const handleGalleryImagesUpload = async (e) => {
     const files = Array.from(e.target.files);
@@ -146,6 +207,7 @@ const PoliuretanEnjeksiyon = () => {
     );
     setFormData((prev) => ({ ...prev, galleryImages: newGalleryImages }));
     // Eğer önizleme için dosya objesi tutuluyorsa onu da güncellemek gerekebilir
+    // Bu kısım şu an için basit tutuldu, daha detaylı bir state yönetimi gerekebilir
     setGalleryImageFiles((prev) =>
       prev.filter((_, index) => index !== indexToRemove)
     );
@@ -214,13 +276,71 @@ const PoliuretanEnjeksiyon = () => {
 
   return (
     <div className="poliuretan-editor-container">
-      <h2>Poliüretan Enjeksiyon Sayfası Düzenleme</h2>
       <form onSubmit={handleSubmit}>
+
+        {/* YENİ EKLENEN KISIM: Anasayfa Ürün Bilgisi */}
+        <div className="poliuretan-editor-section">
+        <h2 className="admin-title">Anasayfa Ürün Düzenlemesi</h2>
+        <div className="form-group">
+            <label htmlFor="homepageTitle">Başlık:</label>
+            <input
+              type="text"
+              id="homepageTitle"
+              name="homepageTitle"
+              value={formData.homepageTitle}
+              onChange={handleChange}
+              placeholder="Anasayfa kartı başlığı"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="homepageSubtitle">Alt Başlık:</label>
+            <input
+              type="text"
+              id="homepageSubtitle"
+              name="homepageSubtitle"
+              value={formData.homepageSubtitle}
+              onChange={handleChange}
+              placeholder="Anasayfa kartı alt başlığı"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="homepageImage">Görsel Seç:</label>
+            <input
+              type="file"
+              id="homepageImage"
+              accept="image/*"
+              onChange={handleHomepageImageUpload}
+              disabled={uploading}
+            />
+            {(formData.homepageImage || homepageImageFile) && (
+              <img
+                src={homepageImageFile ? URL.createObjectURL(homepageImageFile) : formData.homepageImage}
+                alt="Anasayfa Ürün Önizleme"
+                className="image-preview uploaded-image" // Mevcut stilleri kullan
+                style={{ maxWidth: "200px", display: "block" }} // Daha küçük önizleme
+              />
+            )}
+            {homepageImageFile && <p>Yeni Anasayfa Görseli: {homepageImageFile.name}</p>}
+            {uploading && <p>Görsel yükleniyor...</p>}
+          </div>
+        </div>
+        {/* YENİ EKLENEN KISIM SONU */}
+
         {/* 1. Banner/Ana Başlık Kısmı */}
         <div className="poliuretan-editor-section">
-          <h3>Banner Alanı</h3>
+        <h2 className="admin-title">Ürün İçerik Düzenlemesi</h2>
+        <div className="form-group">
+            <label htmlFor="mainTitle"> Banner Başlık:</label>
+            <input
+              type="text"
+              id="mainTitle"
+              name="mainTitle"
+              value={formData.mainTitle}
+              onChange={handleChange}
+            />
+          </div>
           <div className="form-group">
-            <label htmlFor="mainBannerImage">Ana Banner Görseli:</label>
+            <label htmlFor="mainBannerImage">Banner Görseli:</label>
             <input
               type="file"
               id="mainBannerImage"
@@ -239,16 +359,6 @@ const PoliuretanEnjeksiyon = () => {
               <p>Yeni görsel: {mainBannerImageFile.name}</p>
             )}
             {uploading && <p>Görsel yükleniyor...</p>}
-          </div>
-          <div className="form-group">
-            <label htmlFor="mainTitle">Ana Başlık (Banner):</label>
-            <input
-              type="text"
-              id="mainTitle"
-              name="mainTitle"
-              value={formData.mainTitle}
-              onChange={handleChange}
-            />
           </div>
         </div>
 
@@ -272,6 +382,7 @@ const PoliuretanEnjeksiyon = () => {
               name="descriptionText"
               value={formData.descriptionText}
               onChange={handleChange}
+              rows={6}
             />
           </div>
         </div>
@@ -356,6 +467,7 @@ const PoliuretanEnjeksiyon = () => {
                 </button>
               </div>
             ))}
+            {/* Önizleme için yeni yüklenen dosyaları gösterme (sadece adlarını) */}
             {galleryImageFiles.map((file, index) => (
               <p key={`new-gallery-${index}`}>{file.name}</p>
             ))}
@@ -382,6 +494,7 @@ const PoliuretanEnjeksiyon = () => {
               name="detailsText"
               value={formData.detailsText}
               onChange={handleChange}
+              rows={6}
             />
           </div>
           <div className="form-group">
@@ -392,7 +505,7 @@ const PoliuretanEnjeksiyon = () => {
               name="youtubeLink"
               value={formData.youtubeLink}
               onChange={handleChange}
-              placeholder="Örn: https://www.youtube.com/embed/videoid"
+              placeholder="Örn: https://www.youtube.com/watch?v=xxxxxxxxxxx"
             />
             {formData.youtubeLink && (
               <p>
@@ -429,6 +542,7 @@ const PoliuretanEnjeksiyon = () => {
               name="bottomInfoText"
               value={formData.bottomInfoText}
               onChange={handleChange}
+              rows={4}
             />
           </div>
           <div className="form-group">
@@ -461,6 +575,7 @@ const PoliuretanEnjeksiyon = () => {
                 </button>
               </div>
             ))}
+            {/* Önizleme için yeni yüklenen dosyaları gösterme (sadece adlarını) */}
             {documentFiles.map((file, index) => (
               <p key={`new-doc-${index}`}>{file.name}</p>
             ))}

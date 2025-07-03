@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./AsilNunX.css";
 
@@ -10,25 +10,60 @@ const AsilNunX = ({ onClose }) => {
     info: "",
     image: "",
     documents: [],
-    text: "Varsayılan metin", // Varsayılan metin
-    linkText: "Varsayılan Link Metni", // Varsayılan link metni
-    link: "", // Varsayılan link
+    text: "Varsayılan metin",
+    linkText: "Varsayılan Link Metni",
+    link: "",
+    gallery: ["", "", "", ""],
   });
-  const [loading, setLoading] = useState(true); // Yükleme durumu ekleyelim
-  const [uploading, setUploading] = useState(false); // Yükleme durumu (resim ve dökümanlar için)
+
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
 
   const [tempBoxData, setTempBoxData] = useState({
     title: "",
     subtitle: "",
-    image: "",
+    image: null,
     preview: "",
   });
 
-  // Görsel seçimi ve önizleme
+  const documentInputRef = useRef(null);
+  const galleryInputRef = useRef(null);
+  const selectedDocIndexRef = useRef(0);
+  const fileInputRefs = useRef({});
+  const selectedGalleryIndexRef = useRef(0);
+
+  const [previewDocuments, setPreviewDocuments] = useState([
+    null,
+    null,
+    null,
+    null,
+  ]);
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const previewURL = URL.createObjectURL(file);
+    setAsilNunXData((prev) => ({
+      ...prev,
+      image: previewURL,
+    }));
+  };
+  
+  // Sadece frontend: örnek veri setleniyor
+  useEffect(() => {
+    setAsilNunXData((prev) => ({
+      ...prev,
+      gallery: ["", "", "", ""],
+      documents: [],
+    }));
+    setLoading(false);
+  }, []);
+
+  if (loading) return <div>Yükleniyor...</div>;
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     const previewURL = URL.createObjectURL(file);
     setTempBoxData((prev) => ({
       ...prev,
@@ -37,97 +72,15 @@ const AsilNunX = ({ onClose }) => {
     }));
   };
 
-  // Sayfa verilerini al
-  useEffect(() => {
-    const fetchAsilNunXData = async () => {
-      try {
-        const response = await axios.get("http://localhost:5001/api/asilnunx");
-        setAsilNunXData(response.data);
-        setLoading(false); // Yükleme tamamlandığında
-      } catch (error) {
-        console.error("Veri alınırken hata oluştu: ", error);
-        setLoading(false); // Yükleme hata durumunda da tamamlanmış kabul edilir
-      }
-    };
-
-    fetchAsilNunXData();
-  }, []);
-
-  // Veriler yüklenene kadar "Yükleniyor..." mesajı gösterelim
-  if (loading) {
-    return <div>Yükleniyor...</div>;
-  }
-
-  // Resim yükleme işlemi
-  const handleImageUpload = async (event) => {
-    const formData = new FormData();
-    formData.append("image", event.target.files[0]);
-
-    setUploading(true); // Yükleme başladı
-
-    try {
-      const response = await axios.post(
-        "http://localhost:5001/api/asilnunx/upload-image",
-        formData
-      );
-      console.log("Yüklenen resim:", response.data.image);
-      setAsilNunXData({ ...asilNunXData, image: response.data.image }); // Resim URL'sini güncelle
-      alert("Resim başarıyla yüklendi!"); // Kullanıcıyı bilgilendir
-    } catch (error) {
-      console.error("Resim yüklenirken hata oluştu:", error);
-      alert("Resim yüklenirken bir hata oluştu.");
-    } finally {
-      setUploading(false); // Yükleme tamamlandı
+  const handleEditClick = (index) => {
+    if (fileInputRefs.current[index]) {
+      fileInputRefs.current[index].click();
     }
   };
 
-  // Döküman yükleme işlemi
-  const handleDocumentUpload = async (event) => {
-    const formData = new FormData();
-    Array.from(event.target.files).forEach((file) => {
-      formData.append("documents", file);
-    });
-
-    setUploading(true); // Yükleme başladı
-
-    try {
-      const response = await axios.put(
-        "http://localhost:5001/api/asilnunx",
-        formData
-      );
-      setAsilNunXData({ ...asilNunXData, documents: response.data.documents });
-      alert("Dökümanlar başarıyla yüklendi!"); // Kullanıcıyı bilgilendir
-    } catch (error) {
-      console.error("Döküman yüklenirken hata oluştu:", error);
-      alert("Döküman yüklenirken bir hata oluştu.");
-    } finally {
-      setUploading(false); // Yükleme tamamlandı
-    }
-  };
-
-  // Form verilerini güncelleme
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    // tempBoxData'dan asilNunXData'ya ek veri al
-    const combinedData = {
-      ...asilNunXData,
-      boxTitle: tempBoxData.title,
-      boxSubtitle: tempBoxData.subtitle,
-      boxImagePreview: tempBoxData.preview, // Eğer direkt URL olarak saklanacaksa
-    };
-
-    try {
-      const response = await axios.put(
-        "http://localhost:5001/api/asilnunx",
-        combinedData
-      );
-      console.log("Veri başarıyla güncellendi:", response.data);
-      alert("Veriler başarıyla güncellendi!");
-    } catch (error) {
-      console.error("Veri güncellenirken hata oluştu:", error);
-      alert("Veri güncellenirken bir hata oluştu.");
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert("Veriler frontendde simule edildi, backend'e gönderilmedi.");
   };
 
   return (
@@ -135,186 +88,249 @@ const AsilNunX = ({ onClose }) => {
       <div className="asil-nun-x-content">
         <form onSubmit={handleSubmit}>
           <div className="form-container">
-            <h2 className="asil-nun-x-title">Anasayfa Ürün Bilgisi</h2>
+            <h2 className="admin-title">Anasayfa Ürün Düzenlemesi</h2>
+
             <div className="form-group">
-              <div className="product-banner">
-                <h3>Anasayfa Ürün Bilgileri</h3>
-                <label>Başlık</label>
-                <input
-                  type="text"
-                  value={tempBoxData.title}
-                  onChange={(e) =>
-                    setTempBoxData({ ...tempBoxData, title: e.target.value })
-                  }
+              <label>Başlık</label>
+              <input
+                type="text"
+                value={tempBoxData.title}
+                onChange={(e) =>
+                  setTempBoxData({ ...tempBoxData, title: e.target.value })
+                }
+              />
+              <label>Alt Başlık</label>
+              <input
+                type="text"
+                value={tempBoxData.subtitle}
+                onChange={(e) =>
+                  setTempBoxData({ ...tempBoxData, subtitle: e.target.value })
+                }
+              />
+              <label>Görsel Seç</label>
+              <input type="file" accept="image/*" onChange={handleFileChange} />
+              {tempBoxData.preview && (
+                <img
+                  src={tempBoxData.preview}
+                  alt="Önizleme"
+                  style={{
+                    marginTop: "10px",
+                    borderRadius: "8px",
+                    backgroundColor: "#f8f8f8",
+                    maxWidth: "100px",
+                  }}
                 />
-                <label>Alt Başlık</label>
-                <input
-                  type="text"
-                  value={tempBoxData.subtitle}
-                  onChange={(e) =>
-                    setTempBoxData({ ...tempBoxData, subtitle: e.target.value })
-                  }
-                />
-                <label>Görsel Seç</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                />
-                {tempBoxData.preview && (
-                  <img
-                    src={tempBoxData.preview}
-                    alt="Önizleme"
-                    style={{
-                      marginTop: "10px",
-                      borderRadius: "8px",
-                      backgroundColor: "#f8f8f8",
-                    }}
-                  />
-                )}
-              </div>
+              )}
             </div>
-              <div className="asil-nun-x-text">
-                <h2 className="asil-nun-x-title">Ürün Sayfası</h2>
-                <div className="form-group">
-                  <label htmlFor="title">Başlık:</label>
-                  <input
-                    type="text"
-                    id="title"
-                    value={asilNunXData.title}
-                    onChange={(e) =>
-                      setAsilNunXData({ ...asilNunXData, title: e.target.value })
-                    }
-                    placeholder="Başlık"
-                  />
-                </div>
 
-                <div className="form-group">
-                  <label htmlFor="description">Açıklama:</label>
-                  <textarea
-                    id="description"
-                    value={asilNunXData.description}
-                    onChange={(e) =>
-                      setAsilNunXData({
-                        ...asilNunXData,
-                        description: e.target.value,
-                      })
-                    }
-                    placeholder="Açıklama"
-                  />
-                </div>
+            <div className="asil-nun-x-text">
+              <h2 className="admin-title">Ürün İçerik Düzenlemesi</h2>
 
-                <div className="form-group">
-                  <label htmlFor="details">Detaylar:</label>
-                  <textarea
-                    id="details"
-                    value={asilNunXData.details}
-                    onChange={(e) =>
-                      setAsilNunXData({
-                        ...asilNunXData,
-                        details: e.target.value,
-                      })
-                    }
-                    placeholder="Detaylar"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="info">Bilgi:</label>
-                  <textarea
-                    id="info"
-                    value={asilNunXData.info}
-                    onChange={(e) =>
-                      setAsilNunXData({ ...asilNunXData, info: e.target.value })
-                    }
-                    placeholder="Bilgi"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="text">Metin:</label>
-                  <input
-                    type="text"
-                    id="text"
-                    value={asilNunXData.text}
-                    onChange={(e) =>
-                      setAsilNunXData({ ...asilNunXData, text: e.target.value })
-                    }
-                    placeholder="Metin"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="linkText">Buton Metni:</label>
-                  <input
-                    type="text"
-                    id="linkText"
-                    value={asilNunXData.linkText}
-                    onChange={(e) =>
-                      setAsilNunXData({
-                        ...asilNunXData,
-                        linkText: e.target.value,
-                      })
-                    }
-                    placeholder="Buton Metni"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="link">Bağlantı:</label>
-                  <input
-                    type="text"
-                    id="link"
-                    value={asilNunXData.link}
-                    onChange={(e) =>
-                      setAsilNunXData({ ...asilNunXData, link: e.target.value })
-                    }
-                    placeholder="Bağlantı"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="image">Ana Resim:</label>
-                  <input
-                    type="file"
-                    id="image"
-                    onChange={handleImageUpload}
-                    accept="image/*"
-                  />
-                  {asilNunXData.image && (
-                    <img
-                      src={asilNunXData.image}
-                      alt="Asil Nun X"
-                      className="uploaded-image"
-                    />
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="documents">Dökümanlar:</label>
-                  <input
-                    type="file"
-                    id="documents"
-                    onChange={handleDocumentUpload}
-                    accept=".pdf, .doc, .docx, .jpg, .png"
-                    multiple
-                  />
-                  <div className="documents-list">
-                    {asilNunXData.documents.map((doc, index) => (
-                      <a
-                        key={index}
-                        href={doc}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {`Döküman ${index + 1}`}
-                      </a>
-                    ))}
-                  </div>
+              <div className="form-group">
+                <label htmlFor="title">Başlık:</label>
+                <input
+                  type="text"
+                  id="title"
+                  value={asilNunXData.title}
+                  onChange={(e) =>
+                    setAsilNunXData({ ...asilNunXData, title: e.target.value })
+                  }
+                  placeholder="Başlık"
+                />
               </div>
 
-              <button type="submit" disabled={uploading}>
-                {uploading ? "Yükleniyor..." : "Kaydet"}
+              <div className="form-group">
+                <label htmlFor="description">Açıklama:</label>
+                <textarea
+                  id="description"
+                  value={asilNunXData.description}
+                  onChange={(e) =>
+                    setAsilNunXData({
+                      ...asilNunXData,
+                      description: e.target.value,
+                    })
+                  }
+                  placeholder="Açıklama"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="details">Detaylar:</label>
+                <textarea
+                  id="details"
+                  value={asilNunXData.details}
+                  onChange={(e) =>
+                    setAsilNunXData({
+                      ...asilNunXData,
+                      details: e.target.value,
+                    })
+                  }
+                  placeholder="Detaylar"
+                />
+              </div>
+            {/* Ana Resim Önizleme Kutusu */}
+<div className="form-group">
+  <label className="section-label">Ana Resim</label>
+  <div className="image-box">
+    {asilNunXData.image ? (
+      <>
+        <img
+          src={asilNunXData.image}
+          alt="Ana görsel"
+          className="gallery-image"
+        />
+        <div
+          className="edit-icon"
+          onClick={() => document.getElementById("mainImageInput").click()}
+          title="Resmi değiştir"
+        >
+          ✏️
+        </div>
+      </>
+    ) : (
+      <div
+        className="document-placeholder"
+        onClick={() => document.getElementById("mainImageInput").click()}
+      >
+        <div className="document-icon-preview">➕</div>
+        <p>Görsel Ekle</p>
+      </div>
+    )}
+  </div>
+
+  {/* Gizli dosya inputu */}
+  <input
+    type="file"
+    id="mainImageInput"
+    accept="image/*"
+    style={{ display: "none" }}
+    onChange={handleImageUpload}
+  />
+</div>
+
+
+              {/* 4 kutuluk döküman önizleme */}
+              <div className="documents-grid">
+                {[0, 1, 2, 3].map((index) => {
+                  const file = previewDocuments[index];
+                  const fileName = file ? file.name : null;
+
+                  return (
+                    <div key={index} className="document-box">
+                      {file ? (
+                        <>
+                          <div className="document-icon-preview">📄</div>
+                          <p className="document-filename" title={fileName}>
+                            {fileName.length > 25
+                              ? fileName.substring(0, 22) + "..."
+                              : fileName}
+                          </p>
+
+                          {/* Düzenleme (kalem) ikonu */}
+                          <div
+                            className="edit-icon"
+                            onClick={() => {
+                              selectedDocIndexRef.current = index;
+                              documentInputRef.current?.click();
+                            }}
+                            title="Dökümanı değiştir"
+                          >
+                            ✏️
+                          </div>
+                        </>
+                      ) : (
+                        <div
+                          className="document-placeholder"
+                          onClick={() => {
+                            selectedDocIndexRef.current = index;
+                            documentInputRef.current?.click();
+                          }}
+                        >
+                          <div className="document-icon-preview">➕</div>
+                          <p>Yeni Döküman Ekle</p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Tek input – frontend önizleme için */}
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx, "
+                ref={documentInputRef}
+                style={{ display: "none" }}
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    const index = selectedDocIndexRef.current;
+                    setPreviewDocuments((prev) => {
+                      const updated = [...prev];
+                      updated[index] = file;
+                      return updated;
+                    });
+                  }
+                }}
+              />
+
+              {/* Galeri */}
+              <div className="gallery-grid">
+                {[0, 1, 2, 3].map((index) => {
+                  const imageUrl = asilNunXData.gallery[index];
+
+                  return (
+                    <div key={index} className="gallery-item">
+                      {imageUrl ? (
+                        <img
+                          src={imageUrl}
+                          alt={`Galeri ${index + 1}`}
+                          className="gallery-image"
+                        />
+                      ) : (
+                        <div className="gallery-placeholder">Resim Yok</div>
+                      )}
+
+                      <input
+                        type="file"
+                        accept="image/*"
+                        style={{ display: "none" }}
+                        ref={galleryInputRef}
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            const previewURL = URL.createObjectURL(file);
+                            setAsilNunXData((prev) => {
+                              const updated = [...prev.gallery];
+                              // Burada selectedGalleryIndexRef.current kullanılıyor!
+                              updated[selectedGalleryIndexRef.current] =
+                                previewURL;
+                              return { ...prev, gallery: updated };
+                            });
+                          }
+                        }}
+                      />
+
+                      <div
+                        className="edit-icon"
+                        onClick={() => {
+                          selectedGalleryIndexRef.current = index; // Tıklanan indexi kaydet
+                          galleryInputRef.current?.click();
+                        }}
+                        title="Resmi değiştir"
+                      >
+                        ✏️
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <button
+                type="submit"
+                disabled={uploading}
+                className="save-button"
+              >
+                {uploading ? "Kaydediliyor..." : "Kaydet"}
               </button>
             </div>
           </div>

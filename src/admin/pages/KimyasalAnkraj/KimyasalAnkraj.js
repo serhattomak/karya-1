@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../KimyasalAnkraj/KimyasalAnkraj.css";
+import "../KimyasalAnkraj/KimyasalAnkraj.css"; // Mevcut CSS yolu
 
 const KimyasalAnkraj = () => {
   const [bannerImage, setBannerImage] = useState("");
@@ -7,6 +7,12 @@ const KimyasalAnkraj = () => {
   const [contentTitle, setContentTitle] = useState("İçerik Başlığı");
   const [contentText, setContentText] = useState(""); // İçerik metni için ayrı state
   const [bannerTitle, setBannerTitle] = useState("Banner Başlığı");
+
+  // YENİ EKLENEN KISIM İÇİN STATE'LER
+  const [homepageTitle, setHomepageTitle] = useState("");
+  const [homepageSubtitle, setHomepageSubtitle] = useState("");
+  const [homepageImage, setHomepageImage] = useState(""); // Anasayfa ürün görseli için state
+  // YENİ EKLENEN KISIM İÇİN STATE'LER SONU
 
   const [boxes, setBoxes] = useState([
     { title: "Kutu 1 Başlığı", image: null },
@@ -23,11 +29,22 @@ const KimyasalAnkraj = () => {
     console.log("İçerik Başlığı:", contentTitle);
     console.log("İçerik Metni:", contentText);
     console.log("Kutular:", boxes);
+    // YENİ EKLENEN KISIM İÇİN CONSOLE.LOG'LAR
+    console.log("Anasayfa Başlık:", homepageTitle);
+    console.log("Anasayfa Alt Başlık:", homepageSubtitle);
+    console.log("Anasayfa Görsel:", homepageImage);
+    // YENİ EKLENEN KISIM İÇİN CONSOLE.LOG'LAR SONU
   };
 
   const handleBannerUpload = (event) => {
     setBannerImage(URL.createObjectURL(event.target.files[0]));
   };
+
+  // YENİ EKLENEN KISIM İÇİN HANDLER
+  const handleHomepageImageUpload = (event) => {
+    setHomepageImage(URL.createObjectURL(event.target.files[0]));
+  };
+  // YENİ EKLENEN KISIM İÇİN HANDLER SONU
 
   const handleBoxImageUpload = (index, event) => {
     const image = event.target.files[0];
@@ -44,8 +61,54 @@ const KimyasalAnkraj = () => {
 
   return (
     <div className="page-editor kimyasal-ankraj-editor">
-      <h2>Kimyasal Ankraj Filiz Ekim</h2>
+      {/* <h2 className="admin-title">Kimyasal Ankraj Filiz Ekim</h2> */}
       <form onSubmit={handleSubmit}>
+
+        {/* YENİ EKLENEN KISIM: Anasayfa Ürün Bilgisi */}
+        <h2 className="admin-title">Anasayfa Ürün Düzenlemesi</h2>
+        <div className="form-group">
+          <div className="product-banner">
+            <label htmlFor="homepageTitle">Başlık</label>
+            <input
+              type="text"
+              id="homepageTitle"
+              value={homepageTitle}
+              onChange={(e) => setHomepageTitle(e.target.value)}
+              placeholder="Anasayfa ürün başlığı"
+            />
+            <label htmlFor="homepageSubtitle">Alt Başlık</label>
+            <input
+              type="text"
+              id="homepageSubtitle"
+              value={homepageSubtitle}
+              onChange={(e) => setHomepageSubtitle(e.target.value)}
+              placeholder="Anasayfa ürün alt başlığı"
+            />
+            <label htmlFor="homepageImage">Görsel Seç</label>
+            <input
+              type="file"
+              id="homepageImage"
+              accept="image/*"
+              onChange={handleHomepageImageUpload}
+            />
+            {homepageImage && (
+              <img
+                src={homepageImage}
+                alt="Anasayfa Ürün Önizleme"
+                style={{
+                  marginTop: "10px",
+                  borderRadius: "8px",
+                  backgroundColor: "#f8f8f8",
+                  maxWidth: "200px", // Küçük bir önizleme boyutu
+                  display: "block"
+                }}
+              />
+            )}
+          </div>
+        </div>
+        {/* YENİ EKLENEN KISIM SONU */}
+        <h2 className="admin-title">Ürün İçerik Düzenlemesi</h2>
+
         <div className="form-group">
           <label htmlFor="bannerImage">Banner Resim:</label>
           <input

@@ -36,10 +36,10 @@ const Sidebar = () => {
         <nav>
           <NavLink to="home">Anasayfa</NavLink>
           <NavLink to="AboutUs">Hakkımızda</NavLink>
-          <NavLink to="asilnunx">Aşil Nun X</NavLink>
+          {/* <NavLink to="asilnunx">Aşil Nun X</NavLink>
           <NavLink to="Poliuretan">Poliüretan Enjeksiyon</NavLink>
           <NavLink to="telbeton">Halatlı Tel -Beton Kesme</NavLink>
-          <NavLink to="kimyasalankraj">Kimyasal Ankraj Filiz Ekim</NavLink>
+          <NavLink to="kimyasalankraj">Kimyasal Ankraj Filiz Ekim</NavLink> */}
           <NavLink to="Contact">İletişim</NavLink>
         </nav>
       </div>
