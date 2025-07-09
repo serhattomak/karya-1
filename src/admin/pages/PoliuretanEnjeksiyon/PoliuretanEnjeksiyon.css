@@ -150,7 +150,7 @@
   
   .documents-list .document-item a {
     text-decoration: none;
-    color: #007bff;
+    color: #333;
     font-weight: 500;
   }
   
@@ -216,7 +216,7 @@
     display: block;
     width: 100%;
     padding: 15px;
-    background-color: #007bff; /* Mavi ton */
+    background-color: #333; /* Mavi ton */
     color: white;
     border: none;
     border-radius: 8px;

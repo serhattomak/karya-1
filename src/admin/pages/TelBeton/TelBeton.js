@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import "../AsilNunX/AsilNunX.css";
+import React, { useState, useRef } from "react";
+import "./TelBeton.css"; // CSS dosyanızın yolu bu şekilde olmalı
 
 const TelBeton = () => {
   const [bannerImage, setBannerImage] = useState("");
@@ -7,30 +7,23 @@ const TelBeton = () => {
   const [contentTitle, setContentTitle] = useState("İçerik Başlığı");
   const [contentMainText, setContentMainText] = useState("İçerik Metni");
   const [bannerTitle, setBannerTitle] = useState("Banner Başlığı");
-  const [contentImage, setContentImage] = useState(null);
+  const [contentImage, setContentImage] = useState(null); // Şu an HTML'de kullanılmıyor gibi.
+  const [uploading, setUploading] = useState(false);
 
-  // YENİ EKLENEN KISIM: Anasayfa Ürün Bilgisi için state'ler
+  // Anasayfa Ürün Bilgisi için state'ler (Değişmedi)
   const [homepageTitle, setHomepageTitle] = useState("");
   const [homepageSubtitle, setHomepageSubtitle] = useState("");
-  const [homepageImage, setHomepageImage] = useState(null);
+  const [homepageImage, setHomepageImage] = useState(""); // Başlangıçta boş string
 
-  // Kutu bilgileri (Uygulama Alanlarına ait Görseller için)
-  const [boxes, setBoxes] = useState([
-    { title: "Kutu 1 Başlığı", image: null },
-    { title: "Kutu 2 Başlığı", image: null },
-    { title: "Kutu 3 Başlığı", image: null },
-    { title: "Kutu 4 Başlığı", image: null },
+  // UYGULAMA ALANLARI GÖRSELLERİ İÇİN YENİ STATE VE REFLER
+  const [applicationAreaImages, setApplicationAreaImages] = useState([
+    "",
+    "",
+    "",
+    "", // 4 adet boş string olarak başlatıldı
   ]);
-
-  // Yeni ve güncellenmiş updateBox fonksiyonu
-  const updateBox = (index, field, value) => {
-    setBoxes(prevBoxes => {
-      const updatedBoxes = [...prevBoxes];
-      updatedBoxes[index] = { ...updatedBoxes[index], [field]: value };
-      return updatedBoxes;
-    });
-  };
-
+  const applicationFileInputRefs = useRef([]); // Her bir input için ref dizisi
+  const selectedApplicationImageIndexRef = useRef(0); // Tıklanan uygulama alanı resminin indeksini tutmak için
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -42,24 +35,21 @@ const TelBeton = () => {
     console.log("Anasayfa Ürün Başlığı:", homepageTitle);
     console.log("Anasayfa Ürün Alt Başlığı:", homepageSubtitle);
     console.log("Anasayfa Ürün Resmi:", homepageImage);
+    console.log("Uygulama Alanları Görselleri:", applicationAreaImages);
+    alert("Form verileri konsola yazdırıldı (kayıt işlemi simüle edildi).");
   };
 
-  const handleBoxSubmit = (event, index) => {
-    event.preventDefault();
-    console.log("Kutu", index + 1, "Başlık:", boxes[index].title);
-    console.log("Kutu", index + 1, "Fotoğraf:", boxes[index].image);
-  };
-
-  const handleImageUpload = (index, event) => {
-    const image = event.target.files[0];
-    if (image) {
-      updateBox(index, "image", URL.createObjectURL(image)); // Güncellenmiş kullanım
-    }
-  };
-
+  // Banner ve Homepage resimleri için mevcut yükleme fonksiyonları (Değişmedi)
   const handleBannerUpload = (event) => {
     if (event.target.files && event.target.files[0]) {
       setBannerImage(URL.createObjectURL(event.target.files[0]));
+    }
+  };
+
+  const handleHomepageImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setHomepageImage(URL.createObjectURL(file));
     }
   };
 
@@ -69,23 +59,33 @@ const TelBeton = () => {
     }
   };
 
-  // YENİ EKLENEN KISIM: Anasayfa Ürün Görseli Yükleme
-  const handleHomepageImageUpload = (event) => {
-    const file = event.target.files[0];
+  // UYGULAMA ALANLARI GÖRSELLERİ İÇİN YÜKLEME VE SİLME FONKSİYONLARI
+  const handleApplicationImageUpload = (event) => {
+    const file = event.target.files && event.target.files[0];
     if (file) {
-      setHomepageImage(URL.createObjectURL(file));
+      const imageUrl = URL.createObjectURL(file);
+      setApplicationAreaImages((prevImages) => {
+        const updatedImages = [...prevImages];
+        // selectedApplicationImageIndexRef.current kullanarak doğru indeksi güncelliyoruz
+        updatedImages[selectedApplicationImageIndexRef.current] = imageUrl;
+        return updatedImages;
+      });
     }
+  };
+
+  // Uygulama alanı için gizli dosya input'unu tetikleme fonksiyonu
+  const triggerApplicationFileInput = (index) => {
+    selectedApplicationImageIndexRef.current = index; // Tıklanan indexi kaydet
+    applicationFileInputRefs.current[index]?.click(); // İlgili input'u tetikle
   };
 
   return (
     <div className="page-editor">
-      {/* <h2 className="admin-title">Halatlı Tel-Beton Kesme Sayfası Düzenleme</h2> */}
       <form onSubmit={handleSubmit}>
-
-      <h2 className="admin-title">Anasayfa Ürün Düzenlemesi</h2>
-      <div className="form-group">
+        <h2 className="admin-title">Anasayfa Ürün Düzenlemesi</h2>
+        <div className="form-group">
           <div className="product-banner">
-            <label htmlFor="homepageTitle">Başlık:</label>
+            <label htmlFor="homepageTitle">Başlık</label>
             <input
               type="text"
               id="homepageTitle"
@@ -94,9 +94,8 @@ const TelBeton = () => {
               placeholder="Anasayfa kartı başlığı"
             />
           </div>
-        </div>
-        <div className="form-group">
-          <label htmlFor="homepageSubtitle">Alt Başlık:</label>
+
+          <label htmlFor="homepageSubtitle">Alt Başlık</label>
           <input
             type="text"
             id="homepageSubtitle"
@@ -104,9 +103,8 @@ const TelBeton = () => {
             onChange={(e) => setHomepageSubtitle(e.target.value)}
             placeholder="Anasayfa kartı alt başlığı"
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="homepageImage">Görsel Seç:</label>
+
+          <label htmlFor="homepageImage">Görsel Seç</label>
           <input
             type="file"
             id="homepageImage"
@@ -118,7 +116,13 @@ const TelBeton = () => {
               src={homepageImage}
               alt="Anasayfa Ürün Önizleme"
               className="preview-image"
-              style={{ maxWidth: "200px", display: "block", marginTop: "10px", borderRadius: "8px", backgroundColor: "#f8f8f8" }}
+              style={{
+                maxWidth: "200px",
+                display: "block",
+                marginTop: "10px",
+                borderRadius: "8px",
+                backgroundColor: "#f8f8f8",
+              }}
             />
           )}
         </div>
@@ -190,49 +194,59 @@ const TelBeton = () => {
           />
         </div>
 
-        <button type="submit" className="submit-btn">
-          Tüm Sayfayı Kaydet
-        </button>
+        {/* UYGULAMA ALANLARI GÖRSELLERİ - BURASI DEĞİŞTİRİLDİ */}
+        <h2 className="panel-title">Uygulama Alanlarına Ait Görseller</h2>
+        <div className="gallery-grid">
+          {[0, 1, 2, 3].map((index) => {
+            const imageUrl = applicationAreaImages[index];
 
-        <h2 className="panel-title"> Uygulama Alanlarına Ait Görseller</h2>
-        {boxes.map((box, index) => (
-          <div key={index} className="form-group box-item-group">
-            <h3 className="sub-panel-title">Kutu {index + 1} Görseli</h3>
-            <div className="form-group">
-                <label htmlFor={`boxTitle${index}`}>Kutu {index + 1} Başlığı:</label>
+            return (
+              <div key={index} className="gallery-item image-box">
+                {imageUrl ? (
+                  <>
+                    <img
+                      src={imageUrl}
+                      alt={`Uygulama Alanı ${index + 1}`}
+                      className="image-preview-square"
+                    />
+                    <div className="image-overlay">
+                      <span
+                        className="edit-icon"
+                        onClick={() => triggerApplicationFileInput(index)}
+                        title="Resmi Değiştir"
+                      >
+                        ✏️
+                      </span>
+                    </div>
+                  </>
+                ) : (
+                  <div
+                    className="image-placeholder"
+                    onClick={() => triggerApplicationFileInput(index)}
+                  >
+                    <div className="plus-icon">➕</div>
+                    <p>Görsel Ekle</p>
+                  </div>
+                )}
                 <input
-                    type="text"
-                    id={`boxTitle${index}`}
-                    value={box.title}
-                    onChange={(e) => updateBox(index, "title", e.target.value)} // Burası güncellendi
-                    placeholder={`Kutu ${index + 1} Başlığını girin`}
-                    required
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  ref={(el) => (applicationFileInputRefs.current[index] = el)} // Ref'i doğru index'e ata
+                  onChange={handleApplicationImageUpload} // Fonksiyonu doğrudan çağır
                 />
-            </div>
-            <div className="form-group">
-                <label htmlFor={`boxImage${index}`}>
-                    Kutu {index + 1} Fotoğraf Yükle:
-                </label>
-                <input
-                    type="file"
-                    id={`boxImage${index}`}
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload(index, e)}
-                    required
-                />
-            </div>
-            {box.image && (
-                <img
-                    src={box.image}
-                    alt={`Kutu ${index + 1}`}
-                    className="preview-image"
-                />
-            )}
-            <button type="button" onClick={(e) => handleBoxSubmit(e, index)} className="submit-btn save-box-btn">
-                Kutu {index + 1} Kaydet
-            </button>
-          </div>
-        ))}
+              </div>
+            );
+          })}
+        </div>
+
+        <button
+                type="submit"
+                disabled={uploading}
+                className="save-button"
+              >
+                {uploading ? "Kaydediliyor..." : "Kaydet"}
+              </button>
       </form>
     </div>
   );

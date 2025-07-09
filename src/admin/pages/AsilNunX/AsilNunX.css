@@ -269,7 +269,7 @@ input[type="file"]::file-selector-button:hover {
 }
 
 .edit-icon:hover {
-  color: #007bff;
+  color: #333;
 }
 
 .delete-icon:hover {

@@ -583,7 +583,7 @@ const PoliuretanEnjeksiyon = () => {
         </div>
 
         <button type="submit" className="submit-button" disabled={uploading}>
-          {uploading ? "Kaydediliyor..." : "Tüm Sayfayı Güncelle"}
+          {uploading ? "Kaydediliyor..." : "Kaydet"}
         </button>
       </form>
     </div>

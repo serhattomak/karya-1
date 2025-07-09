@@ -38,10 +38,7 @@ const ContactEditor = () => {
         setFormData(response.data);
         setLoading(false);
       } catch (error) {
-        console.error(
-          "İletişim sayfası verileri alınırken hata oluştu:",
-          error
-        );
+        console.error("İletişim sayfası verileri alınırken hata oluştu:", error);
         setLoading(false);
         // Hata durumunda varsayılan boş değerlerle devam et
       }
@@ -61,15 +58,11 @@ const ContactEditor = () => {
     formData.append("file", file); // Backend'de 'file' olarak bekliyor varsayalım
 
     try {
-      const response = await axios.post(
-        `http://localhost:5001/api/upload/${endpoint}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post(`http://localhost:5001/api/upload/${endpoint}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       return response.data.url; // Yüklenen dosyanın URL'sini dönsün
     } catch (error) {
       console.error(`${endpoint} yüklenirken hata:`, error);
@@ -118,9 +111,10 @@ const ContactEditor = () => {
     <div className="contact-editor-container">
       <h2>İletişim Sayfası Düzenleme</h2>
       <form onSubmit={handleSubmit}>
+
         {/* 1. Banner Alanı */}
         <div className="contact-editor-section">
-          <h3>Sayfa Banner Alanı</h3>
+          <h3 className="admin-title">Sayfa Banner Alanı</h3>
           <div className="form-group">
             <label htmlFor="bannerTitle">Banner Başlık:</label>
             <input
@@ -148,148 +142,49 @@ const ContactEditor = () => {
                 className="image-preview uploaded-image"
               />
             )}
-            {bannerImageFile && <p>Yeni görsel: {bannerImageFile.name}</p>}
+            {bannerImageFile && (
+                <p>Yeni görsel: {bannerImageFile.name}</p>
+            )}
             {uploading && <p>Görsel yükleniyor...</p>}
           </div>
         </div>
 
         {/* 2. İletişim Bilgileri (Sol Kısım) */}
         <div className="contact-editor-section">
-          <h3>İletişim Detayları</h3>
+          <h3 className="admin-title">İletişim Bilgileri</h3>
+     
           <div className="form-group">
-            <label htmlFor="phoneTitle">Telefon Başlığı:</label>
-            <input
-              type="text"
-              id="phoneTitle"
-              name="phoneTitle"
-              value={formData.phoneTitle}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="phoneNumber">Telefon Numarası:</label>
-            <input
-              type="text"
-              id="phoneNumber"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-              placeholder="Örn: 0216 399 39 92"
-            />
+            <label htmlFor="phoneNumber">Telefon Numarası</label>
+            <input type="text" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange}/>
           </div>
 
+         
           <div className="form-group">
-            <label htmlFor="emailTitle">E-posta Başlığı:</label>
-            <input
-              type="text"
-              id="emailTitle"
-              name="emailTitle"
-              value={formData.emailTitle}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="emailAddress">E-posta Adresi:</label>
-            <input
-              type="email"
-              id="emailAddress"
-              name="emailAddress"
-              value={formData.emailAddress}
-              onChange={handleChange}
-              placeholder="Örn: info@karyayapi.com"
-            />
+            <label htmlFor="emailAddress">E-posta Adresi</label>
+            <input type="email" id="emailAddress" name="emailAddress" value={formData.emailAddress} onChange={handleChange} />
           </div>
 
+        
           <div className="form-group">
-            <label htmlFor="locationTitle">Lokasyon Başlığı:</label>
-            <input
-              type="text"
-              id="locationTitle"
-              name="locationTitle"
-              value={formData.locationTitle}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="locationAddress">Lokasyon Adresi:</label>
-            <textarea
-              id="locationAddress"
-              name="locationAddress"
-              value={formData.locationAddress}
-              onChange={handleChange}
-              placeholder="Örn: Bağlarbaşı Mah. Ihlamur Sok. No:24A..."
-            />
+            <label htmlFor="locationAddress">Lokasyon Adresi</label>
+            <textarea id="locationAddress" name="locationAddress" value={formData.locationAddress} onChange={handleChange}  />
           </div>
 
+       
           <div className="form-group">
-            <label htmlFor="instagramTitle">Instagram Başlığı:</label>
-            <input
-              type="text"
-              id="instagramTitle"
-              name="instagramTitle"
-              value={formData.instagramTitle}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="instagramUsername">Instagram Kullanıcı Adı:</label>
-            <input
-              type="text"
-              id="instagramUsername"
-              name="instagramUsername"
-              value={formData.instagramUsername}
-              onChange={handleChange}
-              placeholder="Örn: karyayapi"
-            />
+            <label htmlFor="instagramUsername">Instagram Kullanıcı Adı</label>
+            <input type="text" id="instagramUsername" name="instagramUsername" value={formData.instagramUsername} onChange={handleChange} />
           </div>
         </div>
 
-        {/* 3. Mesaj Yolla Formu (Sağ Kısım) - Sadece Başlık ve Açıklama */}
-        <div className="contact-editor-section">
-          <h3>Mesaj Formu Ayarları</h3>
-          <div className="form-group">
-            <label htmlFor="messageFormTitle">Form Başlığı:</label>
-            <input
-              type="text"
-              id="messageFormTitle"
-              name="messageFormTitle"
-              value={formData.messageFormTitle}
-              onChange={handleChange}
-              placeholder="Örn: Mesaj Yolla"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="messageFormDescription">Form Açıklaması:</label>
-            <textarea
-              id="messageFormDescription"
-              name="messageFormDescription"
-              value={formData.messageFormDescription}
-              onChange={handleChange}
-              placeholder="Örn: Ürün ya da uygulamalar hakkında sormak istediğiniz..."
-            />
-          </div>
-          <p className="note">
-            Form alanları (İsim, Soyisim vb.) doğrudan panelden düzenlenemez.
-            Backend tarafından yönetilir.
-          </p>
-        </div>
+     
 
         {/* 4. Harita Kısmı */}
         <div className="contact-editor-section">
-          <h3>Harita Ayarları</h3>
+          <h3 className="admin-title">Harita </h3>
+       
           <div className="form-group">
-            <label htmlFor="mapTitle">Harita Başlığı:</label>
-            <input
-              type="text"
-              id="mapTitle"
-              name="mapTitle"
-              value={formData.mapTitle}
-              onChange={handleChange}
-              placeholder="Örn: Lokasyonumuz"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="mapIframeCode">Google Haritalar Embed Kodu:</label>
+            <label htmlFor="mapIframeCode">Adres</label>
             <textarea
               id="mapIframeCode"
               name="mapIframeCode"
@@ -297,16 +192,16 @@ const ContactEditor = () => {
               onChange={handleChange}
               placeholder="Google Haritalar'dan alınan <iframe> kodunu buraya yapıştırın."
             />
-            <p className="note">
-              Google Haritalar'dan "Paylaş" "Harita Yerleştir" kısmından
-              alacağınız iframe kodunu buraya yapıştırın.
-            </p>
           </div>
         </div>
 
-        <button type="submit" className="submit-button" disabled={uploading}>
-          {uploading ? "Kaydediliyor..." : "İletişim Sayfasını Güncelle"}
-        </button>
+        <button
+                type="submit"
+                disabled={uploading}
+                className="save-button"
+              >
+                {uploading ? "Kaydediliyor..." : "Kaydet"}
+              </button>
       </form>
     </div>
   );
