@@ -4,7 +4,6 @@ import "./PolDetails.css";
 const PolDetails = ({ title, description }) => {
   return (
     <div className="injection-details-container">
-      {/* Sol taraf: Başlık ve açıklama */}
       <div className="injection-details-content">
         <div className="text-section">
           <h2 className="title">
@@ -14,7 +13,6 @@ const PolDetails = ({ title, description }) => {
           <p className="description">{description}</p>
         </div>
 
-        {/* Sağ taraf: Video */}
         <div className="video-section">
           <iframe
             className="video-thumbnail"

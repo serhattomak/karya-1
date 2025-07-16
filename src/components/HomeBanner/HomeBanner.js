@@ -6,7 +6,7 @@ const HomeBanner = ({ title, subtitle, children }) => {
     <div
       className="banner"
       style={{
-        backgroundImage: "url('/assets/images/3.webp')", // Statik arka plan resmi
+        backgroundImage: "url('/assets/images/3.webp')",
       }}
     >
       <div className="banner-container">

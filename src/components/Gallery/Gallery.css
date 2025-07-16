@@ -1,20 +1,18 @@
-/* Genel container ve başlık */
 .gallery-container {
   width: 100%;
 
   display: flex;
-  align-items: center; /* Yazı ve görseller aynı hizaya gelir */
+  align-items: center;
   flex-direction: column;
   margin-bottom: 2rem;
 }
 
-/* Yazı alanı */
 .gallery-content {
   width: 80%;
-  flex-basis: 20%; /* Yazı alanının genişliği */
+  flex-basis: 20%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Yazıları sola hizala */
+  align-items: flex-start;
 }
 
 .gallery-title {
@@ -22,29 +20,26 @@
   font-weight: bold;
   color: #333;
   margin-bottom: 15px;
-
   padding-bottom: 5px;
-  text-align: left; /* Yazıyı sola hizala */
+  text-align: left;
 }
 
-/* Görsel galerisi alanı */
 .gallery-images-container {
-  flex: 1; /* Görseller alanını genişlet */
+  flex: 1;
   display: flex;
-  justify-content: center; /* Görselleri ortala */
+  justify-content: center;
   align-items: center;
 }
 
 .gallery-images {
   display: flex;
-  justify-content: space-between; /* Görseller arası boşluk */
+  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap; /* Görselleri birden fazla satıra yerleştir */
+  flex-wrap: wrap;
   gap: 3rem;
   width: 100%;
 }
 
-/* Her bir görsel */
 .gallery-images img {
   width: 100%;
   max-width: 300px;
@@ -57,24 +52,22 @@
   transform: scale(1.05);
 }
 
-/* Görsel galerisi alanı */
 .gallery-images {
   display: flex;
-  justify-content: space-between; /* Görseller arası boşluk */
+  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap; /* Görselleri birden fazla satıra yerleştir */
-  gap: 1rem; /* Görseller arasındaki boşluk */
+  flex-wrap: wrap;
+  gap: 1rem;
   width: 100%;
 }
 
-/* Mobil düzen */
 @media (max-width: 768px) {
   .gallery-images {
-    gap: 1rem; /* Daha küçük boşluk */
+    gap: 1rem;
   }
 
   .gallery-images img {
-    max-width: calc(50% - 0.5rem); /* İki sütun düzeni için genişlik */
+    max-width: calc(50% - 0.5rem);
   }
 
   .gallery-title {
@@ -88,21 +81,20 @@
 
 @media (min-width: 769px) and (max-width: 1439px) {
   .gallery-images {
-    gap: 0.5rem; /* Boşlukları daha kontrollü hale getir */
+    gap: 0.5rem;
   }
 
   .gallery-images img {
-    max-width: calc(25% - 1rem); /* Üç sütun düzeni */
+    max-width: calc(25% - 1rem);
   }
 }
 
-/* 1440px ve üzeri ekranlar için gap'i azalt */
 @media (min-width: 1440px) {
   .gallery-images {
-    gap: 0rem; /* Boşluğu daha uygun hale getir */
+    gap: 0rem;
   }
 
   .gallery-images img {
-    max-width: calc(25% - 1rem); /* 5 sütun düzeni için genişlik */
+    max-width: calc(25% - 1rem);
   }
 }

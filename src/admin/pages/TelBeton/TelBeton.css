@@ -12,19 +12,19 @@
   width: 100%;
   flex-wrap: wrap;
 }
+
 .gallery-item {
   position: relative;
   width: 100%;
-  max-width: 250px; /* Her bir öğe için maksimum genişlik */
-  /* padding-bottom'u kaldırıyoruz, height ile yönetelim */
-  height: 200px; /* Sabit bir yükseklik verelim, istediğiniz boyuta göre ayarlayabilirsiniz */
+  max-width: 250px;
+  height: 200px;
   background-color: #f4f4f4;
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
-  display: flex; /* İçeriği hizalamak için flexbox kullan */
-  justify-content: center; /* Yatayda ortala */
-  align-items: center; /* Dikeyde ortala */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease-in-out;
 }
@@ -34,7 +34,7 @@
 }
 
 .gallery-item img {
-  position: absolute; /* Kutuyu tamamen kaplaması için */
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -44,16 +44,13 @@
   user-select: none;
 }
 
-/* Resim Yok Placeholder'ı */
 .gallery-placeholder {
-  /* Zaten .gallery-item içinde flexbox var, bu yüzden width/height ve display:flex burada gereksiz olabilir */
   color: #888;
   font-size: 14px;
   text-align: center;
   padding: 10px;
-  /* box-sizing: border-box; */ /* Zaten parent flex item olduğu için buna gerek yok */
-  /* Bu div, .gallery-item içindeki flexbox tarafından ortalanacaktır */
 }
+
 .image-preview-square {
   width: 100%;
   height: 100%;
@@ -69,6 +66,7 @@
   gap: 6px;
   z-index: 2;
 }
+
 .edit-icon {
   position: absolute;
   top: 8px;
@@ -93,7 +91,7 @@
   opacity: 1;
   background-color: rgba(0, 0, 0, 0.9);
 }
-/* Genel form ve başlık stilleri (mevcut olabilir, kontrol edin) */
+
 .page-editor {
   padding: 20px;
   max-width: 1100px;
@@ -105,7 +103,6 @@
 
 .page-editor h2 {
   text-align: center;
-
   color: #333;
   font-weight: 600;
   font-size: 22px;

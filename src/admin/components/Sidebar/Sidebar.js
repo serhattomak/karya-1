@@ -1,8 +1,7 @@
-// src/components/Admin/Sidebar/Sidebar.js
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
-import logo from "./KaryaLogo.png"; // Logoyu import edin
+import logo from "./KaryaLogo.png";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,9 +13,9 @@ const Sidebar = () => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
-        setIsOpen(true); // Geniş ekranlarda her zaman açık
+        setIsOpen(true);
       } else {
-        setIsOpen(false); // Küçük ekranlarda kapalı başlasın
+        setIsOpen(false);
       }
     };
 
@@ -30,7 +29,7 @@ const Sidebar = () => {
     <>
       <div className={`sidebar ${isOpen ? "open" : ""}`}>
         <div className="sidebar-header">
-          <img src={logo} alt="Logo" className="sidebar-logo" /> {/* Logo */}
+          <img src={logo} alt="Logo" className="sidebar-logo" />
           <h4 className="font-bold text-lg  leading-7">Admin Panel</h4>
         </div>
         <nav>
@@ -44,8 +43,7 @@ const Sidebar = () => {
         </nav>
       </div>
       <button className="menu-toggle" onClick={toggleSidebar}>
-        {/* Hamburger ikonu */}
-        {isOpen ? "✕" : "☰"} {/* Açık olduğunda X kapalı olduğunda ☰ */}
+        {isOpen ? "✕" : "☰"}
       </button>
     </>
   );

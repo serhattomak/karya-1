@@ -27,8 +27,6 @@
 }
 
 .banner-container {
-  /* width: 100%; */
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -48,14 +46,14 @@
   font-size: 4rem;
   margin-bottom: 10px;
   font-weight: 700;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Gölge ekleniyor */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); 
 }
 
 .banner p {
   font-size: 1.87rem;
   font-weight: 400;
   max-width: 850px;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Gölge ekleniyor */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); 
 }
 
 @media (max-width: 768px) {

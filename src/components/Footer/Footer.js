@@ -1,6 +1,6 @@
 import React from "react";
 import "./Footer.css";
-import { FaInstagram } from "react-icons/fa"; // Instagram ikonu
+import { FaInstagram } from "react-icons/fa";
 
 const Footer = () => {
   return (

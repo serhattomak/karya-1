@@ -23,7 +23,7 @@
   content: "";
   height: 130px;
   position: absolute;
-  width: 50px; /* Kenar efektleri için genişlik */
+  width: 50px;
   z-index: 2;
 }
 
@@ -41,15 +41,15 @@
 .PartnersSlider-track {
   animation: scroll 40s linear infinite;
   display: flex;
-  align-items: center; /* Resimleri dikey ortalama */
+  align-items: center;
   justify-content: flex-start;
-  width: calc(300px * 40); /* Slider genişliği */
+  width: calc(300px * 40);
   gap: 2rem;
 }
 
 .PartnersSlider img {
-  height: 50px; /* Resimlerin sabit boyutta olması */
-  max-width: 200px; /* Oranlarını koruyarak genişliği otomatik ayarla */
+  height: 50px;
+  max-width: 200px;
   display: block;
-  margin: 0 auto; /* Resimleri yatay ortala */
+  margin: 0 auto;
 }

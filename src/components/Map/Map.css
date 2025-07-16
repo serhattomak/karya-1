@@ -1,73 +1,67 @@
-/* Konteyner ayarları */
 .location-section {
   padding: 20px;
   border-radius: 10px;
   margin: 20px 0;
   display: flex;
-  justify-content: center; /* Ekranın yatay merkezinde */
-  align-items: center; /* Ekranın dikey merkezinde */
+  justify-content: center;
+  align-items: center;
   width: 100%;
 }
 
-/* Harita içeriği */
 .map-content {
-  width: 80%; /* Başlangıçta genişlik ayarı */
+  width: 80%;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Tüm içeriği ortala */
+  align-items: center;
 }
 
-/* Başlık düzeni */
 .map-title {
-  width: 100%; /* Başlık ve çizgi tüm genişliğe yayılsın */
-  text-align: left; /* Başlığı sola hizala */
+  width: 100%;
+  text-align: left;
   margin-bottom: 10px;
 }
 
 .location-section h2 {
-  font-size: 24px; /* Daha büyük yazı boyutu */
+  font-size: 24px;
   color: #333;
-  margin-bottom: 5px; /* Çizgiyle arasındaki mesafe */
-  font-weight: bold; /* Kalın yazı */
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
 .location-section hr {
-  width: 50px; /* Çizgi genişliği */
+  width: 50px;
   border: 2px solid #ff9800;
-  margin: 0; /* Başlıkla arasında boşluk bırakma */
+  margin: 0;
 }
 
-/* Harita konteyneri */
 .map-container {
   overflow: hidden;
   border-radius: 10px;
-  height: 470px; /* Harita yüksekliği */
-  width: 100%; /* Harita genişliği */
+  height: 470px;
+  width: 100%;
 }
 
 @media screen and (max-width: 768px) {
-  /* Mobil ekran için harita boyutları */
   .map-container {
-    height: 273px; /* Daha küçük bir yükseklik */
-    width: 100%; /* Ekranın tamamına yayılacak şekilde genişlik */
+    height: 273px;
+    width: 100%;
   }
 
-  /* Harita içeriği ve başlık için düzenlemeler */
   .map-content {
-    width: 100%; /* Mobilde tüm genişlik kullanılacak */
+    width: 100%;
     padding: 10px;
   }
 
   .map-title h2 {
-    font-size: 20px; /* Başlık boyutunu küçült */
+    font-size: 20px;
   }
 
   .location-section {
-    width: 100%; /* Ekran genişliğine göre tam genişlik */
-    padding: 15px; /* Mobilde daha uygun padding */
+    width: 100%;
+    padding: 15px;
   }
 
   .location-section hr {
-    width: 40px; /* Çizgi boyutunu küçült */
+    width: 40px;
   }
 }

@@ -2,8 +2,7 @@
   background: radial-gradient(
     97.57% 210.75% at 0.9% 2.98%,
     rgba(7, 7, 7, 0.4) 0%,
-    /* Opaklık azaltıldı */ rgba(0, 0, 0, 0.2) 100%
-      /* Daha parlak bir ton eklendi */
+    rgba(0, 0, 0, 0.2) 100%
   );
   backdrop-filter: blur(10px);
   padding: 1rem;
@@ -31,7 +30,7 @@
 }
 
 .main_list.desktop {
-  display: flex; /* Web görünümünde menüyü göster */
+  display: flex;
   gap: 1rem;
 }
 
@@ -43,7 +42,7 @@
   height: 100vh;
   background-color: rgba(27, 27, 27, 0.97);
   color: white;
-  display: none; /* Başlangıçta gizli */
+  display: none;
   flex-direction: column;
   text-align: left;
   align-items: flex-start;
@@ -108,7 +107,6 @@
   font-size: 20px;
 }
 
-/* Hamburger buton */
 .navTrigger {
   display: none;
   flex-direction: column;
@@ -122,15 +120,14 @@
   background-color: white;
 }
 
-/* Menü Açıkken Arka Plan Overlay */
 .menu-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Yarı saydam arka plan */
-  z-index: 9; /* Mobil menüden daha düşük */
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9;
 }
 
 .social-media {
@@ -139,17 +136,15 @@
 }
 
 .social-media .instagram-icon {
-  font-size: 2rem; /* İkon boyutu */
+  font-size: 2rem;
   color: white;
   cursor: pointer;
 }
 
-/* Mobil Menü (Z-index güncellemesi) */
 .main_list.mobile {
-  z-index: 10; /* Overlay'den daha üstte */
+  z-index: 10;
 }
 
-/* Mobil Menü Kapatma Butonu (NavClose) */
 .navClose {
   position: absolute;
   top: 1rem;
@@ -159,7 +154,6 @@
   cursor: pointer;
 }
 
-/* Responsive ayarlar */
 @media screen and (max-width: 729px) {
   .main_list.desktop {
     display: none;
@@ -183,17 +177,14 @@
 }
 
 @media screen and (min-width: 730px) {
-  /* Mobil menüyü geniş ekranda gizle */
   .main_list.mobile {
     display: none;
   }
 
-  /* Web menüsünü geniş ekranda göster */
   .main_list.desktop {
     display: flex;
   }
 
-  /* Hamburger menüyü geniş ekranda gizle */
   .navTrigger {
     display: none;
   }

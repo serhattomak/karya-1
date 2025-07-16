@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-import logo from "./KaryaLogo.png"; // Logoyu import edin
+import logo from "./KaryaLogo.png";
 
 const Login = ({ setIsAuthenticated }) => {
   const [username, setUsername] = useState("");
@@ -11,17 +11,18 @@ const Login = ({ setIsAuthenticated }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Artık token doğrulama yapılmayacak. Giriş başarılı sayacağız.
-    setIsAuthenticated(true); // Giriş başarılı, durumu güncelle
-    navigate("/admin/Home"); // Yönetim paneline yönlendir
+    setIsAuthenticated(true);
+    navigate("/admin/Home");
   };
 
   return (
     <div id="login-page">
       <div className="login">
-        <div className="login-header">  <img src={logo} alt="Logo" className="logo" />
-        <h2 className="login-title"> Karya Yapı Admin Panel Giriş</h2></div>
-       
+        <div className="login-header">
+          {" "}
+          <img src={logo} alt="Logo" className="logo" />
+          <h2 className="login-title"> Karya Yapı Admin Panel Giriş</h2>
+        </div>
 
         <form className="form-login" onSubmit={handleLogin}>
           <label htmlFor="email">Kullanıcı Adı</label>

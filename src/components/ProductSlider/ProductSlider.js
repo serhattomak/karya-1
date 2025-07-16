@@ -6,7 +6,6 @@ const ProductSlider = ({ products }) => {
   const trackRef = useRef(null);
   const navigate = useNavigate();
 
-  // Statik bağlantılar dizisi (kartların sırasına göre)
   const staticLinks = [
     "/AsilNunX",
     "/PoliuretanEnjeksiyon",

@@ -48,12 +48,11 @@ const Home = () => {
     }
   };
 
-  // Sabit rota listesi (index sırasına göre eşleşir)
   const pageRoutes = [
-    "/admin/asilnunx", // İlk kutu için (muhtemelen AsilNunX)
-    "/admin/Poliuretan", // Dördüncü kutu için (muhtemelen Poliüretan)
-    "/admin/telbeton", // Üçüncü kutu için (muhtemelen Tel Beton Kesme)
-    "/admin/KimyasalAnkraj", // İkinci kutu için (muhtemelen Kimyasal Ankraj)
+    "/admin/asilnunx",
+    "/admin/Poliuretan",
+    "/admin/telbeton",
+    "/admin/KimyasalAnkraj",
   ];
 
   const openModal = () => {
@@ -125,7 +124,7 @@ const Home = () => {
             </div>
           ))}
         </div>
-{/* 
+        {/* 
         <button type="submit" className="submit-btn">
           Kaydet
         </button> */}

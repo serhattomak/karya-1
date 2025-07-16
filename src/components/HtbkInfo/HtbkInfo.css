@@ -1,31 +1,26 @@
-/* Genel container ve içerik stil */
 .HtbkInfo-container {
   display: flex;
   align-items: center;
   justify-content: space-around;
   width: 100%;
   padding: 20px;
-  box-sizing: border-box; /* Padding'i dahil eder */
+  box-sizing: border-box;
   margin-bottom: 2rem;
 }
 
-/* İçeriğin genişliği ve hizalaması */
-
 .HtbkInfo-content {
-  width: 80%; /* Ekranın %90 genişliğinde */
+  width: 80%;
   display: flex;
-  justify-content: space-between; /* İçeriği yatayda ortalar */
+  justify-content: space-between;
 }
 
-/* Sol kısımdaki metin bölümü */
 .HtbkInfo-text {
   flex: 1;
   color: #333;
   max-width: 520px;
-  text-align: left; /* Sol hizalı metin */
+  text-align: left;
 }
 
-/* Başlık ve paragraf stilleri */
 .HtbkInfo-title {
   font-size: 28px;
   font-weight: bold;
@@ -42,7 +37,6 @@
 }
 
 @media screen and (max-width: 768px) {
-  /* İçeriğin genişliği ve hizalaması */
   .HtbkInfo-container {
     padding: 0px;
   }

@@ -12,7 +12,6 @@
   object-fit: cover;
 }
 
-/* Renkli bulanık efekt için ::before ile ekleme */
 .banner-about::before {
   content: "";
   position: absolute;
@@ -43,13 +42,13 @@
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
   font-family: Montserrat;
-  z-index: 2; /* Metnin önde görünmesi için */
+  z-index: 2; 
 }
 
 @media (max-width: 768px) {
   .banner-text-about {
-    font-size: 1.5rem; /* Mobil cihazlarda daha küçük boyut */
-    line-height: 50px; /* Yazı aralığını da mobil uyumlu yap */
+    font-size: 1.5rem;
+    line-height: 50px; 
     font-weight: 600;
   }
   .banner-about {
@@ -62,7 +61,7 @@
 
 @media (max-width: 480px) {
   .banner-text-about {
-    font-size: 1.25rem; /* Daha küçük ekranlar için daha küçük boyut */
+    font-size: 1.25rem; 
     line-height: 40px;
     font-weight: 600;
   }

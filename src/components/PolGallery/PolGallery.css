@@ -1,12 +1,10 @@
-/* Galeri Konteyneri */
 .p-gallery-container {
-  width: 70%; /* Galeri genişliğini %80 olarak ayarladık */
-  margin: 0 auto; /* Ortaya hizalama */
+  width: 70%;
+  margin: 0 auto;
   padding: 50px;
   text-align: left;
 }
 
-/* Başlık */
 .p-gallery-title {
   font-size: 1.8rem;
   font-weight: bold;
@@ -16,38 +14,35 @@
 }
 
 .p-gallery-title span {
-  color: #f57c00; /* Başlık alt çizgi rengi */
+  color: #f57c00;
   border-bottom: 3px solid #f57c00;
   padding-bottom: 3px;
 }
-/* Galeri Ana Konteyner */
+
 .p-gallery-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Her sırada 4 sütun */
-  gap: 10px; /* Görseller arasındaki boşluğu daraltmak için 10px */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
   justify-items: center;
   align-items: center;
-  margin-top: 20px; /* Başlık ve görseller arasında mesafe */
+  margin-top: 20px;
 }
 
-/* Üst ve Alt Sıradaki Resimler İçin Ortak Stil */
 .p-gallery-item img {
-  width: 300px; /* Tüm görsellerin genişliği */
-  height: 250px; /* Tüm görsellerin yüksekliği */
-  object-fit: cover; /* Görsellerin düzgün kesilmesi */
+  width: 300px;
+  height: 250px;
+  object-fit: cover;
   border-radius: 20px;
 }
 
-/* Hover Efekti (İsteğe Bağlı) */
 .p-gallery-item img:hover {
-  transform: scale(1.05); /* Hover sırasında görsel büyür */
+  transform: scale(1.05);
   transition: transform 0.3s ease-in-out;
 }
 
-/* Mobil Düzenlemeler */
 @media screen and (max-width: 768px) {
   .p-gallery-container {
-    width: 100%; /* Mobilde genişlik tam ekran olacak */
+    width: 100%;
     padding: 20px;
   }
 
@@ -57,13 +52,12 @@
 
   .p-gallery-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Her sıradaki 2 sütun */
-    gap: 10px; /* Görseller arasındaki boşluk */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
     justify-items: center;
   }
 
-  /* Mobilde tüm resimler aynı boyutta olacak */
   .p-gallery-item img {
-    height: 150px; /* Görsellerin yüksekliği */
+    height: 150px;
   }
 }

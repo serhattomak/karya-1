@@ -1,10 +1,10 @@
 .home-background {
   background-size: cover;
   background-position: center;
-  height: 100vh; /* Mobilde yüksekliği sınırlamak için vh kullanabilirsiniz */
+  height: 100vh;
   position: relative;
   z-index: 1;
-  overflow: hidden; /* Kaydırmayı engeller, sadece bu öğe için geçerli */
+  overflow: hidden;
 }
 
 .home-background::before {
@@ -24,19 +24,17 @@
   z-index: -1;
 }
 
-/* Banner altındaki metni mobilde gizleyelim */
 .banner-info {
   font-size: 0.95rem;
   margin: 1rem;
   font-weight: 600;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Gölge ekleniyor */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* Mobil görünümde kaydırmayı engelle */
 @media (max-width: 768px) {
   .home-background {
-    height: 100vh; /* Yüksekliği sınırlı tutuyoruz */
-    overflow: hidden; /* Kaydırmayı sadece bu öğede engelliyoruz */
+    height: 100vh;
+    overflow: hidden;
   }
 
   .banner-info {

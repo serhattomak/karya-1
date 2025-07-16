@@ -1,10 +1,8 @@
-/* Temel stiller */
 .slider-container {
   width: 100%;
   display: flex;
   justify-content: center;
   flex-direction: column;
-
   padding: 1rem;
 }
 
@@ -30,12 +28,12 @@
   scroll-behavior: smooth;
   list-style-type: none;
   margin: 0;
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
   gap: 1rem;
 }
 
 .slider__track::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
 }
 
 .slide {
@@ -44,8 +42,8 @@
   height: 300px;
   scroll-snap-align: start;
   display: flex;
-  flex-direction: column; /* Dikey düzen */
-  align-items: flex-start; /* İçerikler sola hizalanır */
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: space-between;
   background: radial-gradient(
     97.57% 210.75% at 0.9% 2.98%,
@@ -62,8 +60,8 @@
 }
 
 .slide:hover {
-  transform: scale(1.01); /* Yumuşak büyüme efekti */
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); /* Daha belirgin gölge */
+  transform: scale(1.01);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
 }
 
 .product-image {
@@ -78,24 +76,22 @@
   font-weight: 600;
   color: #ffffff;
   margin: 0.25rem 0;
-  text-align: left; /* Tüm başlıklar solda hizalanır */
+  text-align: left;
 }
 
 .product-subtitle {
   font-size: 1rem;
   font-weight: 600;
   margin-top: 0.25rem;
-  text-align: left; /* Tüm alt başlıklar da solda hizalanır */
+  text-align: left;
 }
 
-/* subtitle içeren kartlar için özel düzenleme */
 .slide.with-subtitle .product-title {
   font-size: 1.4rem;
-  margin-bottom: 0.5rem; /* Subtitle ile aralığı arttır */
+  margin-bottom: 0.5rem;
   font-weight: 600;
 }
 
-/* subtitle içeren kartlar için alt başlık düzenlemesi */
 .slide.with-subtitle .product-subtitle {
   font-size: 1rem;
   font-weight: 600;
@@ -106,7 +102,6 @@ a {
   display: block;
 }
 
-/* Mobil ekran */
 @media (max-width: 768px) {
   .slider__track {
     gap: 0.4rem;
@@ -134,7 +129,7 @@ a {
 
   .slide.with-subtitle .product-title {
     font-size: 0.8rem;
-    margin-bottom: 0rem; /* Subtitle ile aralığı arttır */
+    margin-bottom: 0rem;
     font-weight: 600;
   }
   .slide.with-subtitle .product-subtitle {
@@ -144,7 +139,6 @@ a {
   }
 }
 
-/* Tablet ekran */
 @media (min-width: 769px) and (max-width: 1024px) {
   .slide {
     flex: 0 0 30%;
@@ -166,7 +160,6 @@ a {
   }
 }
 
-/* Büyük ekran */
 @media (min-width: 1025px) {
   .slide {
     flex: 0 0 284px;

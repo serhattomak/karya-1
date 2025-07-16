@@ -4,12 +4,6 @@
   padding: 1rem 0;
   width: 100%;
   height: auto;
-
-  /* background: linear-gradient(
-    90deg,
-    #000000 0%,
-    rgba(112, 112, 112, 0.1) 41.77%
-  ); */
 }
 
 .footer-container {
@@ -98,37 +92,37 @@
 
 @media (max-width: 768px) {
   .footer-container {
-    flex-direction: column; /* Bileşenleri dikey olarak hizala */
+    flex-direction: column;
     text-align: center;
     font-size: 0.875rem;
   }
 
   .footer-left {
-    order: 3; /* Logoyu en alt sıraya taşı */
-    margin-top: 20px; /* Üst kısımdan boşluk ekle */
+    order: 3;
+    margin-top: 20px;
   }
 
   .footer-center {
-    order: 1; /* Ortadaki içerik üstte kalacak */
-    flex-direction: column; /* Dikey hizalama */
-    gap: 20px; /* Footer links arasına boşluk ekle */
+    order: 1;
+    flex-direction: column;
+    gap: 20px;
   }
 
   .footer-links {
-    gap: 10px; /* Her grup arasında boşluk */
+    gap: 10px;
     text-align: center;
   }
 
   .footer-right {
-    order: 2; /* Sağdaki içerik orta sırada */
+    order: 2;
     margin-top: 20px;
-    text-align: center; /* Mobilde içeriği ortala */
+    text-align: center;
   }
 
   .social-icon {
     display: block;
-    margin: 0 auto; /* Instagram ikonunu ortala */
-    width: 32px; /* Mobilde biraz daha büyük görünmesi için boyutu artır */
+    margin: 0 auto;
+    width: 32px;
     height: 32px;
   }
 }

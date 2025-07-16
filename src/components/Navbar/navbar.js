@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./navbar.css";
-import { IoClose, IoMail, IoLogoInstagram } from "react-icons/io5"; // Instagram ikonu eklendi
+import { IoClose, IoMail, IoLogoInstagram } from "react-icons/io5"; 
 import { Link } from "react-router-dom";
 
 const Navbar = () => {

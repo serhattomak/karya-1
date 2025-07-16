@@ -1,7 +1,6 @@
 .service-list {
   width: 50%;
-
-  margin: 0 auto; /* Ortalamak için */
+  margin: 0 auto;
 }
 
 .service-title {
@@ -54,57 +53,55 @@
 
 @media screen and (min-width: 769px) and (max-width: 1366px) {
   .service-list {
-    width: 90%; /* Daha dar ekranlar için genişliği azalt */
-    padding: 10px; /* İç boşluğu küçült */
+    width: 90%;
+    padding: 10px;
   }
 }
 
-/* Responsive tasarım için */
 @media (max-width: 768px) {
   .service-list {
-    width: 90%; /* Daha dar ekranlar için genişliği azalt */
-    padding: 10px; /* İç boşluğu küçült */
+    width: 90%;
+    padding: 10px;
   }
 
   .service-title {
-    font-size: 0.875rem; /* Başlık boyutunu küçült */
-    text-align: left; /* Mobilde başlığı ortala */
+    font-size: 0.875rem;
+    text-align: left;
   }
 
   .service-items {
-    text-align: left; /* Listeyi sola hizala */
+    text-align: left;
   }
 
   .service-items li {
-    font-size: 0.9rem; /* Yazı boyutunu küçült */
-    padding-left: 40px; /* Bullet ile metin arasındaki boşluğu azalt */
+    font-size: 0.9rem;
+    padding-left: 40px;
   }
 
   .service-items li::before {
-    width: 25px; /* Bullet boyutunu küçült */
+    width: 25px;
     height: 25px;
     font-size: 0.9rem;
   }
 }
 
-/* Daha küçük ekranlar (telefonlar) için */
 @media (max-width: 480px) {
   .service-list {
-    width: 100%; /* Tam genişlik kullan */
-    padding: 5px; /* Daha az iç boşluk */
+    width: 100%;
+    padding: 5px;
   }
 
   .service-title {
-    font-size: 1rem; /* Daha küçük başlık */
+    font-size: 1rem;
   }
 
   .service-items li {
-    font-size: 0.85rem; /* Metin boyutunu iyice küçült */
-    padding-left: 35px; /* Bullet ile metin arasındaki boşluğu daha da azalt */
+    font-size: 0.85rem;
+    padding-left: 35px;
   }
 
   .service-items li::before {
-    width: 20px; /* Bullet boyutunu küçült */
+    width: 20px;
     height: 20px;
     font-size: 0.8rem;
   }

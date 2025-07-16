@@ -6,12 +6,12 @@ const Banner = ({ imageSrc, title }) => {
   return (
     <div className="banner-about">
       <img
-        src={imageSrc} // Dinamik resim kaynağı
+        src={imageSrc}
         alt="Banner"
         className="banner-image-about"
         loading="lazy"
       />
-      <h1 className="banner-text-about">{title}</h1> {/* Dinamik başlık */}
+      <h1 className="banner-text-about">{title}</h1>
     </div>
   );
 };

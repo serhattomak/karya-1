@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./AboutUs.css";
 
@@ -9,9 +9,26 @@ const AboutUs = () => {
     content: "",
     image: "",
   });
-  const [selectedFile, setSelectedFile] = useState(null);
 
-  // Sayfa yüklendiğinde veriyi çek
+  const [servicesTitle, setServicesTitle] = useState(
+    "Hizmet Verdiğimiz Konular"
+  );
+  const [servicesList, setServicesList] = useState([
+    "Poliüretan enjeksiyon reçine satışı.",
+    "Her türlü negatif yönden su sızıntılarına karşı poliüretan enjeksiyon reçinesi ile su yalıtımı.",
+    "Epoksi enjeksiyon reçinesi ile yapısal çatlak tamiri.",
+    "Epoksi ile demir filiz ekimi.",
+    "Epoksi ile rot montajı.",
+    "Karot makineleri ile beton delme.",
+    "Hidrolik raylı sistemler ile beton kesme.",
+    "Halatlı - tel beton kesme.",
+  ]);
+
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [bannerTitle, setBannerTitle] = useState("Banner Başlığı");
+  const [bannerImage, setBannerImage] = useState("");
+  const applicationFileInputRefs = useRef([]);
+  const selectedApplicationImageIndexRef = useRef(0);
   useEffect(() => {
     fetchData();
   }, []);
@@ -25,7 +42,29 @@ const AboutUs = () => {
       .catch((error) => console.error("Veri çekme hatası: ", error));
   };
 
-  // Input değişimini takip et
+  const handleApplicationImageUpload = (event) => {
+    const file = event.target.files && event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setApplicationAreaImages((prevImages) => {
+        const updatedImages = [...prevImages];
+        updatedImages[selectedApplicationImageIndexRef.current] = imageUrl;
+        return updatedImages;
+      });
+    }
+  };
+  const triggerApplicationFileInput = (index) => {
+    selectedApplicationImageIndexRef.current = index;
+    applicationFileInputRefs.current[index]?.click();
+  };
+
+  const [applicationAreaImages, setApplicationAreaImages] = useState([
+    "",
+    "",
+    "",
+    "",
+  ]);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -36,22 +75,25 @@ const AboutUs = () => {
     if (file) {
       setSelectedFile(file);
 
-      // Resmi hemen base64 formatında göstermek için FileReader'ı kullan
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData((prevData) => ({
           ...prevData,
-          image: reader.result, // Base64 formatındaki resmi hemen göster
+          image: reader.result,
         }));
       };
-      reader.readAsDataURL(file); // Dosyayı base64 formatına çevir
+      reader.readAsDataURL(file);
     }
   };
 
-  // Resmi sunucuya yükleme fonksiyonu
-  const uploadImage = async () => {
-    if (!selectedFile) return formData.image; // Yeni resim seçilmemişse eski resmi kullan
+  const handleBannerUpload = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      setBannerImage(URL.createObjectURL(event.target.files[0]));
+    }
+  };
 
+  const uploadImage = async () => {
+    if (!selectedFile) return formData.image;
     const formDataUpload = new FormData();
     formDataUpload.append("image", selectedFile);
 
@@ -60,27 +102,23 @@ const AboutUs = () => {
         "http://localhost:5001/api/about/upload-image",
         formDataUpload
       );
-      return response.data.imageUrl; // Resmin yeni URL'sini döndür
+      return response.data.imageUrl;
     } catch (error) {
       console.error("Resim yükleme hatası:", error);
-      return formData.image; // Hata olursa eski resmi kullan
+      return formData.image;
     }
   };
 
-  // Formu gönder
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Resmi yükle ve URL'ini al
     const uploadedImageUrl = await uploadImage();
-    // Form verisini yeni resimle birlikte güncelle
     const updatedData = { ...formData, image: uploadedImageUrl };
 
-    // Veriyi backend'e gönder
     axios
       .put("http://localhost:5001/api/about", updatedData)
       .then(() => {
-        setFormData(updatedData); // Backend'den dönen veriyi anında güncelle
+        setFormData(updatedData);
         alert("Güncelleme başarılı!");
       })
       .catch((error) => {
@@ -92,6 +130,34 @@ const AboutUs = () => {
   return (
     <div className="admin-panel">
       <h2 className="panel-title">Hakkımızda</h2>
+      <div className="form-group">
+        <label htmlFor="bannerTitle">Banner Başlık:</label>
+        <input
+          type="text"
+          id="bannerTitle"
+          value={bannerTitle}
+          onChange={(e) => setBannerTitle(e.target.value)}
+          placeholder="Başlık ekleyin"
+          required
+        />
+
+        <label htmlFor="bannerImage">Banner Resim:</label>
+        <input
+          type="file"
+          id="bannerImage"
+          accept="image/*"
+          onChange={handleBannerUpload}
+          required
+        />
+        {bannerImage && (
+          <img
+            src={bannerImage}
+            alt="Banner Önizleme"
+            className="preview-image"
+          />
+        )}
+      </div>
+
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Başlık</label>
@@ -102,8 +168,6 @@ const AboutUs = () => {
             onChange={handleChange}
             placeholder="Başlık"
           />
-        </div>
-        <div className="form-group">
           <label>Alt Başlık</label>
           <input
             type="text"
@@ -112,8 +176,6 @@ const AboutUs = () => {
             onChange={handleChange}
             placeholder="Alt Başlık"
           />
-        </div>
-        <div className="form-group">
           <label>İçerik</label>
           <textarea
             className="text-area"
@@ -122,19 +184,110 @@ const AboutUs = () => {
             onChange={handleChange}
             placeholder="İçerik"
           ></textarea>
-        </div>
-        <div className="form-group">
           <label>Resim Yükle</label>
           <input type="file" accept="image/*" onChange={handleFileChange} />
+          {formData.image && (
+            <img
+              className="preview-image"
+              src={formData.image}
+              alt="Önizleme"
+              style={{ width: "150px", marginTop: "10px" }}
+            />
+          )}{" "}
         </div>
-        {formData.image && (
-          <img
-            className="preview-image"
-            src={formData.image}
-            alt="Önizleme"
-            style={{ width: "150px", marginTop: "10px" }}
+
+        <div className="form-group service-section">
+          <label htmlFor="servicesTitle">Başlık</label>
+          <input
+            type="text"
+            id="servicesTitle"
+            className="input full"
+            value={servicesTitle}
+            onChange={(e) => setServicesTitle(e.target.value)}
+            placeholder="Hizmet başlığını girin"
           />
-        )}
+
+          <label>Maddeler</label>
+          {servicesList.map((item, index) => (
+            <div key={index} className="service-item-row">
+              <span className="index">{index + 1}.</span>
+              <input
+                type="text"
+                className="input"
+                value={item}
+                onChange={(e) => {
+                  const updated = [...servicesList];
+                  updated[index] = e.target.value;
+                  setServicesList(updated);
+                }}
+                placeholder={`Madde ${index + 1}`}
+              />
+              <button
+                type="button"
+                className="delete-btn"
+                onClick={() => {
+                  const updated = servicesList.filter((_, i) => i !== index);
+                  setServicesList(updated);
+                }}
+              >
+                ❌
+              </button>
+            </div>
+          ))}
+
+          <button
+            type="button"
+            className="add-btn"
+            onClick={() => setServicesList([...servicesList, ""])}
+          >
+            + Yeni Madde Ekle
+          </button>
+        </div>
+
+        <h4 className="panel-title">Görseller</h4>
+        <div className="gallery-grid">
+          {[0, 1, 2, 3].map((index) => {
+            const imageUrl = applicationAreaImages[index];
+
+            return (
+              <div key={index} className="gallery-item image-box">
+                {imageUrl ? (
+                  <>
+                    <img
+                      src={imageUrl}
+                      alt={`Uygulama Alanı ${index + 1}`}
+                      className="image-preview-square"
+                    />
+                    <div className="image-overlay">
+                      <span
+                        className="edit-icon"
+                        onClick={() => triggerApplicationFileInput(index)}
+                        title="Resmi Değiştir"
+                      >
+                        ✏️
+                      </span>
+                    </div>
+                  </>
+                ) : (
+                  <div
+                    className="image-placeholder"
+                    onClick={() => triggerApplicationFileInput(index)}
+                  >
+                    <div className="plus-icon">Görsel Ekle ➕</div>
+                  </div>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  ref={(el) => (applicationFileInputRefs.current[index] = el)}
+                  onChange={handleApplicationImageUpload}
+                />
+              </div>
+            );
+          })}
+        </div>
+
         <button type="submit">Kaydet</button>
       </form>
     </div>

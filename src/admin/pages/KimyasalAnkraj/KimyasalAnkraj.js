@@ -12,7 +12,12 @@ const KimyasalAnkraj = () => {
   const [homepageSubtitle, setHomepageSubtitle] = useState("");
   const [homepageImage, setHomepageImage] = useState("");
 
-  const [applicationAreaImages, setApplicationAreaImages] = useState(["", "", "", ""]);
+  const [applicationAreaImages, setApplicationAreaImages] = useState([
+    "",
+    "",
+    "",
+    "",
+  ]);
   const applicationFileInputRefs = useRef([]);
   const selectedApplicationImageIndexRef = useRef(0);
 
@@ -203,8 +208,7 @@ const KimyasalAnkraj = () => {
                     className="image-placeholder"
                     onClick={() => triggerApplicationFileInput(index)}
                   >
-                    <div className="plus-icon">➕</div>
-                    <p>Görsel Ekle</p>
+                    <div className="plus-icon"> Görsel Ekle ➕</div>{" "}
                   </div>
                 )}
                 <input

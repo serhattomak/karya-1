@@ -1,7 +1,6 @@
 import React from "react";
 import emailjs from "emailjs-com";
 import "./ContactForm.css";
-// React Icons'tan gerekli ikonları import edin
 import {
   FaPhone,
   FaEnvelope,
@@ -10,16 +9,15 @@ import {
 } from "react-icons/fa";
 
 const ContactForm = () => {
-  // Form gönderim işlemi
   const sendEmail = (e) => {
     e.preventDefault();
 
     emailjs
       .sendForm(
-        "service_ryy5urc", // EmailJS'den aldığınız Service ID
-        "template_xgg8bns", // EmailJS'den aldığınız Template ID
+        "service_ryy5urc", //Service ID
+        "template_xgg8bns", //  Template ID
         e.target,
-        "0kX-HdVgnL6ZzjCJU" // EmailJS hesabınızın Public Key'i
+        "0kX-HdVgnL6ZzjCJU" // Public Key
       )
       .then(
         (result) => {
@@ -30,7 +28,7 @@ const ContactForm = () => {
         }
       );
 
-    e.target.reset(); // Form alanlarını temizle
+    e.target.reset();
   };
 
   return (
@@ -104,10 +102,9 @@ const ContactForm = () => {
   );
 };
 
-// Contact Detail Component
 const ContactDetail = ({ icon, title, content }) => (
   <div className="contact-detail">
-    <div className="icon">{icon}</div> {/* Dinamik olarak ikon */}
+    <div className="icon">{icon}</div>
     <div>
       <h4>{title}</h4>
       <p>{content}</p>

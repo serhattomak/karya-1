@@ -13,7 +13,7 @@ const PolGallery = ({ title, images }) => {
               src={image.src}
               alt={image.alt}
               className="p-gallery-image"
-              loading="lazy" // Lazy loading
+              loading="lazy"
             />
           </div>
         ))}

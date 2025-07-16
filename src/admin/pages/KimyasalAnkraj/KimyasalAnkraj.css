@@ -1,112 +1,95 @@
-/* Genel sayfa düzeni */
 .page-editor {
-    max-width: 1100px;
-    margin: 30px auto;
-    padding: 30px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    box-sizing: border-box;
-  }
-  
-  /* Form alanları genel stili */
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #444;
-  }
-  
-  .form-group input[type="text"],
-  .form-group input[type="file"],
-  .form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-    font-size: 15px;
-    transition: border-color 0.3s ease;
-  }
-  
-  .form-group input[type="text"]:focus,
-  .form-group textarea:focus {
-    border-color: #343a40;
-    outline: none;
-  }
-  
-  /* Dosya input butonu düzeni */
-  input[type="file"]::file-selector-button {
-    background-color: #343a40;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 10px 15px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  input[type="file"]::file-selector-button:hover {
-    background-color: #495057;
-  }
-  
-  /* Resim önizleme */
-  /* .preview-image {
-    margin-top: 10px;
-    max-width: 400px;
-    max-height: 300px;
-    border-radius: 8px;
-    object-fit: contain;
-    display: block;
-  }
-   */
-  /* Submit butonu */
-  .submit-btn {
-    display: inline-block;
-    background-color: #343a40;
-    color: #fff;
-    padding: 12px 25px;
-    font-size: 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .submit-btn:hover {
-    background-color: #495057;
-  }
-  
-  /* Panel başlığı */
-  .panel-title {
-    margin-top: 40px;
-    margin-bottom: 20px;
-    font-size: 22px;
-    font-weight: 600;
-    color: #333;
-    padding-bottom: 8px;
-  }
-  
-  /* Kutular için düzen */
-  .boxes-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
-    gap: 25px;
-  }
-  
-  .box {
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    padding: 20px;
-    box-sizing: border-box;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  }
-  
-  .box form {
-    margin: 0; /* Kutularda form üstündeki boşluğu kaldır */
-  }
-  
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #444;
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"],
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-size: 15px;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+  border-color: #343a40;
+  outline: none;
+}
+
+input[type="file"]::file-selector-button {
+  background-color: #343a40;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: #495057;
+}
+
+.submit-btn {
+  display: inline-block;
+  background-color: #343a40;
+  color: #fff;
+  padding: 12px 25px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #495057;
+}
+
+.panel-title {
+  margin-top: 40px;
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+  padding-bottom: 8px;
+}
+
+.boxes-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+.box {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.box form {
+  margin: 0;
+}

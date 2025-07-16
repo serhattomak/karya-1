@@ -9,12 +9,11 @@ import KimyasalAnkraj from "../../pages/KimyasalAnkraj/KimyasalAnkraj";
 import TelBeton from "../../pages/TelBeton/TelBeton";
 import ContactPage from "../../pages/ContactPage/ContactPage";
 import Poliuretan from "../../pages/PoliuretanEnjeksiyon/PoliuretanEnjeksiyon";
-// import diğer admin sayfalarını buraya ekle
 
 const AdminLayout = () => {
   return (
     <div className="admin-layout">
-      <Sidebar /> {/* Sidebar her zaman görünecek */}
+      <Sidebar />
       <div className="content-area">
         <Routes>
           <Route path="home" element={<Home />} />

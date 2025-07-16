@@ -14,31 +14,29 @@ const AsilNunXInfo = () => {
     linkText: "",
     link: "",
   });
-  const [loading, setLoading] = useState(true); // Loading state ekleyelim
+  const [loading, setLoading] = useState(true);
 
-  // API'den veri almak için useEffect kullanıyoruz
   useEffect(() => {
     const fetchAsilNunXData = async () => {
       try {
         const response = await axios.get("http://localhost:5001/api/asilnunx");
-        console.log("API'den alınan veri:", response.data); // Veriyi konsola yazdırıyoruz
-        setAsilNunXData(response.data); // API'den alınan verileri state'e ekliyoruz
-        setLoading(false); // Veriler geldikten sonra loading'i false yapıyoruz
+        console.log("API'den alınan veri:", response.data);
+        setAsilNunXData(response.data);
+        setLoading(false);
       } catch (error) {
         console.error("Veri alınırken hata oluştu: ", error);
-        setLoading(false); // Hata durumunda da loading'i false yapıyoruz
+        setLoading(false);
       }
     };
 
     fetchAsilNunXData();
   }, []);
 
-  // Eğer veri yükleniyorsa "Yükleniyor..." mesajı göster
   if (loading) {
     return <div>Yükleniyor...</div>;
   }
 
-  console.log("asilNunXData:", asilNunXData); // Veriyi konsola yazdırıyoruz
+  console.log("asilNunXData:", asilNunXData);
 
   return (
     <div className="asil-nun-x-container">
@@ -68,13 +66,11 @@ const AsilNunXInfo = () => {
           </div>
           <p className="asil-nun-x-contact">
             {asilNunXData.text || ""}{" "}
-            {/* Eğer text yoksa varsayılan metni kullan */}{" "}
             <a href={asilNunXData.link}>
               <span>{asilNunXData.linkText || ""}</span>
             </a>
           </p>
         </div>
-        {/* Resim */}
         <div className="asil-nun-x-image">
           <img
             src={asilNunXData.image || "/assets/images/Group 300.webp"}

@@ -171,7 +171,6 @@
   font-size: 18px;
 }
 
-/* Input Fields */
 .admin-panel .modal input,
 .admin-panel .modal textarea {
   width: 100%;
@@ -190,8 +189,6 @@
   background-color: #fff;
   outline: none;
 }
-
-/* Buttons Container */
 .modal-buttons {
   display: flex;
   justify-content: flex-end;
@@ -199,7 +196,6 @@
   margin-top: 20px;
 }
 
-/* Save Button */
 .save-button {
   background-color: #343a40;
   color: white;
@@ -215,7 +211,6 @@
   background-color: rgb(34, 34, 23);
 }
 
-/* Close Button */
 .close-button {
   background-color: #f44336;
   color: white;

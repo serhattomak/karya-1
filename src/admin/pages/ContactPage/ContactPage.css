@@ -1,134 +1,128 @@
-/* ContactEditor.css */
-
 .contact-editor-container {
-    width: 100%;
-    max-width: 1100px; /* Admin paneli layout'unuzun genişliğine göre ayarlanabilir */
-    margin: 20px auto; /* Üstten/alttan boşluk ve yatayda ortalama */
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
-  }
-  
-  .contact-editor-container h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #333;
-    font-size: 26px;
-    font-weight: 600;
-    padding-bottom: 15px;
-  }
-  
-  .contact-editor-section {
-    margin-bottom: 40px;
-    padding: 20px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-  }
+  width: 100%;
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
 
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #555;
-  }
-  
-  .form-group input[type="text"],
-  .form-group textarea,
-  .form-group input[type="url"],
-  .form-group input[type="email"] {
-    width: calc(100% - 22px); /* Padding'i hesaba kat */
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    transition: border-color 0.3s;
-  }
-  
-  .form-group input[type="file"] {
-    width: 100%; /* Dosya seç butonuyla birlikte tam genişlik */
-    padding: 10px 0; /* Padding sadece dikeyde olsun, yatayda file selector button var */
-    border: none; /* Varsayılan border'ı kaldır */
-    box-sizing: border-box;
-  }
-  
-  .form-group input[type="text"]:focus,
-  .form-group textarea:focus,
-  .form-group input[type="url"]:focus,
-  .form-group input[type="email"]:focus {
-    border-color: #343a40;
-    outline: none;
-  }
-  
-  textarea {
-    min-height: 80px; /* Daha az yer kaplasın */
-    resize: vertical;
-  }
-  
-  .image-preview {
-    display: block;
-    max-width: 250px;
-    margin-top: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 5px;
-  }
-  
-  /* Genel buton stilleri */
-  .submit-button {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    background-color: #333;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 18px;
-    cursor: pointer;
-    margin-top: 40px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .submit-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .submit-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-  }
-  
-  /* File input'un görünümünü iyileştir */
-  input[type="file"]::file-selector-button {
-    background-color: #343a40;
-    color: white;
-    margin-left: 5px;
-    padding: 10px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  input[type="file"] {
-    color: transparent;
-  }
-  
-  input[type="file"]::file-selector-button:hover {
-    background-color: #495057;
-  }
-  
-  .uploaded-image {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-    margin-top: 10px;
-    border: 1px solid #eee;
-  }
+.contact-editor-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+  font-size: 26px;
+  font-weight: 600;
+  padding-bottom: 15px;
+}
 
+.contact-editor-section {
+  margin-bottom: 40px;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-group input[type="text"],
+.form-group textarea,
+.form-group input[type="url"],
+.form-group input[type="email"] {
+  width: calc(100% - 22px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+.form-group input[type="file"] {
+  width: 100%;
+  padding: 10px 0;
+  border: none;
+  box-sizing: border-box;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus,
+.form-group input[type="url"]:focus,
+.form-group input[type="email"]:focus {
+  border-color: #343a40;
+  outline: none;
+}
+
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.image-preview {
+  display: block;
+  max-width: 250px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.submit-button {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  margin-top: 40px;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+.submit-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+input[type="file"]::file-selector-button {
+  background-color: #343a40;
+  color: white;
+  margin-left: 5px;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+input[type="file"] {
+  color: transparent;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: #495057;
+}
+
+.uploaded-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  margin-top: 10px;
+  border: 1px solid #eee;
+}

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import "./TelBeton.css"; // CSS dosyanızın yolu bu şekilde olmalı
+import "./TelBeton.css";
 
 const TelBeton = () => {
   const [bannerImage, setBannerImage] = useState("");
@@ -7,23 +7,21 @@ const TelBeton = () => {
   const [contentTitle, setContentTitle] = useState("İçerik Başlığı");
   const [contentMainText, setContentMainText] = useState("İçerik Metni");
   const [bannerTitle, setBannerTitle] = useState("Banner Başlığı");
-  const [contentImage, setContentImage] = useState(null); // Şu an HTML'de kullanılmıyor gibi.
+  const [contentImage, setContentImage] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  // Anasayfa Ürün Bilgisi için state'ler (Değişmedi)
   const [homepageTitle, setHomepageTitle] = useState("");
   const [homepageSubtitle, setHomepageSubtitle] = useState("");
-  const [homepageImage, setHomepageImage] = useState(""); // Başlangıçta boş string
+  const [homepageImage, setHomepageImage] = useState("");
 
-  // UYGULAMA ALANLARI GÖRSELLERİ İÇİN YENİ STATE VE REFLER
   const [applicationAreaImages, setApplicationAreaImages] = useState([
     "",
     "",
     "",
-    "", // 4 adet boş string olarak başlatıldı
+    "",
   ]);
-  const applicationFileInputRefs = useRef([]); // Her bir input için ref dizisi
-  const selectedApplicationImageIndexRef = useRef(0); // Tıklanan uygulama alanı resminin indeksini tutmak için
+  const applicationFileInputRefs = useRef([]);
+  const selectedApplicationImageIndexRef = useRef(0);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -39,7 +37,6 @@ const TelBeton = () => {
     alert("Form verileri konsola yazdırıldı (kayıt işlemi simüle edildi).");
   };
 
-  // Banner ve Homepage resimleri için mevcut yükleme fonksiyonları (Değişmedi)
   const handleBannerUpload = (event) => {
     if (event.target.files && event.target.files[0]) {
       setBannerImage(URL.createObjectURL(event.target.files[0]));
@@ -59,24 +56,21 @@ const TelBeton = () => {
     }
   };
 
-  // UYGULAMA ALANLARI GÖRSELLERİ İÇİN YÜKLEME VE SİLME FONKSİYONLARI
   const handleApplicationImageUpload = (event) => {
     const file = event.target.files && event.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setApplicationAreaImages((prevImages) => {
         const updatedImages = [...prevImages];
-        // selectedApplicationImageIndexRef.current kullanarak doğru indeksi güncelliyoruz
         updatedImages[selectedApplicationImageIndexRef.current] = imageUrl;
         return updatedImages;
       });
     }
   };
 
-  // Uygulama alanı için gizli dosya input'unu tetikleme fonksiyonu
   const triggerApplicationFileInput = (index) => {
-    selectedApplicationImageIndexRef.current = index; // Tıklanan indexi kaydet
-    applicationFileInputRefs.current[index]?.click(); // İlgili input'u tetikle
+    selectedApplicationImageIndexRef.current = index;
+    applicationFileInputRefs.current[index]?.click();
   };
 
   return (
@@ -194,7 +188,6 @@ const TelBeton = () => {
           />
         </div>
 
-        {/* UYGULAMA ALANLARI GÖRSELLERİ - BURASI DEĞİŞTİRİLDİ */}
         <h2 className="panel-title">Uygulama Alanlarına Ait Görseller</h2>
         <div className="gallery-grid">
           {[0, 1, 2, 3].map((index) => {
@@ -224,29 +217,24 @@ const TelBeton = () => {
                     className="image-placeholder"
                     onClick={() => triggerApplicationFileInput(index)}
                   >
-                    <div className="plus-icon">➕</div>
-                    <p>Görsel Ekle</p>
+                    <div className="plus-icon"> Görsel Ekle ➕</div>
                   </div>
                 )}
                 <input
                   type="file"
                   accept="image/*"
                   style={{ display: "none" }}
-                  ref={(el) => (applicationFileInputRefs.current[index] = el)} // Ref'i doğru index'e ata
-                  onChange={handleApplicationImageUpload} // Fonksiyonu doğrudan çağır
+                  ref={(el) => (applicationFileInputRefs.current[index] = el)}
+                  onChange={handleApplicationImageUpload}
                 />
               </div>
             );
           })}
         </div>
 
-        <button
-                type="submit"
-                disabled={uploading}
-                className="save-button"
-              >
-                {uploading ? "Kaydediliyor..." : "Kaydet"}
-              </button>
+        <button type="submit" disabled={uploading} className="save-button">
+          {uploading ? "Kaydediliyor..." : "Kaydet"}
+        </button>
       </form>
     </div>
   );

@@ -56,8 +56,8 @@
   width: 148px;
   height: 4px;
 
-  background-color: #ff6600; /* Rengi ayarlayın */
-  border: none; /* Varsa kenarlıkları kaldırın */
+  background-color: #ff6600;
+  border: none;
   margin-bottom: 1rem;
 }
 
@@ -81,28 +81,28 @@
   }
 
   .info-image-container {
-    width: 100%; /* Mobilde daha dar yap */
+    width: 100%;
 
     margin-bottom: 1rem;
   }
 
   .info-image img {
-    width: 100%; /* Resmi tam genişlik yap */
-    padding: 1rem; /* Mobilde paddingi azalt */
+    width: 100%;
+    padding: 1rem;
     height: 20%;
   }
 
   .info-text {
     width: 100%;
-    text-align: left; /* Metni ortala */
+    text-align: left;
   }
 
   .info-text .about-title {
-    font-size: 1.5rem; /* Başlık boyutunu küçült */
+    font-size: 1.5rem;
   }
 
   .info-text p {
-    font-size: 0.875rem; /* Metin boyutunu küçült */
+    font-size: 0.875rem;
   }
 }
 
@@ -116,24 +116,24 @@
   }
 
   .info-image-container {
-    width: 50%; /* Mobilde daha dar yap */
+    width: 50%;
     margin-bottom: 1rem;
   }
 
   .info-image img {
-    width: 100%; /* Resmi tam genişlik yap */
+    width: 100%;
   }
 
   .info-text {
     max-width: 50%;
-    text-align: left; /* Metni ortala */
+    text-align: left;
   }
 
   .info-text .about-title {
-    font-size: 1.5rem; /* Başlık boyutunu küçült */
+    font-size: 1.5rem;
   }
 
   .info-text p {
-    font-size: 0.875rem; /* Metin boyutunu küçült */
+    font-size: 0.875rem;
   }
 }

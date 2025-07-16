@@ -48,8 +48,7 @@ const AsilNunX = ({ onClose }) => {
       image: previewURL,
     }));
   };
-  
-  // Sadece frontend: örnek veri setleniyor
+
   useEffect(() => {
     setAsilNunXData((prev) => ({
       ...prev,
@@ -168,48 +167,48 @@ const AsilNunX = ({ onClose }) => {
                   placeholder="Detaylar"
                 />
               </div>
-            {/* Ana Resim Önizleme Kutusu */}
-<div className="form-group">
-  <label className="section-label">Ana Resim</label>
-  <div className="image-box">
-    {asilNunXData.image ? (
-      <>
-        <img
-          src={asilNunXData.image}
-          alt="Ana görsel"
-          className="gallery-image"
-        />
-        <div
-          className="edit-icon"
-          onClick={() => document.getElementById("mainImageInput").click()}
-          title="Resmi değiştir"
-        >
-          ✏️
-        </div>
-      </>
-    ) : (
-      <div
-        className="document-placeholder"
-        onClick={() => document.getElementById("mainImageInput").click()}
-      >
-        <div className="document-icon-preview">➕</div>
-        <p>Görsel Ekle</p>
-      </div>
-    )}
-  </div>
+              <div className="form-group">
+                <label className="section-label">Ana Resim</label>
+                <div className="image-box">
+                  {asilNunXData.image ? (
+                    <>
+                      <img
+                        src={asilNunXData.image}
+                        alt="Ana görsel"
+                        className="gallery-image"
+                      />
+                      <div
+                        className="edit-icon"
+                        onClick={() =>
+                          document.getElementById("mainImageInput").click()
+                        }
+                        title="Resmi değiştir"
+                      >
+                        ✏️
+                      </div>
+                    </>
+                  ) : (
+                    <div
+                      className="document-placeholder"
+                      onClick={() =>
+                        document.getElementById("mainImageInput").click()
+                      }
+                    >
+                      <div className="document-icon-preview">➕</div>
+                      <p>Görsel Ekle</p>
+                    </div>
+                  )}
+                </div>
 
-  {/* Gizli dosya inputu */}
-  <input
-    type="file"
-    id="mainImageInput"
-    accept="image/*"
-    style={{ display: "none" }}
-    onChange={handleImageUpload}
-  />
-</div>
+                <input
+                  type="file"
+                  id="mainImageInput"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={handleImageUpload}
+                />
+              </div>
 
-
-              {/* 4 kutuluk döküman önizleme */}
               <div className="documents-grid">
                 {[0, 1, 2, 3].map((index) => {
                   const file = previewDocuments[index];
@@ -226,7 +225,6 @@ const AsilNunX = ({ onClose }) => {
                               : fileName}
                           </p>
 
-                          {/* Düzenleme (kalem) ikonu */}
                           <div
                             className="edit-icon"
                             onClick={() => {
@@ -255,7 +253,6 @@ const AsilNunX = ({ onClose }) => {
                 })}
               </div>
 
-              {/* Tek input – frontend önizleme için */}
               <input
                 type="file"
                 accept=".pdf,.doc,.docx, "
@@ -274,7 +271,6 @@ const AsilNunX = ({ onClose }) => {
                 }}
               />
 
-              {/* Galeri */}
               <div className="gallery-grid">
                 {[0, 1, 2, 3].map((index) => {
                   const imageUrl = asilNunXData.gallery[index];
@@ -302,7 +298,6 @@ const AsilNunX = ({ onClose }) => {
                             const previewURL = URL.createObjectURL(file);
                             setAsilNunXData((prev) => {
                               const updated = [...prev.gallery];
-                              // Burada selectedGalleryIndexRef.current kullanılıyor!
                               updated[selectedGalleryIndexRef.current] =
                                 previewURL;
                               return { ...prev, gallery: updated };
@@ -314,7 +309,7 @@ const AsilNunX = ({ onClose }) => {
                       <div
                         className="edit-icon"
                         onClick={() => {
-                          selectedGalleryIndexRef.current = index; // Tıklanan indexi kaydet
+                          selectedGalleryIndexRef.current = index;
                           galleryInputRef.current?.click();
                         }}
                         title="Resmi değiştir"
