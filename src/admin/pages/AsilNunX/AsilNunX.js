@@ -31,6 +31,8 @@ const AsilNunX = ({ onClose }) => {
   const selectedDocIndexRef = useRef(0);
   const fileInputRefs = useRef({});
   const selectedGalleryIndexRef = useRef(0);
+  const [bannerTitle, setBannerTitle] = useState("Banner Başlığı");
+  const [bannerImage, setBannerImage] = useState("");
 
   const [previewDocuments, setPreviewDocuments] = useState([
     null,
@@ -69,6 +71,12 @@ const AsilNunX = ({ onClose }) => {
       image: file,
       preview: previewURL,
     }));
+  };
+
+  const handleBannerUpload = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      setBannerImage(URL.createObjectURL(event.target.files[0]));
+    }
   };
 
   const handleEditClick = (index) => {
@@ -118,6 +126,34 @@ const AsilNunX = ({ onClose }) => {
                     backgroundColor: "#f8f8f8",
                     maxWidth: "100px",
                   }}
+                />
+              )}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="bannerTitle">Banner Başlık:</label>
+              <input
+                type="text"
+                id="bannerTitle"
+                value={bannerTitle}
+                onChange={(e) => setBannerTitle(e.target.value)}
+                placeholder="Başlık ekleyin"
+                required
+              />
+
+              <label htmlFor="bannerImage">Banner Resim:</label>
+              <input
+                type="file"
+                id="bannerImage"
+                accept="image/*"
+                onChange={handleBannerUpload}
+                required
+              />
+              {bannerImage && (
+                <img
+                  src={bannerImage}
+                  alt="Banner Önizleme"
+                  className="preview-image"
                 />
               )}
             </div>

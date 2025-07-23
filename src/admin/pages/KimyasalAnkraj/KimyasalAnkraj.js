@@ -129,9 +129,7 @@ const KimyasalAnkraj = () => {
               className="preview-image"
             />
           )}
-        </div>
-
-        <div className="form-group">
+       
           <label htmlFor="bannerTitle">Banner Başlık:</label>
           <input
             type="text"

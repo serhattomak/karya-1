@@ -359,8 +359,7 @@ const PoliuretanEnjeksiyon = () => {
               value={formData.mainTitle}
               onChange={handleChange}
             />
-          </div>
-          <div className="form-group">
+       
             <label htmlFor="mainBannerImage">Banner Görseli:</label>
             <input
               type="file"

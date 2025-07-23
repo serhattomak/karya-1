@@ -119,10 +119,9 @@ const ContactEditor = () => {
               name="bannerTitle"
               value={formData.bannerTitle}
               onChange={handleChange}
-              placeholder="Örn: İletişim"
+            
             />
-          </div>
-          <div className="form-group">
+     
             <label htmlFor="bannerImage">Banner Arkaplan Görseli:</label>
             <input
               type="file"
