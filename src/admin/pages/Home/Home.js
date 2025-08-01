@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getPage, updatePage } from "../../../api";
+import { getPage, updatePage, getProducts } from "../../../api";
 import Swal from 'sweetalert2';
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
@@ -7,91 +7,169 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
   const [bannerTitle, setBannerTitle] = useState("");
   const [bannerSubtitle, setBannerSubtitle] = useState("");
-  const [boxes, setBoxes] = useState([]);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [availableProducts, setAvailableProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showBannerModal, setShowBannerModal] = useState(false);
+  const [showProductModal, setShowProductModal] = useState(false);
   const [tempTitle, setTempTitle] = useState("");
   const [tempSubtitle, setTempSubtitle] = useState("");
+  const [draggedItem, setDraggedItem] = useState(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getPage("C569F4BC-D5F8-4768-8DFE-21618933F647");
-        const data = response.data && response.data.data ? response.data.data : response.data;
-        setBannerTitle((data.titles && data.titles[0]) || "");
-        setBannerSubtitle((data.subtitles && data.subtitles[0]) || "");
+        setLoading(true);
+        
+        const pageResponse = await getPage("C569F4BC-D5F8-4768-8DFE-21618933F647");
+        const pageData = pageResponse.data && pageResponse.data.data ? pageResponse.data.data : pageResponse.data;
+        
+        setBannerTitle((pageData.titles && pageData.titles[0]) || "");
+        setBannerSubtitle((pageData.subtitles && pageData.subtitles[0]) || "");
+        
+        const productsResponse = await getProducts({ PageIndex: 1, PageSize: 100 });
+        const allProducts = productsResponse?.data?.data?.items || productsResponse?.data?.items || productsResponse?.data || [];
+        
+        setAvailableProducts(allProducts);
+        
         const API_URL = process.env.REACT_APP_API_URL || "https://localhost:7103";
-        setBoxes(
-          (data.products || []).map((product) => {
-            let imagePath = (product.files && product.files[0] && product.files[0].path) || "";
-            if (imagePath && imagePath.startsWith("uploads/")) {
-              imagePath = `${API_URL}/${imagePath}`;
-            }
-            return {
-              title: (product.titles && product.titles[0]) || "",
-              subtitle: (product.subtitles && product.subtitles[0]) || "",
-              image: imagePath,
-              id: product.id,
-            };
-          })
-        );
+        const currentSelectedProducts = (pageData.products || []).map((product) => {
+          let imagePath = (product.files && product.files[0] && product.files[0].path) || "";
+          if (imagePath && imagePath.startsWith("uploads/")) {
+            imagePath = `${API_URL}/${imagePath}`;
+          }
+          return {
+            ...product,
+            imagePath
+          };
+        });
+        
+        setSelectedProducts(currentSelectedProducts);
+        
       } catch (error) {
-        console.error("Page verisi alınırken hata oluştu:", error);
+        console.error("Veriler yüklenirken hata oluştu:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Hata!',
+          text: 'Veriler yüklenirken bir hata oluştu.',
+          confirmButtonText: 'Tamam',
+          confirmButtonColor: '#dc3545'
+        });
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
   }, []);
 
-  const handleSave = async (event) => {
-    if (event) event.preventDefault();
+  const handleDragStart = (e, index) => {
+    setDraggedItem(index);
+  };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e, dropIndex) => {
+    e.preventDefault();
+    if (draggedItem === null) return;
+
+    const updatedProducts = [...selectedProducts];
+    const draggedProduct = updatedProducts[draggedItem];
+    
+    updatedProducts.splice(draggedItem, 1);
+    updatedProducts.splice(dropIndex, 0, draggedProduct);
+    
+    setSelectedProducts(updatedProducts);
+    setDraggedItem(null);
+  };
+
+  const addProductToHome = (product) => {
+    if (selectedProducts.length >= 4) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Uyarı!',
+        text: 'Ana sayfada maksimum 4 ürün gösterilebilir.',
+        confirmButtonText: 'Tamam',
+        confirmButtonColor: '#ffc107'
+      });
+      return;
+    }
+
+    const API_URL = process.env.REACT_APP_API_URL || "https://localhost:7103";
+    let imagePath = (product.files && product.files[0] && product.files[0].path) || "";
+    if (imagePath && imagePath.startsWith("uploads/")) {
+      imagePath = `${API_URL}/${imagePath}`;
+    }
+
+    const productWithImage = {
+      ...product,
+      imagePath
+    };
+
+    setSelectedProducts(prev => [...prev, productWithImage]);
+    setShowProductModal(false);
+  };
+
+  const removeProductFromHome = (productId) => {
+    setSelectedProducts(prev => prev.filter(p => p.id !== productId));
+  };
+
+  const openBannerModal = () => {
+    setTempTitle(bannerTitle);
+    setTempSubtitle(bannerSubtitle);
+    setShowBannerModal(true);
+  };
+
+  const openProductModal = () => {
+    setShowProductModal(true);
+  };
+
+  const closeBannerModal = () => {
+    setShowBannerModal(false);
+  };
+
+  const closeProductModal = () => {
+    setShowProductModal(false);
+  };
+
+  const saveBannerChanges = async () => {
+    setBannerTitle(tempTitle);
+    setBannerSubtitle(tempSubtitle);
+    setShowBannerModal(false);
+    await saveAllChanges();
+  };
+
+  const saveAllChanges = async () => {
     try {
-      const response = await getPage("C569F4BC-D5F8-4768-8DFE-21618933F647");
-      const page = response.data && response.data.data ? response.data.data : response.data;
+      const pageResponse = await getPage("C569F4BC-D5F8-4768-8DFE-21618933F647");
+      const page = pageResponse.data && pageResponse.data.data ? pageResponse.data.data : pageResponse.data;
 
-      let updatedProducts = boxes.map((box, idx) => {
-        const oldProduct = (page.products && page.products[idx]) || {};
-        return {
-          id: oldProduct.id,
-          name: oldProduct.name || box.title || "Ürün",
-          titles: [box.title],
-          subtitles: [box.subtitle],
-          descriptions: oldProduct.descriptions || [],
-          urls: oldProduct.urls || [],
-          fileIds: oldProduct.fileIds || [],
-          files: oldProduct.files || [],
-          ...Object.fromEntries(Object.entries(oldProduct).filter(([k]) => !["id","name","titles","subtitles","descriptions","urls","fileIds","files"].includes(k)))
-        };
-      });
+      const updatedProducts = selectedProducts.map((product) => ({
+        id: product.id,
+        name: product.name,
+        titles: product.titles || [],
+        subtitles: product.subtitles || [],
+        descriptions: product.descriptions || [],
+        urls: product.urls || [],
+        fileIds: product.fileIds || [],
+        files: product.files || []
+      }));
 
-      if (page.products && page.products.length > boxes.length) {
-        updatedProducts = [
-          ...updatedProducts,
-          ...page.products.slice(boxes.length)
-        ];
-      }
-
-      const boxIds = boxes.map((b) => b.id).filter(Boolean);
-      let mergedProductIds = Array.isArray(page.productIds) ? [...page.productIds] : [];
-      boxIds.forEach((id) => {
-        if (!mergedProductIds.includes(id)) mergedProductIds.push(id);
-      });
-
-      mergedProductIds = Array.from(new Set([...mergedProductIds, ...boxIds]));
+      const productIds = selectedProducts.map(p => p.id);
 
       const updatedPage = {
         ...page,
-        titles: [tempTitle || bannerTitle],
-        subtitles: [tempSubtitle || bannerSubtitle],
-        descriptions: page.descriptions || [],
+        titles: [bannerTitle],
+        subtitles: [bannerSubtitle],
         products: updatedProducts,
-        name: page.name || "Anasayfa",
-        productIds: mergedProductIds,
+        productIds: productIds,
       };
 
       await updatePage(updatedPage);
+      
       Swal.fire({
         icon: 'success',
         title: 'Başarılı!',
@@ -113,113 +191,180 @@ const Home = () => {
     }
   };
 
-  const pageRoutes = [
-    "/admin/asilnunx",
-    "/admin/Poliuretan",
-    "/admin/telbeton",
-    "/admin/KimyasalAnkraj",
-  ];
-
-  const openModal = () => {
-    setTempTitle(bannerTitle);
-    setTempSubtitle(bannerSubtitle);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleModalSave = async () => {
-    setBannerTitle(tempTitle);
-    setBannerSubtitle(tempSubtitle);
-    setIsModalOpen(false);
-    setTimeout(() => {
-      handleSave();
-    }, 0);
-  };
+  if (loading) {
+    return <div className="loading">Yükleniyor...</div>;
+  }
 
   return (
     <div className="admin-panel">
-      <form id="home-form" onSubmit={handleSave}>
-        <h2 className="panel-title">Anasayfa Banner</h2>
-        <div className="banner-form">
-          <div className="text-section">
-            <h1>{bannerTitle || "Başlık eklenmedi"}</h1>
-            <p>{bannerSubtitle || "Alt başlık eklenmedi"}</p>
-            <div className="controls below-title">
-              <button type="button" className="fix-button" onClick={openModal}>
-                Düzenle
+      {/* Banner Bölümü */}
+      <div className="home-section">
+        <div className="section-header">
+          <h2 className="section-title">Ana Sayfa Banner</h2>
+          <button className="edit-btn primary" onClick={openBannerModal}>
+            ✏️ Düzenle
+          </button>
+        </div>
+        
+        <div className="banner-preview">
+          <div className="banner-content">
+            <h1 className="banner-title">{bannerTitle || "Başlık eklenmedi"}</h1>
+            <p className="banner-subtitle">{bannerSubtitle || "Alt başlık eklenmedi"}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Ürünler Bölümü */}
+      <div className="home-section">
+        <div className="section-header">
+          <h2 className="section-title">Ana Sayfada Gösterilecek Ürünler</h2>
+          <button className="add-btn primary" onClick={openProductModal}>
+            + Ürün Ekle
+          </button>
+        </div>
+
+        <div className="selected-products">
+          {selectedProducts.length === 0 ? (
+            <div className="no-products">
+              <p>Henüz ürün seçilmedi. Ürün eklemek için yukarıdaki butona tıklayın.</p>
+            </div>
+          ) : (
+            <div className="products-grid">
+              {selectedProducts.map((product, index) => (
+                <div
+                  key={product.id}
+                  className="product-item"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, index)}
+                >
+                  <div className="drag-handle">⋮⋮</div>
+                  <div className="product-image">
+                    {product.imagePath ? (
+                      <img src={product.imagePath} alt={product.name} />
+                    ) : (
+                      <div className="no-image">Görsel Yok</div>
+                    )}
+                  </div>
+                  <div className="product-info">
+                    <h3>{product.name}</h3>
+                    <p>{product.titles && product.titles[0] ? product.titles[0] : "Başlık yok"}</p>
+                  </div>
+                  <div className="product-actions">
+                    <span className="order-number">{index + 1}</span>
+                    <button 
+                      className="remove-btn"
+                      onClick={() => removeProductFromHome(product.id)}
+                    >
+                      ×
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="save-section">
+          <button className="save-btn primary" onClick={saveAllChanges}>
+            💾 Değişiklikleri Kaydet
+          </button>
+        </div>
+      </div>
+
+      {/* Banner Düzenleme Modalı */}
+      {showBannerModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3>Banner Düzenle</h3>
+              <button className="close-btn" onClick={closeBannerModal}>×</button>
+            </div>
+            <div className="modal-body">
+              <div className="form-group">
+                <label>Başlık</label>
+                <input
+                  type="text"
+                  value={tempTitle}
+                  onChange={(e) => setTempTitle(e.target.value)}
+                  placeholder="Banner başlığını girin"
+                />
+              </div>
+              <div className="form-group">
+                <label>Alt Başlık</label>
+                <input
+                  type="text"
+                  value={tempSubtitle}
+                  onChange={(e) => setTempSubtitle(e.target.value)}
+                  placeholder="Banner alt başlığını girin"
+                />
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="cancel-btn" onClick={closeBannerModal}>
+                İptal
               </button>
-              {/* <button type="button" className="delete-button" disabled>
-                Sil
-              </button> */}
+              <button className="save-btn" onClick={saveBannerChanges}>
+                Kaydet
+              </button>
             </div>
           </div>
         </div>
+      )}
 
-        <h2 className="panel-title">Ürünler</h2>
-        <div className="boxes-wrapper">
-          {boxes.map((box, index) => (
-            <div key={index} className="box">
-              {box.image && (
-                <img
-                  src={
-                    typeof box.image === "string"
-                      ? box.image
-                      : URL.createObjectURL(box.image)
-                  }
-                  alt={`Box ${index + 1}`}
-                  className="preview-image"
-                />
-              )}
-              <div className="product_titles">
-                <h3>{box.title || " "}</h3>
-                <h4>{box.subtitle || " "}</h4>
-              </div>
-              <div className="controls">
-                <button
-                  type="button"
-                  className="fix-button"
-                  onClick={() => navigate(pageRoutes[index])}
-                >
-                  Düzenle
-                </button>
-                {/* <button type="button" className="delete-button" disabled>
-                  Sil
-                </button> */}
-              </div>
-            </div>
-          ))}
-        </div>
-        {/* 
-        <button type="submit" className="submit-btn">
-          Kaydet
-        </button> */}
-      </form>
-
-      {/* Banner modalı */}
-      {isModalOpen && (
+      {/* Ürün Seçim Modalı */}
+      {showProductModal && (
         <div className="modal-overlay">
-          <div className="modal">
-            <h3>Banner Düzenle</h3>
-            <label>Başlık</label>
-            <input
-              type="text"
-              value={tempTitle}
-              onChange={(e) => setTempTitle(e.target.value)}
-            />
-            <label>Alt Başlık</label>
-            <input
-              type="text"
-              value={tempSubtitle}
-              onChange={(e) => setTempSubtitle(e.target.value)}
-            />
-            <div className="modal-buttons">
-              <button className="save-button" type="button" onClick={handleModalSave}>
-                Kaydet
-              </button>
-              <button className="close-button" onClick={closeModal}>
+          <div className="modal-content large">
+            <div className="modal-header">
+              <h3>Ürün Seç</h3>
+              <button className="close-btn" onClick={closeProductModal}>×</button>
+            </div>
+            <div className="modal-body">
+              <div className="available-products-grid">
+                {availableProducts
+                  .filter(product => !selectedProducts.some(selected => selected.id === product.id))
+                  .map((product) => {
+                    const API_URL = process.env.REACT_APP_API_URL || "https://localhost:7103";
+                    let imagePath = (product.files && product.files[0] && product.files[0].path) || "";
+                    if (imagePath && imagePath.startsWith("uploads/")) {
+                      imagePath = `${API_URL}/${imagePath}`;
+                    }
+
+                    return (
+                      <div key={product.id} className="available-product-item">
+                        <div className="product-image">
+                          {imagePath ? (
+                            <img src={imagePath} alt={product.name} />
+                          ) : (
+                            <div className="no-image">Görsel Yok</div>
+                          )}
+                        </div>
+                        <div className="product-info">
+                          <h4>{product.name}</h4>
+                          <p>{product.titles && product.titles[0] ? product.titles[0] : "Başlık yok"}</p>
+                        </div>
+                        <button 
+                          className="add-product-btn"
+                          onClick={() => addProductToHome(product)}
+                          disabled={selectedProducts.length >= 4}
+                        >
+                          Ekle
+                        </button>
+                      </div>
+                    );
+                  })
+                }
+              </div>
+              {availableProducts.filter(product => !selectedProducts.some(selected => selected.id === product.id)).length === 0 && (
+                <div className="no-products">
+                  <p>Tüm ürünler zaten seçilmiş.</p>
+                </div>
+              )}
+            </div>
+            <div className="modal-footer">
+              <button className="cancel-btn" onClick={closeProductModal}>
                 Kapat
               </button>
             </div>
