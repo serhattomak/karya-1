@@ -48,7 +48,7 @@
 }
 
 .product-card {
-  background: white;
+  background: transparent;
   border-radius: 15px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -66,6 +66,7 @@
   height: 200px;
   overflow: hidden;
   position: relative;
+  background: transparent;
 }
 
 .product-image img {
@@ -73,6 +74,12 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
+  background: transparent;
+}
+
+.product-image img[src*=".png"] {
+  object-fit: contain;
+  background: transparent;
 }
 
 .product-card:hover .product-image img {
@@ -92,6 +99,7 @@
 
 .product-info {
   padding: 20px;
+  background: transparent;
 }
 
 .product-name {
@@ -104,7 +112,7 @@
 
 .product-title {
   font-size: 16px;
-  color: #007bff;
+  color: #ffffff;
   margin: 0 0 10px 0;
   font-weight: 600;
 }
@@ -125,21 +133,23 @@
 }
 
 .product-subtitle {
-  background: #e2e8f0;
+  background: transparent;
   color: #4a5568;
-  padding: 4px 8px;
-  border-radius: 12px;
+  padding: 0;
+  border-radius: 0;
   font-size: 0.8rem;
   font-weight: 500;
+  display: inline;
 }
 
 .more-subtitles {
-  background: #cbd5e0;
+  background: transparent;
   color: #2d3748;
-  padding: 4px 8px;
-  border-radius: 12px;
+  padding: 0;
+  border-radius: 0;
   font-size: 0.75rem;
   font-style: italic;
+  display: inline;
 }
 
 /* List items styles */
