@@ -159,11 +159,38 @@ const Products = () => {
                 <p className="product-title">
                   {product.titles && product.titles[0] ? product.titles[0] : "Başlık yok"}
                 </p>
+                {/* Alt başlıklar */}
+                {product.subtitles && product.subtitles.length > 0 && (
+                  <div className="product-subtitles">
+                    {product.subtitles.slice(0, 2).map((subtitle, index) => (
+                      <span key={index} className="product-subtitle">
+                        {subtitle}
+                      </span>
+                    ))}
+                    {product.subtitles.length > 2 && (
+                      <span className="more-subtitles">+{product.subtitles.length - 2} daha</span>
+                    )}
+                  </div>
+                )}
                 <p className="product-description">
                   {product.descriptions && product.descriptions[0] 
                     ? product.descriptions[0].substring(0, 100) + "..." 
                     : "Açıklama yok"}
                 </p>
+                {/* Liste öğeleri */}
+                {product.listItems && product.listItems.length > 0 && (
+                  <div className="product-list-items">
+                    <h5>Özellikler:</h5>
+                    <ul>
+                      {product.listItems.slice(0, 3).map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                      {product.listItems.length > 3 && (
+                        <li className="more-items">+{product.listItems.length - 3} özellik daha</li>
+                      )}
+                    </ul>
+                  </div>
+                )}
                 
                 <div className="product-actions">
                   <button 

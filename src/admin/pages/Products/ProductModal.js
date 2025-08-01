@@ -20,7 +20,9 @@ const uploadFile = async (file) => {
 const ProductModal = ({ product, onClose, onSave }) => {
   const [name, setName] = useState("");
   const [titles, setTitles] = useState([""]);
+  const [subtitles, setSubtitles] = useState([""]);
   const [descriptions, setDescriptions] = useState([""]);
+  const [listItems, setListItems] = useState([""]);
   const [urls, setUrls] = useState([""]);
   const [productImages, setProductImages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -30,10 +32,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
     if (product) {
       setName(product.name || "");
       setTitles(product.titles || [""]);
+      setSubtitles(product.subtitles || [""]);
       setDescriptions(product.descriptions || [""]);
+      setListItems(product.listItems || [""]);
       setUrls(product.urls || [""]);
       
-      // Mevcut dosyaları ayarla
       if (product.files && product.files.length > 0) {
         const images = product.files.map(file => ({
           id: file.id,
@@ -50,7 +53,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
     setLoading(true);
 
     try {
-      // Yeni yüklenen dosyaları işle
       const fileIds = [];
       for (const image of productImages) {
         if (image.isExisting) {
@@ -67,13 +69,14 @@ const ProductModal = ({ product, onClose, onSave }) => {
       const productData = {
         name,
         titles: titles.filter(t => t.trim() !== ""),
+        subtitles: subtitles.filter(st => st.trim() !== ""),
         descriptions: descriptions.filter(d => d.trim() !== ""),
+        listItems: listItems.filter(li => li.trim() !== ""),
         urls: urls.filter(u => u.trim() !== ""),
         fileIds
       };
 
       if (product) {
-        // Güncelleme
         productData.id = product.id;
         await updateProduct(productData);
         Swal.fire({
@@ -86,7 +89,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
           timerProgressBar: true
         });
       } else {
-        // Yeni ekleme
         await createProduct(productData);
         Swal.fire({
           icon: 'success',
@@ -148,6 +150,20 @@ const ProductModal = ({ product, onClose, onSave }) => {
     setTitles(titles.filter((_, i) => i !== index));
   };
 
+  const addSubtitle = () => {
+    setSubtitles([...subtitles, ""]);
+  };
+
+  const updateSubtitle = (index, value) => {
+    const updated = [...subtitles];
+    updated[index] = value;
+    setSubtitles(updated);
+  };
+
+  const removeSubtitle = (index) => {
+    setSubtitles(subtitles.filter((_, i) => i !== index));
+  };
+
   const addDescription = () => {
     setDescriptions([...descriptions, ""]);
   };
@@ -160,6 +176,20 @@ const ProductModal = ({ product, onClose, onSave }) => {
 
   const removeDescription = (index) => {
     setDescriptions(descriptions.filter((_, i) => i !== index));
+  };
+
+  const addListItem = () => {
+    setListItems([...listItems, ""]);
+  };
+
+  const updateListItem = (index, value) => {
+    const updated = [...listItems];
+    updated[index] = value;
+    setListItems(updated);
+  };
+
+  const removeListItem = (index) => {
+    setListItems(listItems.filter((_, i) => i !== index));
   };
 
   const addUrl = () => {
@@ -229,6 +259,33 @@ const ProductModal = ({ product, onClose, onSave }) => {
             </button>
           </div>
 
+          {/* Alt Başlıklar */}
+          <div className="form-group">
+            <label>Alt Başlıklar</label>
+            {subtitles.map((subtitle, index) => (
+              <div key={index} className="input-group">
+                <input
+                  type="text"
+                  value={subtitle}
+                  onChange={(e) => updateSubtitle(index, e.target.value)}
+                  placeholder={`Alt başlık ${index + 1}`}
+                />
+                {subtitles.length > 1 && (
+                  <button
+                    type="button"
+                    className="remove-btn"
+                    onClick={() => removeSubtitle(index)}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+            <button type="button" className="add-btn" onClick={addSubtitle}>
+              + Alt Başlık Ekle
+            </button>
+          </div>
+
           {/* Açıklamalar */}
           <div className="form-group">
             <label>Açıklamalar</label>
@@ -253,6 +310,33 @@ const ProductModal = ({ product, onClose, onSave }) => {
             ))}
             <button type="button" className="add-btn" onClick={addDescription}>
               + Açıklama Ekle
+            </button>
+          </div>
+
+          {/* Liste Öğeleri */}
+          <div className="form-group">
+            <label>Liste Öğeleri</label>
+            {listItems.map((item, index) => (
+              <div key={index} className="input-group">
+                <input
+                  type="text"
+                  value={item}
+                  onChange={(e) => updateListItem(index, e.target.value)}
+                  placeholder={`Liste öğesi ${index + 1}`}
+                />
+                {listItems.length > 1 && (
+                  <button
+                    type="button"
+                    className="remove-btn"
+                    onClick={() => removeListItem(index)}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+            <button type="button" className="add-btn" onClick={addListItem}>
+              + Liste Öğesi Ekle
             </button>
           </div>
 

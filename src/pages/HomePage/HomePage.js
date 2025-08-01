@@ -25,7 +25,7 @@ function HomePage() {
               ? BASE_URL + product.files[0].path
               : "",
           title: product.titles?.[0] || product.name || "",
-          subtitle: product.descriptions?.[0] || "",
+          subtitle: product.subtitles?.[0] || "",
         }));
         setProducts(mappedProducts);
       } catch (error) {
