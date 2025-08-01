@@ -79,6 +79,18 @@ export const updatePage = (data) =>
     }
   );
 
+export const updatePageProductOrder = (data) =>
+  axios.put(
+    `${API_URL}/api/Page/product-order`,
+    JSON.stringify(data),
+    {
+      headers: {
+        ...getAuthHeader(),
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
 export const deletePage = (id) =>
   axios.delete(`${API_URL}/api/Page/${id}`, { headers: getAuthHeader() });
 

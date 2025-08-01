@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getPage, updatePage, getProducts } from "../../../api";
+import { getPage, updatePage, getProducts, updatePageProductOrder } from "../../../api";
 import Swal from 'sweetalert2';
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
@@ -72,7 +72,7 @@ const Home = () => {
     e.preventDefault();
   };
 
-  const handleDrop = (e, dropIndex) => {
+  const handleDrop = async (e, dropIndex) => {
     e.preventDefault();
     if (draggedItem === null) return;
 
@@ -84,6 +84,35 @@ const Home = () => {
     
     setSelectedProducts(updatedProducts);
     setDraggedItem(null);
+
+    try {
+      const productIds = updatedProducts.map(p => p.id);
+      const productOrderData = {
+        pageId: "C569F4BC-D5F8-4768-8DFE-21618933F647",
+        productIds: productIds
+      };
+
+      await updatePageProductOrder(productOrderData);
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Sıralama güncellendi!',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    } catch (error) {
+      console.error("Sıralama kaydedilirken hata:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Sıralama kaydedilemedi!',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+      });
+    }
   };
 
   const addProductToHome = (product) => {
@@ -136,10 +165,63 @@ const Home = () => {
   };
 
   const saveBannerChanges = async () => {
-    setBannerTitle(tempTitle);
-    setBannerSubtitle(tempSubtitle);
-    setShowBannerModal(false);
-    await saveAllChanges();
+    try {
+      setBannerTitle(tempTitle);
+      setBannerSubtitle(tempSubtitle);
+      setShowBannerModal(false);
+
+      const pageResponse = await getPage("C569F4BC-D5F8-4768-8DFE-21618933F647");
+      const page = pageResponse.data && pageResponse.data.data ? pageResponse.data.data : pageResponse.data;
+
+      const updatedProducts = selectedProducts.map((product) => ({
+        id: product.id,
+        name: product.name,
+        titles: product.titles || [],
+        subtitles: product.subtitles || [],
+        descriptions: product.descriptions || [],
+        urls: product.urls || [],
+        fileIds: product.fileIds || [],
+        files: product.files || []
+      }));
+
+      const productIds = selectedProducts.map(p => p.id);
+
+      const updatedPage = {
+        ...page,
+        titles: [tempTitle],
+        subtitles: [tempSubtitle],
+        products: updatedProducts,
+        productIds: productIds,
+      };
+
+      await updatePage(updatedPage);
+
+      const productOrderData = {
+        pageId: "C569F4BC-D5F8-4768-8DFE-21618933F647",
+        productIds: productIds
+      };
+
+      await updatePageProductOrder(productOrderData);
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Banner Güncellendi!',
+        text: 'Banner başlığı ve alt başlığı başarıyla kaydedildi!',
+        confirmButtonText: 'Tamam',
+        confirmButtonColor: '#28a745',
+        timer: 2000,
+        timerProgressBar: true
+      });
+    } catch (error) {
+      console.error("Banner kaydedilirken hata oluştu:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Hata!',
+        text: 'Banner kaydetme sırasında bir hata oluştu.',
+        confirmButtonText: 'Tamam',
+        confirmButtonColor: '#dc3545'
+      });
+    }
   };
 
   const saveAllChanges = async () => {
@@ -169,6 +251,13 @@ const Home = () => {
       };
 
       await updatePage(updatedPage);
+
+      const productOrderData = {
+        pageId: "C569F4BC-D5F8-4768-8DFE-21618933F647",
+        productIds: productIds
+      };
+
+      await updatePageProductOrder(productOrderData);
       
       Swal.fire({
         icon: 'success',
