@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Swal from 'sweetalert2';
 import "./ContactPage.css";
 
 const ContactEditor = () => {
@@ -67,7 +68,13 @@ const ContactEditor = () => {
       return response.data.url;
     } catch (error) {
       console.error(`${endpoint} yüklenirken hata:`, error);
-      alert(`Dosya yüklenirken hata oluştu: ${endpoint}`);
+      Swal.fire({
+        icon: 'error',
+        title: 'Hata!',
+        text: `Dosya yüklenirken hata oluştu: ${endpoint}`,
+        confirmButtonText: 'Tamam',
+        confirmButtonColor: '#dc3545'
+      });
       return null;
     }
   };
@@ -81,7 +88,15 @@ const ContactEditor = () => {
     if (imageUrl) {
       setFormData((prev) => ({ ...prev, bannerImage: imageUrl }));
       setBannerImageFile(file);
-      alert("Banner görseli başarıyla yüklendi!");
+      Swal.fire({
+        icon: 'success',
+        title: 'Başarılı!',
+        text: 'Banner görseli başarıyla yüklendi!',
+        confirmButtonText: 'Tamam',
+        confirmButtonColor: '#28a745',
+        timer: 2000,
+        timerProgressBar: true
+      });
     }
     setUploading(false);
   };
@@ -92,10 +107,24 @@ const ContactEditor = () => {
 
     try {
       await axios.put("http://localhost:5001/api/contact", formData);
-      alert("İletişim sayfası başarıyla güncellendi!");
+      Swal.fire({
+        icon: 'success',
+        title: 'Başarılı!',
+        text: 'İletişim sayfası başarıyla güncellendi!',
+        confirmButtonText: 'Tamam',
+        confirmButtonColor: '#28a745',
+        timer: 2000,
+        timerProgressBar: true
+      });
     } catch (error) {
       console.error("Veriler güncellenirken hata oluştu:", error);
-      alert("Veriler güncellenirken bir hata oluştu.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Hata!',
+        text: 'Veriler güncellenirken bir hata oluştu.',
+        confirmButtonText: 'Tamam',
+        confirmButtonColor: '#dc3545'
+      });
     } finally {
       setUploading(false);
     }

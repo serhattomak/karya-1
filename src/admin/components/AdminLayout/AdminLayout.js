@@ -9,6 +9,7 @@ import KimyasalAnkraj from "../../pages/KimyasalAnkraj/KimyasalAnkraj";
 import TelBeton from "../../pages/TelBeton/TelBeton";
 import ContactPage from "../../pages/ContactPage/ContactPage";
 import Poliuretan from "../../pages/PoliuretanEnjeksiyon/PoliuretanEnjeksiyon";
+import Products from "../../pages/Products/Products";
 
 const AdminLayout = () => {
   return (
@@ -24,6 +25,7 @@ const AdminLayout = () => {
           <Route path="telbeton" element={<TelBeton />} />
           <Route path="contact" element={<ContactPage />} />
           <Route path="Poliuretan" element={<Poliuretan />} />
+          <Route path="products" element={<Products />} />
         </Routes>
       </div>
     </div>

@@ -1,19 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar/navbar";
 import Banner from "../../components/Banner/Banner";
 import AboutUsInfo from "../../components/AboutUsInfo/Aboutusinfo";
 import ServiceSection from "../../components/ServicesSection/ServicesSection"; 
 import PartnersSlider from "../../components/PartnersSlider/PartnersSlider";
 import Footer from "../../components/Footer/Footer";
+import { getPage } from "../../api";
+
+const ABOUT_PAGE_ID = "bba2449c-3594-474c-b6ea-c31751903beb";
+const BASE_URL = "https://localhost:7103/";
 
 function AboutPage() {
+  const [pageData, setPageData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getPage(ABOUT_PAGE_ID);
+        const data = response?.data?.data || response?.data || response;
+        setPageData(data);
+      } catch (error) {
+        console.error("Sayfa verisi çekme hatası:", error);
+        setPageData(null);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (!pageData) return <div>Yükleniyor...</div>;
+
+  const galleryImages = (pageData.files || []).map(f => f.path ? BASE_URL + f.path : "");
+
   return (
     <div>
-      <Banner imageSrc="/assets/images/aboutbanner.webp" title="Hakkımızda" />{" "}
+      <Banner imageSrc={pageData.bannerImageUrl || "/assets/images/aboutbanner.webp"} title={pageData.name || "Hakkımızda"} />
       <br></br>
-      <AboutUsInfo />
+      <AboutUsInfo 
+        titles={pageData.titles ? [pageData.titles[0]] : []}
+        subtitles={pageData.subtitles}
+        descriptions={pageData.descriptions}
+        image={pageData.files?.[0]?.path ? BASE_URL + pageData.files[0].path : "/assets/images/hk.jpeg"}
+      />
       <br></br>
-      <ServiceSection />
+      <ServiceSection 
+        serviceTitle={pageData.titles?.[1]}
+        listItems={pageData.listItems}
+        galleryImages={galleryImages}
+      />
       <br></br>
       <PartnersSlider></PartnersSlider>
       <br></br>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { getPage, updatePage } from "../../../api";
+import Swal from 'sweetalert2';
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 
@@ -17,34 +18,98 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/api/home");
-        const { banner, boxes } = response.data;
-
-        setBannerTitle(banner.title || "");
-        setBannerSubtitle(banner.subtitle || "");
-        setBoxes(boxes || []);
+        const response = await getPage("C569F4BC-D5F8-4768-8DFE-21618933F647");
+        const data = response.data && response.data.data ? response.data.data : response.data;
+        setBannerTitle((data.titles && data.titles[0]) || "");
+        setBannerSubtitle((data.subtitles && data.subtitles[0]) || "");
+        const API_URL = process.env.REACT_APP_API_URL || "https://localhost:7103";
+        setBoxes(
+          (data.products || []).map((product) => {
+            let imagePath = (product.files && product.files[0] && product.files[0].path) || "";
+            if (imagePath && imagePath.startsWith("uploads/")) {
+              imagePath = `${API_URL}/${imagePath}`;
+            }
+            return {
+              title: (product.titles && product.titles[0]) || "",
+              subtitle: (product.subtitles && product.subtitles[0]) || "",
+              image: imagePath,
+              id: product.id,
+            };
+          })
+        );
       } catch (error) {
-        console.error("Home verisi alınırken hata oluştu:", error);
+        console.error("Page verisi alınırken hata oluştu:", error);
       }
     };
-
     fetchData();
   }, []);
 
   const handleSave = async (event) => {
-    event.preventDefault();
-
-    const updatedData = {
-      banner: { title: bannerTitle, subtitle: bannerSubtitle },
-      boxes: boxes,
-    };
+    if (event) event.preventDefault();
 
     try {
-      await axios.put("http://localhost:5001/api/home", updatedData);
-      alert("Değişiklikler başarıyla kaydedildi!");
+      const response = await getPage("C569F4BC-D5F8-4768-8DFE-21618933F647");
+      const page = response.data && response.data.data ? response.data.data : response.data;
+
+      let updatedProducts = boxes.map((box, idx) => {
+        const oldProduct = (page.products && page.products[idx]) || {};
+        return {
+          id: oldProduct.id,
+          name: oldProduct.name || box.title || "Ürün",
+          titles: [box.title],
+          subtitles: [box.subtitle],
+          descriptions: oldProduct.descriptions || [],
+          urls: oldProduct.urls || [],
+          fileIds: oldProduct.fileIds || [],
+          files: oldProduct.files || [],
+          ...Object.fromEntries(Object.entries(oldProduct).filter(([k]) => !["id","name","titles","subtitles","descriptions","urls","fileIds","files"].includes(k)))
+        };
+      });
+
+      if (page.products && page.products.length > boxes.length) {
+        updatedProducts = [
+          ...updatedProducts,
+          ...page.products.slice(boxes.length)
+        ];
+      }
+
+      const boxIds = boxes.map((b) => b.id).filter(Boolean);
+      let mergedProductIds = Array.isArray(page.productIds) ? [...page.productIds] : [];
+      boxIds.forEach((id) => {
+        if (!mergedProductIds.includes(id)) mergedProductIds.push(id);
+      });
+
+      mergedProductIds = Array.from(new Set([...mergedProductIds, ...boxIds]));
+
+      const updatedPage = {
+        ...page,
+        titles: [tempTitle || bannerTitle],
+        subtitles: [tempSubtitle || bannerSubtitle],
+        descriptions: page.descriptions || [],
+        products: updatedProducts,
+        name: page.name || "Anasayfa",
+        productIds: mergedProductIds,
+      };
+
+      await updatePage(updatedPage);
+      Swal.fire({
+        icon: 'success',
+        title: 'Başarılı!',
+        text: 'Değişiklikler başarıyla kaydedildi!',
+        confirmButtonText: 'Tamam',
+        confirmButtonColor: '#28a745',
+        timer: 2000,
+        timerProgressBar: true
+      });
     } catch (error) {
       console.error("Veriler kaydedilirken hata oluştu:", error);
-      alert("Bir hata oluştu. Lütfen tekrar deneyin.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Hata!',
+        text: 'Bir hata oluştu. Lütfen tekrar deneyin.',
+        confirmButtonText: 'Tamam',
+        confirmButtonColor: '#dc3545'
+      });
     }
   };
 
@@ -65,15 +130,18 @@ const Home = () => {
     setIsModalOpen(false);
   };
 
-  const handleModalSave = () => {
+  const handleModalSave = async () => {
     setBannerTitle(tempTitle);
     setBannerSubtitle(tempSubtitle);
     setIsModalOpen(false);
+    setTimeout(() => {
+      handleSave();
+    }, 0);
   };
 
   return (
     <div className="admin-panel">
-      <form onSubmit={handleSave}>
+      <form id="home-form" onSubmit={handleSave}>
         <h2 className="panel-title">Anasayfa Banner</h2>
         <div className="banner-form">
           <div className="text-section">
@@ -148,7 +216,7 @@ const Home = () => {
               onChange={(e) => setTempSubtitle(e.target.value)}
             />
             <div className="modal-buttons">
-              <button className="save-button" onClick={handleModalSave}>
+              <button className="save-button" type="button" onClick={handleModalSave}>
                 Kaydet
               </button>
               <button className="close-button" onClick={closeModal}>

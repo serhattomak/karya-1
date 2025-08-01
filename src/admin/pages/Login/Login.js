@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 import "./Login.css";
 import logo from "./KaryaLogo.png";
 
@@ -11,8 +12,45 @@ const Login = ({ setIsAuthenticated }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    setIsAuthenticated(true);
-    navigate("/admin/Home");
+    try {
+      const response = await fetch("https://localhost:7103/api/Auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Login response:", data);
+        if (data && data.data && data.data.token) {
+          localStorage.setItem("token", data.data.token);
+        }
+        setIsAuthenticated(true);
+        navigate("/admin/Home");
+      } else {
+        // Hatalı giriş
+        Swal.fire({
+          icon: 'error',
+          title: 'Giriş Başarısız!',
+          text: 'Kullanıcı adı veya şifre hatalı.',
+          confirmButtonText: 'Tamam',
+          confirmButtonColor: '#dc3545'
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Bağlantı Hatası!',
+        text: 'Sunucuya bağlanılamadı.',
+        confirmButtonText: 'Tamam',
+        confirmButtonColor: '#dc3545'
+      });
+    }
   };
 
   return (

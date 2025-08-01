@@ -1,170 +1,180 @@
 import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
+import { getPage, updatePage } from "../../../api";
+import Swal from 'sweetalert2';
 import "./AboutUs.css";
-
-const AboutUs = () => {
-  const [formData, setFormData] = useState({
-    title: "",
-    subtitle: "",
-    content: "",
-    image: "",
+const BASE_URL = "https://localhost:7103/";
+const uploadFile = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  const token = localStorage.getItem("token");
+  const response = await fetch("https://localhost:7103/api/File/upload", {
+    method: "POST",
+    body: formData,
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
+  if (!response.ok) throw new Error("Dosya yüklenemedi");
+  return await response.json();
+};
 
-  const [servicesTitle, setServicesTitle] = useState(
-    "Hizmet Verdiğimiz Konular"
-  );
-  const [servicesList, setServicesList] = useState([
-    "Poliüretan enjeksiyon reçine satışı.",
-    "Her türlü negatif yönden su sızıntılarına karşı poliüretan enjeksiyon reçinesi ile su yalıtımı.",
-    "Epoksi enjeksiyon reçinesi ile yapısal çatlak tamiri.",
-    "Epoksi ile demir filiz ekimi.",
-    "Epoksi ile rot montajı.",
-    "Karot makineleri ile beton delme.",
-    "Hidrolik raylı sistemler ile beton kesme.",
-    "Halatlı - tel beton kesme.",
-  ]);
 
+const ABOUT_US_PAGE_ID = "BBA2449C-3594-474C-B6EA-C31751903BEB";
+const AboutUs = () => {
+  const [title, setTitle] = useState("");
+  const [subtitle, setSubtitle] = useState("");
+  const [content, setContent] = useState("");
+  const [image, setImage] = useState("");
+  const [servicesTitle, setServicesTitle] = useState("");
+  const [servicesList, setServicesList] = useState([]);
+  const [applicationAreaImages, setApplicationAreaImages] = useState([null, null, null, null]);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [bannerTitle, setBannerTitle] = useState("Banner Başlığı");
-  const [bannerImage, setBannerImage] = useState("");
+  const [pageType, setPageType] = useState(0);
+  const [name, setName] = useState("");
+  const [urls, setUrls] = useState([]);
+  const [backgroundImageUrl, setBackgroundImageUrl] = useState("");
+  const [productIds, setProductIds] = useState([]);
+  const [additionalFields, setAdditionalFields] = useState([]);
   const applicationFileInputRefs = useRef([]);
   const selectedApplicationImageIndexRef = useRef(0);
+
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getPage(ABOUT_US_PAGE_ID);
+        const data = response?.data?.data || response?.data || response;
+        setTitle((data.titles && data.titles[0]) || "");
+        setSubtitle((data.subtitles && data.subtitles[0]) || "");
+        setContent((data.descriptions && data.descriptions[0]) || "");
+        setImage(data.bannerImageUrl || "");
+        setServicesTitle((data.titles && data.titles[1]) || "");
+        setServicesList(data.listItems || []);
+        setPageType(typeof data.pageType !== 'undefined' ? data.pageType : 0);
+        setName(data.name || "");
+        setUrls(data.urls || []);
+        setBackgroundImageUrl(data.backgroundImageUrl || "");
+        setProductIds(data.productIds || []);
+        setAdditionalFields(data.additionalFields || []);
+        let appImages = [null, null, null, null];
+        if (Array.isArray(data.files)) {
+          appImages = data.files.slice(0, 4).map(f => ({
+            id: f.id,
+            url: f.path ? BASE_URL + f.path : ""
+          }));
+          while (appImages.length < 4) appImages.push(null);
+        }
+        setApplicationAreaImages(appImages);
+      } catch (error) {
+        console.error("Veri çekme hatası: ", error);
+      }
+    };
     fetchData();
   }, []);
-
-  const fetchData = () => {
-    axios
-      .get("http://localhost:5001/api/about")
-      .then((response) => {
-        setFormData(response.data);
-      })
-      .catch((error) => console.error("Veri çekme hatası: ", error));
-  };
-
-  const handleApplicationImageUpload = (event) => {
-    const file = event.target.files && event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setApplicationAreaImages((prevImages) => {
-        const updatedImages = [...prevImages];
-        updatedImages[selectedApplicationImageIndexRef.current] = imageUrl;
-        return updatedImages;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let uploadedImageUrl = image;
+    if (selectedFile) {
+      try {
+        const uploaded = await uploadFile(selectedFile);
+        uploadedImageUrl = uploaded.url || uploaded.path || uploaded.imageUrl || image;
+      } catch (error) {
+        console.error("Resim yükleme hatası:", error);
+      }
+    }
+    const updatedData = {
+      id: ABOUT_US_PAGE_ID,
+      pageType,
+      name,
+      titles: [title, servicesTitle],
+      subtitles: [subtitle],
+      descriptions: [content],
+      listItems: servicesList,
+      urls,
+      backgroundImageUrl,
+      bannerImageUrl: uploadedImageUrl,
+      fileIds: applicationAreaImages.filter(img => img && img.id).map(img => img.id),
+      productIds,
+      additionalFields,
+    };
+    try {
+      await updatePage(updatedData);
+      Swal.fire({
+        icon: 'success',
+        title: 'Başarılı!',
+        text: 'Güncelleme başarılı!',
+        confirmButtonText: 'Tamam',
+        confirmButtonColor: '#28a745',
+        timer: 2000,
+        timerProgressBar: true
+      });
+    } catch (error) {
+      console.error("Güncelleme hatası: ", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Hata!',
+        text: 'Güncellenirken bir hata oluştu.',
+        confirmButtonText: 'Tamam',
+        confirmButtonColor: '#dc3545'
       });
     }
   };
+
+  const handleApplicationImageUpload = async (event) => {
+    const file = event.target.files && event.target.files[0];
+    if (file) {
+      try {
+        const uploaded = await uploadFile(file);
+        console.log("uploadFile yanıtı:", uploaded);
+        const imageUrl = uploaded?.data?.path ? BASE_URL + uploaded.data.path : "";
+        console.log("Kullanılan imageUrl:", imageUrl);
+        const fileId = uploaded?.data?.id || null;
+        setApplicationAreaImages((prevImages) => {
+          const updatedImages = [...prevImages];
+          updatedImages[selectedApplicationImageIndexRef.current] = fileId ? { id: fileId, url: imageUrl } : null;
+          return updatedImages;
+        });
+      } catch (error) {
+        console.error("Uygulama alanı görseli yüklenemedi", error);
+      }
+    }
+  };
+
   const triggerApplicationFileInput = (index) => {
     selectedApplicationImageIndexRef.current = index;
     applicationFileInputRefs.current[index]?.click();
   };
 
-  const [applicationAreaImages, setApplicationAreaImages] = useState([
-    "",
-    "",
-    "",
-    "",
-  ]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "title") setTitle(value);
+    else if (name === "subtitle") setSubtitle(value);
+    else if (name === "content") setContent(value);
   };
+
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-
     if (file) {
       setSelectedFile(file);
-
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData((prevData) => ({
-          ...prevData,
-          image: reader.result,
-        }));
+        setImage(reader.result);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleBannerUpload = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      setBannerImage(URL.createObjectURL(event.target.files[0]));
-    }
-  };
-
-  const uploadImage = async () => {
-    if (!selectedFile) return formData.image;
-    const formDataUpload = new FormData();
-    formDataUpload.append("image", selectedFile);
-
-    try {
-      const response = await axios.post(
-        "http://localhost:5001/api/about/upload-image",
-        formDataUpload
-      );
-      return response.data.imageUrl;
-    } catch (error) {
-      console.error("Resim yükleme hatası:", error);
-      return formData.image;
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const uploadedImageUrl = await uploadImage();
-    const updatedData = { ...formData, image: uploadedImageUrl };
-
-    axios
-      .put("http://localhost:5001/api/about", updatedData)
-      .then(() => {
-        setFormData(updatedData);
-        alert("Güncelleme başarılı!");
-      })
-      .catch((error) => {
-        console.error("Güncelleme hatası: ", error);
-        alert("Güncellenirken bir hata oluştu.");
-      });
-  };
 
   return (
     <div className="admin-panel">
       <h2 className="panel-title">Hakkımızda</h2>
-      <div className="form-group">
-        <label htmlFor="bannerTitle">Banner Başlık:</label>
-        <input
-          type="text"
-          id="bannerTitle"
-          value={bannerTitle}
-          onChange={(e) => setBannerTitle(e.target.value)}
-          placeholder="Başlık ekleyin"
-          required
-        />
-
-        <label htmlFor="bannerImage">Banner Resim:</label>
-        <input
-          type="file"
-          id="bannerImage"
-          accept="image/*"
-          onChange={handleBannerUpload}
-          required
-        />
-        {bannerImage && (
-          <img
-            src={bannerImage}
-            alt="Banner Önizleme"
-            className="preview-image"
-          />
-        )}
-      </div>
-
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Başlık</label>
           <input
             type="text"
             name="title"
-            value={formData.title}
+            value={title}
             onChange={handleChange}
             placeholder="Başlık"
           />
@@ -172,7 +182,7 @@ const AboutUs = () => {
           <input
             type="text"
             name="subtitle"
-            value={formData.subtitle}
+            value={subtitle}
             onChange={handleChange}
             placeholder="Alt Başlık"
           />
@@ -180,20 +190,20 @@ const AboutUs = () => {
           <textarea
             className="text-area"
             name="content"
-            value={formData.content}
+            value={content}
             onChange={handleChange}
             placeholder="İçerik"
           ></textarea>
           <label>Resim Yükle</label>
           <input type="file" accept="image/*" onChange={handleFileChange} />
-          {formData.image && (
+          {image && (
             <img
               className="preview-image"
-              src={formData.image}
+              src={image}
               alt="Önizleme"
               style={{ width: "150px", marginTop: "10px" }}
             />
-          )}{" "}
+          )}
         </div>
 
         <div className="form-group service-section">
@@ -234,7 +244,6 @@ const AboutUs = () => {
               </button>
             </div>
           ))}
-
           <button
             type="button"
             className="add-btn"
@@ -247,14 +256,13 @@ const AboutUs = () => {
         <h4 className="panel-title">Görseller</h4>
         <div className="gallery-grid">
           {[0, 1, 2, 3].map((index) => {
-            const imageUrl = applicationAreaImages[index];
-
+            const imageObj = applicationAreaImages[index];
             return (
               <div key={index} className="gallery-item image-box">
-                {imageUrl ? (
+                {imageObj && imageObj.url ? (
                   <>
                     <img
-                      src={imageUrl}
+                      src={imageObj.url}
                       alt={`Uygulama Alanı ${index + 1}`}
                       className="image-preview-square"
                     />
