@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { createProduct, updateProduct } from "../../../api";
+import { createProduct, updateProduct, getFiles } from "../../../api";
 import Swal from 'sweetalert2';
 
 const BASE_URL = "https://localhost:7103/";
@@ -24,7 +24,17 @@ const ProductModal = ({ product, onClose, onSave }) => {
   const [descriptions, setDescriptions] = useState([""]);
   const [listItems, setListItems] = useState([""]);
   const [urls, setUrls] = useState([""]);
+  const [bannerImageUrl, setBannerImageUrl] = useState("");
+  const [bannerImageFile, setBannerImageFile] = useState(null);
+  const [productImageId, setProductImageId] = useState("");
+  const [documentImageIds, setDocumentImageIds] = useState([]);
+  const [productDetailImageIds, setProductDetailImageIds] = useState([]);
+  const [productDetailImages, setProductDetailImages] = useState([]); // Ürün detay görselleri için ayrı state
+  const [documentFiles, setDocumentFiles] = useState([]); // Döküman dosyaları
   const [productImages, setProductImages] = useState([]);
+  const [availableFiles, setAvailableFiles] = useState([]);
+  const [showFileSelector, setShowFileSelector] = useState(false);
+  const [selectedFileType, setSelectedFileType] = useState('');
   const [loading, setLoading] = useState(false);
   const modalRef = useRef();
 
@@ -36,6 +46,41 @@ const ProductModal = ({ product, onClose, onSave }) => {
       setDescriptions(product.descriptions || [""]);
       setListItems(product.listItems || [""]);
       setUrls(product.urls || [""]);
+      setBannerImageUrl(product.bannerImageUrl || "");
+      setProductImageId(product.productImageId || "");
+      setDocumentImageIds(product.documentImageIds || []);
+      setProductDetailImageIds(product.productDetailImageIds || []);
+      
+      // Önce tüm döküman dosyalarını temizle
+      let allDocumentFiles = [];
+      
+      // Döküman dosyalarını yükle
+      if (product.documentFiles && product.documentFiles.length > 0) {
+        const documents = product.documentFiles.map(file => ({
+          id: file.id,
+          name: file.name,
+          path: file.path,
+          url: file.path ? BASE_URL + file.path : "",
+          isExisting: true,
+          isDocumentImage: false
+        }));
+        allDocumentFiles = [...allDocumentFiles, ...documents];
+      }
+      
+      // Döküman görsellerini yükle (documentImages array'den)
+      if (product.documentImages && product.documentImages.length > 0) {
+        const docImages = product.documentImages.map(file => ({
+          id: file.id,
+          name: file.name,
+          path: file.path,
+          url: file.path ? BASE_URL + file.path : "",
+          isExisting: true,
+          isDocumentImage: true
+        }));
+        allDocumentFiles = [...allDocumentFiles, ...docImages];
+      }
+      
+      setDocumentFiles(allDocumentFiles);
       
       if (product.files && product.files.length > 0) {
         const images = product.files.map(file => ({
@@ -45,14 +90,53 @@ const ProductModal = ({ product, onClose, onSave }) => {
         }));
         setProductImages(images);
       }
+      
+      // productImages array'ini de yükle
+      if (product.productImages && product.productImages.length > 0) {
+        const prodImages = product.productImages.map(file => ({
+          id: file.id,
+          url: file.path ? BASE_URL + file.path : "",
+          name: file.name,
+          isExisting: true
+        }));
+        setProductDetailImages(prodImages);
+      }
+    } else {
+      // Yeni ürün oluştururken tüm state'leri temizle
+      setDocumentFiles([]);
+      setProductDetailImages([]);
+      setProductImages([]);
     }
   }, [product]);
+
+  useEffect(() => {
+    const fetchAvailableFiles = async () => {
+      try {
+        const response = await getFiles();
+        const files = response?.data?.data || response?.data || [];
+        setAvailableFiles(files);
+      } catch (error) {
+        console.error("Dosyalar yüklenirken hata:", error);
+      }
+    };
+
+    fetchAvailableFiles();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      let finalBannerImageUrl = bannerImageUrl;
+      if (bannerImageFile) {
+        const uploaded = await uploadFile(bannerImageFile);
+        const uploadedFile = uploaded?.data || uploaded;
+        if (uploadedFile && uploadedFile.path) {
+          finalBannerImageUrl = BASE_URL + uploadedFile.path;
+        }
+      }
+
       const fileIds = [];
       for (const image of productImages) {
         if (image.isExisting) {
@@ -66,6 +150,44 @@ const ProductModal = ({ product, onClose, onSave }) => {
         }
       }
 
+      // Döküman dosyalarını işle
+      const documentFileIds = [];
+      const documentImageFileIds = [];
+      
+      for (const doc of documentFiles) {
+        if (doc.isExisting) {
+          if (doc.isDocumentImage) {
+            documentImageFileIds.push(doc.id);
+          } else {
+            documentFileIds.push(doc.id);
+          }
+        } else if (doc.file) {
+          const uploaded = await uploadFile(doc.file);
+          const uploadedFileId = uploaded?.data?.id || uploaded?.id;
+          if (uploadedFileId) {
+            if (doc.isDocumentImage) {
+              documentImageFileIds.push(uploadedFileId);
+            } else {
+              documentFileIds.push(uploadedFileId);
+            }
+          }
+        }
+      }
+
+      // Ürün detay görsellerini işle
+      const productDetailFileIds = [];
+      for (const image of productDetailImages) {
+        if (image.isExisting) {
+          productDetailFileIds.push(image.id);
+        } else if (image.file) {
+          const uploaded = await uploadFile(image.file);
+          const uploadedFileId = uploaded?.data?.id || uploaded?.id;
+          if (uploadedFileId) {
+            productDetailFileIds.push(uploadedFileId);
+          }
+        }
+      }
+
       const productData = {
         name,
         titles: titles.filter(t => t.trim() !== ""),
@@ -73,7 +195,13 @@ const ProductModal = ({ product, onClose, onSave }) => {
         descriptions: descriptions.filter(d => d.trim() !== ""),
         listItems: listItems.filter(li => li.trim() !== ""),
         urls: urls.filter(u => u.trim() !== ""),
-        fileIds
+        bannerImageUrl: finalBannerImageUrl.trim() || null,
+        productImageId: productImageId.trim() || null,
+        documentImageIds: documentImageFileIds,
+        productDetailImageIds: productDetailImageIds.filter(id => String(id).trim() !== ""),
+        fileIds,
+        documentFileIds,
+        productDetailFileIds
       };
 
       if (product) {
@@ -116,24 +244,78 @@ const ProductModal = ({ product, onClose, onSave }) => {
     }
   };
 
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    files.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setProductImages(prev => [...prev, {
-          id: Date.now() + Math.random(),
-          url: event.target.result,
-          file: file,
-          isExisting: false
-        }]);
-      };
-      reader.readAsDataURL(file);
-    });
+  const removeDocumentFile = (fileId) => {
+    setDocumentFiles(prev => prev.filter(doc => doc.id !== fileId));
   };
 
-  const removeImage = (imageId) => {
-    setProductImages(prev => prev.filter(img => img.id !== imageId));
+  // Ana ürün görseli için seçilen dosyayı bul
+  const getSelectedProductImage = () => {
+    if (!productImageId) return null;
+    return availableFiles.find(file => file.id === productImageId);
+  };
+
+  const handleBannerFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setBannerImageFile(file);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setBannerImageUrl(event.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const openFileSelector = (fileType) => {
+    setSelectedFileType(fileType);
+    setShowFileSelector(true);
+  };
+
+  const selectFileFromSystem = (file) => {
+    const fileUrl = BASE_URL + file.path;
+    
+    switch (selectedFileType) {
+      case 'banner':
+        setBannerImageUrl(fileUrl);
+        setBannerImageFile(null);
+        break;
+      case 'productImage':
+        setProductImageId(file.id);
+        break;
+      case 'documentImage':
+        setDocumentFiles(prev => [...prev, {
+          id: file.id,
+          name: file.name,
+          path: file.path,
+          url: fileUrl,
+          isExisting: true,
+          isDocumentImage: true
+        }]);
+        break;
+      case 'productDetailImage':
+        setProductDetailImageIds([...productDetailImageIds, file.id]);
+        setProductDetailImages(prev => [...prev, {
+          id: file.id,
+          name: file.name,
+          path: file.path,
+          url: fileUrl,
+          isExisting: true
+        }]);
+        break;
+      case 'documentFile':
+        setDocumentFiles(prev => [...prev, {
+          id: file.id,
+          name: file.name,
+          path: file.path,
+          url: fileUrl,
+          isExisting: true,
+          isDocumentImage: false
+        }]);
+        break;
+    }
+    
+    setShowFileSelector(false);
+    setSelectedFileType('');
   };
 
   const addTitle = () => {
@@ -246,7 +428,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 {titles.length > 1 && (
                   <button
                     type="button"
-                    className="remove-btn"
+                    className="remove-btn danger"
                     onClick={() => removeTitle(index)}
                   >
                     ×
@@ -254,7 +436,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="add-btn" onClick={addTitle}>
+            <button type="button" className="add-btn secondary" onClick={addTitle}>
               + Başlık Ekle
             </button>
           </div>
@@ -273,7 +455,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 {subtitles.length > 1 && (
                   <button
                     type="button"
-                    className="remove-btn"
+                    className="remove-btn danger"
                     onClick={() => removeSubtitle(index)}
                   >
                     ×
@@ -281,7 +463,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="add-btn" onClick={addSubtitle}>
+            <button type="button" className="add-btn secondary" onClick={addSubtitle}>
               + Alt Başlık Ekle
             </button>
           </div>
@@ -300,7 +482,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 {descriptions.length > 1 && (
                   <button
                     type="button"
-                    className="remove-btn"
+                    className="remove-btn danger"
                     onClick={() => removeDescription(index)}
                   >
                     ×
@@ -308,7 +490,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="add-btn" onClick={addDescription}>
+            <button type="button" className="add-btn secondary" onClick={addDescription}>
               + Açıklama Ekle
             </button>
           </div>
@@ -327,7 +509,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 {listItems.length > 1 && (
                   <button
                     type="button"
-                    className="remove-btn"
+                    className="remove-btn danger"
                     onClick={() => removeListItem(index)}
                   >
                     ×
@@ -335,7 +517,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="add-btn" onClick={addListItem}>
+            <button type="button" className="add-btn secondary" onClick={addListItem}>
               + Liste Öğesi Ekle
             </button>
           </div>
@@ -354,7 +536,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 {urls.length > 1 && (
                   <button
                     type="button"
-                    className="remove-btn"
+                    className="remove-btn danger"
                     onClick={() => removeUrl(index)}
                   >
                     ×
@@ -362,50 +544,394 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="add-btn" onClick={addUrl}>
+            <button type="button" className="add-btn secondary" onClick={addUrl}>
               + URL Ekle
             </button>
           </div>
 
-          {/* Görseller */}
+          {/* Banner Image URL */}
           <div className="form-group">
-            <label>Ürün Görselleri</label>
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImageUpload}
-              className="file-input"
-            />
-            
-            {productImages.length > 0 && (
-              <div className="image-preview-grid">
-                {productImages.map((image) => (
-                  <div key={image.id} className="image-preview-item">
-                    <img src={image.url} alt="Ürün görseli" />
-                    <button
-                      type="button"
-                      className="remove-image-btn"
-                      onClick={() => removeImage(image.id)}
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
+            <label>Banner Görseli</label>
+            <div className="banner-image-input">
+              <input
+                type="url"
+                value={bannerImageUrl}
+                onChange={(e) => setBannerImageUrl(e.target.value)}
+                placeholder="Banner görsel URL'si girebilir ya da dosya seçebilirsiniz"
+              />
+              <div className="banner-image-controls">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleBannerFileSelect}
+                  style={{ display: 'none' }}
+                  id="banner-file-input"
+                />
+                <label htmlFor="banner-file-input" className="file-select-btn primary">
+                  Dosya Seç
+                </label>
+                <button
+                  type="button"
+                  className="file-select-btn primary"
+                  onClick={() => openFileSelector('banner')}
+                >
+                  Sistemden Seç
+                </button>
               </div>
-            )}
+              {bannerImageUrl && (
+                <div className="banner-preview">
+                  <img src={bannerImageUrl} alt="Banner önizleme" style={{ maxWidth: '200px', maxHeight: '100px' }} />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Product Image ID */}
+          <div className="form-group">
+            <label>Ana Ürün Görseli</label>
+            <div className="product-image-selector">
+              <button
+                type="button"
+                className="file-select-btn primary"
+                onClick={() => openFileSelector('productImage')}
+              >
+                Ana Görsel Seç
+              </button>
+              {productImageId && (
+                <div className="selected-file-info">
+                  <div className="selected-image-preview">
+                    {(() => {
+                      const selectedImage = getSelectedProductImage();
+                      return selectedImage ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <img 
+                            src={BASE_URL + selectedImage.path} 
+                            alt={selectedImage.name}
+                            style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
+                          />
+                          <span>{selectedImage.name}</span>
+                        </div>
+                      ) : (
+                        <span>Seçilen görsel ID: {productImageId}</span>
+                      );
+                    })()}
+                  </div>
+                  <button
+                    type="button"
+                    className="remove-btn danger"
+                    onClick={() => setProductImageId('')}
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Document Image IDs */}
+          <div className="form-group">
+            <label>Döküman Görselleri</label>
+            <div className="document-images-selector">
+              <div className="upload-controls">
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => {
+                    const files = Array.from(e.target.files);
+                    files.forEach(file => {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        const tempId = `temp_${Date.now()}_${Math.random()}`;
+                        setDocumentFiles(prev => [...prev, {
+                          id: tempId,
+                          name: file.name,
+                          path: file.name,
+                          url: event.target.result,
+                          file: file,
+                          isExisting: false,
+                          isDocumentImage: true
+                        }]);
+                      };
+                      reader.readAsDataURL(file);
+                    });
+                  }}
+                  style={{ display: 'none' }}
+                  id="document-image-input"
+                />
+                <label htmlFor="document-image-input" className="file-select-btn primary">
+                  Yeni Görsel Yükle
+                </label>
+                <button
+                  type="button"
+                  className="file-select-btn primary"
+                  onClick={() => openFileSelector('documentImage')}
+                >
+                  Sistemden Seç
+                </button>
+              </div>
+              {documentFiles.filter(doc => doc.isDocumentImage).length > 0 && (
+                <div className="selected-images">
+                  {documentFiles
+                    .filter(doc => doc.isDocumentImage)
+                    .sort((a, b) => {
+                      // Yeni eklenen dosyalar önce gelsin (isExisting false olanlar)
+                      if (!a.isExisting && b.isExisting) return -1;
+                      if (a.isExisting && !b.isExisting) return 1;
+                      // ID'ye göre sırala
+                      return a.id.toString().localeCompare(b.id.toString());
+                    })
+                    .map((docFile, index) => (
+                    <div key={docFile.id} className="selected-image-item">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <img 
+                          src={docFile.url} 
+                          alt={docFile.name}
+                          style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }}
+                        />
+                        <span>{docFile.name}</span>
+                      </div>
+                      <button
+                        type="button"
+                        className="remove-btn danger"
+                        onClick={() => {
+                          setDocumentFiles(prev => prev.filter(doc => doc.id !== docFile.id));
+                        }}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Product Detail Image IDs */}
+          <div className="form-group">
+            <label>Ürün Detay Görselleri</label>
+            <div className="product-detail-images-selector">
+              <div className="upload-controls">
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => {
+                    const files = Array.from(e.target.files);
+                    files.forEach(file => {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        const newId = Date.now() + Math.random();
+                        setProductDetailImageIds(prev => [...prev, newId]);
+                        setProductDetailImages(prev => [...prev, {
+                          id: newId,
+                          url: event.target.result,
+                          name: file.name,
+                          file: file,
+                          isExisting: false
+                        }]);
+                      };
+                      reader.readAsDataURL(file);
+                    });
+                  }}
+                  style={{ display: 'none' }}
+                  id="detail-image-input"
+                />
+                <label htmlFor="detail-image-input" className="file-select-btn primary">
+                  Yeni Görsel Yükle
+                </label>
+                <button
+                  type="button"
+                  className="file-select-btn primary"
+                  onClick={() => openFileSelector('productDetailImage')}
+                >
+                  Sistemden Seç
+                </button>
+              </div>
+              {productDetailImageIds.length > 0 && (
+                <div className="selected-images">
+                  {productDetailImageIds.map((id, index) => {
+                    const image = productDetailImages.find(img => img.id === id);
+                    return (
+                      <div key={index} className="selected-image-item">
+                        {image ? (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <img 
+                              src={image.url} 
+                              alt={image.name || `Detay görseli ${index + 1}`}
+                              style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }}
+                            />
+                            <span>{image.name || `Detay görseli ${index + 1}`}</span>
+                          </div>
+                        ) : (
+                          <span>Görsel ID: {id}</span>
+                        )}
+                        <button
+                          type="button"
+                          className="remove-btn danger"
+                          onClick={() => {
+                            setProductDetailImageIds(productDetailImageIds.filter((_, i) => i !== index));
+                            setProductDetailImages(prev => prev.filter(img => img.id !== id));
+                          }}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Ürün Dosyaları/Dökümanları */}
+          <div className="form-group">
+            <label>Ürün Dosyaları/Dökümanları</label>
+            <div className="document-files-selector">
+              <div className="upload-controls">
+                <input
+                  type="file"
+                  multiple
+                  onChange={(e) => {
+                    const files = Array.from(e.target.files);
+                    files.forEach(file => {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        setDocumentFiles(prev => [...prev, {
+                          id: `temp_${Date.now()}_${Math.random()}`,
+                          name: file.name,
+                          path: file.name,
+                          url: event.target.result,
+                          file: file,
+                          isExisting: false,
+                          isDocumentImage: false
+                        }]);
+                      };
+                      reader.readAsDataURL(file);
+                    });
+                  }}
+                  style={{ display: 'none' }}
+                  id="document-file-input"
+                />
+                <label htmlFor="document-file-input" className="file-select-btn primary">
+                  Yeni Dosya Yükle
+                </label>
+                <button
+                  type="button"
+                  className="file-select-btn primary"
+                  onClick={() => openFileSelector('documentFile')}
+                >
+                  Sistemden Seç
+                </button>
+              </div>
+              {documentFiles.filter(doc => !doc.isDocumentImage).length > 0 && (
+                <div className="selected-files">
+                  {documentFiles.filter(doc => !doc.isDocumentImage).map((doc, index) => (
+                    <div key={doc.id} className="selected-file-item">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        {doc.url && doc.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                          <img 
+                            src={doc.url} 
+                            alt={doc.name}
+                            style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }}
+                          />
+                        ) : (
+                          <div style={{ 
+                            width: '40px', 
+                            height: '40px', 
+                            background: '#f0f0f0', 
+                            borderRadius: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '12px'
+                          }}>
+                            📄
+                          </div>
+                        )}
+                        <span>{doc.name}</span>
+                      </div>
+                      <button
+                        type="button"
+                        className="remove-btn danger"
+                        onClick={() => removeDocumentFile(doc.id)}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="modal-footer">
-            <button type="button" className="cancel-btn" onClick={onClose}>
+            <button type="button" className="cancel-btn danger" onClick={onClose}>
               İptal
             </button>
-            <button type="submit" className="save-btn" disabled={loading}>
+            <button type="submit" className="save-btn primary" disabled={loading}>
               {loading ? "Kaydediliyor..." : "Kaydet"}
             </button>
           </div>
         </form>
       </div>
+
+      {/* Dosya Seçici Modal */}
+      {showFileSelector && (
+        <div className="file-selector-modal">
+          <div className="file-selector-content">
+            <div className="file-selector-header">
+              <h3>Dosya Seç</h3>
+              <button
+                type="button"
+                className="close-btn"
+                onClick={() => setShowFileSelector(false)}
+              >
+                ×
+              </button>
+            </div>
+            <div className="file-selector-body">
+              <div className="files-grid">
+                {availableFiles
+                  .filter(file => {
+                    // Görsel seçimi için sadece resimleri göster
+                    if (['banner', 'productImage', 'documentImage', 'productDetailImage'].includes(selectedFileType)) {
+                      return file.contentType?.startsWith('image/') || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i);
+                    }
+                    // Döküman dosyası seçimi için tüm dosyaları göster
+                    if (selectedFileType === 'documentFile') {
+                      return true;
+                    }
+                    return true;
+                  })
+                  .map(file => (
+                    <div
+                      key={file.id}
+                      className="file-item"
+                      onClick={() => selectFileFromSystem(file)}
+                    >
+                      {file.contentType?.startsWith('image/') || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                        <img
+                          src={BASE_URL + file.path}
+                          alt={file.name}
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="file-icon">
+                          <span style={{ fontSize: '48px' }}>📄</span>
+                        </div>
+                      )}
+                      <div className="file-info">
+                        <span className="file-name">{file.name}</span>
+                        <span className="file-size">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

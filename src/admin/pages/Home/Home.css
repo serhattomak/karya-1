@@ -47,7 +47,7 @@
 }
 
 .edit-btn.primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #f68b1f 0%, #ee5c30 100%);
   color: white;
   min-width: auto;
   max-width: 130px;
@@ -66,7 +66,7 @@
 }
 
 .save-btn.primary {
-  background: #007bff;
+  background: #f68b1f;
   color: white;
   font-size: 16px;
   padding: 16px 32px;
@@ -78,7 +78,7 @@
 }
 
 .save-btn:hover {
-  background: #0056b3;
+  background: #ee5c30;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
@@ -405,7 +405,7 @@
 }
 
 .modal-footer .save-btn {
-  background: linear-gradient(135deg, #007bff 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #f68b1f 0%, #ee5c30 100%);
   color: white;
   border: none;
   padding: 12px 24px;

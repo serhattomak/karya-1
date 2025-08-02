@@ -1,4 +1,5 @@
 import React from "react";
+import Gallery from "../Gallery/Gallery";
 import "./ProductInfo.css";
 
 const BASE_URL = "https://localhost:7103/";
@@ -13,16 +14,66 @@ const ProductInfo = ({ productData }) => {
     descriptions = [],
     listItems = [],
     urls = [],
-    files = []
+    files = [],
+    productImage = null,
+    documentImages: apiDocumentImages = [],
+    productImages: apiProductImages = [],
+    documentImageIds = [],
+    productDetailImageIds = [],
+    productImageId = null
   } = productData;
 
-  // Ana görsel için ilk dosyayı kullan
-  const mainImage = files && files[0] 
-    ? BASE_URL + files[0].path 
-    : "/assets/images/Group 300.webp";
+  const mainImage = (() => {
+    if (productImage && productImage.path) {
+      return BASE_URL + productImage.path;
+    }
+    if (productImageId) {
+      const productImageFile = files.find(file => file.id === productImageId);
+      if (productImageFile) return BASE_URL + productImageFile.path;
+    }
+    return files && files[0] 
+      ? BASE_URL + files[0].path 
+      : "/assets/images/Group 300.webp";
+  })();
+
+  const documentImages = (() => {
+    if (apiDocumentImages && apiDocumentImages.length > 0) {
+      return apiDocumentImages.map(img => ({
+        ...img,
+        path: BASE_URL + img.path
+      }));
+    }
+    if (documentImageIds.length > 0) {
+      return documentImageIds.map(imageId => {
+        const file = files.find(f => f.id === imageId);
+        return file ? { ...file, path: BASE_URL + file.path } : null;
+      }).filter(Boolean);
+    }
+    return [];
+  })();
+
+  const productDetailImages = (() => {
+    if (apiProductImages && apiProductImages.length > 0) {
+      return apiProductImages.map(img => ({
+        src: BASE_URL + img.path,
+        alt: img.name || name
+      }));
+    }
+    if (productDetailImageIds.length > 0) {
+      return productDetailImageIds.map(imageId => {
+        const file = files.find(f => f.id === imageId);
+        return file ? {
+          src: BASE_URL + file.path,
+          alt: file.name || name
+        } : null;
+      }).filter(Boolean);
+    }
+    return [];
+  })();
 
   return (
     <div className="product-info-container">
+      {/* Ürün Bilgileri ve Ana Görsel - Üst Kısım */}
       <div className="product-info-content">
         <div className="product-info-text">
           {/* Ana başlık */}
@@ -67,47 +118,34 @@ const ProductInfo = ({ productData }) => {
             </div>
           )}
 
-          {/* Dökümanlar - İkinci dosyadan itibaren (orijinal tasarım gibi) */}
-          {files.length > 1 && (
+          {/* Dökümanlar - documentImages ile URLs eşleştirilerek */}
+          {documentImages.length > 0 && (
             <div className="product-info-documents">
-              {files.slice(1).map((file, index) => {
+              {documentImages.map((file, index) => {
                 const isImage = file.contentType?.startsWith('image/') || 
                   file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i);
+                
+                const imageSrc = file.path.startsWith('http') ? file.path : BASE_URL + file.path;
+                
+                const relatedUrl = urls[index];
+                const linkHref = relatedUrl || imageSrc;
                 
                 return (
                   <a
                     key={index}
-                    href={BASE_URL + file.path}
+                    href={linkHref}
                     target="_blank"
                     rel="noopener noreferrer"
+                    title={relatedUrl ? `${file.name || `Document ${index + 1}`} - Dökümana Git` : `${file.name || `Document ${index + 1}`} - Görseli Görüntüle`}
                   >
                     <img
-                      src={isImage ? BASE_URL + file.path : `/assets/images/Documents/doc${index + 1}.png`}
+                      src={isImage ? imageSrc : `/assets/images/Documents/doc${index + 1}.png`}
                       alt={file.name || `Document ${index + 1}`}
                       loading="lazy"
                     />
                   </a>
                 );
               })}
-            </div>
-          )}
-
-          {/* URL'ler - mavi butonlar şeklinde */}
-          {urls.length > 0 && urls.some(url => url) && (
-            <div className="product-info-links">
-              {urls.map((url, index) => (
-                url && (
-                  <a 
-                    key={index}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="product-link"
-                  >
-                    Daha Fazla Bilgi
-                  </a>
-                )
-              ))}
             </div>
           )}
 
@@ -122,12 +160,21 @@ const ProductInfo = ({ productData }) => {
         
         {/* Ana görsel - sağ tarafta */}
         <div className="product-info-image">
-          <img
-            src={mainImage}
-            alt={titles[0] || name}
-          />
+          <div className="main-image">
+            <img
+              src={mainImage}
+              alt={titles[0] || name}
+            />
+          </div>
         </div>
       </div>
+      
+      {/* Ürün Detay Görselleri Galerisi - Alt Kısım Ayrı Div */}
+      {productDetailImages.length > 0 && (
+        <div className="product-detail-gallery-section">
+          <Gallery images={productDetailImages} title="Görseller" />
+        </div>
+      )}
     </div>
   );
 };

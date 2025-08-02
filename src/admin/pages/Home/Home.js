@@ -36,7 +36,21 @@ const Home = () => {
         
         const API_URL = process.env.REACT_APP_API_URL || "https://localhost:7103";
         const currentSelectedProducts = (pageData.products || []).map((product) => {
-          let imagePath = (product.files && product.files[0] && product.files[0].path) || "";
+          let imagePath = "";
+          
+          // Ana ürün görseli öncelikli
+          if (product.productImageId && product.files) {
+            const mainImage = product.files.find(file => file.id === product.productImageId);
+            if (mainImage) {
+              imagePath = mainImage.path;
+            }
+          }
+          
+          // Yedek olarak ilk dosya
+          if (!imagePath && product.files && product.files[0] && product.files[0].path) {
+            imagePath = product.files[0].path;
+          }
+          
           if (imagePath && imagePath.startsWith("uploads/")) {
             imagePath = `${API_URL}/${imagePath}`;
           }
@@ -128,7 +142,21 @@ const Home = () => {
     }
 
     const API_URL = process.env.REACT_APP_API_URL || "https://localhost:7103";
-    let imagePath = (product.files && product.files[0] && product.files[0].path) || "";
+    let imagePath = "";
+    
+    // Ana ürün görseli öncelikli
+    if (product.productImageId && product.files) {
+      const mainImage = product.files.find(file => file.id === product.productImageId);
+      if (mainImage) {
+        imagePath = mainImage.path;
+      }
+    }
+    
+    // Yedek olarak ilk dosya
+    if (!imagePath && product.files && product.files[0] && product.files[0].path) {
+      imagePath = product.files[0].path;
+    }
+    
     if (imagePath && imagePath.startsWith("uploads/")) {
       imagePath = `${API_URL}/${imagePath}`;
     }
@@ -179,7 +207,12 @@ const Home = () => {
         titles: product.titles || [],
         subtitles: product.subtitles || [],
         descriptions: product.descriptions || [],
+        listItems: product.listItems || [],
         urls: product.urls || [],
+        bannerImageUrl: product.bannerImageUrl || null,
+        productImageId: product.productImageId || null,
+        documentImageIds: product.documentImageIds || [],
+        productDetailImageIds: product.productDetailImageIds || [],
         fileIds: product.fileIds || [],
         files: product.files || []
       }));
@@ -235,7 +268,12 @@ const Home = () => {
         titles: product.titles || [],
         subtitles: product.subtitles || [],
         descriptions: product.descriptions || [],
+        listItems: product.listItems || [],
         urls: product.urls || [],
+        bannerImageUrl: product.bannerImageUrl || null,
+        productImageId: product.productImageId || null,
+        documentImageIds: product.documentImageIds || [],
+        productDetailImageIds: product.productDetailImageIds || [],
         fileIds: product.fileIds || [],
         files: product.files || []
       }));

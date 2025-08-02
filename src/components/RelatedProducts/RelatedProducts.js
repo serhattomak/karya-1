@@ -47,9 +47,18 @@ const RelatedProducts = ({ currentProductId, productName = "Ürünler" }) => {
         <h3 className="related-products-title">Diğer Ürünlerimiz</h3>
         <div className="related-products-grid">
           {relatedProducts.map((product) => {
-            const image = product.files && product.files[0] 
-              ? BASE_URL + product.files[0].path 
-              : "/assets/images/Group 300.webp";
+            const mainImage = (() => {
+              if (product.productImage && product.productImage.path) {
+                return BASE_URL + product.productImage.path;
+              }
+              if (product.productImageId && product.files) {
+                const productImageFile = product.files.find(file => file.id === product.productImageId);
+                if (productImageFile) return BASE_URL + productImageFile.path;
+              }
+              return product.files && product.files[0] 
+                ? BASE_URL + product.files[0].path 
+                : "/assets/images/Group 300.webp";
+            })();
             
             return (
               <div 
@@ -59,7 +68,7 @@ const RelatedProducts = ({ currentProductId, productName = "Ürünler" }) => {
               >
                 <div className="related-product-image">
                   <img 
-                    src={image} 
+                    src={mainImage} 
                     alt={product.titles?.[0] || product.name} 
                     loading="lazy"
                   />

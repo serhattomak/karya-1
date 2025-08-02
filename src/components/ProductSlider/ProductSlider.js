@@ -36,7 +36,18 @@ const ProductSlider = ({ products }) => {
               onClick={() => handleProductClick(index)}
             >
               <img
-                src={product.image}
+                src={(() => {
+                  // Dinamik ürünler için ana ürün görseli öncelikli
+                  if (product.productImageId && product.files) {
+                    const mainImage = product.files.find(file => file.id === product.productImageId);
+                    if (mainImage) {
+                      return `https://localhost:7103/${mainImage.path}`;
+                    }
+                  }
+                  
+                  // Statik ürünler için image field'ı veya banner
+                  return product.image || product.bannerImageUrl || "/assets/images/Group 300.webp";
+                })()}
                 className="product-image"
                 alt={product.title}
               />

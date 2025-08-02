@@ -139,19 +139,63 @@ const Products = () => {
           products.map((product) => (
             <div key={product.id} className="product-card">
               <div className="product-image">
-                {product.files && product.files.length > 0 ? (
-                  <img
-                    src={product.files[0].path ? BASE_URL + product.files[0].path : "/placeholder.jpg"}
-                    alt={product.name}
-                    onError={(e) => {
-                      e.target.src = "/placeholder.jpg";
-                    }}
-                  />
-                ) : (
-                  <div className="no-image">
-                    <span>Görsel Yok</span>
-                  </div>
-                )}
+                {(() => {
+                  // Ana ürün görseli öncelikle productImage objesinden kontrol et
+                  if (product.productImage && product.productImage.path) {
+                    return (
+                      <img
+                        src={BASE_URL + product.productImage.path}
+                        alt={product.name}
+                        onError={(e) => {
+                          e.target.src = "/placeholder.jpg";
+                        }}
+                      />
+                    );
+                  }
+                  
+                  // Ana ürün görseli files dizisinden kontrol et (backup)
+                  if (product.productImageId && product.files) {
+                    const mainImage = product.files.find(file => 
+                      file.id === product.productImageId || 
+                      file.id === String(product.productImageId) || 
+                      String(file.id) === String(product.productImageId)
+                    );
+                    if (mainImage && mainImage.path) {
+                      return (
+                        <img
+                          src={BASE_URL + mainImage.path}
+                          alt={product.name}
+                          onError={(e) => {
+                            e.target.src = "/placeholder.jpg";
+                          }}
+                        />
+                      );
+                    }
+                  }
+                  
+                  // İlk mevcut dosyayı göster
+                  if (product.files && product.files.length > 0) {
+                    const firstFile = product.files.find(file => file.path);
+                    if (firstFile) {
+                      return (
+                        <img
+                          src={BASE_URL + firstFile.path}
+                          alt={product.name}
+                          onError={(e) => {
+                            e.target.src = "/placeholder.jpg";
+                          }}
+                        />
+                      );
+                    }
+                  }
+                  
+                  // Hiç görsel yoksa
+                  return (
+                    <div className="no-image">
+                      <span>Görsel Yok</span>
+                    </div>
+                  );
+                })()}
               </div>
               
               <div className="product-info">

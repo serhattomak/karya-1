@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar/navbar";
 import Banner from "../../components/Banner/Banner";
 import ProductInfo from "../../components/ProductInfo/ProductInfo";
-import Gallery from "../../components/Gallery/Gallery";
 import ContactSection from "../../components/ContactSection/ContactSection";
 import Footer from "../../components/Footer/Footer";
 import RelatedProducts from "../../components/RelatedProducts/RelatedProducts";
@@ -81,30 +80,19 @@ function ProductDetailPage() {
     );
   }
 
-  const bannerImage = productData.files && productData.files[0] 
-    ? BASE_URL + productData.files[0].path 
-    : "/assets/images/Group 300.webp";
-
-  const galleryImages = productData.files && productData.files.length > 1 
-    ? productData.files.slice(1).map((file, index) => ({
-        src: BASE_URL + file.path,
-        alt: `${productData.name} - Görsel ${index + 2}`
-      })) 
-    : [];
+  const bannerImage = productData.bannerImageUrl || 
+    (productData.files && productData.files[0] 
+      ? BASE_URL + productData.files[0].path 
+      : "/assets/images/Group 300.webp");
 
   return (
     <div className="product-detail-page">
+      <Navbar />
       <Banner
         imageSrc={bannerImage}
         title={productData.titles?.[0] || productData.name}
       />
       <ProductInfo productData={productData} />
-      {galleryImages.length > 0 && (
-        <Gallery 
-          images={galleryImages} 
-          title="Ürün Görselleri" 
-        />
-      )}
       <RelatedProducts 
         currentProductId={productData.id}
         productName={productData.name}

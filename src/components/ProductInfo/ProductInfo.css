@@ -1,26 +1,30 @@
 /* Genel container ve içerik stil */
 .product-info-container {
   display: flex;
-  justify-content: space-around;
-  align-items: center;
+  flex-direction: column;
   width: 100%;
   padding: 30px;
   background-color: #ffffff;
-  flex-direction: row;
 }
 
 .product-info-content {
   display: flex;
-  width: 83%;
-  justify-content: space-between;
+  flex-direction: row;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 40px;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 /* Sol kısımdaki metin bölümü */
 .product-info-text {
-  flex: 1;
-  max-width: 600px;
+  flex: 0 0 60%;
+  max-width: 700px;
   color: #333;
   text-align: left;
+  order: 1;
 }
 
 /* Başlık ve paragraf stilleri */
@@ -184,13 +188,13 @@
 
 /* Sağdaki ana görsel */
 .product-info-image {
-  flex-shrink: 0;
+  flex: 0 0 35%;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-end;
+  align-items: flex-start;
   width: 400px;
   height: auto;
-  position: relative;
+  order: 2;
 }
 
 /* Ana görsel ve arka plan için özel stil */
@@ -205,20 +209,18 @@
 /* Mobil ekranlar için responsive düzenlemeler */
 @media screen and (max-width: 768px) {
   .product-info-container {
-    flex-direction: column; /* Dikey hizalama */
-    padding: 20px; /* İçerik alanına daha fazla boşluk bırak */
+    padding: 20px;
   }
 
   .product-info-content {
-    flex-direction: column; /* İçeriği dikeyde hizala */
-    align-items: center; /* İçeriği ortala */
-    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
   }
 
   .product-info-text {
-    text-align: left; /* Metni ortala */
-    max-width: 100%; /* Metin kutusunu ekran boyutuna göre genişlet */
-    margin-bottom: 20px; /* Alt boşluk ekle */
+    max-width: 100%;
+    margin-bottom: 20px;
   }
 
   .product-info-title {
@@ -285,23 +287,20 @@
 
 @media screen and (min-width: 800px) and (max-width: 1280px) {
   .product-info-container {
-    flex-direction: column; /* Dikey hizalama */
-    padding: 20px; /* İçerik alanına daha fazla boşluk bırak */
+    padding: 20px;
   }
 
   .product-info-content {
-    flex-direction: column; /* İçeriği dikeyde hizala */
-    align-items: center; /* İçeriği ortala */
+    flex-direction: column;
+    align-items: flex-start;
     width: 90%;
   }
 
   .product-info-text {
-    text-align: left; /* Metni ortala */
-    max-width: 100%; /* Metin kutusunu ekran boyutuna göre genişlet */
-    margin-bottom: 20px; /* Alt boşluk ekle */
+    max-width: 100%;
+    margin-bottom: 20px;
   }
 
-  /* Sağdaki ana görsel */
   .product-info-image {
     width: 300px;
     display: none; /* Orta ekranlarda görseli gizle */
@@ -314,5 +313,88 @@
     border-radius: 5px;
     position: relative;
     z-index: 1;
+  }
+}
+
+/* Product Detail Gallery Styles - Removed conflicting styles */
+
+/* Mobile responsiveness for new gallery */
+@media screen and (max-width: 799px) {
+  .main-image {
+    width: 250px;
+  }
+}
+
+/* Ürün Detay Görselleri Bölümü - Alt kısımda ayrı div */
+.product-detail-gallery-section {
+  width: 100%;
+  margin-top: 40px;
+  padding-top: 20px;
+}
+
+/* Gallery bileşeni için özel stiller - Çakışmayı önle */
+.product-detail-gallery-section .gallery-content {
+  width: 100% !important;
+  align-items: center !important;
+}
+
+.product-detail-gallery-section .gallery-title {
+  text-align: center !important;
+  width: 100% !important;
+}
+
+.product-detail-gallery-section .line {
+  display: none !important;
+}
+
+.product-detail-gallery-section .gallery-images {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 2rem !important;
+  width: 100% !important;
+}
+
+.product-detail-gallery-section .gallery-images img {
+  width: 100% !important;
+  max-width: 250px !important;
+  height: auto !important;
+  border-radius: 20px !important;
+  transition: transform 0.3s !important;
+}
+
+.product-detail-gallery-section .gallery-images img:hover {
+  transform: scale(1.05) !important;
+}
+
+/* Mobile için gallery düzenlemesi */
+@media (max-width: 768px) {
+  .product-detail-gallery-section .gallery-images {
+    gap: 1rem !important;
+  }
+
+  .product-detail-gallery-section .gallery-images img {
+    max-width: calc(50% - 0.5rem) !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1439px) {
+  .product-detail-gallery-section .gallery-images {
+    gap: 1.5rem !important;
+  }
+
+  .product-detail-gallery-section .gallery-images img {
+    max-width: calc(33.33% - 1rem) !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  .product-detail-gallery-section .gallery-images {
+    gap: 2rem !important;
+  }
+
+  .product-detail-gallery-section .gallery-images img {
+    max-width: calc(25% - 1.5rem) !important;
   }
 }
