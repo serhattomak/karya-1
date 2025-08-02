@@ -12,6 +12,7 @@ const ProductInfo = ({ productData }) => {
     titles = [],
     subtitles = [],
     descriptions = [],
+    listTitles = [],
     listItems = [],
     urls = [],
     files = [],
@@ -107,8 +108,14 @@ const ProductInfo = ({ productData }) => {
           {/* Özellikler Listesi */}
           {listItems.length > 0 && listItems.some(item => item) && (
             <div className="product-info-features">
-              {subtitles[1] && (
-                <h4 className="product-info-subtitle">{subtitles[1]}</h4>
+              {listTitles.length > 0 && listTitles.some(title => title) && (
+                <div className="list-titles">
+                  {listTitles.map((title, index) => (
+                    title && (
+                      <h4 key={index} className="product-info-subtitle">{title}</h4>
+                    )
+                  ))}
+                </div>
               )}
               <ul>
                 {listItems.map((item, index) => (

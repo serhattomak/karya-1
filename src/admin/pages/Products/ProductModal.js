@@ -22,6 +22,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
   const [titles, setTitles] = useState([""]);
   const [subtitles, setSubtitles] = useState([""]);
   const [descriptions, setDescriptions] = useState([""]);
+  const [listTitles, setListTitles] = useState([""]);
   const [listItems, setListItems] = useState([""]);
   const [urls, setUrls] = useState([""]);
   const [bannerImageUrl, setBannerImageUrl] = useState("");
@@ -44,6 +45,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
       setTitles(product.titles || [""]);
       setSubtitles(product.subtitles || [""]);
       setDescriptions(product.descriptions || [""]);
+      setListTitles(product.listTitles || [""]);
       setListItems(product.listItems || [""]);
       setUrls(product.urls || [""]);
       setBannerImageUrl(product.bannerImageUrl || "");
@@ -186,6 +188,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
         titles: titles.filter(t => t.trim() !== ""),
         subtitles: subtitles.filter(st => st.trim() !== ""),
         descriptions: descriptions.filter(d => d.trim() !== ""),
+        listTitles: listTitles.filter(lt => lt.trim() !== ""),
         listItems: listItems.filter(li => li.trim() !== ""),
         urls: urls.filter(u => u.trim() !== ""),
         bannerImageUrl: finalBannerImageUrl.trim() || null,
@@ -353,6 +356,20 @@ const ProductModal = ({ product, onClose, onSave }) => {
     setDescriptions(descriptions.filter((_, i) => i !== index));
   };
 
+  const addListTitle = () => {
+    setListTitles([...listTitles, ""]);
+  };
+
+  const updateListTitle = (index, value) => {
+    const updated = [...listTitles];
+    updated[index] = value;
+    setListTitles(updated);
+  };
+
+  const removeListTitle = (index) => {
+    setListTitles(listTitles.filter((_, i) => i !== index));
+  };
+
   const addListItem = () => {
     setListItems([...listItems, ""]);
   };
@@ -485,6 +502,33 @@ const ProductModal = ({ product, onClose, onSave }) => {
             ))}
             <button type="button" className="add-btn secondary" onClick={addDescription}>
               + Açıklama Ekle
+            </button>
+          </div>
+
+          {/* Liste Başlıkları */}
+          <div className="form-group">
+            <label>Liste Başlıkları</label>
+            {listTitles.map((listTitle, index) => (
+              <div key={index} className="input-group">
+                <input
+                  type="text"
+                  value={listTitle}
+                  onChange={(e) => updateListTitle(index, e.target.value)}
+                  placeholder={`Liste başlığı ${index + 1}`}
+                />
+                {listTitles.length > 1 && (
+                  <button
+                    type="button"
+                    className="remove-btn danger"
+                    onClick={() => removeListTitle(index)}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+            <button type="button" className="add-btn secondary" onClick={addListTitle}>
+              + Liste Başlığı Ekle
             </button>
           </div>
 

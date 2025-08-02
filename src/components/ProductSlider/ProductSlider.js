@@ -41,7 +41,11 @@ const ProductSlider = ({ products }) => {
                     return BASE_URL + product.productImage.path;
                   }
                   if (product.productImageId && product.files) {
-                    const productImageFile = product.files.find(file => file.id === product.productImageId);
+                    const productImageFile = product.files.find(file => 
+                      file.id === product.productImageId || 
+                      file.id === String(product.productImageId) || 
+                      String(file.id) === String(product.productImageId)
+                    );
                     if (productImageFile) {
                       return BASE_URL + productImageFile.path;
                     }

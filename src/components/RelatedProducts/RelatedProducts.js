@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getProducts } from "../../api";
+import { getProducts, getFile } from "../../api";
 import "./RelatedProducts.css";
 
 const BASE_URL = "https://localhost:7103/";
@@ -52,7 +52,11 @@ const RelatedProducts = ({ currentProductId, productName = "Ürünler" }) => {
                 return BASE_URL + product.productImage.path;
               }
               if (product.productImageId && product.files) {
-                const productImageFile = product.files.find(file => file.id === product.productImageId);
+                const productImageFile = product.files.find(file => 
+                  file.id === product.productImageId || 
+                  file.id === String(product.productImageId) || 
+                  String(file.id) === String(product.productImageId)
+                );
                 if (productImageFile) return BASE_URL + productImageFile.path;
               }
               return product.files && product.files[0] 
