@@ -22,7 +22,7 @@
 .product-info-text {
   flex: 0 0 60%;
   max-width: 700px;
-  color: #333;
+  color: #000;
   text-align: left;
   order: 1;
 }
@@ -31,7 +31,7 @@
 .product-info-title {
   font-size: 28px;
   font-weight: bold;
-  color: #333;
+  color: #000;
   margin-bottom: 10px;
   border-bottom: 3px solid #f68b1f;
   display: inline-block;
@@ -41,7 +41,7 @@
 .product-info-subtitle {
   font-size: 20px;
   font-weight: 600;
-  color: #f68b1f;
+  color: #000;
   margin-bottom: 15px;
   margin-top: 10px;
 }
@@ -56,12 +56,12 @@
 
 /* Özellikler listesi */
 .product-info-features {
-  margin: 20px 0;
+  margin: 40px 0;
 }
 
 .product-info-features h4 {
   font-size: 18px;
-  color: #333;
+  color: #000;
   margin-bottom: 10px;
   font-weight: 600;
 }

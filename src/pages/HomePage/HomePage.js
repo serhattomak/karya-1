@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import HomeBanner from "../../components/HomeBanner/HomeBanner";
 import ProductSlider from "../../components/ProductSlider/ProductSlider";
 import "./HomePage.css";
-import { getPage } from "../../api";
+import { getPage, getFile } from "../../api";
 
 const BASE_URL = "https://localhost:7103/";
 
@@ -14,18 +14,59 @@ function HomePage() {
   useEffect(() => {
     const fetchHomePageData = async () => {
       try {
-        const response = await getPage("C569F4BC-D5F8-4768-8DFE-21618933F647");
+        const response = await getPage("7A10627F-810B-4BF9-A211-1BE5BFF2A132");
         const data = response?.data?.data || response?.data || response;
         setBannerTitle((data.titles && data.titles[0]) || "");
         setBannerSubtitle((data.subtitles && data.subtitles[0]) || "");
-        const mappedProducts = (data.products || []).map((product) => ({
-          ...product,
-          image:
-            product.files && product.files[0] && product.files[0].path
-              ? BASE_URL + product.files[0].path
-              : "",
-          title: product.titles?.[0] || product.name || "",
-          subtitle: product.subtitles?.[0] || "",
+        const mappedProducts = await Promise.all((data.products || []).map(async (product) => {
+          let imagePath = "";
+          
+          if (product.productImage && product.productImage.path) {
+            imagePath = product.productImage.path;
+          }
+          else if (product.productImageId) {
+            try {
+              const fileResponse = await getFile(product.productImageId);
+              const fileData = fileResponse.data && fileResponse.data.data ? fileResponse.data.data : fileResponse.data;
+              if (fileData && fileData.path) {
+                imagePath = fileData.path;
+              }
+            } catch (error) {
+              console.log("File API'sinden dosya çekilirken hata:", error);
+              
+              if (product.files && product.files.length > 0) {
+                const productImageFile = product.files.find(file => 
+                  file.id === product.productImageId || 
+                  file.id === String(product.productImageId) || 
+                  String(file.id) === String(product.productImageId)
+                );
+                if (productImageFile) {
+                  imagePath = productImageFile.path;
+                }
+              }
+            }
+          }
+          else if (product.files && product.files[0] && product.files[0].path) {
+            imagePath = product.files[0].path;
+          }
+          
+          let fullImageUrl = "";
+          if (imagePath) {
+            if (imagePath.startsWith("uploads/")) {
+              fullImageUrl = BASE_URL + imagePath;
+            } else if (!imagePath.startsWith("http")) {
+              fullImageUrl = BASE_URL + imagePath;
+            } else {
+              fullImageUrl = imagePath;
+            }
+          }
+
+          return {
+            ...product,
+            image: fullImageUrl,
+            title: product.titles?.[0] || product.name || "",
+            subtitle: product.subtitles?.[0] || "",
+          };
         }));
         setProducts(mappedProducts);
       } catch (error) {

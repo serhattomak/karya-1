@@ -140,7 +140,6 @@ const Products = () => {
             <div key={product.id} className="product-card">
               <div className="product-image">
                 {(() => {
-                  // Ana ürün görseli öncelikle productImage objesinden kontrol et
                   if (product.productImage && product.productImage.path) {
                     return (
                       <img
@@ -153,7 +152,6 @@ const Products = () => {
                     );
                   }
                   
-                  // Ana ürün görseli files dizisinden kontrol et (backup)
                   if (product.productImageId && product.files) {
                     const mainImage = product.files.find(file => 
                       file.id === product.productImageId || 
@@ -173,7 +171,6 @@ const Products = () => {
                     }
                   }
                   
-                  // İlk mevcut dosyayı göster
                   if (product.files && product.files.length > 0) {
                     const firstFile = product.files.find(file => file.path);
                     if (firstFile) {
@@ -189,7 +186,6 @@ const Products = () => {
                     }
                   }
                   
-                  // Hiç görsel yoksa
                   return (
                     <div className="no-image">
                       <span>Görsel Yok</span>

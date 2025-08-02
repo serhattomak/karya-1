@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getPage, updatePage, getProductsAuth as getProducts, updatePageProductOrder } from "../../../api";
+import { getPage, updatePage, getProductsAuth as getProducts, updatePageProductOrder, getFile } from "../../../api";
 import Swal from 'sweetalert2';
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +23,7 @@ const Home = () => {
       try {
         setLoading(true);
         
-        const pageResponse = await getPage("C569F4BC-D5F8-4768-8DFE-21618933F647");
+        const pageResponse = await getPage("7A10627F-810B-4BF9-A211-1BE5BFF2A132");
         const pageData = pageResponse.data && pageResponse.data.data ? pageResponse.data.data : pageResponse.data;
         
         setBannerTitle((pageData.titles && pageData.titles[0]) || "");
@@ -31,34 +31,103 @@ const Home = () => {
         
         const productsResponse = await getProducts({ PageIndex: 1, PageSize: 100 });
         const allProducts = productsResponse?.data?.data?.items || productsResponse?.data?.items || productsResponse?.data || [];
+        console.log("API'dan gelen tüm ürünler:", allProducts);
         
         setAvailableProducts(allProducts);
         
         const API_URL = process.env.REACT_APP_API_URL || "https://localhost:7103";
-        const currentSelectedProducts = (pageData.products || []).map((product) => {
+        const currentSelectedProducts = await Promise.all((pageData.products || []).map(async (product) => {
+          console.log("Sayfa yüklenirken ürün:", product);
+          console.log("productImage:", product.productImage);
+          console.log("productImageId:", product.productImageId);
+          console.log("files:", product.files);
+          
           let imagePath = "";
           
-          // Ana ürün görseli öncelikli
-          if (product.productImageId && product.files) {
-            const mainImage = product.files.find(file => file.id === product.productImageId);
-            if (mainImage) {
-              imagePath = mainImage.path;
+          if (product.productImage && product.productImage.path) {
+            imagePath = product.productImage.path;
+            console.log("productImage.path kullanıldı:", imagePath);
+          }
+          else if (product.productImageId) {
+            try {
+              console.log("File API'sinden dosya çekiliyor:", product.productImageId);
+              const fileResponse = await getFile(product.productImageId);
+              const fileData = fileResponse.data && fileResponse.data.data ? fileResponse.data.data : fileResponse.data;
+              if (fileData && fileData.path) {
+                imagePath = fileData.path;
+                console.log("File API'sinden dosya bulundu:", imagePath);
+              } else {
+                console.log("File API'sinden dosya bulunamadı");
+              }
+            } catch (error) {
+              console.log("File API'sinden dosya çekilirken hata:", error);
+              
+              // Fallback: Önce kendi files array'inde ara
+              if (product.files && product.files.length > 0) {
+                const productImageFile = product.files.find(file => 
+                  file.id === product.productImageId || 
+                  file.id === String(product.productImageId) || 
+                  String(file.id) === String(product.productImageId)
+                );
+                if (productImageFile) {
+                  imagePath = productImageFile.path;
+                  console.log("productImageId ile eşleşen dosya bulundu (kendi files):", imagePath);
+                }
+              }
+              
+              // Eğer kendi files'ında yoksa, availableProducts'tan ara
+              if (!imagePath && allProducts && allProducts.length > 0) {
+                console.log("availableProducts'tan aranıyor, allProducts uzunluğu:", allProducts.length);
+                const availableProduct = allProducts.find(p => p.id === product.id);
+                console.log("availableProduct bulundu mu:", !!availableProduct);
+                if (availableProduct) {
+                  console.log("availableProduct files:", availableProduct.files);
+                  if (availableProduct.files && availableProduct.files.length > 0) {
+                    const productImageFile = availableProduct.files.find(file => 
+                      file.id === product.productImageId || 
+                      file.id === String(product.productImageId) || 
+                      String(file.id) === String(product.productImageId)
+                    );
+                    if (productImageFile) {
+                      imagePath = productImageFile.path;
+                      console.log("productImageId ile eşleşen dosya bulundu (availableProducts):", imagePath);
+                    } else {
+                      console.log("availableProducts'ta da productImageId ile eşleşen dosya bulunamadı");
+                    }
+                  } else {
+                    console.log("availableProduct'ta da files boş");
+                  }
+                } else {
+                  console.log("availableProducts'ta ürün bulunamadı");
+                }
+              }
+            }
+            
+            if (!imagePath) {
+              console.log("productImageId ile eşleşen dosya bulunamadı");
             }
           }
-          
-          // Yedek olarak ilk dosya
-          if (!imagePath && product.files && product.files[0] && product.files[0].path) {
+          else if (product.files && product.files[0] && product.files[0].path) {
             imagePath = product.files[0].path;
+            console.log("İlk dosya kullanıldı:", imagePath);
           }
           
-          if (imagePath && imagePath.startsWith("uploads/")) {
-            imagePath = `${API_URL}/${imagePath}`;
+          if (imagePath) {
+            if (imagePath.startsWith("uploads/")) {
+              imagePath = `${API_URL}/${imagePath}`;
+            } else if (!imagePath.startsWith("http")) {
+              imagePath = `${API_URL}/${imagePath}`;
+            }
+            console.log("Final imagePath:", imagePath);
+          } else {
+            console.log("Hiç görsel bulunamadı");
           }
+          
           return {
             ...product,
             imagePath
           };
-        });
+        }));
         
         setSelectedProducts(currentSelectedProducts);
         
@@ -102,7 +171,7 @@ const Home = () => {
     try {
       const productIds = updatedProducts.map(p => p.id);
       const productOrderData = {
-        pageId: "C569F4BC-D5F8-4768-8DFE-21618933F647",
+        pageId: "7A10627F-810B-4BF9-A211-1BE5BFF2A132",
         productIds: productIds
       };
 
@@ -129,7 +198,7 @@ const Home = () => {
     }
   };
 
-  const addProductToHome = (product) => {
+  const addProductToHome = async (product) => {
     if (selectedProducts.length >= 4) {
       Swal.fire({
         icon: 'warning',
@@ -141,24 +210,58 @@ const Home = () => {
       return;
     }
 
+    console.log("Ürün ekleniyor:", product);
+    console.log("productImage:", product.productImage);
+    console.log("productImageId:", product.productImageId);
+    console.log("files:", product.files);
+
     const API_URL = process.env.REACT_APP_API_URL || "https://localhost:7103";
     let imagePath = "";
     
-    // Ana ürün görseli öncelikli
-    if (product.productImageId && product.files) {
-      const mainImage = product.files.find(file => file.id === product.productImageId);
-      if (mainImage) {
-        imagePath = mainImage.path;
+    if (product.productImage && product.productImage.path) {
+      imagePath = product.productImage.path;
+      console.log("productImage.path kullanıldı:", imagePath);
+    }
+    else if (product.productImageId) {
+      try {
+        console.log("File API'sinden dosya çekiliyor:", product.productImageId);
+        const fileResponse = await getFile(product.productImageId);
+        const fileData = fileResponse.data && fileResponse.data.data ? fileResponse.data.data : fileResponse.data;
+        if (fileData && fileData.path) {
+          imagePath = fileData.path;
+          console.log("File API'sinden dosya bulundu:", imagePath);
+        } else {
+          console.log("File API'sinden dosya bulunamadı");
+        }
+      } catch (error) {
+        console.log("File API'sinden dosya çekilirken hata:", error);
+        
+        // Fallback: files dizisinden ara
+        if (product.files) {
+          const productImageFile = product.files.find(file => file.id === product.productImageId);
+          if (productImageFile) {
+            imagePath = productImageFile.path;
+            console.log("productImageId ile eşleşen dosya bulundu:", imagePath);
+          } else {
+            console.log("productImageId ile eşleşen dosya bulunamadı");
+          }
+        }
       }
     }
-    
-    // Yedek olarak ilk dosya
-    if (!imagePath && product.files && product.files[0] && product.files[0].path) {
+    else if (product.files && product.files[0] && product.files[0].path) {
       imagePath = product.files[0].path;
+      console.log("İlk dosya kullanıldı:", imagePath);
     }
     
-    if (imagePath && imagePath.startsWith("uploads/")) {
-      imagePath = `${API_URL}/${imagePath}`;
+    if (imagePath) {
+      if (imagePath.startsWith("uploads/")) {
+        imagePath = `${API_URL}/${imagePath}`;
+      } else if (!imagePath.startsWith("http")) {
+        imagePath = `${API_URL}/${imagePath}`;
+      }
+      console.log("Final imagePath:", imagePath);
+    } else {
+      console.log("Hiç görsel bulunamadı");
     }
 
     const productWithImage = {
@@ -166,6 +269,7 @@ const Home = () => {
       imagePath
     };
 
+    console.log("Eklenen ürün:", productWithImage);
     setSelectedProducts(prev => [...prev, productWithImage]);
     setShowProductModal(false);
   };
@@ -198,7 +302,7 @@ const Home = () => {
       setBannerSubtitle(tempSubtitle);
       setShowBannerModal(false);
 
-      const pageResponse = await getPage("C569F4BC-D5F8-4768-8DFE-21618933F647");
+      const pageResponse = await getPage("7A10627F-810B-4BF9-A211-1BE5BFF2A132");
       const page = pageResponse.data && pageResponse.data.data ? pageResponse.data.data : pageResponse.data;
 
       const updatedProducts = selectedProducts.map((product) => ({
@@ -230,7 +334,7 @@ const Home = () => {
       await updatePage(updatedPage);
 
       const productOrderData = {
-        pageId: "C569F4BC-D5F8-4768-8DFE-21618933F647",
+        pageId: "7A10627F-810B-4BF9-A211-1BE5BFF2A132",
         productIds: productIds
       };
 
@@ -259,7 +363,7 @@ const Home = () => {
 
   const saveAllChanges = async () => {
     try {
-      const pageResponse = await getPage("C569F4BC-D5F8-4768-8DFE-21618933F647");
+      const pageResponse = await getPage("7A10627F-810B-4BF9-A211-1BE5BFF2A132");
       const page = pageResponse.data && pageResponse.data.data ? pageResponse.data.data : pageResponse.data;
 
       const updatedProducts = selectedProducts.map((product) => ({
@@ -291,7 +395,7 @@ const Home = () => {
       await updatePage(updatedPage);
 
       const productOrderData = {
-        pageId: "C569F4BC-D5F8-4768-8DFE-21618933F647",
+        pageId: "7A10627F-810B-4BF9-A211-1BE5BFF2A132",
         productIds: productIds
       };
 
@@ -454,9 +558,32 @@ const Home = () => {
                   .filter(product => !selectedProducts.some(selected => selected.id === product.id))
                   .map((product) => {
                     const API_URL = process.env.REACT_APP_API_URL || "https://localhost:7103";
-                    let imagePath = (product.files && product.files[0] && product.files[0].path) || "";
-                    if (imagePath && imagePath.startsWith("uploads/")) {
-                      imagePath = `${API_URL}/${imagePath}`;
+                    let imagePath = "";
+                    
+                    // Ana ürün görseli öncelikli - ProductInfo ile aynı mantık
+                    // Öncelikle productImage objesini kontrol et
+                    if (product.productImage && product.productImage.path) {
+                      imagePath = product.productImage.path;
+                    }
+                    // Backup olarak files dizisinden productImageId ile eşleşeni bul
+                    else if (product.productImageId && product.files) {
+                      const productImageFile = product.files.find(file => file.id === product.productImageId);
+                      if (productImageFile) {
+                        imagePath = productImageFile.path;
+                      }
+                    }
+                    // Son çare olarak ilk dosyayı kullan
+                    else if (product.files && product.files[0] && product.files[0].path) {
+                      imagePath = product.files[0].path;
+                    }
+                    
+                    // URL'yi tam olarak oluştur
+                    if (imagePath) {
+                      if (imagePath.startsWith("uploads/")) {
+                        imagePath = `${API_URL}/${imagePath}`;
+                      } else if (!imagePath.startsWith("http")) {
+                        imagePath = `${API_URL}/${imagePath}`;
+                      }
                     }
 
                     return (

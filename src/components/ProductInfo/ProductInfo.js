@@ -91,9 +91,9 @@ const ProductInfo = ({ productData }) => {
           ))}
 
           {/* Alt başlık ayrı bölüm olarak */}
-          {subtitles[0] && (
+          {/* {subtitles[0] && (
             <p className="product-info-details">{subtitles[0]}</p>
-          )}
+          )} */}
 
           {/* Ek bilgiler */}
           {titles.slice(1).map((title, index) => (
@@ -107,7 +107,9 @@ const ProductInfo = ({ productData }) => {
           {/* Özellikler Listesi */}
           {listItems.length > 0 && listItems.some(item => item) && (
             <div className="product-info-features">
-              <h4>Özellikler:</h4>
+              {subtitles[1] && (
+                <h4 className="product-info-subtitle">{subtitles[1]}</h4>
+              )}
               <ul>
                 {listItems.map((item, index) => (
                   item && (

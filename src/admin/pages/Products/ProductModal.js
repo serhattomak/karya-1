@@ -51,10 +51,8 @@ const ProductModal = ({ product, onClose, onSave }) => {
       setDocumentImageIds(product.documentImageIds || []);
       setProductDetailImageIds(product.productDetailImageIds || []);
       
-      // Önce tüm döküman dosyalarını temizle
       let allDocumentFiles = [];
       
-      // Döküman dosyalarını yükle
       if (product.documentFiles && product.documentFiles.length > 0) {
         const documents = product.documentFiles.map(file => ({
           id: file.id,
@@ -67,7 +65,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
         allDocumentFiles = [...allDocumentFiles, ...documents];
       }
       
-      // Döküman görsellerini yükle (documentImages array'den)
       if (product.documentImages && product.documentImages.length > 0) {
         const docImages = product.documentImages.map(file => ({
           id: file.id,
@@ -91,7 +88,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
         setProductImages(images);
       }
       
-      // productImages array'ini de yükle
       if (product.productImages && product.productImages.length > 0) {
         const prodImages = product.productImages.map(file => ({
           id: file.id,
@@ -102,7 +98,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
         setProductDetailImages(prodImages);
       }
     } else {
-      // Yeni ürün oluştururken tüm state'leri temizle
       setDocumentFiles([]);
       setProductDetailImages([]);
       setProductImages([]);
@@ -150,7 +145,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
         }
       }
 
-      // Döküman dosyalarını işle
       const documentFileIds = [];
       const documentImageFileIds = [];
       
@@ -174,7 +168,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
         }
       }
 
-      // Ürün detay görsellerini işle
       const productDetailFileIds = [];
       for (const image of productDetailImages) {
         if (image.isExisting) {
@@ -590,13 +583,43 @@ const ProductModal = ({ product, onClose, onSave }) => {
           <div className="form-group">
             <label>Ana Ürün Görseli</label>
             <div className="product-image-selector">
-              <button
-                type="button"
-                className="file-select-btn primary"
-                onClick={() => openFileSelector('productImage')}
-              >
-                Ana Görsel Seç
-              </button>
+              <div className="upload-controls">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      try {
+                        const uploadedFile = await uploadFile(file);
+                        setProductImageId(uploadedFile.id);
+                        setAvailableFiles(prev => [...prev, uploadedFile]);
+                      } catch (error) {
+                        console.error("Dosya yüklenirken hata:", error);
+                        Swal.fire({
+                          icon: 'error',
+                          title: 'Hata!',
+                          text: 'Dosya yüklenirken bir hata oluştu.',
+                          confirmButtonText: 'Tamam',
+                          confirmButtonColor: '#dc3545'
+                        });
+                      }
+                    }
+                  }}
+                  style={{ display: 'none' }}
+                  id="product-image-input"
+                />
+                <label htmlFor="product-image-input" className="file-select-btn primary">
+                  Yeni Görsel Yükle
+                </label>
+                <button
+                  type="button"
+                  className="file-select-btn primary"
+                  onClick={() => openFileSelector('productImage')}
+                >
+                  Sistemden Seç
+                </button>
+              </div>
               {productImageId && (
                 <div className="selected-file-info">
                   <div className="selected-image-preview">
