@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getPage, updatePage, getProductsAuth as getProducts, updatePageProductOrder, getFile } from "../../../api";
+import { getPage, getPageByName, updatePage, getProductsAuth as getProducts, updatePageProductOrder, getFile } from "../../../api";
 import Swal from 'sweetalert2';
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +23,7 @@ const Home = () => {
       try {
         setLoading(true);
         
-        const pageResponse = await getPage("7A10627F-810B-4BF9-A211-1BE5BFF2A132");
+        const pageResponse = await getPageByName("Anasayfa");
         const pageData = pageResponse.data && pageResponse.data.data ? pageResponse.data.data : pageResponse.data;
         
         setBannerTitle((pageData.titles && pageData.titles[0]) || "");
@@ -169,9 +169,12 @@ const Home = () => {
     setDraggedItem(null);
 
     try {
+      const pageResponse = await getPageByName("Anasayfa");
+      const page = pageResponse.data && pageResponse.data.data ? pageResponse.data.data : pageResponse.data;
+      
       const productIds = updatedProducts.map(p => p.id);
       const productOrderData = {
-        pageId: "7A10627F-810B-4BF9-A211-1BE5BFF2A132",
+        pageId: page.id,
         productIds: productIds
       };
 
@@ -302,7 +305,7 @@ const Home = () => {
       setBannerSubtitle(tempSubtitle);
       setShowBannerModal(false);
 
-      const pageResponse = await getPage("7A10627F-810B-4BF9-A211-1BE5BFF2A132");
+      const pageResponse = await getPageByName("Anasayfa");
       const page = pageResponse.data && pageResponse.data.data ? pageResponse.data.data : pageResponse.data;
 
       const updatedProducts = selectedProducts.map((product) => ({
@@ -334,7 +337,7 @@ const Home = () => {
       await updatePage(updatedPage);
 
       const productOrderData = {
-        pageId: "7A10627F-810B-4BF9-A211-1BE5BFF2A132",
+        pageId: page.id,
         productIds: productIds
       };
 
@@ -363,7 +366,7 @@ const Home = () => {
 
   const saveAllChanges = async () => {
     try {
-      const pageResponse = await getPage("7A10627F-810B-4BF9-A211-1BE5BFF2A132");
+      const pageResponse = await getPageByName("Anasayfa");
       const page = pageResponse.data && pageResponse.data.data ? pageResponse.data.data : pageResponse.data;
 
       const updatedProducts = selectedProducts.map((product) => ({
@@ -395,7 +398,7 @@ const Home = () => {
       await updatePage(updatedPage);
 
       const productOrderData = {
-        pageId: "7A10627F-810B-4BF9-A211-1BE5BFF2A132",
+        pageId: page.id,
         productIds: productIds
       };
 

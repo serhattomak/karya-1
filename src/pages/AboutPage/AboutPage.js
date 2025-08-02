@@ -5,9 +5,8 @@ import AboutUsInfo from "../../components/AboutUsInfo/Aboutusinfo";
 import ServiceSection from "../../components/ServicesSection/ServicesSection"; 
 import PartnersSlider from "../../components/PartnersSlider/PartnersSlider";
 import Footer from "../../components/Footer/Footer";
-import { getPage } from "../../api";
+import { getPageByName } from "../../api";
 
-const ABOUT_PAGE_ID = "bba2449c-3594-474c-b6ea-c31751903beb";
 const BASE_URL = "https://localhost:7103/";
 
 function AboutPage() {
@@ -16,7 +15,7 @@ function AboutPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getPage(ABOUT_PAGE_ID);
+        const response = await getPageByName("Hakkımızda");
         const data = response?.data?.data || response?.data || response;
         setPageData(data);
       } catch (error) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { getPage, updatePage } from "../../../api";
+import { getPage, getPageByName, updatePage } from "../../../api";
 import Swal from 'sweetalert2';
 import "./AboutUs.css";
 const BASE_URL = "https://localhost:7103/";
@@ -17,8 +17,8 @@ const uploadFile = async (file) => {
 };
 
 
-const ABOUT_US_PAGE_ID = "BBA2449C-3594-474C-B6EA-C31751903BEB";
 const AboutUs = () => {
+  const [pageData, setPageData] = useState(null);
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [content, setContent] = useState("");
@@ -39,8 +39,9 @@ const AboutUs = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getPage(ABOUT_US_PAGE_ID);
+        const response = await getPageByName("Hakkımızda");
         const data = response?.data?.data || response?.data || response;
+        setPageData(data);
         setTitle((data.titles && data.titles[0]) || "");
         setSubtitle((data.subtitles && data.subtitles[0]) || "");
         setContent((data.descriptions && data.descriptions[0]) || "");
@@ -80,7 +81,7 @@ const AboutUs = () => {
       }
     }
     const updatedData = {
-      id: ABOUT_US_PAGE_ID,
+      id: pageData?.id,
       pageType,
       name,
       titles: [title, servicesTitle],

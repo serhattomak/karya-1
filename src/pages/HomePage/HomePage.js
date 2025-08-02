@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import HomeBanner from "../../components/HomeBanner/HomeBanner";
 import ProductSlider from "../../components/ProductSlider/ProductSlider";
 import "./HomePage.css";
-import { getPage, getFile } from "../../api";
+import { getPageByName, getFile } from "../../api";
 
 const BASE_URL = "https://localhost:7103/";
 
@@ -14,7 +14,7 @@ function HomePage() {
   useEffect(() => {
     const fetchHomePageData = async () => {
       try {
-        const response = await getPage("7A10627F-810B-4BF9-A211-1BE5BFF2A132");
+        const response = await getPageByName("Anasayfa");
         const data = response?.data?.data || response?.data || response;
         setBannerTitle((data.titles && data.titles[0]) || "");
         setBannerSubtitle((data.subtitles && data.subtitles[0]) || "");
