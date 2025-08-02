@@ -1,0 +1,159 @@
+/* RelatedProducts.css */
+
+.related-products-container {
+  background-color: #f8f9fa;
+  padding: 40px 20px;
+  margin: 30px 0;
+}
+
+.related-products-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.related-products-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.related-products-title::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 3px;
+  background-color: #f68b1f;
+  margin: 15px auto 0;
+}
+
+.related-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.related-product-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.related-product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+  border-color: #f68b1f;
+}
+
+.related-product-image {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+}
+
+.related-product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.related-product-card:hover .related-product-image img {
+  transform: scale(1.05);
+}
+
+.related-product-info {
+  padding: 20px;
+  text-align: center;
+}
+
+.related-product-info h4 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+  line-height: 1.3;
+  min-height: 2.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.related-product-info p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 15px;
+  line-height: 1.4;
+  min-height: 1.4rem;
+}
+
+.view-details {
+  display: inline-block;
+  color: #f68b1f;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.related-product-card:hover .view-details {
+  color: #ee5c30;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .related-products-container {
+    padding: 40px 15px;
+  }
+  
+  .related-products-title {
+    font-size: 1.6rem;
+    margin-bottom: 30px;
+  }
+  
+  .related-products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+  }
+  
+  .related-product-image {
+    height: 160px;
+  }
+  
+  .related-product-info {
+    padding: 15px;
+  }
+  
+  .related-product-info h4 {
+    font-size: 1.1rem;
+    min-height: 2.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .related-products-container {
+    padding: 30px 10px;
+    margin: 30px 0;
+  }
+  
+  .related-products-title {
+    font-size: 1.4rem;
+  }
+  
+  .related-products-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .related-product-image {
+    height: 180px;
+  }
+}

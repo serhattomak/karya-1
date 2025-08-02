@@ -14,6 +14,7 @@ import KimyasalAnkPage from "./pages/KimyasalAnkPage/KimyasalAnkPage";
 import PoliuretanPage from "./pages/PoliuretanPage/PoliuretanPage";
 import ContactPage from "./pages/ContactPage/ContactPage";
 import AslilNunXPage from "./pages/AsilnunXPage/AsilNunXPage";
+import ProductDetailPage from "./pages/ProductDetailPage/ProductDetailPage";
 import AdminLayout from "./admin/components/AdminLayout/AdminLayout"; 
 import Login from "./admin/pages/Login/Login"; 
 import "./App.css";
@@ -44,6 +45,7 @@ const AppContent = () => {
         />
         <Route path="/KimyasalAnkraj" element={<KimyasalAnkPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/product/:id" element={<ProductDetailPage />} />
 
         <Route
           path="/login"

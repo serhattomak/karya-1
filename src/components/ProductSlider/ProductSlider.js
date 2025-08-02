@@ -14,7 +14,14 @@ const ProductSlider = ({ products }) => {
   ];
 
   const handleProductClick = (index) => {
-    navigate(staticLinks[index] || "/");
+    const product = products[index];
+    // Eğer ürünün ID'si varsa, yeni dinamik sayfaya yönlendir
+    if (product && product.id) {
+      navigate(`/product/${product.id}`);
+    } else {
+      // Geriye dönük uyumluluk için statik linkler
+      navigate(staticLinks[index] || "/");
+    }
   };
 
   return (

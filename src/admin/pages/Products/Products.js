@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getProducts, deleteProduct } from "../../../api";
+import { getProductsAuth as getProducts, deleteProduct } from "../../../api";
 import ProductModal from "./ProductModal";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import Swal from 'sweetalert2';

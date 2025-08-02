@@ -96,10 +96,13 @@ export const deletePage = (id) =>
 
 // PRODUCT
 export const getProducts = (params) =>
+  axios.get(`${API_URL}/api/Product`, { params });
+
+export const getProductsAuth = (params) =>
   axios.get(`${API_URL}/api/Product`, { params, headers: getAuthHeader() });
 
 export const getProduct = (id) =>
-  axios.get(`${API_URL}/api/Product/${id}`, { headers: getAuthHeader() });
+  axios.get(`${API_URL}/api/Product/${id}`);
 
 export const createProduct = (data) =>
   axios.post(`${API_URL}/api/Product`, data, { headers: getAuthHeader() });

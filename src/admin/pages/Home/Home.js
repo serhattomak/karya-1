@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getPage, updatePage, getProducts, updatePageProductOrder } from "../../../api";
+import { getPage, updatePage, getProductsAuth as getProducts, updatePageProductOrder } from "../../../api";
 import Swal from 'sweetalert2';
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
