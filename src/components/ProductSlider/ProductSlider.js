@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { getProductUrl } from "../../utils/slugUtils";
 import "./ProductSlider.css";
 
 const BASE_URL = "https://localhost:7103/";
@@ -17,8 +18,9 @@ const ProductSlider = ({ products }) => {
 
   const handleProductClick = (index) => {
     const product = products[index];
-    if (product && product.id) {
-      navigate(`/product/${product.id}`);
+    if (product && (product.id || product.name)) {
+      const productUrl = getProductUrl(product);
+      navigate(productUrl);
     } else {
       navigate(staticLinks[index] || "/");
     }
@@ -38,7 +40,9 @@ const ProductSlider = ({ products }) => {
               <img
                 src={(() => {
                   if (product.productImage && product.productImage.path) {
-                    return BASE_URL + product.productImage.path;
+                    return product.productImage.path.startsWith('http') 
+                      ? product.productImage.path 
+                      : BASE_URL + product.productImage.path;
                   }
                   if (product.productImageId && product.files) {
                     const productImageFile = product.files.find(file => 
@@ -46,12 +50,16 @@ const ProductSlider = ({ products }) => {
                       file.id === String(product.productImageId) || 
                       String(file.id) === String(product.productImageId)
                     );
-                    if (productImageFile) {
-                      return BASE_URL + productImageFile.path;
+                    if (productImageFile && productImageFile.path) {
+                      return productImageFile.path.startsWith('http') 
+                        ? productImageFile.path 
+                        : BASE_URL + productImageFile.path;
                     }
                   }
-                  if (product.files && product.files[0]) {
-                    return BASE_URL + product.files[0].path;
+                  if (product.files && product.files[0] && product.files[0].path) {
+                    return product.files[0].path.startsWith('http') 
+                      ? product.files[0].path 
+                      : BASE_URL + product.files[0].path;
                   }
                   if (product.image) {
                     return product.image;

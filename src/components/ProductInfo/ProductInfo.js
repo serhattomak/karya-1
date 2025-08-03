@@ -25,50 +25,128 @@ const ProductInfo = ({ productData }) => {
   } = productData;
 
   const mainImage = (() => {
+    console.log("ProductInfo - Calculating main image:");
+    console.log("- productImage:", productImage);
+    console.log("- productImageId:", productImageId);
+    console.log("- files:", files);
+    console.log("- apiProductImages:", apiProductImages);
+    console.log("- All productData keys:", Object.keys(productData));
+    
     if (productImage && productImage.path) {
-      return BASE_URL + productImage.path;
+      console.log("Using productImage.path:", productImage.path);
+      return productImage.path.startsWith('http') ? productImage.path : BASE_URL + productImage.path;
     }
-    if (productImageId) {
-      const productImageFile = files.find(file => file.id === productImageId);
-      if (productImageFile) return BASE_URL + productImageFile.path;
+    
+    if (productData.productImage && productData.productImage.path) {
+      console.log("Using productData.productImage.path:", productData.productImage.path);
+      return productData.productImage.path.startsWith('http') ? productData.productImage.path : BASE_URL + productData.productImage.path;
     }
-    return files && files[0] 
-      ? BASE_URL + files[0].path 
-      : "/assets/images/Group 300.webp";
+    
+    if (productImageId && files && files.length > 0) {
+      const productImageFile = files.find(file => {
+        const match = file.id === productImageId || 
+                     file.id === String(productImageId) || 
+                     String(file.id) === String(productImageId);
+        console.log(`Checking file ${file.id} against productImageId ${productImageId}: ${match}`);
+        return match;
+      });
+      console.log("Found productImageFile:", productImageFile);
+      
+      if (productImageFile && productImageFile.path) {
+        const finalUrl = productImageFile.path.startsWith('http') ? productImageFile.path : BASE_URL + productImageFile.path;
+        console.log("Using productImageFile:", finalUrl);
+        return finalUrl;
+      }
+    }
+    
+    if (files && files[0] && files[0].path) {
+      console.log("Using first file:", files[0].path);
+      return files[0].path.startsWith('http') ? files[0].path : BASE_URL + files[0].path;
+    }
+    
+    if (apiProductImages && apiProductImages.length > 0 && apiProductImages[0].path) {
+      console.log("Using first apiProductImage:", apiProductImages[0].path);
+      return apiProductImages[0].path.startsWith('http') ? apiProductImages[0].path : BASE_URL + apiProductImages[0].path;
+    }
+    
+    console.log("Using fallback image");
+    return "/assets/images/Group 300.webp";
   })();
 
   const documentImages = (() => {
     if (apiDocumentImages && apiDocumentImages.length > 0) {
       return apiDocumentImages.map(img => ({
         ...img,
-        path: BASE_URL + img.path
+        path: img.path.startsWith('http') ? img.path : BASE_URL + img.path
       }));
     }
     if (documentImageIds.length > 0) {
       return documentImageIds.map(imageId => {
-        const file = files.find(f => f.id === imageId);
-        return file ? { ...file, path: BASE_URL + file.path } : null;
+        const file = files.find(f => 
+          f.id === imageId || 
+          f.id === String(imageId) || 
+          String(f.id) === String(imageId)
+        );
+        if (file && file.path) {
+          return { 
+            ...file, 
+            path: file.path.startsWith('http') ? file.path : BASE_URL + file.path 
+          };
+        }
+        return null;
       }).filter(Boolean);
     }
     return [];
   })();
 
   const productDetailImages = (() => {
+    console.log("ProductInfo - Calculating productDetailImages:");
+    console.log("- apiProductImages:", apiProductImages);
+    console.log("- productDetailImageIds:", productDetailImageIds);
+    console.log("- files for detail images:", files);
+    
     if (apiProductImages && apiProductImages.length > 0) {
+      console.log("Using apiProductImages");
       return apiProductImages.map(img => ({
-        src: BASE_URL + img.path,
+        src: img.path.startsWith('http') ? img.path : BASE_URL + img.path,
         alt: img.name || name
       }));
     }
+    
     if (productDetailImageIds.length > 0) {
-      return productDetailImageIds.map(imageId => {
-        const file = files.find(f => f.id === imageId);
-        return file ? {
-          src: BASE_URL + file.path,
-          alt: file.name || name
-        } : null;
+      console.log("Using productDetailImageIds to find files");
+      const detailImages = productDetailImageIds.map(imageId => {
+        const file = files.find(f => 
+          f.id === imageId || 
+          f.id === String(imageId) || 
+          String(f.id) === String(imageId)
+        );
+        console.log(`Looking for imageId ${imageId}, found file:`, file);
+        
+        if (file && file.path) {
+          return {
+            src: file.path.startsWith('http') ? file.path : BASE_URL + file.path,
+            alt: file.name || name
+          };
+        }
+        return null;
       }).filter(Boolean);
+      
+      console.log("Final detailImages from productDetailImageIds:", detailImages);
+      return detailImages;
     }
+    
+    if (files && files.length > 1) {
+      console.log("Using fallback: remaining files as detail images");
+      const fallbackImages = files.slice(1).map(file => ({
+        src: file.path.startsWith('http') ? file.path : BASE_URL + file.path,
+        alt: file.name || name
+      }));
+      console.log("Fallback detail images:", fallbackImages);
+      return fallbackImages;
+    }
+    
+    console.log("No detail images found");
     return [];
   })();
 
@@ -130,16 +208,14 @@ const ProductInfo = ({ productData }) => {
           {/* Dökümanlar - documentImages ile URLs eşleştirilerek */}
           {documentImages.length > 0 && (
             <div className="product-info-documents">
-              {documentImages.map((file, index) => {
-                const isImage = file.contentType?.startsWith('image/') || 
-                  file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i);
-                
-                const imageSrc = file.path.startsWith('http') ? file.path : BASE_URL + file.path;
-                
-                const relatedUrl = urls[index];
-                const linkHref = relatedUrl || imageSrc;
-                
-                return (
+          {documentImages.map((file, index) => {
+            const isImage = file.contentType?.startsWith('image/') || 
+              file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i);
+            
+            const imageSrc = file.path;
+            
+            const relatedUrl = urls[index];
+            const linkHref = relatedUrl || imageSrc;                return (
                   <a
                     key={index}
                     href={linkHref}

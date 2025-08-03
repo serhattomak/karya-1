@@ -1,0 +1,26 @@
+.product-debug-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-debug-list {
+  display: grid;
+  gap: 20px;
+}
+
+.product-debug-item {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+
+.debug-info p {
+  margin: 5px 0;
+  font-family: monospace;
+}
+
+.debug-info strong {
+  color: #333;
+}

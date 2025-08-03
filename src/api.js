@@ -64,6 +64,9 @@ export const getPage = (id) =>
 export const getPageByName = (name) =>
   axios.get(`${API_URL}/api/Page/name/${name}`, { headers: getAuthHeader() });
 
+export const getPageBySlug = (slug) =>
+  axios.get(`${API_URL}/api/Page/slug/${slug}`, { headers: getAuthHeader() });
+
 export const getPagesByType = (type, params) =>
   axios.get(`${API_URL}/api/Page/type/${type}`, { params, headers: getAuthHeader() });
 
@@ -109,6 +112,9 @@ export const getProduct = (id) =>
 
 export const getProductByName = (name) =>
   axios.get(`${API_URL}/api/Product/name/${name}`);
+
+export const getProductBySlug = (slug) =>
+  axios.get(`${API_URL}/api/Product/slug/${slug}`);
 
 export const createProduct = (data) =>
   axios.post(`${API_URL}/api/Product`, data, { headers: getAuthHeader() });

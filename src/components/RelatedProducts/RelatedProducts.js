@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProducts, getFile } from "../../api";
+import { getProductUrl } from "../../utils/slugUtils";
 import "./RelatedProducts.css";
 
 const BASE_URL = "https://localhost:7103/";
@@ -32,8 +33,9 @@ const RelatedProducts = ({ currentProductId, productName = "Ürünler" }) => {
     fetchRelatedProducts();
   }, [currentProductId]);
 
-  const handleProductClick = (productId) => {
-    navigate(`/product/${productId}`);
+  const handleProductClick = (product) => {
+    const productUrl = getProductUrl(product);
+    navigate(productUrl);
     window.scrollTo(0, 0);
   };
 
@@ -49,7 +51,9 @@ const RelatedProducts = ({ currentProductId, productName = "Ürünler" }) => {
           {relatedProducts.map((product) => {
             const mainImage = (() => {
               if (product.productImage && product.productImage.path) {
-                return BASE_URL + product.productImage.path;
+                return product.productImage.path.startsWith('http') 
+                  ? product.productImage.path 
+                  : BASE_URL + product.productImage.path;
               }
               if (product.productImageId && product.files) {
                 const productImageFile = product.files.find(file => 
@@ -57,18 +61,25 @@ const RelatedProducts = ({ currentProductId, productName = "Ürünler" }) => {
                   file.id === String(product.productImageId) || 
                   String(file.id) === String(product.productImageId)
                 );
-                if (productImageFile) return BASE_URL + productImageFile.path;
+                if (productImageFile && productImageFile.path) {
+                  return productImageFile.path.startsWith('http') 
+                    ? productImageFile.path 
+                    : BASE_URL + productImageFile.path;
+                }
               }
-              return product.files && product.files[0] 
-                ? BASE_URL + product.files[0].path 
-                : "/assets/images/Group 300.webp";
+              if (product.files && product.files[0] && product.files[0].path) {
+                return product.files[0].path.startsWith('http') 
+                  ? product.files[0].path 
+                  : BASE_URL + product.files[0].path;
+              }
+              return "/assets/images/Group 300.webp";
             })();
             
             return (
               <div 
                 key={product.id} 
                 className="related-product-card"
-                onClick={() => handleProductClick(product.id)}
+                onClick={() => handleProductClick(product)}
               >
                 <div className="related-product-image">
                   <img 

@@ -6,13 +6,13 @@ import ProductInfo from "../../components/ProductInfo/ProductInfo";
 import ContactSection from "../../components/ContactSection/ContactSection";
 import Footer from "../../components/Footer/Footer";
 import RelatedProducts from "../../components/RelatedProducts/RelatedProducts";
-import { getProduct } from "../../api";
+import { getProductBySlug, getFile } from "../../api";
 import "./ProductDetailPage.css";
 
 const BASE_URL = "https://localhost:7103/";
 
 function ProductDetailPage() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [productData, setProductData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,9 +22,70 @@ function ProductDetailPage() {
       try {
         setLoading(true);
         setError(null);
-        const response = await getProduct(id);
+        console.log("Fetching product with slug:", slug);
+        
+        const response = await getProductBySlug(slug);
         const data = response?.data?.data || response?.data || response;
+        console.log("Product data received:", data);
+        console.log("Product files:", data?.files);
+        console.log("Product productImageId:", data?.productImageId);
+        console.log("Product bannerImageUrl:", data?.bannerImageUrl);
+        console.log("Product productDetailImageIds:", data?.productDetailImageIds);
+        console.log("Product productImages:", data?.productImages);
+        console.log("Product documentImages:", data?.documentImages);
+        console.log("Full product object keys:", Object.keys(data));
+        
         setProductData(data);
+        
+        if (data && (!data.files || data.files.length === 0) && data.productImageId) {
+          try {
+            console.log("Files array is empty but productImageId exists, fetching file separately...");
+            const fileResponse = await getFile(data.productImageId);
+            const fileData = fileResponse?.data?.data || fileResponse?.data || fileResponse;
+            console.log("Fetched file data:", fileData);
+            
+            if (fileData) {
+              const updatedData = {
+                ...data,
+                files: [fileData],
+                productImage: fileData
+              };
+              console.log("Updated product data with fetched file:", updatedData);
+              setProductData(updatedData);
+            }
+          } catch (fileError) {
+            console.error("Error fetching product image file:", fileError);
+          }
+        }
+        
+        if (data && data.productDetailImageIds && data.productDetailImageIds.length > 0) {
+          try {
+            console.log("Fetching product detail images...");
+            const detailImagePromises = data.productDetailImageIds.map(async (imageId) => {
+              try {
+                const imageResponse = await getFile(imageId);
+                return imageResponse?.data?.data || imageResponse?.data || imageResponse;
+              } catch (err) {
+                console.error(`Error fetching detail image ${imageId}:`, err);
+                return null;
+              }
+            });
+            
+            const detailImages = await Promise.all(detailImagePromises);
+            const validDetailImages = detailImages.filter(Boolean);
+            
+            if (validDetailImages.length > 0) {
+              console.log("Fetched detail images:", validDetailImages);
+              setProductData(prevData => ({
+                ...prevData,
+                productImages: validDetailImages,
+                files: [...(prevData.files || []), ...validDetailImages]
+              }));
+            }
+          } catch (detailError) {
+            console.error("Error fetching detail images:", detailError);
+          }
+        }
         
         if (data) {
           document.title = `${data.titles?.[0] || data.name} - Karya Yapı`;
@@ -41,17 +102,17 @@ function ProductDetailPage() {
       }
     };
 
-    if (id) {
+    if (slug) {
       fetchProductData();
     } else {
-      setError("Geçersiz ürün ID'si.");
+      setError("Geçersiz ürün slug'ı.");
       setLoading(false);
     }
 
     return () => {
       document.title = "Karya Yapı";
     };
-  }, [id]);
+  }, [slug]);
 
   if (loading) {
     return (
@@ -80,10 +141,19 @@ function ProductDetailPage() {
     );
   }
 
-  const bannerImage = productData.bannerImageUrl || 
-    (productData.files && productData.files[0] 
-      ? BASE_URL + productData.files[0].path 
-      : "/assets/images/Group 300.webp");
+  const bannerImage = (() => {
+    if (productData.bannerImageUrl) {
+      return productData.bannerImageUrl.startsWith('http') 
+        ? productData.bannerImageUrl 
+        : BASE_URL + productData.bannerImageUrl;
+    }
+    if (productData.files && productData.files[0] && productData.files[0].path) {
+      return productData.files[0].path.startsWith('http') 
+        ? productData.files[0].path 
+        : BASE_URL + productData.files[0].path;
+    }
+    return "/assets/images/Group 300.webp";
+  })();
 
   return (
     <div className="product-detail-page">

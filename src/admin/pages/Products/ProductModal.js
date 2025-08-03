@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createProduct, updateProduct, getFiles } from "../../../api";
+import { createSlugFromProduct } from "../../../utils/slugUtils";
 import Swal from 'sweetalert2';
 
 const BASE_URL = "https://localhost:7103/";
@@ -19,6 +20,7 @@ const uploadFile = async (file) => {
 
 const ProductModal = ({ product, onClose, onSave }) => {
   const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
   const [titles, setTitles] = useState([""]);
   const [subtitles, setSubtitles] = useState([""]);
   const [descriptions, setDescriptions] = useState([""]);
@@ -30,8 +32,8 @@ const ProductModal = ({ product, onClose, onSave }) => {
   const [productImageId, setProductImageId] = useState("");
   const [documentImageIds, setDocumentImageIds] = useState([]);
   const [productDetailImageIds, setProductDetailImageIds] = useState([]);
-  const [productDetailImages, setProductDetailImages] = useState([]); // Ürün detay görselleri için ayrı state
-  const [documentFiles, setDocumentFiles] = useState([]); // Döküman dosyaları
+  const [productDetailImages, setProductDetailImages] = useState([]);
+  const [documentFiles, setDocumentFiles] = useState([]);
   const [productImages, setProductImages] = useState([]);
   const [availableFiles, setAvailableFiles] = useState([]);
   const [showFileSelector, setShowFileSelector] = useState(false);
@@ -42,6 +44,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
   useEffect(() => {
     if (product) {
       setName(product.name || "");
+      setSlug(product.slug || "");
       setTitles(product.titles || [""]);
       setSubtitles(product.subtitles || [""]);
       setDescriptions(product.descriptions || [""]);
@@ -125,6 +128,29 @@ const ProductModal = ({ product, onClose, onSave }) => {
     setLoading(true);
 
     try {
+      if (!name.trim()) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Hata!',
+          text: 'Ürün adı zorunludur.',
+          confirmButtonText: 'Tamam'
+        });
+        setLoading(false);
+        return;
+      }
+
+      const finalSlug = slug.trim() || createSlugFromProduct({ name });
+      if (!finalSlug) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Hata!',
+          text: 'Geçerli bir slug oluşturulamadı.',
+          confirmButtonText: 'Tamam'
+        });
+        setLoading(false);
+        return;
+      }
+
       let finalBannerImageUrl = bannerImageUrl;
       if (bannerImageFile) {
         const uploaded = await uploadFile(bannerImageFile);
@@ -185,6 +211,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
 
       const productData = {
         name,
+        slug: finalSlug,
         titles: titles.filter(t => t.trim() !== ""),
         subtitles: subtitles.filter(st => st.trim() !== ""),
         descriptions: descriptions.filter(d => d.trim() !== ""),
@@ -418,10 +445,36 @@ const ProductModal = ({ product, onClose, onSave }) => {
             <input
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                const newName = e.target.value;
+                setName(newName);
+                if (!slug || slug === createSlugFromProduct({ name })) {
+                  setSlug(createSlugFromProduct({ name: newName }));
+                }
+              }}
               placeholder="Ürün adını girin"
               required
             />
+            {name && (
+              <div style={{ marginTop: '8px', padding: '8px', backgroundColor: '#f0f0f0', borderRadius: '4px', fontSize: '12px' }}>
+                <strong>URL Önizleme:</strong> /product/{slug || createSlugFromProduct({ name })}
+              </div>
+            )}
+          </div>
+
+          {/* Slug */}
+          <div className="form-group">
+            <label>URL Slug *</label>
+            <input
+              type="text"
+              value={slug}
+              onChange={(e) => setSlug(e.target.value)}
+              placeholder="url-dostu-slug"
+              required
+            />
+            <small style={{ color: '#666', fontSize: '12px' }}>
+              SEO dostu URL için kullanılır. Boş bırakırsanız ürün adından otomatik oluşturulur.
+            </small>
           </div>
 
           {/* Başlıklar */}

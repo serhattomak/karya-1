@@ -220,13 +220,15 @@ const Products = () => {
                 {/* Liste öğeleri */}
                 {product.listItems && product.listItems.length > 0 && (
                   <div className="product-list-items">
-                    <h5>Özellikler:</h5>
+                    {product.listTitles && product.listTitles.length > 0 && (
+                      <h5>{product.listTitles[0]}</h5>
+                    )}
                     <ul>
                       {product.listItems.slice(0, 3).map((item, index) => (
                         <li key={index}>{item}</li>
                       ))}
                       {product.listItems.length > 3 && (
-                        <li className="more-items">+{product.listItems.length - 3} özellik daha</li>
+                        <li className="more-items">+{product.listItems.length - 3} madde daha</li>
                       )}
                     </ul>
                   </div>
