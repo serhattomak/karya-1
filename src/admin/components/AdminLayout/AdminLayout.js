@@ -11,10 +11,10 @@ import ContactPage from "../../pages/ContactPage/ContactPage";
 import Poliuretan from "../../pages/PoliuretanEnjeksiyon/PoliuretanEnjeksiyon";
 import Products from "../../pages/Products/Products";
 
-const AdminLayout = () => {
+const AdminLayout = ({ setIsAuthenticated }) => {
   return (
     <div className="admin-layout">
-      <Sidebar />
+      <Sidebar setIsAuthenticated={setIsAuthenticated} />
       <div className="content-area">
         <Routes>
           <Route path="home" element={<Home />} />

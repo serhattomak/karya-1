@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -24,8 +24,49 @@ const PrivateRoute = ({ element, isAuthenticated }) => {
 };
 
 const AppContent = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); 
-  const location = useLocation(); 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
+
+  useEffect(() => {
+    const checkAuthStatus = () => {
+      const token = localStorage.getItem("token");
+      const tokenExpiration = localStorage.getItem("tokenExpiration");
+
+      if (token && tokenExpiration) {
+        const currentTime = Date.now();
+        const expirationTime = parseInt(tokenExpiration, 10);
+
+        if (currentTime < expirationTime) {
+          setIsAuthenticated(true);
+        } else {
+          localStorage.removeItem("token");
+          localStorage.removeItem("tokenExpiration");
+          setIsAuthenticated(false);
+        }
+      } else {
+        setIsAuthenticated(false);
+      }
+      
+      setIsLoading(false);
+    };
+
+    checkAuthStatus();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        fontSize: '18px' 
+      }}>
+        Yükleniyor...
+      </div>
+    );
+  } 
 
   const hideNavbar =
     location.pathname.startsWith("/admin") || location.pathname === "/login";
@@ -56,7 +97,7 @@ const AppContent = () => {
           path="/admin/*"
           element={
             <PrivateRoute
-              element={<AdminLayout />}
+              element={<AdminLayout setIsAuthenticated={setIsAuthenticated} />}
               isAuthenticated={isAuthenticated}
             />
           }
