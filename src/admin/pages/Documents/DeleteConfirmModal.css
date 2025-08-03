@@ -1,0 +1,114 @@
+.delete-confirm-modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 500px;
+  overflow: hidden;
+}
+
+.delete-confirm-modal .modal-header {
+  padding: 20px 24px;
+  background: #f8f9fa;
+  border-bottom: 2px solid #f1f3f4;
+}
+
+.delete-confirm-modal .modal-header h3 {
+  margin: 0;
+  color: #dc3545;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.delete-confirm-modal .modal-content {
+  padding: 24px;
+  text-align: center;
+}
+
+.warning-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.delete-confirm-modal p {
+  margin: 0 0 16px 0;
+  color: #333;
+  line-height: 1.5;
+}
+
+.document-description {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 6px;
+  font-style: italic;
+  color: #6c757d !important;
+  border-left: 4px solid #dee2e6;
+}
+
+.warning-text {
+  color: #dc3545 !important;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.delete-confirm-modal .modal-actions {
+  padding: 20px 24px;
+  background: #f8f9fa;
+  border-top: 2px solid #f1f3f4;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.delete-confirm-modal .cancel-btn,
+.delete-confirm-modal .delete-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 80px;
+}
+
+.delete-confirm-modal .cancel-btn {
+  background: #6c757d;
+  color: white;
+}
+
+.delete-confirm-modal .cancel-btn:hover {
+  background: #5a6268;
+}
+
+.delete-confirm-modal .delete-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.delete-confirm-modal .delete-btn:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+  .delete-confirm-modal {
+    margin: 20px;
+    max-width: calc(100% - 40px);
+  }
+
+  .delete-confirm-modal .modal-content {
+    padding: 20px;
+  }
+
+  .delete-confirm-modal .modal-actions {
+    flex-direction: column;
+    padding: 16px 20px;
+  }
+
+  .delete-confirm-modal .cancel-btn,
+  .delete-confirm-modal .delete-btn {
+    width: 100%;
+  }
+}
