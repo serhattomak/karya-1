@@ -23,7 +23,7 @@
 }
 
 .add-btn {
-  background: #007bff;
+  background: #f68b1f;
   color: white;
   border: none;
   padding: 12px 24px;
@@ -35,7 +35,7 @@
 }
 
 .add-btn:hover {
-  background: #0056b3;
+  background: #ee5c30;
   transform: translateY(-1px);
 }
 
@@ -255,9 +255,9 @@
 }
 
 .edit-btn:hover {
-  background: #fff3e0;
+  background: #ee5c30;
   border-color: #ff9800;
-  color: #ff9800;
+  color: #ffffff;
 }
 
 .delete-btn:hover {

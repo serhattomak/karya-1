@@ -576,7 +576,7 @@
 }
 
 .save-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #00aaff, #007bff);
+  background: linear-gradient(135deg, #f68b1f, #ee5c30);
   transform: translateY(-1px);
 }
 
@@ -587,11 +587,11 @@
 }
 
 .save-btn.primary {
-  background: #007bff;
+  background: #f68b1f;
 }
 
 .save-btn.primary:hover:not(:disabled) {
-  background: #0056b3;
+  background: #ee5c30;
 }
 
 .delete-btn.danger {

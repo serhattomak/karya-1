@@ -1,7 +1,7 @@
 /* Sidebar Base Styles */
 .sidebar {
   width: 280px;
-  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  background: linear-gradient(135deg, #333 0%, #333 100%);
   color: white;
   padding: 0;
   height: 100vh;
@@ -75,13 +75,13 @@
 .nav-item:hover {
   background: rgba(255, 255, 255, 0.1);
   color: white;
-  border-left-color: #3b82f6;
+  border-left-color: #f68b1f;
 }
 
 .nav-item.active {
-  background: rgba(59, 130, 246, 0.2);
+  background: #f68b1f;
   color: white;
-  border-left-color: #3b82f6;
+  border-left-color: #666;
 }
 
 .nav-item.active::before {
@@ -91,7 +91,7 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background: #3b82f6;
+  background: #f68b1f;
 }
 
 .nav-icon {
@@ -148,7 +148,7 @@
   left: 20px;
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  background: linear-gradient(135deg, #333 0%, #333 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -308,6 +308,6 @@
 .nav-item:focus,
 .logout-btn:focus,
 .menu-toggle:focus {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid #f68b1f;
   outline-offset: 2px;
 }

@@ -57,7 +57,7 @@
 }
 
 .add-btn.primary {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background: linear-gradient(135deg, #f68b1f 0%, #ee5c30 100%);
   color: white;
   min-width: auto;
   white-space: nowrap;
@@ -451,7 +451,7 @@
 }
 
 .add-product-btn {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background: linear-gradient(135deg, #f68b1f 0%, #ee5c30 100%);
   color: white;
   border: none;
   padding: 10px 20px;

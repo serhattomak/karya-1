@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { getPage, getPageByName, updatePage, getProductsAuth as getProducts, updatePageProductOrder, getFile } from "../../../api";
-import Swal from 'sweetalert2';
+import {
+  getPage,
+  getPageByName,
+  updatePage,
+  getProductsAuth as getProducts,
+  updatePageProductOrder,
+  getFile,
+} from "../../../api";
+import Swal from "sweetalert2";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 
@@ -22,123 +29,167 @@ const Home = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
+
         const pageResponse = await getPageByName("Anasayfa");
-        const pageData = pageResponse.data && pageResponse.data.data ? pageResponse.data.data : pageResponse.data;
-        
+        const pageData =
+          pageResponse.data && pageResponse.data.data
+            ? pageResponse.data.data
+            : pageResponse.data;
+
         setBannerTitle((pageData.titles && pageData.titles[0]) || "");
         setBannerSubtitle((pageData.subtitles && pageData.subtitles[0]) || "");
-        
-        const productsResponse = await getProducts({ PageIndex: 1, PageSize: 100 });
-        const allProducts = productsResponse?.data?.data?.items || productsResponse?.data?.items || productsResponse?.data || [];
+
+        const productsResponse = await getProducts({
+          PageIndex: 1,
+          PageSize: 100,
+        });
+        const allProducts =
+          productsResponse?.data?.data?.items ||
+          productsResponse?.data?.items ||
+          productsResponse?.data ||
+          [];
         console.log("API'dan gelen tüm ürünler:", allProducts);
-        
+
         setAvailableProducts(allProducts);
-        
-        const API_URL = process.env.REACT_APP_API_URL || "https://localhost:7103";
-        const currentSelectedProducts = await Promise.all((pageData.products || []).map(async (product) => {
-          console.log("Sayfa yüklenirken ürün:", product);
-          console.log("productImage:", product.productImage);
-          console.log("productImageId:", product.productImageId);
-          console.log("files:", product.files);
-          
-          let imagePath = "";
-          
-          if (product.productImage && product.productImage.path) {
-            imagePath = product.productImage.path;
-            console.log("productImage.path kullanıldı:", imagePath);
-          }
-          else if (product.productImageId) {
-            try {
-              console.log("File API'sinden dosya çekiliyor:", product.productImageId);
-              const fileResponse = await getFile(product.productImageId);
-              const fileData = fileResponse.data && fileResponse.data.data ? fileResponse.data.data : fileResponse.data;
-              if (fileData && fileData.path) {
-                imagePath = fileData.path;
-                console.log("File API'sinden dosya bulundu:", imagePath);
-              } else {
-                console.log("File API'sinden dosya bulunamadı");
-              }
-            } catch (error) {
-              console.log("File API'sinden dosya çekilirken hata:", error);
-              
-              // Fallback: Önce kendi files array'inde ara
-              if (product.files && product.files.length > 0) {
-                const productImageFile = product.files.find(file => 
-                  file.id === product.productImageId || 
-                  file.id === String(product.productImageId) || 
-                  String(file.id) === String(product.productImageId)
+
+        const API_URL =
+          process.env.REACT_APP_API_URL || "https://localhost:7103";
+        const currentSelectedProducts = await Promise.all(
+          (pageData.products || []).map(async (product) => {
+            console.log("Sayfa yüklenirken ürün:", product);
+            console.log("productImage:", product.productImage);
+            console.log("productImageId:", product.productImageId);
+            console.log("files:", product.files);
+
+            let imagePath = "";
+
+            if (product.productImage && product.productImage.path) {
+              imagePath = product.productImage.path;
+              console.log("productImage.path kullanıldı:", imagePath);
+            } else if (product.productImageId) {
+              try {
+                console.log(
+                  "File API'sinden dosya çekiliyor:",
+                  product.productImageId
                 );
-                if (productImageFile) {
-                  imagePath = productImageFile.path;
-                  console.log("productImageId ile eşleşen dosya bulundu (kendi files):", imagePath);
+                const fileResponse = await getFile(product.productImageId);
+                const fileData =
+                  fileResponse.data && fileResponse.data.data
+                    ? fileResponse.data.data
+                    : fileResponse.data;
+                if (fileData && fileData.path) {
+                  imagePath = fileData.path;
+                  console.log("File API'sinden dosya bulundu:", imagePath);
+                } else {
+                  console.log("File API'sinden dosya bulunamadı");
                 }
-              }
-              
-              // Eğer kendi files'ında yoksa, availableProducts'tan ara
-              if (!imagePath && allProducts && allProducts.length > 0) {
-                console.log("availableProducts'tan aranıyor, allProducts uzunluğu:", allProducts.length);
-                const availableProduct = allProducts.find(p => p.id === product.id);
-                console.log("availableProduct bulundu mu:", !!availableProduct);
-                if (availableProduct) {
-                  console.log("availableProduct files:", availableProduct.files);
-                  if (availableProduct.files && availableProduct.files.length > 0) {
-                    const productImageFile = availableProduct.files.find(file => 
-                      file.id === product.productImageId || 
-                      file.id === String(product.productImageId) || 
+              } catch (error) {
+                console.log("File API'sinden dosya çekilirken hata:", error);
+
+                // Fallback: Önce kendi files array'inde ara
+                if (product.files && product.files.length > 0) {
+                  const productImageFile = product.files.find(
+                    (file) =>
+                      file.id === product.productImageId ||
+                      file.id === String(product.productImageId) ||
                       String(file.id) === String(product.productImageId)
+                  );
+                  if (productImageFile) {
+                    imagePath = productImageFile.path;
+                    console.log(
+                      "productImageId ile eşleşen dosya bulundu (kendi files):",
+                      imagePath
                     );
-                    if (productImageFile) {
-                      imagePath = productImageFile.path;
-                      console.log("productImageId ile eşleşen dosya bulundu (availableProducts):", imagePath);
+                  }
+                }
+
+                // Eğer kendi files'ında yoksa, availableProducts'tan ara
+                if (!imagePath && allProducts && allProducts.length > 0) {
+                  console.log(
+                    "availableProducts'tan aranıyor, allProducts uzunluğu:",
+                    allProducts.length
+                  );
+                  const availableProduct = allProducts.find(
+                    (p) => p.id === product.id
+                  );
+                  console.log(
+                    "availableProduct bulundu mu:",
+                    !!availableProduct
+                  );
+                  if (availableProduct) {
+                    console.log(
+                      "availableProduct files:",
+                      availableProduct.files
+                    );
+                    if (
+                      availableProduct.files &&
+                      availableProduct.files.length > 0
+                    ) {
+                      const productImageFile = availableProduct.files.find(
+                        (file) =>
+                          file.id === product.productImageId ||
+                          file.id === String(product.productImageId) ||
+                          String(file.id) === String(product.productImageId)
+                      );
+                      if (productImageFile) {
+                        imagePath = productImageFile.path;
+                        console.log(
+                          "productImageId ile eşleşen dosya bulundu (availableProducts):",
+                          imagePath
+                        );
+                      } else {
+                        console.log(
+                          "availableProducts'ta da productImageId ile eşleşen dosya bulunamadı"
+                        );
+                      }
                     } else {
-                      console.log("availableProducts'ta da productImageId ile eşleşen dosya bulunamadı");
+                      console.log("availableProduct'ta da files boş");
                     }
                   } else {
-                    console.log("availableProduct'ta da files boş");
+                    console.log("availableProducts'ta ürün bulunamadı");
                   }
-                } else {
-                  console.log("availableProducts'ta ürün bulunamadı");
                 }
               }
+
+              if (!imagePath) {
+                console.log("productImageId ile eşleşen dosya bulunamadı");
+              }
+            } else if (
+              product.files &&
+              product.files[0] &&
+              product.files[0].path
+            ) {
+              imagePath = product.files[0].path;
+              console.log("İlk dosya kullanıldı:", imagePath);
             }
-            
-            if (!imagePath) {
-              console.log("productImageId ile eşleşen dosya bulunamadı");
+
+            if (imagePath) {
+              if (imagePath.startsWith("uploads/")) {
+                imagePath = `${API_URL}/${imagePath}`;
+              } else if (!imagePath.startsWith("http")) {
+                imagePath = `${API_URL}/${imagePath}`;
+              }
+              console.log("Final imagePath:", imagePath);
+            } else {
+              console.log("Hiç görsel bulunamadı");
             }
-          }
-          else if (product.files && product.files[0] && product.files[0].path) {
-            imagePath = product.files[0].path;
-            console.log("İlk dosya kullanıldı:", imagePath);
-          }
-          
-          if (imagePath) {
-            if (imagePath.startsWith("uploads/")) {
-              imagePath = `${API_URL}/${imagePath}`;
-            } else if (!imagePath.startsWith("http")) {
-              imagePath = `${API_URL}/${imagePath}`;
-            }
-            console.log("Final imagePath:", imagePath);
-          } else {
-            console.log("Hiç görsel bulunamadı");
-          }
-          
-          return {
-            ...product,
-            imagePath
-          };
-        }));
-        
+
+            return {
+              ...product,
+              imagePath,
+            };
+          })
+        );
+
         setSelectedProducts(currentSelectedProducts);
-        
       } catch (error) {
         console.error("Veriler yüklenirken hata oluştu:", error);
         Swal.fire({
-          icon: 'error',
-          title: 'Hata!',
-          text: 'Veriler yüklenirken bir hata oluştu.',
-          confirmButtonText: 'Tamam',
-          confirmButtonColor: '#dc3545'
+          icon: "error",
+          title: "Hata!",
+          text: "Veriler yüklenirken bir hata oluştu.",
+          confirmButtonText: "Tamam",
+          confirmButtonColor: "#dc3545",
         });
       } finally {
         setLoading(false);
@@ -161,42 +212,45 @@ const Home = () => {
 
     const updatedProducts = [...selectedProducts];
     const draggedProduct = updatedProducts[draggedItem];
-    
+
     updatedProducts.splice(draggedItem, 1);
     updatedProducts.splice(dropIndex, 0, draggedProduct);
-    
+
     setSelectedProducts(updatedProducts);
     setDraggedItem(null);
 
     try {
       const pageResponse = await getPageByName("Anasayfa");
-      const page = pageResponse.data && pageResponse.data.data ? pageResponse.data.data : pageResponse.data;
-      
-      const productIds = updatedProducts.map(p => p.id);
+      const page =
+        pageResponse.data && pageResponse.data.data
+          ? pageResponse.data.data
+          : pageResponse.data;
+
+      const productIds = updatedProducts.map((p) => p.id);
       const productOrderData = {
         pageId: page.id,
-        productIds: productIds
+        productIds: productIds,
       };
 
       await updatePageProductOrder(productOrderData);
-      
+
       Swal.fire({
-        icon: 'success',
-        title: 'Sıralama güncellendi!',
+        icon: "success",
+        title: "Sıralama güncellendi!",
         toast: true,
-        position: 'top-end',
+        position: "top-end",
         showConfirmButton: false,
-        timer: 2000
+        timer: 2000,
       });
     } catch (error) {
       console.error("Sıralama kaydedilirken hata:", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Sıralama kaydedilemedi!',
+        icon: "error",
+        title: "Sıralama kaydedilemedi!",
         toast: true,
-        position: 'top-end',
+        position: "top-end",
         showConfirmButton: false,
-        timer: 3000
+        timer: 3000,
       });
     }
   };
@@ -204,11 +258,11 @@ const Home = () => {
   const addProductToHome = async (product) => {
     if (selectedProducts.length >= 4) {
       Swal.fire({
-        icon: 'warning',
-        title: 'Uyarı!',
-        text: 'Ana sayfada maksimum 4 ürün gösterilebilir.',
-        confirmButtonText: 'Tamam',
-        confirmButtonColor: '#ffc107'
+        icon: "warning",
+        title: "Uyarı!",
+        text: "Ana sayfada maksimum 4 ürün gösterilebilir.",
+        confirmButtonText: "Tamam",
+        confirmButtonColor: "#ffc107",
       });
       return;
     }
@@ -220,16 +274,18 @@ const Home = () => {
 
     const API_URL = process.env.REACT_APP_API_URL || "https://localhost:7103";
     let imagePath = "";
-    
+
     if (product.productImage && product.productImage.path) {
       imagePath = product.productImage.path;
       console.log("productImage.path kullanıldı:", imagePath);
-    }
-    else if (product.productImageId) {
+    } else if (product.productImageId) {
       try {
         console.log("File API'sinden dosya çekiliyor:", product.productImageId);
         const fileResponse = await getFile(product.productImageId);
-        const fileData = fileResponse.data && fileResponse.data.data ? fileResponse.data.data : fileResponse.data;
+        const fileData =
+          fileResponse.data && fileResponse.data.data
+            ? fileResponse.data.data
+            : fileResponse.data;
         if (fileData && fileData.path) {
           imagePath = fileData.path;
           console.log("File API'sinden dosya bulundu:", imagePath);
@@ -238,10 +294,12 @@ const Home = () => {
         }
       } catch (error) {
         console.log("File API'sinden dosya çekilirken hata:", error);
-        
+
         // Fallback: files dizisinden ara
         if (product.files) {
-          const productImageFile = product.files.find(file => file.id === product.productImageId);
+          const productImageFile = product.files.find(
+            (file) => file.id === product.productImageId
+          );
           if (productImageFile) {
             imagePath = productImageFile.path;
             console.log("productImageId ile eşleşen dosya bulundu:", imagePath);
@@ -250,12 +308,11 @@ const Home = () => {
           }
         }
       }
-    }
-    else if (product.files && product.files[0] && product.files[0].path) {
+    } else if (product.files && product.files[0] && product.files[0].path) {
       imagePath = product.files[0].path;
       console.log("İlk dosya kullanıldı:", imagePath);
     }
-    
+
     if (imagePath) {
       if (imagePath.startsWith("uploads/")) {
         imagePath = `${API_URL}/${imagePath}`;
@@ -269,16 +326,16 @@ const Home = () => {
 
     const productWithImage = {
       ...product,
-      imagePath
+      imagePath,
     };
 
     console.log("Eklenen ürün:", productWithImage);
-    setSelectedProducts(prev => [...prev, productWithImage]);
+    setSelectedProducts((prev) => [...prev, productWithImage]);
     setShowProductModal(false);
   };
 
   const removeProductFromHome = (productId) => {
-    setSelectedProducts(prev => prev.filter(p => p.id !== productId));
+    setSelectedProducts((prev) => prev.filter((p) => p.id !== productId));
   };
 
   const openBannerModal = () => {
@@ -306,7 +363,10 @@ const Home = () => {
       setShowBannerModal(false);
 
       const pageResponse = await getPageByName("Anasayfa");
-      const page = pageResponse.data && pageResponse.data.data ? pageResponse.data.data : pageResponse.data;
+      const page =
+        pageResponse.data && pageResponse.data.data
+          ? pageResponse.data.data
+          : pageResponse.data;
 
       const updatedProducts = selectedProducts.map((product) => ({
         id: product.id,
@@ -321,10 +381,10 @@ const Home = () => {
         documentImageIds: product.documentImageIds || [],
         productDetailImageIds: product.productDetailImageIds || [],
         fileIds: product.fileIds || [],
-        files: product.files || []
+        files: product.files || [],
       }));
 
-      const productIds = selectedProducts.map(p => p.id);
+      const productIds = selectedProducts.map((p) => p.id);
 
       const updatedPage = {
         ...page,
@@ -338,28 +398,28 @@ const Home = () => {
 
       const productOrderData = {
         pageId: page.id,
-        productIds: productIds
+        productIds: productIds,
       };
 
       await updatePageProductOrder(productOrderData);
-      
+
       Swal.fire({
-        icon: 'success',
-        title: 'Banner Güncellendi!',
-        text: 'Banner başlığı ve alt başlığı başarıyla kaydedildi!',
-        confirmButtonText: 'Tamam',
-        confirmButtonColor: '#28a745',
+        icon: "success",
+        title: "Banner Güncellendi!",
+        text: "Banner başlığı ve alt başlığı başarıyla kaydedildi!",
+        confirmButtonText: "Tamam",
+        confirmButtonColor: "#28a745",
         timer: 2000,
-        timerProgressBar: true
+        timerProgressBar: true,
       });
     } catch (error) {
       console.error("Banner kaydedilirken hata oluştu:", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Hata!',
-        text: 'Banner kaydetme sırasında bir hata oluştu.',
-        confirmButtonText: 'Tamam',
-        confirmButtonColor: '#dc3545'
+        icon: "error",
+        title: "Hata!",
+        text: "Banner kaydetme sırasında bir hata oluştu.",
+        confirmButtonText: "Tamam",
+        confirmButtonColor: "#dc3545",
       });
     }
   };
@@ -367,7 +427,10 @@ const Home = () => {
   const saveAllChanges = async () => {
     try {
       const pageResponse = await getPageByName("Anasayfa");
-      const page = pageResponse.data && pageResponse.data.data ? pageResponse.data.data : pageResponse.data;
+      const page =
+        pageResponse.data && pageResponse.data.data
+          ? pageResponse.data.data
+          : pageResponse.data;
 
       const updatedProducts = selectedProducts.map((product) => ({
         id: product.id,
@@ -382,10 +445,10 @@ const Home = () => {
         documentImageIds: product.documentImageIds || [],
         productDetailImageIds: product.productDetailImageIds || [],
         fileIds: product.fileIds || [],
-        files: product.files || []
+        files: product.files || [],
       }));
 
-      const productIds = selectedProducts.map(p => p.id);
+      const productIds = selectedProducts.map((p) => p.id);
 
       const updatedPage = {
         ...page,
@@ -399,28 +462,28 @@ const Home = () => {
 
       const productOrderData = {
         pageId: page.id,
-        productIds: productIds
+        productIds: productIds,
       };
 
       await updatePageProductOrder(productOrderData);
-      
+
       Swal.fire({
-        icon: 'success',
-        title: 'Başarılı!',
-        text: 'Değişiklikler başarıyla kaydedildi!',
-        confirmButtonText: 'Tamam',
-        confirmButtonColor: '#28a745',
+        icon: "success",
+        title: "Başarılı!",
+        text: "Değişiklikler başarıyla kaydedildi!",
+        confirmButtonText: "Tamam",
+        confirmButtonColor: "#28a745",
         timer: 2000,
-        timerProgressBar: true
+        timerProgressBar: true,
       });
     } catch (error) {
       console.error("Veriler kaydedilirken hata oluştu:", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Hata!',
-        text: 'Bir hata oluştu. Lütfen tekrar deneyin.',
-        confirmButtonText: 'Tamam',
-        confirmButtonColor: '#dc3545'
+        icon: "error",
+        title: "Hata!",
+        text: "Bir hata oluştu. Lütfen tekrar deneyin.",
+        confirmButtonText: "Tamam",
+        confirmButtonColor: "#dc3545",
       });
     }
   };
@@ -436,14 +499,32 @@ const Home = () => {
         <div className="section-header">
           <h2 className="section-title">Ana Sayfa Banner</h2>
           <button className="edit-btn primary" onClick={openBannerModal}>
-            ✏️ Düzenle
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+              />
+            </svg>
+            Düzenle
           </button>
         </div>
-        
+
         <div className="banner-preview">
           <div className="banner-content">
-            <h1 className="banner-title">{bannerTitle || "Başlık eklenmedi"}</h1>
-            <p className="banner-subtitle">{bannerSubtitle || "Alt başlık eklenmedi"}</p>
+            <h1 className="banner-title">
+              {bannerTitle || "Başlık eklenmedi"}
+            </h1>
+            <p className="banner-subtitle">
+              {bannerSubtitle || "Alt başlık eklenmedi"}
+            </p>
           </div>
         </div>
       </div>
@@ -453,14 +534,17 @@ const Home = () => {
         <div className="section-header">
           <h2 className="section-title">Ana Sayfada Gösterilecek Ürünler</h2>
           <button className="add-btn primary" onClick={openProductModal}>
-            + Ürün Ekle
+            Ürün Seç
           </button>
         </div>
 
         <div className="selected-products">
           {selectedProducts.length === 0 ? (
             <div className="no-products">
-              <p>Henüz ürün seçilmedi. Ürün eklemek için yukarıdaki butona tıklayın.</p>
+              <p>
+                Henüz ürün seçilmedi. Ürün eklemek için yukarıdaki butona
+                tıklayın.
+              </p>
             </div>
           ) : (
             <div className="products-grid">
@@ -483,11 +567,15 @@ const Home = () => {
                   </div>
                   <div className="product-info">
                     <h3>{product.name}</h3>
-                    <p>{product.titles && product.titles[0] ? product.titles[0] : "Başlık yok"}</p>
+                    <p>
+                      {product.titles && product.titles[0]
+                        ? product.titles[0]
+                        : "Başlık yok"}
+                    </p>
                   </div>
                   <div className="product-actions">
                     <span className="order-number">{index + 1}</span>
-                    <button 
+                    <button
                       className="remove-btn"
                       onClick={() => removeProductFromHome(product.id)}
                     >
@@ -502,7 +590,7 @@ const Home = () => {
 
         <div className="save-section">
           <button className="save-btn primary" onClick={saveAllChanges}>
-            💾 Değişiklikleri Kaydet
+            Değişiklikleri Kaydet
           </button>
         </div>
       </div>
@@ -513,7 +601,9 @@ const Home = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h3>Banner Düzenle</h3>
-              <button className="close-btn" onClick={closeBannerModal}>×</button>
+              <button className="close-btn" onClick={closeBannerModal}>
+                ×
+              </button>
             </div>
             <div className="modal-body">
               <div className="form-group">
@@ -553,34 +643,43 @@ const Home = () => {
           <div className="modal-content large">
             <div className="modal-header">
               <h3>Ürün Seç</h3>
-              <button className="close-btn" onClick={closeProductModal}>×</button>
+              <button className="close-btn" onClick={closeProductModal}>
+                ×
+              </button>
             </div>
             <div className="modal-body">
               <div className="available-products-grid">
                 {availableProducts
-                  .filter(product => !selectedProducts.some(selected => selected.id === product.id))
+                  .filter(
+                    (product) =>
+                      !selectedProducts.some(
+                        (selected) => selected.id === product.id
+                      )
+                  )
                   .map((product) => {
-                    const API_URL = process.env.REACT_APP_API_URL || "https://localhost:7103";
+                    const API_URL =
+                      process.env.REACT_APP_API_URL || "https://localhost:7103";
                     let imagePath = "";
-                    
-                    // Ana ürün görseli öncelikli - ProductInfo ile aynı mantık
-                    // Öncelikle productImage objesini kontrol et
+
                     if (product.productImage && product.productImage.path) {
                       imagePath = product.productImage.path;
                     }
-                    // Backup olarak files dizisinden productImageId ile eşleşeni bul
                     else if (product.productImageId && product.files) {
-                      const productImageFile = product.files.find(file => file.id === product.productImageId);
+                      const productImageFile = product.files.find(
+                        (file) => file.id === product.productImageId
+                      );
                       if (productImageFile) {
                         imagePath = productImageFile.path;
                       }
                     }
-                    // Son çare olarak ilk dosyayı kullan
-                    else if (product.files && product.files[0] && product.files[0].path) {
+                    else if (
+                      product.files &&
+                      product.files[0] &&
+                      product.files[0].path
+                    ) {
                       imagePath = product.files[0].path;
                     }
-                    
-                    // URL'yi tam olarak oluştur
+
                     if (imagePath) {
                       if (imagePath.startsWith("uploads/")) {
                         imagePath = `${API_URL}/${imagePath}`;
@@ -600,9 +699,13 @@ const Home = () => {
                         </div>
                         <div className="product-info">
                           <h4>{product.name}</h4>
-                          <p>{product.titles && product.titles[0] ? product.titles[0] : "Başlık yok"}</p>
+                          <p>
+                            {product.titles && product.titles[0]
+                              ? product.titles[0]
+                              : "Başlık yok"}
+                          </p>
                         </div>
-                        <button 
+                        <button
                           className="add-product-btn"
                           onClick={() => addProductToHome(product)}
                           disabled={selectedProducts.length >= 4}
@@ -611,10 +714,14 @@ const Home = () => {
                         </button>
                       </div>
                     );
-                  })
-                }
+                  })}
               </div>
-              {availableProducts.filter(product => !selectedProducts.some(selected => selected.id === product.id)).length === 0 && (
+              {availableProducts.filter(
+                (product) =>
+                  !selectedProducts.some(
+                    (selected) => selected.id === product.id
+                  )
+              ).length === 0 && (
                 <div className="no-products">
                   <p>Tüm ürünler zaten seçilmiş.</p>
                 </div>
