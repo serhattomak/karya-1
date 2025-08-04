@@ -204,6 +204,24 @@
   color: #721c24;
 }
 
+.file-type-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.file-type-badge.document {
+  background: #cce5ff;
+  color: #0056b3;
+}
+
+.file-type-badge.file {
+  background: #fff3cd;
+  color: #856404;
+}
+
 .action-buttons {
   display: flex;
   gap: 8px;

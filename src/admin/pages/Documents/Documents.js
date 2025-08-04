@@ -3,7 +3,9 @@ import {
   getDocuments, 
   deleteDocument, 
   getProducts as getProductsAPI, 
-  getPages as getPagesAPI 
+  getPages as getPagesAPI,
+  getFiles,
+  deleteFile
 } from "../../../api";
 import DocumentModal from "./DocumentModal";
 import DeleteConfirmModal from "./DeleteConfirmModal";
@@ -15,6 +17,8 @@ const BASE_URL = "https://localhost:7103/";
 
 const Documents = () => {
   const [documents, setDocuments] = useState([]);
+  const [files, setFiles] = useState([]);
+  const [combinedItems, setCombinedItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -35,7 +39,6 @@ const Documents = () => {
     fetchDocuments();
   }, [pagination.pageIndex, pagination.pageSize]);
 
-  // Test için backend'i farklı parametrelerle deneyelim
   const testBackendParams = async () => {
     console.log("=== Backend Parameter Test Başlıyor ===");
     
@@ -58,10 +61,8 @@ const Documents = () => {
     console.log("=== Backend Parameter Test Tamamlandı ===");
   };
 
-  // İlk yüklemede test çalıştır (sadece geliştirme için)
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
-      // testBackendParams(); // Gerekirse aktif et
     }
   }, []);
 
@@ -69,41 +70,74 @@ const Documents = () => {
     try {
       setLoading(true);
       
-      console.log("Document fetch başlıyor...");
+      console.log("Document ve File fetch başlıyor...");
       
-      // Önce basit bir çağrı yapalım, parametresiz
-      const response = await getDocuments();
-      console.log("API Response:", response);
+      const [documentsResponse, filesResponse] = await Promise.all([
+        getDocuments().catch(error => {
+          console.warn("Documents fetch hatası:", error);
+          return { data: { items: [], totalCount: 0 } };
+        }),
+        getFiles().catch(error => {
+          console.warn("Files fetch hatası:", error);
+          return { data: [] };
+        })
+      ]);
       
-      const data = response?.data?.data || response?.data || response;
-      console.log("Parsed data:", data);
+      console.log("Documents API Response:", documentsResponse);
+      console.log("Files API Response:", filesResponse);
       
-      // Backend'den "No documents found" mesajı gelirse, boş array olarak işle
-      let items = [];
+      const documentsData = documentsResponse?.data?.data || documentsResponse?.data || documentsResponse;
+      let documentItems = [];
       let totalCount = 0;
-      let totalPages = 0;
       
-      if (data && !data.errorMessage) {
-        items = data?.items || data || [];
-        totalCount = data?.totalCount || 0;
-        totalPages = data?.totalPages || Math.ceil(totalCount / 10); // Basit değer
-      } else if (data?.errorMessage && data.errorMessage.includes("No documents found")) {
-        // Bu normal bir durum, boş result set
+      if (documentsData && !documentsData.errorMessage) {
+        documentItems = documentsData?.items || documentsData || [];
+        totalCount = documentsData?.totalCount || 0;
+      } else if (documentsData?.errorMessage && documentsData.errorMessage.includes("No documents found")) {
         console.log("Henüz dokuman bulunmuyor");
-        items = [];
+        documentItems = [];
         totalCount = 0;
-        totalPages = 0;
-      } else {
-        items = [];
       }
       
-      setDocuments(Array.isArray(items) ? items : []);
+      const filesData = filesResponse?.data?.data || filesResponse?.data || filesResponse;
+      let fileItems = [];
+      
+      if (Array.isArray(filesData)) {
+        fileItems = filesData.map(file => ({
+          ...file,
+          type: 'file',
+          name: file.fileName || file.name || 'Untitled',
+          category: 'Sistem Dosyası',
+          mimeType: file.contentType || file.mimeType,
+          fileSize: file.size || file.fileSize,
+          isActive: true,
+          displayOrder: 999,
+          previewImageUrl: file.path || file.url,
+          slug: file.fileName ? file.fileName.toLowerCase().replace(/\s+/g, '-') : 'file-' + file.id
+        }));
+      }
+      
+      console.log("İşlenmiş Documents:", documentItems);
+      console.log("İşlenmiş Files:", fileItems);
+      
+      const documentsWithType = documentItems.map(doc => ({
+        ...doc,
+        type: 'document'
+      }));
+      
+      const combined = [...documentsWithType, ...fileItems];
+      
+      setDocuments(documentsWithType);
+      setFiles(fileItems);
+      setCombinedItems(combined);
+      
+      const totalPages = Math.max(1, Math.ceil((documentItems.length + fileItems.length) / 10));
       setPagination(prev => ({
         ...prev,
-        pageIndex: 1,  // Basit bir değer
-        pageSize: 10,  // Basit bir değer
-        totalCount: totalCount,
-        totalPages: Math.max(1, totalPages) // En az 1 sayfa göster
+        pageIndex: 1,
+        pageSize: 10,
+        totalCount: documentItems.length + fileItems.length,
+        totalPages: totalPages
       }));
       
     } catch (error) {
@@ -112,7 +146,6 @@ const Documents = () => {
       console.error("API URL:", error.config?.url);
       console.error("API Params:", error.config?.params);
       
-      // Eğer pagination hatası ise, ilk sayfaya dön
       if (error.message?.includes('offset') || error.message?.includes('OFFSET')) {
         console.log("Pagination hatası tespit edildi, ilk sayfaya dönülüyor...");
         setPagination(prev => ({ ...prev, pageIndex: 1 }));
@@ -155,8 +188,16 @@ const Documents = () => {
     if (!documentToDelete) return;
     
     try {
-      await deleteDocument(documentToDelete.id);
-      setDocuments(documents.filter(d => d.id !== documentToDelete.id));
+      if (documentToDelete.type === 'file') {
+        await deleteFile(documentToDelete.id);
+        setFiles(files.filter(f => f.id !== documentToDelete.id));
+      } else {
+        await deleteDocument(documentToDelete.id);
+        setDocuments(documents.filter(d => d.id !== documentToDelete.id));
+      }
+      
+      setCombinedItems(combinedItems.filter(item => item.id !== documentToDelete.id));
+      
       setShowDeleteModal(false);
       setDocumentToDelete(null);
       Swal.fire({
@@ -191,35 +232,34 @@ const Documents = () => {
     
     console.log(`Sayfa değişimi: ${pagination.pageIndex} -> ${safePage}`);
     
-    // Sadece farklı sayfa ise güncelle
     if (safePage !== pagination.pageIndex) {
       setPagination(prev => ({ ...prev, pageIndex: safePage }));
     }
   };
 
   const handlePageSizeChange = (newSize) => {
-    const safeSize = Math.max(1, Math.min(newSize, 100)); // Max 100 item per page
+    const safeSize = Math.max(1, Math.min(newSize, 100));
     
     console.log(`Sayfa boyutu değişimi: ${pagination.pageSize} -> ${safeSize}`);
     
     setPagination(prev => ({ 
       ...prev, 
       pageSize: safeSize, 
-      pageIndex: 1 // Sayfa boyutu değiştiğinde ilk sayfaya dön
+      pageIndex: 1
     }));
   };
 
-  const filteredDocuments = documents.filter(doc => {
-    const matchesSearch = doc.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         doc.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !categoryFilter || doc.category === categoryFilter;
+  const filteredDocuments = combinedItems.filter(item => {
+    const matchesSearch = item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         item.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = !categoryFilter || item.category === categoryFilter;
     const matchesStatus = statusFilter === "" || 
-                         (statusFilter === "active" && doc.isActive) ||
-                         (statusFilter === "inactive" && !doc.isActive);
+                         (statusFilter === "active" && item.isActive) ||
+                         (statusFilter === "inactive" && !item.isActive);
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
-  const uniqueCategories = [...new Set(documents.map(doc => doc.category).filter(Boolean))];
+  const uniqueCategories = [...new Set(combinedItems.map(item => item.category).filter(Boolean))];
 
   const formatFileSize = (bytes) => {
     if (!bytes || bytes === 0) return 'Bilinmiyor';
@@ -233,7 +273,6 @@ const Documents = () => {
     const totalPages = Math.max(1, pagination.totalPages);
     const totalCount = Math.max(0, pagination.totalCount);
     
-    // Eğer hiç veri yoksa pagination gösterme
     if (totalCount === 0) {
       return (
         <div className="pagination-controls">
@@ -353,6 +392,7 @@ const Documents = () => {
             <tr>
               <th>Önizleme</th>
               <th>Ad</th>
+              <th>Dosya Tipi</th>
               <th>Kategori</th>
               <th>Boyut</th>
               <th>Durum</th>
@@ -404,6 +444,11 @@ const Documents = () => {
                   </div>
                 </td>
                 <td>
+                  <span className={`file-type-badge ${document.type}`}>
+                    {document.type === 'file' ? 'Sistem Dosyası' : 'Döküman'}
+                  </span>
+                </td>
+                <td>
                   <span className="category-badge">
                     {document.category || 'Kategori Yok'}
                   </span>
@@ -426,15 +471,17 @@ const Documents = () => {
                         <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
                       </svg>
                     </button>
-                    <button
-                      onClick={() => handleEditDocument(document)}
-                      className="action-btn edit-btn"
-                      title="Düzenle"
-                    >
-                      <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-                      </svg>
-                    </button>
+                    {document.type === 'document' && (
+                      <button
+                        onClick={() => handleEditDocument(document)}
+                        className="action-btn edit-btn"
+                        title="Düzenle"
+                      >
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                        </svg>
+                      </button>
+                    )}
                     <button
                       onClick={() => handleDeleteClick(document)}
                       className="action-btn delete-btn"
