@@ -84,10 +84,19 @@ const DocumentModal = ({ document, onSave, onClose }) => {
 
   const fetchAvailableFiles = async () => {
     try {
+      console.log("🔍 Dosyalar getiriliyor...");
       const response = await getFiles();
-      setAvailableFiles(response.data || []);
+      console.log("📦 API Response:", response);
+      console.log("📦 Response data:", response.data);
+      
+      const files = response.data?.data || response.data || response || [];
+      console.log("📂 Dosya listesi:", files);
+      console.log("📂 Dosya sayısı:", Array.isArray(files) ? files.length : 'Array değil');
+      console.log("📂 İlk dosya örneği:", files[0]);
+      
+      setAvailableFiles(Array.isArray(files) ? files : []);
     } catch (error) {
-      console.error("Dosyalar yüklenirken hata:", error);
+      console.error("❌ Dosyalar yüklenirken hata:", error);
       setAvailableFiles([]);
     }
   };
@@ -955,7 +964,7 @@ startxref
       {/* File Selector Modal */}
       {showFileSelector && (
         <FileSelector
-          files={availableFiles}
+          files={Array.isArray(availableFiles) ? availableFiles : []}
           onSelect={(file) => handleSelectFromSystem(file, false)}
           onClose={() => setShowFileSelector(false)}
           title="Dosya Seç"
@@ -966,7 +975,7 @@ startxref
       {/* Image Selector Modal */}
       {showImageSelector && (
         <FileSelector
-          files={availableFiles.filter(f => f.contentType?.startsWith('image/'))}
+          files={Array.isArray(availableFiles) ? availableFiles.filter(f => f.contentType?.startsWith('image/')) : []}
           onSelect={(file) => handleSelectFromSystem(file, true)}
           onClose={() => setShowImageSelector(false)}
           title="Görsel Seç"
@@ -978,10 +987,13 @@ startxref
 };
 
 // File Selector Component
-const FileSelector = ({ files, onSelect, onClose, title, filterType }) => {
+const FileSelector = ({ files = [], onSelect, onClose, title, filterType }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredFiles = files.filter(file => 
+  // files'ın array olduğundan emin ol
+  const safeFiles = Array.isArray(files) ? files : [];
+
+  const filteredFiles = safeFiles.filter(file => 
     file.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -1024,6 +1036,13 @@ const FileSelector = ({ files, onSelect, onClose, title, filterType }) => {
                       src={`https://localhost:7103/${file.path}`} 
                       alt={file.name}
                       className="file-thumbnail"
+                      onLoad={() => console.log("✅ Görsel yüklendi:", file.name, file.path)}
+                      onError={(e) => {
+                        console.error("❌ Görsel yüklenemedi:", file.name, file.path);
+                        console.error("❌ Error event:", e);
+                        console.error("❌ Full URL:", `https://localhost:7103/${file.path}`);
+                        e.target.style.display = 'none';
+                      }}
                     />
                   ) : (
                     <div className="file-icon">
