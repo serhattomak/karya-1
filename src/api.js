@@ -1,7 +1,17 @@
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL || "https://localhost:7103";
+// Import new refactored modules
+import { API_CONFIG } from './config/constants';
+import { HttpClient, setupAxiosInterceptors } from './utils/httpUtils';
+import * as services from './services/apiService';
 
+// Setup interceptors for legacy axios usage
+setupAxiosInterceptors();
+
+// Legacy API_URL for backward compatibility
+const API_URL = API_CONFIG.BASE_URL;
+
+// Legacy getAuthHeader for backward compatibility
 function getAuthHeader() {
   const token = localStorage.getItem("token");
   return token ? { Authorization: `Bearer ${token}` } : {};
