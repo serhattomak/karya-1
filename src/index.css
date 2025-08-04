@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import './styles/buttons.css';
 
 body {
   font-family: "Montserrat", sans-serif;

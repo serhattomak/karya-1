@@ -187,7 +187,7 @@
   margin-top: 20px;
 }
 
-.download-btn {
+/* .download-btn {
   background: #28a745;
   color: white;
   border: none;
@@ -205,7 +205,7 @@
 .download-btn:hover {
   background: #1e7e34;
   transform: translateY(-1px);
-}
+} */
 
 .related-content-section {
   border-top: 2px solid #f1f3f4;

@@ -213,8 +213,7 @@
   background: #f8f9fa;
 }
 
-.cancel-btn,
-.save-btn {
+/* .cancel-btn {
   padding: 12px 24px;
   border: none;
   border-radius: 6px;
@@ -232,9 +231,9 @@
 
 .cancel-btn:hover {
   background: #5a6268;
-}
+} */
 
-.save-btn {
+/* .save-btn {
   background: #007bff;
   color: white;
 }
@@ -248,7 +247,7 @@
   background: #6c757d;
   cursor: not-allowed;
   transform: none;
-}
+} */
 
 /* File input styling */
 input[type="file"] {

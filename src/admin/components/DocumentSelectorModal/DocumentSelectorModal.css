@@ -247,7 +247,7 @@
   gap: 12px;
 }
 
-.cancel-btn,
+/* .cancel-btn,
 .confirm-btn {
   padding: 10px 20px;
   border: none;
@@ -266,9 +266,9 @@
 
 .cancel-btn:hover {
   background: #5a6268;
-}
+} */
 
-.confirm-btn {
+/* .confirm-btn {
   background: #007bff;
   color: white;
 }
@@ -282,7 +282,7 @@
   background: #6c757d;
   cursor: not-allowed;
   transform: none;
-}
+} */
 
 /* Responsive Design */
 @media (max-width: 768px) {

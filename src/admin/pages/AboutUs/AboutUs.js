@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { getPage, getPageByName, updatePage } from "../../../api";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import "./AboutUs.css";
 const BASE_URL = "https://localhost:7103/";
 const uploadFile = async (file) => {
@@ -16,7 +16,6 @@ const uploadFile = async (file) => {
   return await response.json();
 };
 
-
 const AboutUs = () => {
   const [pageData, setPageData] = useState(null);
   const [title, setTitle] = useState("");
@@ -25,7 +24,12 @@ const AboutUs = () => {
   const [image, setImage] = useState("");
   const [servicesTitle, setServicesTitle] = useState("");
   const [servicesList, setServicesList] = useState([]);
-  const [applicationAreaImages, setApplicationAreaImages] = useState([null, null, null, null]);
+  const [applicationAreaImages, setApplicationAreaImages] = useState([
+    null,
+    null,
+    null,
+    null,
+  ]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [pageType, setPageType] = useState(0);
   const [name, setName] = useState("");
@@ -48,7 +52,7 @@ const AboutUs = () => {
         setImage(data.bannerImageUrl || "");
         setServicesTitle((data.titles && data.titles[1]) || "");
         setServicesList(data.listItems || []);
-        setPageType(typeof data.pageType !== 'undefined' ? data.pageType : 0);
+        setPageType(typeof data.pageType !== "undefined" ? data.pageType : 0);
         setName(data.name || "");
         setUrls(data.urls || []);
         setBackgroundImageUrl(data.backgroundImageUrl || "");
@@ -56,9 +60,9 @@ const AboutUs = () => {
         setAdditionalFields(data.additionalFields || []);
         let appImages = [null, null, null, null];
         if (Array.isArray(data.files)) {
-          appImages = data.files.slice(0, 4).map(f => ({
+          appImages = data.files.slice(0, 4).map((f) => ({
             id: f.id,
-            url: f.path ? BASE_URL + f.path : ""
+            url: f.path ? BASE_URL + f.path : "",
           }));
           while (appImages.length < 4) appImages.push(null);
         }
@@ -75,7 +79,8 @@ const AboutUs = () => {
     if (selectedFile) {
       try {
         const uploaded = await uploadFile(selectedFile);
-        uploadedImageUrl = uploaded.url || uploaded.path || uploaded.imageUrl || image;
+        uploadedImageUrl =
+          uploaded.url || uploaded.path || uploaded.imageUrl || image;
       } catch (error) {
         console.error("Resim yükleme hatası:", error);
       }
@@ -91,29 +96,31 @@ const AboutUs = () => {
       urls,
       backgroundImageUrl,
       bannerImageUrl: uploadedImageUrl,
-      fileIds: applicationAreaImages.filter(img => img && img.id).map(img => img.id),
+      fileIds: applicationAreaImages
+        .filter((img) => img && img.id)
+        .map((img) => img.id),
       productIds,
       additionalFields,
     };
     try {
       await updatePage(updatedData);
       Swal.fire({
-        icon: 'success',
-        title: 'Başarılı!',
-        text: 'Güncelleme başarılı!',
-        confirmButtonText: 'Tamam',
-        confirmButtonColor: '#28a745',
+        icon: "success",
+        title: "Başarılı!",
+        text: "Güncelleme başarılı!",
+        confirmButtonText: "Tamam",
+        confirmButtonColor: "#28a745",
         timer: 2000,
-        timerProgressBar: true
+        timerProgressBar: true,
       });
     } catch (error) {
       console.error("Güncelleme hatası: ", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Hata!',
-        text: 'Güncellenirken bir hata oluştu.',
-        confirmButtonText: 'Tamam',
-        confirmButtonColor: '#dc3545'
+        icon: "error",
+        title: "Hata!",
+        text: "Güncellenirken bir hata oluştu.",
+        confirmButtonText: "Tamam",
+        confirmButtonColor: "#dc3545",
       });
     }
   };
@@ -124,12 +131,16 @@ const AboutUs = () => {
       try {
         const uploaded = await uploadFile(file);
         console.log("uploadFile yanıtı:", uploaded);
-        const imageUrl = uploaded?.data?.path ? BASE_URL + uploaded.data.path : "";
+        const imageUrl = uploaded?.data?.path
+          ? BASE_URL + uploaded.data.path
+          : "";
         console.log("Kullanılan imageUrl:", imageUrl);
         const fileId = uploaded?.data?.id || null;
         setApplicationAreaImages((prevImages) => {
           const updatedImages = [...prevImages];
-          updatedImages[selectedApplicationImageIndexRef.current] = fileId ? { id: fileId, url: imageUrl } : null;
+          updatedImages[selectedApplicationImageIndexRef.current] = fileId
+            ? { id: fileId, url: imageUrl }
+            : null;
           return updatedImages;
         });
       } catch (error) {
@@ -143,15 +154,12 @@ const AboutUs = () => {
     applicationFileInputRefs.current[index]?.click();
   };
 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "title") setTitle(value);
     else if (name === "subtitle") setSubtitle(value);
     else if (name === "content") setContent(value);
   };
-
-
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -164,7 +172,6 @@ const AboutUs = () => {
       reader.readAsDataURL(file);
     }
   };
-
 
   return (
     <div className="admin-panel">
@@ -282,7 +289,22 @@ const AboutUs = () => {
                     className="image-placeholder"
                     onClick={() => triggerApplicationFileInput(index)}
                   >
-                    <div className="plus-icon">Görsel Ekle ➕</div>
+                    <div className="plus-icon">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="size-6"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M12 4.5v15m7.5-7.5h-15"
+                        />
+                      </svg>
+                    </div>
                   </div>
                 )}
                 <input

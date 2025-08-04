@@ -33,7 +33,7 @@
 }
 
 /* Button Styles */
-.edit-btn, .add-btn, .save-btn {
+/* .edit-btn, .save-btn {
   padding: 12px 20px;
   border: none;
   border-radius: 8px;
@@ -44,9 +44,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-}
+} */
 
-.edit-btn.primary {
+/* .edit-btn.primary {
   background: linear-gradient(135deg, #f68b1f 0%, #ee5c30 100%);
   color: white;
   min-width: auto;
@@ -54,34 +54,34 @@
   white-space: nowrap;
   width: fit-content;
   flex-shrink: 0;
-}
+} */
 
-.add-btn.primary {
+/* .add-btn.primary {
   background: linear-gradient(135deg, #f68b1f 0%, #ee5c30 100%);
   color: white;
   min-width: auto;
   white-space: nowrap;
   width: fit-content;
   flex-shrink: 0;
-}
+} */
 
-.save-btn.primary {
+/* .save-btn.primary {
   background: #f68b1f;
   color: white;
   font-size: 16px;
   padding: 16px 32px;
-}
+} */
 
-.edit-btn:hover, .add-btn:hover {
+/* .edit-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
+} */
 
-.save-btn:hover {
+/* .save-btn:hover {
   background: #ee5c30;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
+} */
 
 /* Banner Preview */
 .banner-preview {
@@ -388,7 +388,7 @@
   background-color: #f8f9fa;
 }
 
-.cancel-btn {
+/* .cancel-btn {
   padding: 12px 24px;
   border: 2px solid #6c757d;
   background: white;
@@ -402,7 +402,7 @@
 .cancel-btn:hover {
   background: #6c757d;
   color: white;
-}
+} */
 
 .modal-footer .save-btn {
   background: linear-gradient(135deg, #f68b1f 0%, #ee5c30 100%);

@@ -22,7 +22,7 @@
   font-weight: 600;
 }
 
-.add-btn {
+/* .add-btn {
   background: #f68b1f;
   color: white;
   border: none;
@@ -37,7 +37,7 @@
 .add-btn:hover {
   background: #ee5c30;
   transform: translateY(-1px);
-}
+} */
 
 .filters-section {
   background: white;
@@ -254,17 +254,17 @@
   color: #2196f3;
 }
 
-.edit-btn:hover {
+/* .edit-btn:hover {
   background: #ee5c30;
   border-color: #ff9800;
   color: #ffffff;
-}
+} */
 
-.delete-btn:hover {
+/* .delete-btn:hover {
   background: #ffebee;
   border-color: #f44336;
   color: #f44336;
-}
+} */
 
 .pagination-controls {
   display: flex;
