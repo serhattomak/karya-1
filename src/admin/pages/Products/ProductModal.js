@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { createProduct, updateProduct, getFiles } from "../../../api";
+import { createProduct, updateProduct, getFiles, getDocuments, getDocument } from "../../../api";
 import { createSlugFromProduct } from "../../../utils/slugUtils";
 import Swal from 'sweetalert2';
 
@@ -36,7 +36,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
   const [documentFiles, setDocumentFiles] = useState([]);
   const [productImages, setProductImages] = useState([]);
   const [availableFiles, setAvailableFiles] = useState([]);
+  const [availableDocuments, setAvailableDocuments] = useState([]);
+  const [selectedDocuments, setSelectedDocuments] = useState([]);
   const [showFileSelector, setShowFileSelector] = useState(false);
+  const [showDocumentSelector, setShowDocumentSelector] = useState(false);
   const [selectedFileType, setSelectedFileType] = useState('');
   const [loading, setLoading] = useState(false);
   const modalRef = useRef();
@@ -55,6 +58,13 @@ const ProductModal = ({ product, onClose, onSave }) => {
       setProductImageId(product.productImageId || "");
       setDocumentImageIds(product.documentImageIds || []);
       setProductDetailImageIds(product.productDetailImageIds || []);
+      
+      // Selected documents from documentIds
+      if (product.documentIds && product.documentIds.length > 0) {
+        setSelectedDocuments(product.documentIds);
+      } else {
+        setSelectedDocuments([]);
+      }
       
       let allDocumentFiles = [];
       
@@ -110,17 +120,24 @@ const ProductModal = ({ product, onClose, onSave }) => {
   }, [product]);
 
   useEffect(() => {
-    const fetchAvailableFiles = async () => {
+    const fetchAvailableData = async () => {
       try {
-        const response = await getFiles();
-        const files = response?.data?.data || response?.data || [];
+        // Fetch available files
+        const filesResponse = await getFiles();
+        const files = filesResponse?.data?.data || filesResponse?.data || [];
         setAvailableFiles(files);
+        
+        // Fetch available documents
+        const documentsResponse = await getDocuments();
+        const documentsData = documentsResponse?.data?.data || documentsResponse?.data || documentsResponse;
+        const documents = documentsData?.items || documentsData || [];
+        setAvailableDocuments(documents);
       } catch (error) {
-        console.error("Dosyalar yüklenirken hata:", error);
+        console.error("Error fetching available data:", error);
       }
     };
 
-    fetchAvailableFiles();
+    fetchAvailableData();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -222,6 +239,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
         productImageId: productImageId.trim() || null,
         documentImageIds: documentImageFileIds,
         productDetailImageIds: productDetailImageIds.filter(id => String(id).trim() !== ""),
+        documentIds: selectedDocuments, // Document ilişkilendirmesi
         fileIds,
         documentFileIds,
         productDetailFileIds
@@ -292,6 +310,25 @@ const ProductModal = ({ product, onClose, onSave }) => {
   const openFileSelector = (fileType) => {
     setSelectedFileType(fileType);
     setShowFileSelector(true);
+  };
+
+  const openDocumentSelector = () => {
+    setShowDocumentSelector(true);
+  };
+
+  const selectDocument = (document) => {
+    if (!selectedDocuments.includes(document.id)) {
+      setSelectedDocuments([...selectedDocuments, document.id]);
+    }
+    setShowDocumentSelector(false);
+  };
+
+  const removeDocument = (documentId) => {
+    setSelectedDocuments(selectedDocuments.filter(id => id !== documentId));
+  };
+
+  const getSelectedDocumentData = (documentId) => {
+    return availableDocuments.find(doc => doc.id === documentId);
   };
 
   const selectFileFromSystem = (file) => {
@@ -748,80 +785,64 @@ const ProductModal = ({ product, onClose, onSave }) => {
             </div>
           </div>
 
-          {/* Document Image IDs */}
+          {/* Product Documents */}
           <div className="form-group">
-            <label>Döküman Görselleri</label>
-            <div className="document-images-selector">
+            <label>Ürün Dökümanları</label>
+            <div className="documents-selector">
               <div className="upload-controls">
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={(e) => {
-                    const files = Array.from(e.target.files);
-                    files.forEach(file => {
-                      const reader = new FileReader();
-                      reader.onload = (event) => {
-                        const tempId = `temp_${Date.now()}_${Math.random()}`;
-                        setDocumentFiles(prev => [...prev, {
-                          id: tempId,
-                          name: file.name,
-                          path: file.name,
-                          url: event.target.result,
-                          file: file,
-                          isExisting: false,
-                          isDocumentImage: true
-                        }]);
-                      };
-                      reader.readAsDataURL(file);
-                    });
-                  }}
-                  style={{ display: 'none' }}
-                  id="document-image-input"
-                />
-                <label htmlFor="document-image-input" className="file-select-btn primary">
-                  Yeni Görsel Yükle
-                </label>
                 <button
                   type="button"
                   className="file-select-btn primary"
-                  onClick={() => openFileSelector('documentImage')}
+                  onClick={openDocumentSelector}
                 >
-                  Sistemden Seç
+                  Döküman Seç
                 </button>
               </div>
-              {documentFiles.filter(doc => doc.isDocumentImage).length > 0 && (
-                <div className="selected-images">
-                  {documentFiles
-                    .filter(doc => doc.isDocumentImage)
-                    .sort((a, b) => {
-                      // Yeni eklenen dosyalar önce gelsin (isExisting false olanlar)
-                      if (!a.isExisting && b.isExisting) return -1;
-                      if (a.isExisting && !b.isExisting) return 1;
-                      // ID'ye göre sırala
-                      return a.id.toString().localeCompare(b.id.toString());
-                    })
-                    .map((docFile, index) => (
-                    <div key={docFile.id} className="selected-image-item">
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <img 
-                          src={docFile.url} 
-                          alt={docFile.name}
-                          style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }}
-                        />
-                        <span>{docFile.name}</span>
+              {selectedDocuments.length > 0 && (
+                <div className="selected-documents">
+                  {selectedDocuments.map((documentId) => {
+                    const document = getSelectedDocumentData(documentId);
+                    if (!document) return null;
+                    
+                    return (
+                      <div key={documentId} className="selected-document-item">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          {document.previewImageUrl ? (
+                            <img 
+                              src={document.previewImageUrl.startsWith('http') ? document.previewImageUrl : BASE_URL + document.previewImageUrl} 
+                              alt={document.name}
+                              style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }}
+                            />
+                          ) : (
+                            <div style={{ 
+                              width: '40px', 
+                              height: '40px', 
+                              backgroundColor: '#f0f0f0', 
+                              borderRadius: '4px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}>
+                              📄
+                            </div>
+                          )}
+                          <div>
+                            <div style={{ fontWeight: '500' }}>{document.name}</div>
+                            <div style={{ fontSize: '12px', color: '#666' }}>
+                              {document.category || 'Kategori Yok'}
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          className="remove-item-btn"
+                          onClick={() => removeDocument(documentId)}
+                        >
+                          ×
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        className="remove-btn danger"
-                        onClick={() => {
-                          setDocumentFiles(prev => prev.filter(doc => doc.id !== docFile.id));
-                        }}
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -1044,6 +1065,56 @@ const ProductModal = ({ product, onClose, onSave }) => {
                       <div className="file-info">
                         <span className="file-name">{file.name}</span>
                         <span className="file-size">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Document Seçici Modal */}
+      {showDocumentSelector && (
+        <div className="file-selector-modal">
+          <div className="file-selector-content">
+            <div className="file-selector-header">
+              <h3>Döküman Seç</h3>
+              <button
+                type="button"
+                className="close-btn"
+                onClick={() => setShowDocumentSelector(false)}
+              >
+                ×
+              </button>
+            </div>
+            <div className="file-selector-body">
+              <div className="documents-grid">
+                {availableDocuments
+                  .filter(doc => !selectedDocuments.includes(doc.id))
+                  .map(document => (
+                    <div
+                      key={document.id}
+                      className="file-item document-item"
+                      onClick={() => selectDocument(document)}
+                    >
+                      {document.previewImageUrl ? (
+                        <img
+                          src={document.previewImageUrl.startsWith('http') ? document.previewImageUrl : BASE_URL + document.previewImageUrl}
+                          alt={document.name}
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="file-icon">
+                          <span style={{ fontSize: '48px' }}>📄</span>
+                        </div>
+                      )}
+                      <div className="file-info">
+                        <span className="file-name">{document.name}</span>
+                        <span className="file-category">{document.category || 'Kategori Yok'}</span>
+                        {document.description && (
+                          <span className="file-description">{document.description}</span>
+                        )}
                       </div>
                     </div>
                   ))}

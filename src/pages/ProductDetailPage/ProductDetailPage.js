@@ -6,7 +6,7 @@ import ProductInfo from "../../components/ProductInfo/ProductInfo";
 import ContactSection from "../../components/ContactSection/ContactSection";
 import Footer from "../../components/Footer/Footer";
 import RelatedProducts from "../../components/RelatedProducts/RelatedProducts";
-import { getProductBySlug, getFile } from "../../api";
+import { getProductBySlug, getFile, getDocument } from "../../api";
 import "./ProductDetailPage.css";
 
 const BASE_URL = "https://localhost:7103/";
@@ -33,6 +33,7 @@ function ProductDetailPage() {
         console.log("Product productDetailImageIds:", data?.productDetailImageIds);
         console.log("Product productImages:", data?.productImages);
         console.log("Product documentImages:", data?.documentImages);
+        console.log("Product documentIds:", data?.documentIds);
         console.log("Full product object keys:", Object.keys(data));
         
         setProductData(data);
@@ -84,6 +85,35 @@ function ProductDetailPage() {
             }
           } catch (detailError) {
             console.error("Error fetching detail images:", detailError);
+          }
+        }
+        
+        // Fetch documents if documentIds exist
+        if (data && data.documentIds && data.documentIds.length > 0) {
+          try {
+            console.log("Fetching product documents...");
+            const documentPromises = data.documentIds.map(async (documentId) => {
+              try {
+                const documentResponse = await getDocument(documentId);
+                return documentResponse?.data?.data || documentResponse?.data || documentResponse;
+              } catch (err) {
+                console.error(`Error fetching document ${documentId}:`, err);
+                return null;
+              }
+            });
+            
+            const documents = await Promise.all(documentPromises);
+            const validDocuments = documents.filter(Boolean);
+            
+            if (validDocuments.length > 0) {
+              console.log("Fetched documents:", validDocuments);
+              setProductData(prevData => ({
+                ...prevData,
+                documents: validDocuments
+              }));
+            }
+          } catch (documentError) {
+            console.error("Error fetching documents:", documentError);
           }
         }
         

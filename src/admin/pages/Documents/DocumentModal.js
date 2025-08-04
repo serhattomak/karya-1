@@ -49,7 +49,6 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         fileSize: document.fileSize || 0
       });
       
-      // Preview URL'lerini set et
       if (document.previewImageUrl) {
         setPreviewUrl(document.previewImageUrl);
       } else if (document.previewImageFile?.path) {
@@ -60,7 +59,6 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         setFilePreviewUrl(`https://localhost:7103/${document.file.path}`);
       }
     } else {
-      // Yeni dosya oluşturma - form sıfırlama
       setFormData({
         name: "",
         slug: "",
@@ -119,7 +117,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
       setFormData(prev => ({
         ...prev,
         [name]: value,
-        slug: generatedSlug || 'document-slug' // Fallback slug
+        slug: generatedSlug || 'document-slug'
       }));
     } else {
       setFormData(prev => ({
@@ -140,8 +138,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         isPDF: file.type === 'application/pdf'
       });
 
-      // Dosya boyutu kontrolü (10MB limit)
-      const maxSize = 10 * 1024 * 1024; // 10MB
+      const maxSize = 10 * 1024 * 1024;
       if (file.size > maxSize) {
         console.warn("❌ Dosya çok büyük:", file.size, "bytes");
         Swal.fire({
@@ -153,11 +150,9 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         return;
       }
 
-      // PDF dosyalar için özel kontrol
       if (file.type === 'application/pdf') {
         console.log("📄 PDF dosyası tespit edildi, özel kontroller yapılıyor...");
         
-        // PDF boyut kontrolü
         if (file.size === 0) {
           console.error("❌ PDF dosyası boş!");
           Swal.fire({
@@ -169,8 +164,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
           return;
         }
 
-        // PDF max boyut kontrolü (özel limit)
-        const pdfMaxSize = 50 * 1024 * 1024; // PDF için 50MB
+        const pdfMaxSize = 50 * 1024 * 1024;
         if (file.size > pdfMaxSize) {
           console.warn("❌ PDF çok büyük:", file.size, "bytes");
           Swal.fire({
@@ -190,7 +184,6 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         fileSize: file.size
       }));
       
-      // File preview oluştur
       if (file.type.startsWith('image/')) {
         const url = URL.createObjectURL(file);
         setFilePreviewUrl(url);
@@ -205,8 +198,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
   const handlePreviewImageSelect = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Görsel boyutu kontrolü (5MB limit)
-      const maxSize = 5 * 1024 * 1024; // 5MB
+      const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
         Swal.fire({
           icon: 'warning',
@@ -219,13 +211,11 @@ const DocumentModal = ({ document, onSave, onClose }) => {
 
       setSelectedPreviewImage(file);
       
-      // Preview URL oluştur
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
     }
   };
 
-  // Sistemdeki dosyalardan seçme
   const handleSelectFromSystem = (file, isPreviewImage = false) => {
     if (isPreviewImage) {
       setFormData(prev => ({
@@ -248,7 +238,6 @@ const DocumentModal = ({ document, onSave, onClose }) => {
     }
   };
 
-  // Backend sağlık kontrolü
   const handleHealthCheck = async () => {
     setCheckingHealth(true);
     try {
@@ -292,10 +281,8 @@ const DocumentModal = ({ document, onSave, onClose }) => {
     }
   };
 
-  // PDF test fonksiyonu
   const handlePDFTest = async () => {
     try {
-      // Basit bir PDF test dosyası oluştur (minimal PDF header)
       const pdfContent = `%PDF-1.4
 1 0 obj
 <<
@@ -392,8 +379,7 @@ startxref
       isPDF: file.type === 'application/pdf'
     });
 
-    // Dosya boyutu kontrolü
-    const maxSize = file.type === 'application/pdf' ? 50 * 1024 * 1024 : 100 * 1024 * 1024; // PDF için 50MB, diğerleri için 100MB
+    const maxSize = file.type === 'application/pdf' ? 50 * 1024 * 1024 : 100 * 1024 * 1024;
     if (file.size > maxSize) {
       const maxSizeMB = maxSize / (1024 * 1024);
       throw new Error(`Dosya boyutu çok büyük. Maksimum ${maxSizeMB}MB olmalıdır.`);
@@ -402,13 +388,11 @@ startxref
     const fileFormData = new FormData();
     fileFormData.append('file', file);
 
-    // PDF için özel formData kontrolü
     if (file.type === 'application/pdf') {
       console.log("📄 PDF FormData oluşturuluyor...");
       console.log("FormData entries:", Array.from(fileFormData.entries()));
     }
 
-    // Upload state'ini başlat
     setUploadingFile(true);
     setUploadProgress(0);
 
@@ -417,8 +401,7 @@ startxref
         try {
           console.log(`📤 Dosya yükleniyor (Deneme ${attempt}/${retries}):`, file.name);
           
-          // PDF için özel timeout ayarları
-          const timeoutDuration = file.type === 'application/pdf' ? 600000 : 300000; // PDF için 10 dakika, diğerleri için 5 dakika
+          const timeoutDuration = file.type === 'application/pdf' ? 600000 : 300000;
           
           const response = await uploadFile(fileFormData, {
             timeout: timeoutDuration,
@@ -429,7 +412,6 @@ startxref
                 setUploadProgress(percentCompleted);
               }
             },
-            // PDF için özel headers
             ...(file.type === 'application/pdf' && {
               maxContentLength: 50 * 1024 * 1024,
               maxBodyLength: 50 * 1024 * 1024,
@@ -438,7 +420,6 @@ startxref
           
           console.log("✅ Dosya yükleme response:", response);
           
-          // Backend response yapısını analiz et
           console.log("🔍 Response data analizi:", {
             responseData: response.data,
             responseDataType: typeof response.data,
@@ -447,10 +428,8 @@ startxref
             dataDataKeys: response.data?.data ? Object.keys(response.data.data) : []
           });
           
-          // Yüklenen dosya ID'sini farklı yollardan bulmaya çalış
           let uploadedFileId = null;
           
-          // 1. Önce direkt response.data.fileId veya id ara
           if (response.data?.fileId) {
             uploadedFileId = response.data.fileId;
             console.log("📌 File ID bulundu (fileId):", uploadedFileId);
@@ -458,7 +437,6 @@ startxref
             uploadedFileId = response.data.id;
             console.log("📌 File ID bulundu (id):", uploadedFileId);
           }
-          // 2. Backend nested response yapısı varsa data.data içinde ara
           else if (response.data?.data?.fileId) {
             uploadedFileId = response.data.data.fileId;
             console.log("📌 File ID bulundu (data.fileId):", uploadedFileId);
@@ -466,7 +444,6 @@ startxref
             uploadedFileId = response.data.data.id;
             console.log("📌 File ID bulundu (data.id):", uploadedFileId);
           }
-          // 3. Backend'in response.data'nın kendisi string ID ise
           else if (typeof response.data === 'string') {
             uploadedFileId = response.data;
             console.log("📌 File ID bulundu (string):", uploadedFileId);
@@ -480,16 +457,14 @@ startxref
               fileSize: file.size
             }));
             
-            // Upload tamamlandı
             setUploadProgress(100);
             setTimeout(() => {
               setUploadingFile(false);
               setUploadProgress(0);
-            }, 1000); // 1 saniye sonra progress bar'ı gizle
+            }, 1000);
             
             return uploadedFileId;
           } else {
-            // Tüm response'u logla ki backend'in tam olarak ne döndürdüğünü görelim
             console.error("❌ File ID bulunamadı. Tam response:", {
               fullResponse: response,
               responseData: response.data,
@@ -508,10 +483,8 @@ startxref
           });
           
           if (attempt === retries) {
-            // Son deneme de başarısız oldu
             let errorMessage = 'Dosya yükleme başarısız oldu.';
             
-            // PDF için özel hata mesajları
             if (file.type === 'application/pdf') {
               if (error.message.includes('413') || error.response?.status === 413) {
                 errorMessage = 'PDF dosyası çok büyük. Backend PDF boyut limitini kontrol edin.';
@@ -525,7 +498,6 @@ startxref
                 errorMessage = 'PDF yükleme sırasında ağ hatası. Backend bağlantısını kontrol edin.';
               }
             } else {
-              // Genel hata mesajları
               if (error.message.includes('Ağ bağlantısı hatası')) {
                 errorMessage = 'Ağ bağlantı hatası. İnternet bağlantınızı kontrol edin.';
               } else if (error.message.includes('Sunucu bağlantı hatası') || error.message.includes('ERR_HTTP2_PROTOCOL_ERROR')) {
@@ -547,7 +519,6 @@ startxref
             throw new Error(errorMessage);
           }
           
-          // Bir sonraki deneme için kısa bir bekleme
           if (attempt < retries) {
             const waitTime = file.type === 'application/pdf' ? 3000 : 2000; // PDF için daha uzun bekleme
             console.log(`⏳ ${attempt + 1}. deneme için ${waitTime/1000} saniye bekleniyor...`);
@@ -556,7 +527,6 @@ startxref
         }
       }
     } finally {
-      // Her durumda upload state'ini temizle
       setUploadingFile(false);
       setUploadProgress(0);
     }
@@ -575,6 +545,34 @@ startxref
         confirmButtonColor: '#ffc107'
       });
       return;
+    }
+
+    const hasUrl = formData.url && formData.url.trim() !== '';
+    const hasFileId = formData.fileId && formData.fileId.trim() !== '';
+    const hasSelectedFile = selectedFile !== null;
+
+    if (!hasUrl && !hasFileId && !hasSelectedFile) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Eksik Bilgi!',
+        text: 'Bir dosya yükleyin, sistemden dosya seçin veya harici URL girin.',
+        confirmButtonColor: '#ffc107'
+      });
+      return;
+    }
+
+    if (hasUrl) {
+      try {
+        new URL(formData.url);
+      } catch (error) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Geçersiz URL!',
+          text: 'Lütfen geçerli bir URL formatı girin (örn: https://example.com/file.pdf)',
+          confirmButtonColor: '#ffc107'
+        });
+        return;
+      }
     }
 
     setLoading(true);
@@ -620,9 +618,40 @@ startxref
         finalFormData.slug = generateSlug(finalFormData.name) || 'document-slug';
       }
 
-      console.log("📋 Document kayıt data:", finalFormData);
+      // URL ile document ekleme durumunda boş file alanlarını temizle
+      if (finalFormData.url && finalFormData.url.trim() !== '') {
+        // URL varsa ve file ID yoksa, file ile ilgili alanları temizle
+        if (!finalFormData.fileId || finalFormData.fileId.trim() === '') {
+          console.log("🌐 URL ile document ekleniyor, file alanları temizleniyor...");
+          console.log("🌐 URL:", finalFormData.url);
+          console.log("🌐 Önceki fileId:", finalFormData.fileId);
+          console.log("🌐 Önceki mimeType:", finalFormData.mimeType);
+          console.log("🌐 Önceki fileSize:", finalFormData.fileSize);
+          
+          delete finalFormData.fileId;
+          delete finalFormData.mimeType;
+          delete finalFormData.fileSize;
+          finalFormData.mimeType = null;
+          finalFormData.fileSize = null;
+          
+          console.log("🌐 Temizlendikten sonra fileId:", finalFormData.fileId);
+          console.log("🌐 Temizlendikten sonra mimeType:", finalFormData.mimeType);
+          console.log("🌐 Temizlendikten sonra fileSize:", finalFormData.fileSize);
+        }
+      }
 
-      // Document oluştur/güncelle
+      Object.keys(finalFormData).forEach(key => {
+        if (finalFormData[key] === '' || finalFormData[key] === undefined) {
+          if (key === 'fileId' || key === 'previewImageFileId') {
+            delete finalFormData[key];
+          } else if (key === 'mimeType' || key === 'fileSize') {
+            finalFormData[key] = null;
+          }
+        }
+      });
+
+      console.log("📋 Document kayıt data (temizlenmiş):", finalFormData);
+
       let response;
       if (document?.id) {
         finalFormData.id = document.id;
@@ -648,7 +677,31 @@ startxref
       console.trace("❌ Hata stack trace:");
       
       let errorMessage = 'Kayıt işlemi başarısız oldu.';
-      if (error.response?.data?.message) {
+      let errorDetails = '';
+      
+      if (error.response?.status === 400 && error.response?.data?.errors) {
+        const validationErrors = error.response.data.errors;
+        console.log("🔍 Validation errors:", validationErrors);
+        
+        if (validationErrors.documentDto || validationErrors['$.fileId']) {
+          errorMessage = 'Backend veri formatı hatası.';
+          errorDetails = 'URL ile dosya eklerken backend veri formatı sorunu oluştu. ';
+          
+          if (validationErrors['$.fileId']) {
+            errorDetails += 'FileId alanı ile ilgili format hatası. ';
+          }
+          
+          if (validationErrors.documentDto) {
+            errorDetails += 'DocumentDto alanı gerekli ama eksik. ';
+          }
+          
+          errorDetails += 'Lütfen tüm gerekli alanları doldurun ve tekrar deneyin.';
+        } else {
+          const errorKeys = Object.keys(validationErrors);
+          errorMessage = `Validation hatası: ${errorKeys.join(', ')}`;
+          errorDetails = Object.values(validationErrors).flat().join(' ');
+        }
+      } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.message) {
         errorMessage = error.message;
@@ -659,9 +712,11 @@ startxref
         title: 'Hata!',
         html: `
           <p><strong>Hata:</strong> ${errorMessage}</p>
-          <p><small>Detaylar için tarayıcı konsolunu kontrol edin.</small></p>
+          ${errorDetails ? `<p><strong>Detay:</strong> ${errorDetails}</p>` : ''}
+          <p><small>Teknik detaylar için tarayıcı konsolunu kontrol edin.</small></p>
         `,
-        confirmButtonColor: '#dc3545'
+        confirmButtonColor: '#dc3545',
+        width: '500px'
       });
     } finally {
       setLoading(false);
@@ -773,6 +828,9 @@ startxref
               onChange={handleInputChange}
               placeholder="https://example.com/file.pdf"
             />
+            <small className="field-hint">
+              Harici URL kullanıyorsanız aşağıdaki "Ana Dosya" alanını boş bırakabilirsiniz.
+            </small>
           </div>
 
           <div className="form-row">
@@ -793,6 +851,9 @@ startxref
                   Sistemdeki Dosyalardan Seç
                 </button>
               </div>
+              <small className="field-hint">
+                Dosya yüklemek yerine yukarıdaki "Harici URL" alanını da kullanabilirsiniz.
+              </small>
               {selectedFile && (
                 <div className="file-info">
                   <span>Yeni dosya: {selectedFile.name}</span>
