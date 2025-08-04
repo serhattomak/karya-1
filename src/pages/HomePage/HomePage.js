@@ -4,12 +4,6 @@ import ProductSlider from "../../components/ProductSlider/ProductSlider";
 import "./HomePage.css";
 import { getPageByName, getFile } from "../../api";
 
-// TODO: Refactoring sonrası şu importları kullan:
-// import { useApi } from "../../hooks";
-// import { pageService, fileService } from "../../services/apiService";
-// import { buildImageUrl } from "../../utils/httpUtils";
-// import { Loading, ErrorMessage } from "../../components/common/CommonComponents";
-
 const BASE_URL = "https://localhost:7103/";
 
 function HomePage() {
