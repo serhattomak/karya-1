@@ -16,7 +16,11 @@ function AboutPage() {
     const fetchData = async () => {
       try {
         const response = await getPageByName("Hakkımızda");
+        console.log("AboutPage API Response:", response);
+        
         const data = response?.data?.data || response?.data || response;
+        console.log("AboutPage Parsed Data:", data);
+        
         setPageData(data);
       } catch (error) {
         console.error("Sayfa verisi çekme hatası:", error);
@@ -28,7 +32,10 @@ function AboutPage() {
 
   if (!pageData) return <div>Yükleniyor...</div>;
 
-  const galleryImages = (pageData.files || []).map(f => f.path ? BASE_URL + f.path : "");
+  const galleryImages = (pageData.files || [])
+    .slice(1)
+    .map(f => f.path ? BASE_URL + f.path : "")
+    .filter(Boolean);
 
   return (
     <div>
@@ -42,8 +49,8 @@ function AboutPage() {
       />
       <br></br>
       <ServiceSection 
-        serviceTitle={pageData.titles?.[1]}
-        listItems={pageData.listItems}
+        serviceTitle={pageData.listTitles?.[0] || "Hizmetlerimiz"}
+        listItems={pageData.listItems || []}
         galleryImages={galleryImages}
       />
       <br></br>

@@ -3,13 +3,15 @@ import ServiceList from "../ServiceList/ServiceList";
 import ImageGallery from "../ImageGallery/ImageGallery";
 import "./ServicesSection.css";
 
-const ServicesSection = () => {
+const ServicesSection = ({ serviceTitle, listItems, galleryImages }) => {
+  console.log("ServicesSection props:", { serviceTitle, listItems, galleryImages });
+  
   return (
     <div className="services-section">
       <div className="service-content">
-      <ServiceList />
-      <ImageGallery />
-    </div>
+        <ServiceList serviceTitle={serviceTitle} listItems={listItems} />
+        <ImageGallery galleryImages={galleryImages} />
+      </div>
     </div>
   );
 };
