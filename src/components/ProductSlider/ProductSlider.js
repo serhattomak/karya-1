@@ -34,7 +34,7 @@ const ProductSlider = ({ products }) => {
           {products.map((product, index) => (
             <li
               key={index}
-              className={`slide ${product.subtitle ? "with-subtitle" : ""}`}
+              className="slide"
               onClick={() => handleProductClick(index)}
             >
               <img
@@ -70,9 +70,6 @@ const ProductSlider = ({ products }) => {
                 alt={product.title}
               />
               <h3 className="product-title">{product.title}</h3>
-              {product.subtitle && (
-                <p className="product-subtitle">{product.subtitle}</p>
-              )}
             </li>
           ))}
         </ul>
