@@ -66,10 +66,10 @@ const ProductSlider = ({ products }) => {
                   }
                   return "/assets/images/Group 300.webp";
                 })()}
-                className="product-image"
+                className="product-slider-image"
                 alt={product.title}
               />
-              <h3 className="product-title">{product.title}</h3>
+              <h3 className="product-slider-title">{product.title}</h3>
             </li>
           ))}
         </ul>
