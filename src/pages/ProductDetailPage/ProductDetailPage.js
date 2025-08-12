@@ -175,10 +175,10 @@ function ProductDetailPage() {
 
   if (loading) {
     return (
-      <div className="product-detail-loading">
+      <div className="details-product-detail-loading">
         <Navbar />
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
+        <div className="details-loading-container">
+          <div className="details-loading-spinner"></div>
           <p>Ürün bilgileri yükleniyor...</p>
         </div>
         <Footer />
@@ -188,9 +188,9 @@ function ProductDetailPage() {
 
   if (error || !productData) {
     return (
-      <div className="product-detail-error">
+      <div className="details-product-detail-error">
         <Navbar />
-        <div className="error-container">
+        <div className="details-error-container">
           <h2>Ürün Bulunamadı</h2>
           <p>{error || "Aradığınız ürün mevcut değil."}</p>
           <button onClick={() => window.history.back()}>Geri Dön</button>
@@ -219,17 +219,17 @@ function ProductDetailPage() {
   })();
 
   return (
-    <div className="product-detail-page">
+    <div className="details-product-detail-page">
       {/* <Navbar /> */}
       <Banner
         imageSrc={bannerImage}
         title={productData.titles?.[0] || productData.name}
       />
       <ProductInfo productData={productData} />
-      <RelatedProducts
+      {/* <RelatedProducts
         currentProductId={productData.id}
         productName={productData.name}
-      />
+      /> */}
       <ContactSection />
       <Footer />
     </div>
