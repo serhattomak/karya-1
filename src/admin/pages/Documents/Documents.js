@@ -275,8 +275,8 @@ const Documents = () => {
     
     if (totalCount === 0) {
       return (
-        <div className="pagination-controls">
-          <div className="pagination-info">
+        <div className="AdminPaginationControls">
+          <div className="AdminPaginationInfo">
             <span>Henüz dosya bulunmuyor</span>
           </div>
         </div>
@@ -284,43 +284,43 @@ const Documents = () => {
     }
     
     return (
-      <div className="pagination-controls">
-        <div className="pagination-info">
+      <div className="AdminPaginationControls">
+        <div className="AdminPaginationInfo">
           <span>
             Toplam {totalCount} kayıt - Sayfa {currentPage} / {totalPages}
           </span>
         </div>
-        <div className="pagination-buttons">
+        <div className="AdminPaginationButtons">
           <button
             onClick={() => handlePageChange(1)}
             disabled={currentPage === 1 || totalCount === 0}
-            className="pagination-btn"
+            className="AdminPaginationBtn"
           >
             İlk
           </button>
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1 || totalCount === 0}
-            className="pagination-btn"
+            className="AdminPaginationBtn"
           >
             Önceki
           </button>
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages || totalCount === 0}
-            className="pagination-btn"
+            className="AdminPaginationBtn"
           >
             Sonraki
           </button>
           <button
             onClick={() => handlePageChange(totalPages)}
             disabled={currentPage === totalPages || totalCount === 0}
-            className="pagination-btn"
+            className="AdminPaginationBtn"
           >
             Son
           </button>
         </div>
-        <div className="page-size-selector">
+        <div className="AdminPageSizeSelector">
           <label>Sayfa başına: </label>
           <select
             value={pagination.pageSize}
@@ -338,36 +338,36 @@ const Documents = () => {
 
   if (loading) {
     return (
-      <div className="documents-page">
-        <div className="loading">Yükleniyor...</div>
+      <div className="AdminDocumentsPage">
+        <div className="AdminLoading">Yükleniyor...</div>
       </div>
     );
   }
 
   return (
-    <div className="documents-page">
-      <div className="documents-header">
+    <div className="AdminDocumentsPage">
+      <div className="AdminDocumentsHeader">
         <h1>Dosya Yönetimi</h1>
         <button onClick={handleAddDocument} className="add-btn">
           + Yeni Dosya Ekle
         </button>
       </div>
 
-      <div className="filters-section">
-        <div className="search-bar">
+      <div className="AdminFiltersSection">
+        <div className="AdminSearchBar">
           <input
             type="text"
             placeholder="Dosya adı veya açıklama ara..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
+            className="AdminSearchInput"
           />
         </div>
-        <div className="filter-controls">
+        <div className="AdminFilterControls">
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="filter-select"
+            className="AdminFilterSelect"
           >
             <option value="">Tüm Kategoriler</option>
             {uniqueCategories.map(category => (
@@ -377,7 +377,7 @@ const Documents = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="filter-select"
+            className="AdminFilterSelect"
           >
             <option value="">Tüm Durumlar</option>
             <option value="active">Aktif</option>
@@ -386,8 +386,8 @@ const Documents = () => {
         </div>
       </div>
 
-      <div className="documents-table-container">
-        <table className="documents-table">
+      <div className="AdminDocumentsTableContainer">
+        <table className="AdminDocumentsTable">
           <thead>
             <tr>
               <th>Önizleme</th>
@@ -404,7 +404,7 @@ const Documents = () => {
             {filteredDocuments.map((document) => (
               <tr key={document.id}>
                 <td>
-                  <div className="document-preview">
+                  <div className="AdminDocumentPreview">
                     {(document.previewImageUrl || document.previewImageFile?.path) ? (
                       <img 
                         src={
@@ -417,14 +417,14 @@ const Documents = () => {
                                 : null
                         } 
                         alt={document.name}
-                        className="preview-image"
+                        className="AdminPreviewImage"
                         onError={(e) => {
                           e.target.style.display = 'none';
                           e.target.nextSibling.style.display = 'flex';
                         }}
                       />
                     ) : null}
-                    <div className="no-preview" style={{display: (document.previewImageUrl || document.previewImageFile?.path) ? 'none' : 'flex'}}>
+                    <div className="AdminNoPreview" style={{display: (document.previewImageUrl || document.previewImageFile?.path) ? 'none' : 'flex'}}>
                       {document.mimeType?.includes('image') ? '🖼️' :
                        document.mimeType?.includes('pdf') ? '📄' :
                        document.mimeType?.includes('word') ? '📝' :
@@ -436,35 +436,35 @@ const Documents = () => {
                   </div>
                 </td>
                 <td>
-                  <div className="document-info">
-                    <div className="document-name">{document.name}</div>
+                  <div className="AdminDocumentInfo">
+                    <div className="AdminDocumentName">{document.name}</div>
                     {document.description && (
-                      <div className="document-description">{document.description}</div>
+                      <div className="AdminDocumentDescription">{document.description}</div>
                     )}
                   </div>
                 </td>
                 <td>
-                  <span className={`file-type-badge ${document.type}`}>
+                  <span className={`AdminFileTypeBadge ${document.type === 'file' ? 'AdminFile' : 'AdminDocument'}`}>
                     {document.type === 'file' ? 'Sistem Dosyası' : 'Döküman'}
                   </span>
                 </td>
                 <td>
-                  <span className="category-badge">
+                  <span className="AdminCategoryBadge">
                     {document.category || 'Kategori Yok'}
                   </span>
                 </td>
                 <td>{formatFileSize(document.fileSize)}</td>
                 <td>
-                  <span className={`status-badge ${document.isActive ? 'active' : 'inactive'}`}>
+                  <span className={`AdminStatusBadge ${document.isActive ? 'AdminActive' : 'AdminInactive'}`}>
                     {document.isActive ? 'Aktif' : 'Pasif'}
                   </span>
                 </td>
                 <td>{document.order || document.order === 0 ? document.order : 'Belirlenmemiş'}</td>
                 <td>
-                  <div className="action-buttons">
+                  <div className="AdminActionButtons">
                     <button
                       onClick={() => handleViewDetails(document)}
-                      className="action-btn detail-btn"
+                      className="AdminActionBtn AdminDetailBtn"
                       title="Detayları Görüntüle"
                     >
                       <svg viewBox="0 0 24 24" fill="currentColor">
@@ -474,7 +474,7 @@ const Documents = () => {
                     {document.type === 'document' && (
                       <button
                         onClick={() => handleEditDocument(document)}
-                        className="action-btn edit-btn"
+                        className="AdminActionBtn edit-btn"
                         title="Düzenle"
                       >
                         <svg viewBox="0 0 24 24" fill="currentColor">
@@ -484,7 +484,7 @@ const Documents = () => {
                     )}
                     <button
                       onClick={() => handleDeleteClick(document)}
-                      className="action-btn delete-btn"
+                      className="AdminActionBtn delete-btn"
                       title="Sil"
                     >
                       <svg viewBox="0 0 24 24" fill="currentColor">
@@ -499,7 +499,7 @@ const Documents = () => {
         </table>
 
         {filteredDocuments.length === 0 && (
-          <div className="no-data">
+          <div className="AdminNoData">
             {searchTerm || categoryFilter || statusFilter
               ? "Filtrelere uygun dosya bulunamadı."
               : "Henüz dosya eklenmemiş."}

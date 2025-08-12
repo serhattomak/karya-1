@@ -1,4 +1,4 @@
-.document-detail-modal {
+.AdminDocumentDetailModal {
   background: white;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -10,7 +10,7 @@
   flex-direction: column;
 }
 
-.document-detail-modal .modal-header {
+.AdminDocumentDetailModal .AdminModalHeader {
   padding: 24px;
   border-bottom: 2px solid #f1f3f4;
   display: flex;
@@ -19,20 +19,20 @@
   background: #f8f9fa;
 }
 
-.document-detail-modal .modal-header h2 {
+.AdminDocumentDetailModal .AdminModalHeader h2 {
   margin: 0;
   color: #333;
   font-size: 24px;
   font-weight: 600;
 }
 
-.document-detail-modal .modal-content {
+.AdminDocumentDetailModal .AdminModalContent {
   padding: 24px;
   overflow-y: auto;
   flex: 1;
 }
 
-.document-info-section {
+.AdminDocumentInfoSection {
   display: grid;
   grid-template-columns: 200px 1fr;
   gap: 30px;
@@ -41,13 +41,13 @@
   border-bottom: 2px solid #f1f3f4;
 }
 
-.document-preview-section {
+.AdminDocumentPreviewSection {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.preview-image-large {
+.AdminPreviewImageLarge {
   width: 100%;
   max-width: 200px;
   height: auto;
@@ -56,7 +56,7 @@
   border: 2px solid #dee2e6;
 }
 
-.no-preview-large {
+.AdminNoPreviewLarge {
   width: 200px;
   height: 150px;
   display: flex;
@@ -69,38 +69,38 @@
   color: #6c757d;
 }
 
-.document-details h3 {
+.AdminDocumentDetails h3 {
   margin: 0 0 20px 0;
   color: #333;
   font-size: 24px;
   font-weight: 600;
 }
 
-.detail-grid {
+.AdminDetailGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin-bottom: 20px;
 }
 
-.detail-item {
+.AdminDetailItem {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.detail-item label {
+.AdminDetailItem label {
   font-weight: 600;
   color: #495057;
   font-size: 14px;
 }
 
-.detail-item span {
+.AdminDetailItem span {
   color: #333;
   font-size: 14px;
 }
 
-.category-badge {
+.AdminCategoryBadge {
   background: #e9ecef;
   color: #495057;
   padding: 4px 12px;
@@ -110,7 +110,7 @@
   width: fit-content;
 }
 
-.status-badge {
+.AdminStatusBadge {
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 12px;
@@ -118,17 +118,17 @@
   width: fit-content;
 }
 
-.status-badge.active {
+.AdminStatusBadge.AdminActive {
   background: #d4edda;
   color: #155724;
 }
 
-.status-badge.inactive {
+.AdminStatusBadge.AdminInactive {
   background: #f8d7da;
   color: #721c24;
 }
 
-.slug-text {
+.AdminSlugText {
   font-family: 'Courier New', monospace;
   background: #f8f9fa;
   padding: 4px 8px;
@@ -136,18 +136,18 @@
   font-size: 12px;
 }
 
-.description-section {
+.AdminDescriptionSection {
   margin-bottom: 20px;
 }
 
-.description-section label {
+.AdminDescriptionSection label {
   display: block;
   font-weight: 600;
   color: #495057;
   margin-bottom: 8px;
 }
 
-.description-text {
+.AdminDescriptionText {
   background: #f8f9fa;
   padding: 16px;
   border-radius: 6px;
@@ -157,18 +157,18 @@
   margin: 0;
 }
 
-.url-section {
+.AdminUrlSection {
   margin-bottom: 20px;
 }
 
-.url-section label {
+.AdminUrlSection label {
   display: block;
   font-weight: 600;
   color: #495057;
   margin-bottom: 8px;
 }
 
-.external-link {
+.AdminExternalLink {
   color: #007bff;
   text-decoration: none;
   padding: 8px 12px;
@@ -178,12 +178,12 @@
   transition: all 0.3s ease;
 }
 
-.external-link:hover {
+.AdminExternalLink:hover {
   background: #bbdefb;
   color: #0056b3;
 }
 
-.action-section {
+.AdminActionSection {
   margin-top: 20px;
 }
 
@@ -207,44 +207,44 @@
   transform: translateY(-1px);
 } */
 
-.related-content-section {
+.AdminRelatedContentSection {
   border-top: 2px solid #f1f3f4;
   padding-top: 30px;
 }
 
-.related-content-section h4 {
+.AdminRelatedContentSection h4 {
   margin: 0 0 20px 0;
   color: #333;
   font-size: 20px;
   font-weight: 600;
 }
 
-.related-content-section h5 {
+.AdminRelatedContentSection h5 {
   margin: 0 0 12px 0;
   color: #495057;
   font-size: 16px;
   font-weight: 600;
 }
 
-.related-products,
-.related-pages {
+.AdminRelatedProducts,
+.AdminRelatedPages {
   margin-bottom: 24px;
 }
 
-.loading-related {
+.AdminLoadingRelated {
   text-align: center;
   padding: 20px;
   color: #6c757d;
   font-style: italic;
 }
 
-.related-list {
+.AdminRelatedList {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.related-item {
+.AdminRelatedItem {
   padding: 12px 16px;
   background: #f8f9fa;
   border: 1px solid #e9ecef;
@@ -254,12 +254,12 @@
   align-items: center;
 }
 
-.item-name {
+.AdminItemName {
   font-weight: 600;
   color: #333;
 }
 
-.item-slug {
+.AdminItemSlug {
   font-family: 'Courier New', monospace;
   background: white;
   padding: 4px 8px;
@@ -268,7 +268,7 @@
   font-size: 12px;
 }
 
-.no-related {
+.AdminNoRelated {
   color: #6c757d;
   font-style: italic;
   margin: 0;
@@ -278,7 +278,7 @@
   text-align: center;
 }
 
-.document-detail-modal .modal-actions {
+.AdminDocumentDetailModal .AdminModalActions {
   padding: 20px 24px;
   background: #f8f9fa;
   border-top: 2px solid #f1f3f4;
@@ -286,7 +286,7 @@
   justify-content: flex-end;
 }
 
-.close-modal-btn {
+.AdminCloseModalBtn {
   background: #6c757d;
   color: white;
   border: none;
@@ -298,37 +298,37 @@
   transition: all 0.3s ease;
 }
 
-.close-modal-btn:hover {
+.AdminCloseModalBtn:hover {
   background: #5a6268;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .document-detail-modal {
+  .AdminDocumentDetailModal {
     max-width: 100%;
     max-height: 95vh;
     margin: 10px;
   }
 
-  .document-detail-modal .modal-content {
+  .AdminDocumentDetailModal .AdminModalContent {
     padding: 16px;
   }
 
-  .document-info-section {
+  .AdminDocumentInfoSection {
     grid-template-columns: 1fr;
     gap: 20px;
     text-align: center;
   }
 
-  .document-preview-section {
+  .AdminDocumentPreviewSection {
     order: -1;
   }
 
-  .detail-grid {
+  .AdminDetailGrid {
     grid-template-columns: 1fr;
   }
 
-  .related-item {
+  .AdminRelatedItem {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
@@ -336,23 +336,23 @@
 }
 
 @media (max-width: 480px) {
-  .document-detail-modal .modal-header {
+  .AdminDocumentDetailModal .AdminModalHeader {
     padding: 16px;
   }
 
-  .document-detail-modal .modal-header h2 {
+  .AdminDocumentDetailModal .AdminModalHeader h2 {
     font-size: 20px;
   }
 
-  .document-detail-modal .modal-content {
+  .AdminDocumentDetailModal .AdminModalContent {
     padding: 12px;
   }
 
-  .document-details h3 {
+  .AdminDocumentDetails h3 {
     font-size: 20px;
   }
 
-  .download-btn {
+  .AdminDownloadBtn {
     width: 100%;
     justify-content: center;
   }
