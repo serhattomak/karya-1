@@ -489,16 +489,16 @@ const Home = () => {
   };
 
   if (loading) {
-    return <div className="loading">Yükleniyor...</div>;
+    return <div className="AdminLoading">Yükleniyor...</div>;
   }
 
   return (
-    <div className="admin-panel">
+    <div className="AdminPanel">
       {/* Banner Bölümü */}
-      <div className="home-section">
-        <div className="section-header">
-          <h2 className="section-title">Ana Sayfa Banner</h2>
-          <button className="edit-btn primary" onClick={openBannerModal}>
+      <div className="AdminHomeSection">
+        <div className="AdminSectionHeader">
+          <h2 className="AdminSectionTitle">Ana Sayfa Banner</h2>
+          <button className="AdminEditBtn primary" onClick={openBannerModal}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -517,12 +517,12 @@ const Home = () => {
           </button>
         </div>
 
-        <div className="banner-preview">
-          <div className="banner-content">
-            <h1 className="banner-title">
+        <div className="AdminBannerPreview">
+          <div className="AdminBannerContent">
+            <h1 className="AdminBannerTitle">
               {bannerTitle || "Başlık eklenmedi"}
             </h1>
-            <p className="banner-subtitle">
+            <p className="AdminBannerSubtitle">
               {bannerSubtitle || "Alt başlık eklenmedi"}
             </p>
           </div>
@@ -530,42 +530,42 @@ const Home = () => {
       </div>
 
       {/* Ürünler Bölümü */}
-      <div className="home-section">
-        <div className="section-header">
-          <h2 className="section-title">Ana Sayfada Gösterilecek Ürünler</h2>
-          <button className="add-btn primary" onClick={openProductModal}>
+      <div className="AdminHomeSection">
+        <div className="AdminSectionHeader">
+          <h2 className="AdminSectionTitle">Ana Sayfada Gösterilecek Ürünler</h2>
+          <button className="AdminAddBtn primary" onClick={openProductModal}>
             Ürün Seç
           </button>
         </div>
 
-        <div className="selected-products">
+        <div className="AdminSelectedProducts">
           {selectedProducts.length === 0 ? (
-            <div className="no-products">
+            <div className="AdminNoProducts">
               <p>
                 Henüz ürün seçilmedi. Ürün eklemek için yukarıdaki butona
                 tıklayın.
               </p>
             </div>
           ) : (
-            <div className="products-grid">
+            <div className="AdminProductsGrid">
               {selectedProducts.map((product, index) => (
                 <div
                   key={product.id}
-                  className="product-item"
+                  className="AdminProductItem"
                   draggable
                   onDragStart={(e) => handleDragStart(e, index)}
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleDrop(e, index)}
                 >
-                  <div className="drag-handle">⋮⋮</div>
-                  <div className="product-image">
+                  <div className="AdminDragHandle">⋮⋮</div>
+                  <div className="AdminProductImage">
                     {product.imagePath ? (
                       <img src={product.imagePath} alt={product.name} />
                     ) : (
-                      <div className="no-image">Görsel Yok</div>
+                      <div className="AdminNoImage">Görsel Yok</div>
                     )}
                   </div>
-                  <div className="product-info">
+                  <div className="AdminProductInfo">
                     <h3>{product.name}</h3>
                     <p>
                       {product.titles && product.titles[0]
@@ -573,10 +573,10 @@ const Home = () => {
                         : "Başlık yok"}
                     </p>
                   </div>
-                  <div className="product-actions">
-                    <span className="order-number">{index + 1}</span>
+                  <div className="AdminProductActions">
+                    <span className="AdminOrderNumber">{index + 1}</span>
                     <button
-                      className="remove-btn"
+                      className="AdminRemoveBtn"
                       onClick={() => removeProductFromHome(product.id)}
                     >
                       ×
@@ -588,8 +588,8 @@ const Home = () => {
           )}
         </div>
 
-        <div className="save-section">
-          <button className="save-btn primary" onClick={saveAllChanges}>
+        <div className="AdminSaveSection">
+          <button className="AdminSaveBtn primary" onClick={saveAllChanges}>
             Değişiklikleri Kaydet
           </button>
         </div>
@@ -597,16 +597,16 @@ const Home = () => {
 
       {/* Banner Düzenleme Modalı */}
       {showBannerModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="modal-header">
+        <div className="AdminModalOverlay">
+          <div className="AdminModalContent">
+            <div className="AdminModalHeader">
               <h3>Banner Düzenle</h3>
-              <button className="close-btn" onClick={closeBannerModal}>
+              <button className="AdminCloseBtn" onClick={closeBannerModal}>
                 ×
               </button>
             </div>
-            <div className="modal-body">
-              <div className="form-group">
+            <div className="AdminModalBody">
+              <div className="AdminFormGroup">
                 <label>Başlık</label>
                 <input
                   type="text"
@@ -615,7 +615,7 @@ const Home = () => {
                   placeholder="Banner başlığını girin"
                 />
               </div>
-              <div className="form-group">
+              <div className="AdminFormGroup">
                 <label>Alt Başlık</label>
                 <input
                   type="text"
@@ -625,11 +625,11 @@ const Home = () => {
                 />
               </div>
             </div>
-            <div className="modal-footer">
-              <button className="cancel-btn" onClick={closeBannerModal}>
+            <div className="AdminModalFooter">
+              <button className="AdminCancelBtn" onClick={closeBannerModal}>
                 İptal
               </button>
-              <button className="save-btn" onClick={saveBannerChanges}>
+              <button className="AdminSaveBtn" onClick={saveBannerChanges}>
                 Kaydet
               </button>
             </div>
@@ -639,16 +639,16 @@ const Home = () => {
 
       {/* Ürün Seçim Modalı */}
       {showProductModal && (
-        <div className="modal-overlay">
-          <div className="modal-content large">
-            <div className="modal-header">
+        <div className="AdminModalOverlay">
+          <div className="AdminModalContent large">
+            <div className="AdminModalHeader">
               <h3>Ürün Seç</h3>
-              <button className="close-btn" onClick={closeProductModal}>
+              <button className="AdminCloseBtn" onClick={closeProductModal}>
                 ×
               </button>
             </div>
-            <div className="modal-body">
-              <div className="available-products-grid">
+            <div className="AdminModalBody">
+              <div className="AdminAvailableProductsGrid">
                 {availableProducts
                   .filter(
                     (product) =>
@@ -689,15 +689,15 @@ const Home = () => {
                     }
 
                     return (
-                      <div key={product.id} className="available-product-item">
-                        <div className="product-image">
+                      <div key={product.id} className="AdminAvailableProductItem">
+                        <div className="AdminProductImage">
                           {imagePath ? (
                             <img src={imagePath} alt={product.name} />
                           ) : (
-                            <div className="no-image">Görsel Yok</div>
+                            <div className="AdminNoImage">Görsel Yok</div>
                           )}
                         </div>
-                        <div className="product-info">
+                        <div className="AdminProductInfo">
                           <h4>{product.name}</h4>
                           <p>
                             {product.titles && product.titles[0]
@@ -706,7 +706,7 @@ const Home = () => {
                           </p>
                         </div>
                         <button
-                          className="add-product-btn"
+                          className="AdminAddProductBtn"
                           onClick={() => addProductToHome(product)}
                           disabled={selectedProducts.length >= 4}
                         >
@@ -722,13 +722,13 @@ const Home = () => {
                     (selected) => selected.id === product.id
                   )
               ).length === 0 && (
-                <div className="no-products">
+                <div className="AdminNoProducts">
                   <p>Tüm ürünler zaten seçilmiş.</p>
                 </div>
               )}
             </div>
-            <div className="modal-footer">
-              <button className="cancel-btn" onClick={closeProductModal}>
+            <div className="AdminModalFooter">
+              <button className="AdminCancelBtn" onClick={closeProductModal}>
                 Kapat
               </button>
             </div>
