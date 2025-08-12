@@ -375,8 +375,8 @@ const AboutUs = () => {
   if (loading) {
     return (
       <div className="admin-panel">
-        <div className="loading">
-          <div className="loading-spinner"></div>
+        <div className="AdminLoading">
+          <div className="AdminLoadingSpinner"></div>
           <p>Hakkımızda sayfası yükleniyor...</p>
         </div>
       </div>
@@ -385,14 +385,14 @@ const AboutUs = () => {
 
   return (
     <div className="admin-panel">
-      <div className="section-header">
-        <h2 className="panel-title">🏢 Hakkımızda Sayfası Yönetimi</h2>
-        <p className="panel-description">
+      <div className="AdminSectionHeader">
+        <h2 className="AdminPanelTitle">🏢 Hakkımızda Sayfası Yönetimi</h2>
+        <p className="AdminPanelDescription">
           Şirket hakkında bilgileri, hizmetlerinizi ve galeri görsellerini düzenleyin.
         </p>
       </div>
       
-      <form onSubmit={handleSubmit} className="form-container">
+      <form onSubmit={handleSubmit} className="AdminFormContainer">
         <div className="form-section">
           <h3 className="form-section-title">📝 Temel Bilgiler</h3>
 
@@ -418,14 +418,14 @@ const AboutUs = () => {
             />
             {image && (
               <img
-                className="preview-image"
+                className="AdminPreviewImage"
                 src={image}
                 alt="Önizleme"
                 style={{ width: "150px", marginTop: "10px", borderRadius: "8px" }}
               />
             )}
             
-            <div className="banner-image-options">
+            <div className="AdminBannerImageOptions">
               <p className="form-helper-text" style={{ marginTop: "15px" }}>Veya sistemden görsel seçin:</p>
               <button
                 type="button"
@@ -437,9 +437,9 @@ const AboutUs = () => {
             </div>
             
             {bannerImageUrl && (
-              <div className="selected-image-preview">
+              <div className="AdminSelectedImagePreview">
                 <p className="form-helper-text">Seçili banner görseli:</p>
-                <img src={bannerImageUrl} alt="Selected banner" className="preview-image" style={{ width: "200px", marginTop: "10px", borderRadius: "8px" }} />
+                <img src={bannerImageUrl} alt="Selected banner" className="AdminPreviewImage" style={{ width: "200px", marginTop: "10px", borderRadius: "8px" }} />
               </div>
             )}
           </div>
@@ -457,7 +457,7 @@ const AboutUs = () => {
               </button>
             </div>
             {titles.map((title, index) => (
-              <div key={index} className="multi-field-item" style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+              <div key={index} className="AdminMultiFieldItem" style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
                 <input
                   type="text"
                   value={title}
@@ -492,7 +492,7 @@ const AboutUs = () => {
               </button>
             </div>
             {subtitles.map((subtitle, index) => (
-              <div key={index} className="multi-field-item" style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+              <div key={index} className="AdminMultiFieldItem" style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
                 <input
                   type="text"
                   value={subtitle}
@@ -527,7 +527,7 @@ const AboutUs = () => {
               </button>
             </div>
             {descriptions.map((description, index) => (
-              <div key={index} className="multi-field-item" style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+              <div key={index} className="AdminMultiFieldItem" style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
                 <textarea
                   value={description}
                   onChange={(e) => updateDescription(index, e.target.value)}
@@ -555,7 +555,7 @@ const AboutUs = () => {
         <div className="form-section">
           <h3 className="form-section-title">🎯 Hizmetler Bölümü</h3>
 
-          <div className="form-group service-section">
+          <div className="form-group AdminServiceSection">
             <label htmlFor="servicesTitle" className="form-label">Hizmetler Başlığı</label>
             <input
               type="text"
@@ -568,8 +568,8 @@ const AboutUs = () => {
 
             <label className="form-label">Hizmet Maddeleri</label>
             {servicesList.map((item, index) => (
-              <div key={index} className="service-item-row-old">
-                <span className="index">{index + 1}.</span>
+              <div key={index} className="AdminServiceItemRowOld">
+                <span className="AdminIndex">{index + 1}.</span>
                 <input
                   type="text"
                   className="form-input"
@@ -689,21 +689,21 @@ const AboutUs = () => {
         <div className="form-section">
           <h3 className="form-section-title">🖼️ Galeri Görselleri</h3>
           <p className="form-help">En fazla 4 görsel yükleyebilirsiniz.</p>
-        <div className="gallery-grid">
+        <div className="AdminGalleryGrid">
           {[0, 1, 2, 3].map((index) => {
             const imageObj = applicationAreaImages[index];
             return (
-              <div key={index} className="gallery-item image-box">
+              <div key={index} className="AdminGalleryItem AdminImageBox">
                 {imageObj && imageObj.url ? (
                   <>
                     <img
                       src={imageObj.url}
                       alt={`Uygulama Alanı ${index + 1}`}
-                      className="image-preview-square"
+                      className="AdminImagePreviewSquare"
                     />
-                    <div className="image-overlay">
+                    <div className="AdminImageOverlay">
                       <span
-                        className="edit-icon"
+                        className="AdminEditIcon"
                         onClick={() => triggerApplicationFileInput(index)}
                         title="Resmi Değiştir"
                       >
@@ -713,10 +713,10 @@ const AboutUs = () => {
                   </>
                 ) : (
                   <div
-                    className="image-placeholder"
+                    className="AdminImagePlaceholder"
                     onClick={() => triggerApplicationFileInput(index)}
                   >
-                    <div className="plus-icon">
+                    <div className="AdminPlusIcon">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -747,7 +747,7 @@ const AboutUs = () => {
         </div>
         </div>
 
-        <div className="form-actions">
+        <div className="AdminFormActions">
           <button type="submit" className="save-btn primary btn-lg">
             💾 Değişiklikleri Kaydet
           </button>
@@ -756,13 +756,13 @@ const AboutUs = () => {
 
       {/* Image Selector Modal */}
       {showImageSelector && (
-        <div className="modal-overlay" onClick={(e) => {
-          if (e.target.className === 'modal-overlay') {
+        <div className="AdminModalOverlay" onClick={(e) => {
+          if (e.target.className === 'AdminModalOverlay') {
             setShowImageSelector(false);
           }
         }}>
-          <div className="modal-content" style={{ maxWidth: '800px', maxHeight: '80vh', overflow: 'auto' }}>
-            <div className="modal-header">
+          <div className="AdminModalContent" style={{ maxWidth: '800px', maxHeight: '80vh', overflow: 'auto' }}>
+            <div className="AdminModalHeader">
               <h3>Sistemden Görsel Seç</h3>
               <button
                 type="button"
@@ -772,8 +772,8 @@ const AboutUs = () => {
                 ×
               </button>
             </div>
-            <div className="modal-body">
-              <div className="files-grid" style={{ 
+            <div className="AdminModalBody">
+              <div className="AdminFilesGrid" style={{ 
                 display: 'grid', 
                 gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', 
                 gap: '15px',
@@ -782,7 +782,7 @@ const AboutUs = () => {
                 {availableImages.map((imagePath, index) => (
                   <div
                     key={index}
-                    className="file-item"
+                    className="AdminFileItem"
                     onClick={() => selectImageFromSystem(imagePath)}
                     style={{
                       cursor: 'pointer',

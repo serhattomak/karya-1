@@ -1,5 +1,5 @@
 /* ===========================================
-   KARYA WEB - ABOUT US COMPONENT CSS
+   KARYA WEB - ADMIN ABOUT US COMPONENT CSS
    ===========================================
    Bu dosyada buton ve form stilleri temizlenmiştir.
    Buton stilleri artık src/styles/buttons.css'de,
@@ -7,33 +7,33 @@
    =========================================== */
 
 /* Panel Header */
-.section-header {
+.AdminSectionHeader {
   margin-bottom: 2rem;
   padding-bottom: 1rem;
   border-bottom: 3px solid #f68b1f;
 }
 
-.panel-title {
+.AdminPanelTitle {
   font-size: 2rem;
   font-weight: 700;
   color: #333;
   margin: 0 0 0.5rem 0;
 }
 
-.panel-description {
+.AdminPanelDescription {
   color: #666;
   font-size: 1rem;
   margin: 0;
 }
 
 /* Form Container */
-.form-container {
+.AdminFormContainer {
   max-width: 800px;
   margin: 0 auto;
 }
 
 /* Service Section Specific */
-.service-section {
+.AdminServiceSection {
   margin-top: 1rem;
   padding: 1.5rem;
   border: 1px solid #e9ecef;
@@ -41,14 +41,14 @@
   background-color: #f8f9fa;
 }
 
-.service-item-row-old {
+.AdminServiceItemRowOld {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 0.75rem;
 }
 
-.service-item-row-old .index {
+.AdminServiceItemRowOld .AdminIndex {
   min-width: 2rem;
   text-align: center;
   font-weight: 600;
@@ -60,19 +60,19 @@
   border: 2px solid #f68b1f;
 }
 
-.service-item-row-old .form-input {
+.AdminServiceItemRowOld .AdminFormInput {
   flex: 1;
 }
 
 /* Gallery Grid */
-.gallery-grid {
+.AdminGalleryGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1.5rem;
   margin-top: 1rem;
 }
 
-.gallery-item {
+.AdminGalleryItem {
   position: relative;
   border-radius: 8px;
   overflow: hidden;
@@ -81,13 +81,13 @@
   transition: all 0.3s ease;
 }
 
-.gallery-item:hover {
+.AdminGalleryItem:hover {
   border-color: #f68b1f;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(246, 139, 31, 0.15);
 }
 
-.image-box {
+.AdminImageBox {
   aspect-ratio: 1;
   display: flex;
   align-items: center;
@@ -95,14 +95,14 @@
   position: relative;
 }
 
-.image-preview-square {
+.AdminImagePreviewSquare {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 6px;
 }
 
-.image-overlay {
+.AdminImageOverlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -117,21 +117,21 @@
   border-radius: 6px;
 }
 
-.image-box:hover .image-overlay {
+.AdminImageBox:hover .AdminImageOverlay {
   opacity: 1;
 }
 
-.edit-icon {
+.AdminEditIcon {
   font-size: 1.5rem;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
 
-.edit-icon:hover {
+.AdminEditIcon:hover {
   transform: scale(1.2);
 }
 
-.image-placeholder {
+.AdminImagePlaceholder {
   width: 100%;
   height: 100%;
   display: flex;
@@ -142,41 +142,41 @@
   border-radius: 6px;
 }
 
-.image-placeholder:hover {
+.AdminImagePlaceholder:hover {
   background: rgba(246, 139, 31, 0.1);
 }
 
-.plus-icon {
+.AdminPlusIcon {
   width: 3rem;
   height: 3rem;
   color: #6c757d;
   transition: color 0.3s ease;
 }
 
-.image-placeholder:hover .plus-icon {
+.AdminImagePlaceholder:hover .AdminPlusIcon {
   color: #f68b1f;
 }
 
 /* Preview Image */
-.preview-image {
+.AdminPreviewImage {
   border: 2px solid #e9ecef;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
 }
 
-.preview-image:hover {
+.AdminPreviewImage:hover {
   transform: scale(1.02);
 }
 
 /* Form Actions */
-.form-actions {
+.AdminFormActions {
   margin-top: 2rem;
   padding-top: 2rem;
   border-top: 1px solid #e9ecef;
   text-align: center;
 }
 
-.form-actions .save-btn {
+.AdminFormActions .AdminSaveBtn {
   background: #f68b1f;
   color: white;
   padding: 10px 20px;
@@ -192,7 +192,7 @@
 }
 
 /* Loading State */
-.loading {
+.AdminLoading {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -201,7 +201,7 @@
   text-align: center;
 }
 
-.loading-spinner {
+.AdminLoadingSpinner {
   width: 40px;
   height: 40px;
   border: 3px solid #f3f3f3;
@@ -216,7 +216,7 @@
   100% { transform: rotate(360deg); }
 }
 
-.loading p {
+.AdminLoading p {
   color: #666;
   font-size: 1rem;
   margin: 0;
@@ -224,42 +224,42 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .panel-title {
+  .AdminPanelTitle {
     font-size: 1.5rem;
   }
   
-  .gallery-grid {
+  .AdminGalleryGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
   
-  .service-item-row {
+  .AdminServiceItemRow {
     flex-direction: column;
     align-items: stretch;
     gap: 0.5rem;
   }
   
-  .service-item-row .index {
+  .AdminServiceItemRow .AdminIndex {
     align-self: flex-start;
     min-width: auto;
     width: 2rem;
   }
   
-  .form-container {
+  .AdminFormContainer {
     padding: 0 1rem;
   }
 }
 
 @media (max-width: 480px) {
-  .gallery-grid {
+  .AdminGalleryGrid {
     grid-template-columns: 1fr;
   }
   
-  .panel-title {
+  .AdminPanelTitle {
     font-size: 1.25rem;
   }
   
-  .plus-icon {
+  .AdminPlusIcon {
     width: 2rem;
     height: 2rem;
   }
@@ -267,15 +267,15 @@
 
 /* Print Styles */
 @media print {
-  .gallery-item,
-  .form-actions,
-  .image-overlay {
+  .AdminGalleryItem,
+  .AdminFormActions,
+  .AdminImageOverlay {
     display: none !important;
   }
 }
 
 /* Banner Image Styles */
-.banner-image-options {
+.AdminBannerImageOptions {
   margin-top: 15px;
 }
 
@@ -289,7 +289,7 @@
   border-radius: 8px;
 } */
 
-.image-option {
+.AdminImageOption {
   cursor: pointer;
   border: 2px solid transparent;
   border-radius: 8px;
@@ -297,17 +297,17 @@
   overflow: hidden;
 }
 
-.image-option:hover {
+.AdminImageOption:hover {
   border-color: #007bff;
   box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
 }
 
-.image-option.selected {
+.AdminImageOption.AdminSelected {
   border-color: #28a745;
   box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
 }
 
-.selected-image-preview {
+.AdminSelectedImagePreview {
   margin-top: 15px;
   padding: 15px;
   background-color: #e7f3ff;
@@ -316,19 +316,19 @@
 }
 
 /* Multi-field styles */
-.multi-field-item {
+.AdminMultiFieldItem {
   display: flex;
   gap: 10px;
   margin-bottom: 10px;
   align-items: flex-start;
 }
 
-.multi-field-item .form-input,
-.multi-field-item .form-textarea {
+.AdminMultiFieldItem .AdminFormInput,
+.AdminMultiFieldItem .AdminFormTextarea {
   flex: 1;
 }
 
-.section-header {
+.AdminFormSectionHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -336,7 +336,7 @@
 }
 
 /* Service group styles - NEW SYSTEM */
-.service-group {
+.AdminServiceGroup {
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   padding: 20px;
@@ -344,7 +344,7 @@
   background-color: #fafafa;
 }
 
-.service-group-header {
+.AdminServiceGroupHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -353,21 +353,21 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
-.service-item-row-new {
+.AdminServiceItemRowNew {
   display: flex;
   gap: 10px;
   margin-bottom: 10px;
   align-items: center;
 }
 
-.service-item-row-new .index {
+.AdminServiceItemRowNew .AdminIndex {
   min-width: 30px;
   font-weight: bold;
   color: #666;
 }
 
 /* Modal Styles */
-.modal-overlay {
+.AdminModalOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -380,7 +380,7 @@
   z-index: 1000;
 }
 
-.modal-content {
+.AdminModalContent {
   background: white;
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -389,7 +389,7 @@
   overflow: hidden;
 }
 
-.modal-header {
+.AdminModalHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -398,18 +398,18 @@
   background-color: #f8f9fa;
 }
 
-.modal-header h3 {
+.AdminModalHeader h3 {
   margin: 0;
   color: #333;
   font-size: 1.25rem;
 }
 
-.modal-body {
+.AdminModalBody {
   padding: 0;
   overflow-y: auto;
 }
 
-.files-grid .file-item:hover {
+.AdminFilesGrid .AdminFileItem:hover {
   border-color: #f68b1f;
   box-shadow: 0 4px 12px rgba(246, 139, 31, 0.15);
   transform: translateY(-2px);
@@ -417,11 +417,11 @@
 
 /* High Contrast Mode */
 @media (prefers-contrast: high) {
-  .gallery-item {
+  .AdminGalleryItem {
     border-color: #000;
   }
   
-  .image-overlay {
+  .AdminImageOverlay {
     background: rgba(0, 0, 0, 0.8);
   }
 }
