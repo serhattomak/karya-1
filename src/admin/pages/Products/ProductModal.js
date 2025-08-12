@@ -469,15 +469,15 @@ const ProductModal = ({ product, onClose, onSave }) => {
   };
 
   return (
-    <div className="modal-overlay" ref={modalRef} onClick={handleOverlayClick}>
-      <div className="modal-content product-modal">
-        <div className="modal-header">
+    <div className="AdminModalOverlay" ref={modalRef} onClick={handleOverlayClick}>
+      <div className="AdminModalContent AdminProductModal">
+        <div className="AdminModalHeader">
           <h3>{product ? "Ürün Düzenle" : "Yeni Ürün Ekle"}</h3>
-          <button className="close-btn" onClick={onClose}>×</button>
+          <button className="AdminCloseBtn" onClick={onClose}>×</button>
         </div>
 
-        <form onSubmit={handleSubmit} className="modal-form">
-          <div className="form-group">
+        <form onSubmit={handleSubmit} className="AdminModalForm">
+          <div className="AdminFormGroup">
             <label>Ürün Adı *</label>
             <input
               type="text"
@@ -500,7 +500,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
           </div>
 
           {/* Slug */}
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label>URL Slug *</label>
             <input
               type="text"
@@ -515,10 +515,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
           </div>
 
           {/* Başlıklar */}
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label>Başlıklar</label>
             {titles.map((title, index) => (
-              <div key={index} className="input-group">
+              <div key={index} className="AdminInputGroup">
                 <input
                   type="text"
                   value={title}
@@ -528,7 +528,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 {titles.length > 1 && (
                   <button
                     type="button"
-                    className="remove-btn danger"
+                    className="AdminRemoveBtn danger"
                     onClick={() => removeTitle(index)}
                   >
                     ×
@@ -536,16 +536,16 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="add-btn secondary" onClick={addTitle}>
+            <button type="button" className="AdminAddBtn secondary" onClick={addTitle}>
               + Başlık Ekle
             </button>
           </div>
 
           {/* Alt Başlıklar */}
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label>Alt Başlıklar</label>
             {subtitles.map((subtitle, index) => (
-              <div key={index} className="input-group">
+              <div key={index} className="AdminInputGroup">
                 <input
                   type="text"
                   value={subtitle}
@@ -555,7 +555,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 {subtitles.length > 1 && (
                   <button
                     type="button"
-                    className="remove-btn danger"
+                    className="AdminRemoveBtn danger"
                     onClick={() => removeSubtitle(index)}
                   >
                     ×
@@ -563,16 +563,16 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="add-btn secondary" onClick={addSubtitle}>
+            <button type="button" className="AdminAddBtn secondary" onClick={addSubtitle}>
               + Alt Başlık Ekle
             </button>
           </div>
 
           {/* Açıklamalar */}
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label>Açıklamalar</label>
             {descriptions.map((description, index) => (
-              <div key={index} className="input-group">
+              <div key={index} className="AdminInputGroup">
                 <textarea
                   value={description}
                   onChange={(e) => updateDescription(index, e.target.value)}
@@ -582,7 +582,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 {descriptions.length > 1 && (
                   <button
                     type="button"
-                    className="remove-btn danger"
+                    className="AdminRemoveBtn danger"
                     onClick={() => removeDescription(index)}
                   >
                     ×
@@ -590,16 +590,16 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="add-btn secondary" onClick={addDescription}>
+            <button type="button" className="AdminAddBtn secondary" onClick={addDescription}>
               + Açıklama Ekle
             </button>
           </div>
 
           {/* Liste Başlıkları */}
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label>Liste Başlıkları</label>
             {listTitles.map((listTitle, index) => (
-              <div key={index} className="input-group">
+              <div key={index} className="AdminInputGroup">
                 <input
                   type="text"
                   value={listTitle}
@@ -609,7 +609,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 {listTitles.length > 1 && (
                   <button
                     type="button"
-                    className="remove-btn danger"
+                    className="AdminRemoveBtn danger"
                     onClick={() => removeListTitle(index)}
                   >
                     ×
@@ -617,16 +617,16 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="add-btn secondary" onClick={addListTitle}>
+            <button type="button" className="AdminAddBtn secondary" onClick={addListTitle}>
               + Liste Başlığı Ekle
             </button>
           </div>
 
           {/* Liste Öğeleri */}
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label>Liste Öğeleri</label>
             {listItems.map((item, index) => (
-              <div key={index} className="input-group">
+              <div key={index} className="AdminInputGroup">
                 <input
                   type="text"
                   value={item}
@@ -636,7 +636,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 {listItems.length > 1 && (
                   <button
                     type="button"
-                    className="remove-btn danger"
+                    className="AdminRemoveBtn danger"
                     onClick={() => removeListItem(index)}
                   >
                     ×
@@ -644,16 +644,16 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="add-btn secondary" onClick={addListItem}>
+            <button type="button" className="AdminAddBtn secondary" onClick={addListItem}>
               + Liste Öğesi Ekle
             </button>
           </div>
 
           {/* URL'ler */}
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label>URL'ler</label>
             {urls.map((url, index) => (
-              <div key={index} className="input-group">
+              <div key={index} className="AdminInputGroup">
                 <input
                   type="url"
                   value={url}
@@ -663,7 +663,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 {urls.length > 1 && (
                   <button
                     type="button"
-                    className="remove-btn danger"
+                    className="AdminRemoveBtn danger"
                     onClick={() => removeUrl(index)}
                   >
                     ×
@@ -671,22 +671,22 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="add-btn secondary" onClick={addUrl}>
+            <button type="button" className="AdminAddBtn secondary" onClick={addUrl}>
               + URL Ekle
             </button>
           </div>
 
           {/* Banner Image URL */}
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label>Banner Görseli</label>
-            <div className="banner-image-input">
+            <div className="AdminBannerImageInput">
               <input
                 type="url"
                 value={bannerImageUrl}
                 onChange={(e) => setBannerImageUrl(e.target.value)}
                 placeholder="Banner görsel URL'si girebilir ya da dosya seçebilirsiniz"
               />
-              <div className="banner-image-controls">
+              <div className="AdminBannerImageControls">
                 <input
                   type="file"
                   accept="image/*"
@@ -694,19 +694,19 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   style={{ display: 'none' }}
                   id="banner-file-input"
                 />
-                <label htmlFor="banner-file-input" className="file-select-btn primary">
+                <label htmlFor="banner-file-input" className="AdminFileSelectBtn primary">
                   Dosya Seç
                 </label>
                 <button
                   type="button"
-                  className="file-select-btn primary"
+                  className="AdminFileSelectBtn primary"
                   onClick={() => openFileSelector('banner')}
                 >
                   Sistemden Seç
                 </button>
               </div>
               {bannerImageUrl && (
-                <div className="banner-preview">
+                <div className="AdminBannerPreview">
                   <img src={bannerImageUrl} alt="Banner önizleme" style={{ maxWidth: '200px', maxHeight: '100px' }} />
                 </div>
               )}
@@ -714,10 +714,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
           </div>
 
           {/* Product Image ID */}
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label>Ana Ürün Görseli</label>
-            <div className="product-image-selector">
-              <div className="upload-controls">
+            <div className="AdminProductImageSelector">
+              <div className="AdminUploadControls">
                 <input
                   type="file"
                   accept="image/*"
@@ -743,20 +743,20 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   style={{ display: 'none' }}
                   id="product-image-input"
                 />
-                <label htmlFor="product-image-input" className="file-select-btn primary">
+                <label htmlFor="product-image-input" className="AdminFileSelectBtn primary">
                   Yeni Görsel Yükle
                 </label>
                 <button
                   type="button"
-                  className="file-select-btn primary"
+                  className="AdminFileSelectBtn primary"
                   onClick={() => openFileSelector('productImage')}
                 >
                   Sistemden Seç
                 </button>
               </div>
               {productImageId && (
-                <div className="selected-file-info">
-                  <div className="selected-image-preview">
+                <div className="AdminSelectedFileInfo">
+                  <div className="AdminSelectedImagePreview">
                     {(() => {
                       const selectedImage = getSelectedProductImage();
                       return selectedImage ? (
@@ -775,7 +775,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   </div>
                   <button
                     type="button"
-                    className="remove-btn danger"
+                    className="AdminRemoveBtn danger"
                     onClick={() => setProductImageId('')}
                   >
                     ×
@@ -786,26 +786,26 @@ const ProductModal = ({ product, onClose, onSave }) => {
           </div>
 
           {/* Product Documents */}
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label>Ürün Dökümanları</label>
-            <div className="documents-selector">
-              <div className="upload-controls">
+            <div className="AdminDocumentsSelector">
+              <div className="AdminUploadControls">
                 <button
                   type="button"
-                  className="file-select-btn primary"
+                  className="AdminFileSelectBtn primary"
                   onClick={openDocumentSelector}
                 >
                   Döküman Seç
                 </button>
               </div>
               {selectedDocuments.length > 0 && (
-                <div className="selected-documents">
+                <div className="AdminSelectedDocuments">
                   {selectedDocuments.map((documentId) => {
                     const document = getSelectedDocumentData(documentId);
                     if (!document) return null;
                     
                     return (
-                      <div key={documentId} className="selected-document-item">
+                      <div key={documentId} className="AdminSelectedDocumentItem">
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                           {document.previewImageUrl ? (
                             <img 
@@ -835,7 +835,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                         </div>
                         <button
                           type="button"
-                          className="remove-item-btn"
+                          className="AdminRemoveItemBtn"
                           onClick={() => removeDocument(documentId)}
                         >
                           ×
@@ -849,10 +849,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
           </div>
 
           {/* Product Detail Image IDs */}
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label>Ürün Detay Görselleri</label>
-            <div className="product-detail-images-selector">
-              <div className="upload-controls">
+            <div className="AdminProductDetailImagesSelector">
+              <div className="AdminUploadControls">
                 <input
                   type="file"
                   accept="image/*"
@@ -878,23 +878,23 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   style={{ display: 'none' }}
                   id="detail-image-input"
                 />
-                <label htmlFor="detail-image-input" className="file-select-btn primary">
+                <label htmlFor="detail-image-input" className="AdminFileSelectBtn primary">
                   Yeni Görsel Yükle
                 </label>
                 <button
                   type="button"
-                  className="file-select-btn primary"
+                  className="AdminFileSelectBtn primary"
                   onClick={() => openFileSelector('productDetailImage')}
                 >
                   Sistemden Seç
                 </button>
               </div>
               {productDetailImageIds.length > 0 && (
-                <div className="selected-images">
+                <div className="AdminSelectedImages">
                   {productDetailImageIds.map((id, index) => {
                     const image = productDetailImages.find(img => img.id === id);
                     return (
-                      <div key={index} className="selected-image-item">
+                      <div key={index} className="AdminSelectedImageItem">
                         {image ? (
                           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <img 
@@ -909,7 +909,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                         )}
                         <button
                           type="button"
-                          className="remove-btn danger"
+                          className="AdminRemoveBtn danger"
                           onClick={() => {
                             setProductDetailImageIds(productDetailImageIds.filter((_, i) => i !== index));
                             setProductDetailImages(prev => prev.filter(img => img.id !== id));
@@ -926,10 +926,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
           </div>
 
           {/* Ürün Dosyaları/Dökümanları */}
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label>Ürün Dosyaları/Dökümanları</label>
-            <div className="document-files-selector">
-              <div className="upload-controls">
+            <div className="AdminDocumentFilesSelector">
+              <div className="AdminUploadControls">
                 <input
                   type="file"
                   multiple
@@ -954,21 +954,21 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   style={{ display: 'none' }}
                   id="document-file-input"
                 />
-                <label htmlFor="document-file-input" className="file-select-btn primary">
+                <label htmlFor="document-file-input" className="AdminFileSelectBtn primary">
                   Yeni Dosya Yükle
                 </label>
                 <button
                   type="button"
-                  className="file-select-btn primary"
+                  className="AdminFileSelectBtn primary"
                   onClick={() => openFileSelector('documentFile')}
                 >
                   Sistemden Seç
                 </button>
               </div>
               {documentFiles.filter(doc => !doc.isDocumentImage).length > 0 && (
-                <div className="selected-files">
+                <div className="AdminSelectedFiles">
                   {documentFiles.filter(doc => !doc.isDocumentImage).map((doc, index) => (
-                    <div key={doc.id} className="selected-file-item">
+                    <div key={doc.id} className="AdminSelectedFileItem">
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         {doc.url && doc.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
                           <img 
@@ -994,7 +994,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                       </div>
                       <button
                         type="button"
-                        className="remove-btn danger"
+                        className="AdminRemoveBtn danger"
                         onClick={() => removeDocumentFile(doc.id)}
                       >
                         ×
@@ -1006,11 +1006,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
             </div>
           </div>
 
-          <div className="modal-footer">
-            <button type="button" className="cancel-btn danger" onClick={onClose}>
+          <div className="AdminModalFooter">
+            <button type="button" className="AdminCancelBtn danger" onClick={onClose}>
               İptal
             </button>
-            <button type="submit" className="save-btn primary" disabled={loading}>
+            <button type="submit" className="AdminSaveBtn primary" disabled={loading}>
               {loading ? "Kaydediliyor..." : "Kaydet"}
             </button>
           </div>
@@ -1019,20 +1019,20 @@ const ProductModal = ({ product, onClose, onSave }) => {
 
       {/* Dosya Seçici Modal */}
       {showFileSelector && (
-        <div className="file-selector-modal">
-          <div className="file-selector-content">
-            <div className="file-selector-header">
+        <div className="AdminFileSelectorModal">
+          <div className="AdminFileSelectorContent">
+            <div className="AdminFileSelectorHeader">
               <h3>Dosya Seç</h3>
               <button
                 type="button"
-                className="close-btn"
+                className="AdminCloseBtn"
                 onClick={() => setShowFileSelector(false)}
               >
                 ×
               </button>
             </div>
-            <div className="file-selector-body">
-              <div className="files-grid">
+            <div className="AdminFileSelectorBody">
+              <div className="AdminFilesGrid">
                 {availableFiles
                   .filter(file => {
                     // Görsel seçimi için sadece resimleri göster
@@ -1048,7 +1048,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   .map(file => (
                     <div
                       key={file.id}
-                      className="file-item"
+                      className="AdminFileItem"
                       onClick={() => selectFileFromSystem(file)}
                     >
                       {file.contentType?.startsWith('image/') || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
@@ -1058,13 +1058,13 @@ const ProductModal = ({ product, onClose, onSave }) => {
                           loading="lazy"
                         />
                       ) : (
-                        <div className="file-icon">
+                        <div className="AdminFileIcon">
                           <span style={{ fontSize: '48px' }}>📄</span>
                         </div>
                       )}
-                      <div className="file-info">
-                        <span className="file-name">{file.name}</span>
-                        <span className="file-size">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                      <div className="AdminFileInfo">
+                        <span className="AdminFileName">{file.name}</span>
+                        <span className="AdminFileSize">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
                       </div>
                     </div>
                   ))}
@@ -1076,26 +1076,26 @@ const ProductModal = ({ product, onClose, onSave }) => {
 
       {/* Document Seçici Modal */}
       {showDocumentSelector && (
-        <div className="file-selector-modal">
-          <div className="file-selector-content">
-            <div className="file-selector-header">
+        <div className="AdminFileSelectorModal">
+          <div className="AdminFileSelectorContent">
+            <div className="AdminFileSelectorHeader">
               <h3>Döküman Seç</h3>
               <button
                 type="button"
-                className="close-btn"
+                className="AdminCloseBtn"
                 onClick={() => setShowDocumentSelector(false)}
               >
                 ×
               </button>
             </div>
-            <div className="file-selector-body">
-              <div className="documents-grid">
+            <div className="AdminFileSelectorBody">
+              <div className="AdminDocumentsGrid">
                 {availableDocuments
                   .filter(doc => !selectedDocuments.includes(doc.id))
                   .map(document => (
                     <div
                       key={document.id}
-                      className="file-item document-item"
+                      className="AdminFileItem AdminDocumentItem"
                       onClick={() => selectDocument(document)}
                     >
                       {document.previewImageUrl ? (
@@ -1105,15 +1105,15 @@ const ProductModal = ({ product, onClose, onSave }) => {
                           loading="lazy"
                         />
                       ) : (
-                        <div className="file-icon">
+                        <div className="AdminFileIcon">
                           <span style={{ fontSize: '48px' }}>📄</span>
                         </div>
                       )}
-                      <div className="file-info">
-                        <span className="file-name">{document.name}</span>
-                        <span className="file-category">{document.category || 'Kategori Yok'}</span>
+                      <div className="AdminFileInfo">
+                        <span className="AdminFileName">{document.name}</span>
+                        <span className="AdminFileCategory">{document.category || 'Kategori Yok'}</span>
                         {document.description && (
-                          <span className="file-description">{document.description}</span>
+                          <span className="AdminFileDescription">{document.description}</span>
                         )}
                       </div>
                     </div>

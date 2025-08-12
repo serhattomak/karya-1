@@ -1,11 +1,11 @@
 /* Products Main Styles */
-.admin-panel {
+.AdminPanel {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.panel-header {
+.AdminPanelHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -14,7 +14,7 @@
   padding-bottom: 15px;
 }
 
-.panel-title {
+.AdminPanelTitle {
   font-size: 28px;
   font-weight: bold;
   color: #333;
@@ -40,14 +40,14 @@
 } */
 
 /* Products Grid */
-.products-grid {
+.AdminProductsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 25px;
   margin-bottom: 30px;
 }
 
-.product-card {
+.AdminProductCard {
   background: transparent;
   border-radius: 15px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
@@ -56,12 +56,12 @@
   border: 1px solid #f0f0f0;
 }
 
-.product-card:hover {
+.AdminProductCard:hover {
   transform: translateY(-5px);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
 }
 
-.product-image {
+.AdminProductImage {
   width: 100%;
   height: 200px;
   overflow: hidden;
@@ -69,7 +69,7 @@
   background: transparent;
 }
 
-.product-image img {
+.AdminProductImage img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -77,16 +77,16 @@
   background: transparent;
 }
 
-.product-image img[src*=".png"] {
+.AdminProductImage img[src*=".png"] {
   object-fit: contain;
   background: transparent;
 }
 
-.product-card:hover .product-image img {
+.AdminProductCard:hover .AdminProductImage img {
   transform: scale(1.05);
 }
 
-.no-image {
+.AdminNoImage {
   width: 100%;
   height: 100%;
   background: linear-gradient(135deg, #f8f9fa, #e9ecef);
@@ -97,12 +97,12 @@
   font-weight: 500;
 }
 
-.product-info {
+.AdminProductInfo {
   padding: 20px;
   background: transparent;
 }
 
-.product-name {
+.AdminProductName {
   font-size: 20px;
   font-weight: bold;
   color: #333;
@@ -110,14 +110,14 @@
   line-height: 1.3;
 }
 
-.product-title {
+.AdminProductTitle {
   font-size: 16px;
   color: #ffffff;
   margin: 0 0 10px 0;
   font-weight: 600;
 }
 
-.product-description {
+.AdminProductDescription {
   font-size: 14px;
   color: #666;
   margin: 0 0 20px 0;
@@ -125,14 +125,14 @@
 }
 
 /* Subtitle styles */
-.product-subtitles {
+.AdminProductSubtitles {
   margin: 8px 0;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-.product-subtitle {
+.AdminProductSubtitle {
   background: transparent;
   color: #4a5568;
   padding: 0;
@@ -142,7 +142,7 @@
   display: inline;
 }
 
-.more-subtitles {
+.AdminMoreSubtitles {
   background: transparent;
   color: #2d3748;
   padding: 0;
@@ -153,11 +153,11 @@
 }
 
 /* List items styles */
-.product-list-items {
+.AdminProductListItems {
   margin: 12px 0 0 0;
 }
 
-.product-list-items h5 {
+.AdminProductListItems h5 {
   margin: 0 0 6px 0;
   font-size: 0.85rem;
   color: #4a5568;
@@ -166,24 +166,24 @@
   letter-spacing: 0.5px;
 }
 
-.product-list-items ul {
+.AdminProductListItems ul {
   margin: 0;
   padding-left: 16px;
   font-size: 0.85rem;
   color: #718096;
 }
 
-.product-list-items li {
+.AdminProductListItems li {
   margin: 2px 0;
   line-height: 1.4;
 }
 
-.more-items {
+.AdminMoreItems {
   font-style: italic;
   color: #a0aec0 !important;
 }
 
-.product-actions {
+.AdminProductActions {
   display: flex;
   gap: 10px;
 }
@@ -220,20 +220,20 @@
 } */
 
 /* No Products State */
-.no-products {
+.AdminNoProducts {
   text-align: center;
   padding: 60px 20px;
   color: #666;
   grid-column: 1 / -1;
 }
 
-.no-products p {
+.AdminNoProducts p {
   font-size: 18px;
   margin: 0;
 }
 
 /* Loading State */
-.loading {
+.AdminLoading {
   text-align: center;
   padding: 60px 20px;
   font-size: 18px;
@@ -241,7 +241,7 @@
 }
 
 /* Pagination */
-.pagination {
+.AdminPagination {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -250,7 +250,7 @@
   padding: 20px 0;
 }
 
-.pagination-btn {
+.AdminPaginationBtn {
   background: #f68b1f;
   color: white;
   border: none;
@@ -262,25 +262,25 @@
   transition: all 0.3s ease;
 }
 
-.pagination-btn:hover:not(:disabled) {
+.AdminPaginationBtn:hover:not(:disabled) {
   background: #ee5c30;
   transform: translateY(-1px);
 }
 
-.pagination-btn:disabled {
+.AdminPaginationBtn:disabled {
   background: #6c757d;
   cursor: not-allowed;
   transform: none;
 }
 
-.pagination-info {
+.AdminPaginationInfo {
   font-size: 16px;
   color: #333;
   font-weight: 500;
 }
 
 /* Modal Styles */
-.modal-overlay {
+.AdminModalOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -294,7 +294,7 @@
   backdrop-filter: blur(5px);
 }
 
-.modal-content {
+.AdminModalContent {
   background: white;
   border-radius: 15px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -315,15 +315,15 @@
   }
 }
 
-.product-modal {
+.AdminProductModal {
   width: 600px;
 }
 
-.delete-modal {
+.AdminDeleteModal {
   width: 400px;
 }
 
-.modal-header {
+.AdminModalHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -332,13 +332,13 @@
   background: linear-gradient(135deg, #f8f9fa, #e9ecef);
 }
 
-.modal-header h3 {
+.AdminModalHeader h3 {
   margin: 0;
   font-size: 22px;
   color: #333;
 }
 
-.close-btn {
+.AdminCloseBtn {
   background: none;
   border: none;
   font-size: 24px;
@@ -353,38 +353,38 @@
   transition: all 0.3s ease;
 }
 
-.close-btn:hover {
+.AdminCloseBtn:hover {
   background: #dc3545;
   color: white;
 }
 
-.modal-form {
+.AdminModalForm {
   padding: 25px;
   max-height: 70vh;
   overflow-y: auto;
 }
 
-.modal-body {
+.AdminModalBody {
   padding: 25px;
   text-align: center;
 }
 
-.warning-icon {
+.AdminWarningIcon {
   font-size: 48px;
   margin-bottom: 15px;
 }
 
-.warning-text {
+.AdminWarningText {
   color: #dc3545;
   font-weight: 600;
   margin-top: 10px;
 }
 
-.form-group {
+.AdminFormGroup {
   margin-bottom: 25px;
 }
 
-.form-group label {
+.AdminFormGroup label {
   display: block;
   margin-bottom: 8px;
   font-weight: 600; 
@@ -392,8 +392,8 @@
   font-size: 14px;
 }
 
-.form-group input,
-.form-group textarea {
+.AdminFormGroup input,
+.AdminFormGroup textarea {
   width: 100%;
   padding: 12px 15px;
   border: 2px solid #e9ecef;
@@ -403,26 +403,26 @@
   box-sizing: border-box;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+.AdminFormGroup input:focus,
+.AdminFormGroup textarea:focus {
   outline: none;
   border-color: #f68b1f;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
-.input-group {
+.AdminInputGroup {
   display: flex;
   gap: 10px;
   margin-bottom: 10px;
   align-items: flex-start;
 }
 
-.input-group input,
-.input-group textarea {
+.AdminInputGroup input,
+.AdminInputGroup textarea {
   flex: 1;
 }
 
-.remove-btn {
+.AdminRemoveBtn {
   background: #dc3545;
   color: white;
   border: none;
@@ -438,15 +438,15 @@
   transition: background 0.3s ease;
 }
 
-.remove-btn:hover {
+.AdminRemoveBtn:hover {
   background: #c82333;
 }
 
-.remove-btn.danger {
+.AdminRemoveBtn.danger {
   background: #dc3545;
 }
 
-.remove-btn.danger:hover {
+.AdminRemoveBtn.danger:hover {
   background: #c82333;
 }
 
@@ -474,18 +474,18 @@
   background: #545b62;
 } */
 
-.file-input {
+.AdminFileInput {
   margin-bottom: 15px;
 }
 
-.image-preview-grid {
+.AdminImagePreviewGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 15px;
   margin-top: 15px;
 }
 
-.image-preview-item {
+.AdminImagePreviewItem {
   position: relative;
   width: 100px;
   height: 100px;
@@ -494,13 +494,13 @@
   border: 2px solid #e9ecef;
 }
 
-.image-preview-item img {
+.AdminImagePreviewItem img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.remove-image-btn {
+.AdminRemoveImageBtn {
   position: absolute;
   top: 5px;
   right: 5px;
@@ -518,19 +518,19 @@
   transition: background 0.3s ease;
 }
 
-.remove-image-btn:hover {
+.AdminRemoveImageBtn:hover {
   background: rgba(200, 35, 51, 1);
 }
 
-.remove-image-btn.danger {
+.AdminRemoveImageBtn.danger {
   background: rgba(220, 53, 69, 0.9);
 }
 
-.remove-image-btn.danger:hover {
+.AdminRemoveImageBtn.danger:hover {
   background: rgba(200, 35, 51, 1);
 }
 
-.modal-footer {
+.AdminModalFooter {
   display: flex;
   justify-content: flex-end;
   gap: 15px;
@@ -594,67 +594,67 @@
   background: #ee5c30;
 } */
 
-.delete-btn.danger {
+.AdminDeleteBtn.danger {
   background: linear-gradient(135deg, #dc3545, #c82333);
 }
 
-.delete-btn.danger:hover {
+.AdminDeleteBtn.danger:hover {
   background: linear-gradient(135deg, #c82333, #a71e2a);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .admin-panel {
+  .AdminPanel {
     padding: 15px;
   }
   
-  .panel-header {
+  .AdminPanelHeader {
     flex-direction: column;
     gap: 15px;
     text-align: center;
   }
   
-  .products-grid {
+  .AdminProductsGrid {
     grid-template-columns: 1fr;
     gap: 20px;
   }
   
-  .product-modal {
+  .AdminProductModal {
     width: 95vw;
   }
   
-  .delete-modal {
+  .AdminDeleteModal {
     width: 95vw;
     max-width: 400px;
   }
   
-  .modal-form {
+  .AdminModalForm {
     max-height: 60vh;
   }
   
-  .image-preview-grid {
+  .AdminImagePreviewGrid {
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   }
   
-  .image-preview-item {
+  .AdminImagePreviewItem {
     width: 80px;
     height: 80px;
   }
   
-  .pagination {
+  .AdminPagination {
     flex-direction: column;
     gap: 10px;
   }
 }
 
 /* Banner Image Input Styles */
-.banner-image-input {
+.AdminBannerImageInput {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.banner-image-controls {
+.AdminBannerImageControls {
   display: flex;
   gap: 10px;
 }
@@ -682,30 +682,30 @@
   background: #ee5c30;
 } */
 
-.banner-preview {
+.AdminBannerPreview {
   margin-top: 10px;
 }
 
 /* Image Upload Controls */
-.image-upload-controls {
+.AdminImageUploadControls {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.upload-controls {
+.AdminUploadControls {
   display: flex;
   gap: 10px;
   margin-bottom: 15px;
 }
 
-.selected-files {
+.AdminSelectedFiles {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.selected-file-item {
+.AdminSelectedFileItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -715,7 +715,7 @@
   border-radius: 6px;
 }
 
-.file-icon {
+.AdminFileIcon {
   width: 100%;
   height: 100px;
   display: flex;
@@ -753,7 +753,7 @@
 }
 
 /* File Selector Modal */
-.file-selector-modal {
+.AdminFileSelectorModal {
   position: fixed;
   top: 0;
   left: 0;
@@ -766,7 +766,7 @@
   z-index: 1001;
 }
 
-.file-selector-content {
+.AdminFileSelectorContent {
   background: white;
   border-radius: 8px;
   width: 90%;
@@ -776,7 +776,7 @@
   flex-direction: column;
 }
 
-.file-selector-header {
+.AdminFileSelectorHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -784,35 +784,23 @@
   border-bottom: 1px solid #e9ecef;
 }
 
-.file-selector-header h3 {
+.AdminFileSelectorHeader h3 {
   margin: 0;
   font-size: 18px;
 }
 
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #666;
-}
-
-.close-btn:hover {
-  color: #000;
-}
-
-.file-selector-body {
+.AdminFileSelectorBody {
   padding: 20px;
   overflow-y: auto;
 }
 
-.files-grid {
+.AdminFilesGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 15px;
 }
 
-.file-item {
+.AdminFileItem {
   border: 1px solid #e9ecef;
   border-radius: 8px;
   padding: 10px;
@@ -820,12 +808,12 @@
   transition: all 0.2s ease;
 }
 
-.file-item:hover {
+.AdminFileItem:hover {
   border-color: #f68b1f;
   box-shadow: 0 2px 8px rgba(246, 139, 31, 0.2);
 }
 
-.file-item img {
+.AdminFileItem img {
   width: 100%;
   height: 100px;
   object-fit: cover;
@@ -833,20 +821,20 @@
   margin-bottom: 8px;
 }
 
-.file-info {
+.AdminFileInfo {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.file-name {
+.AdminFileName {
   font-size: 12px;
   font-weight: 500;
   color: #333;
   word-break: break-word;
 }
 
-.file-size {
+.AdminFileSize {
   font-size: 11px;
   color: #666;
 }

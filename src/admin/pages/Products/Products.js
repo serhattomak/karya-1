@@ -118,27 +118,27 @@ const Products = () => {
   };
 
   if (loading) {
-    return <div className="loading">Yükleniyor...</div>;
+    return <div className="AdminLoading">Yükleniyor...</div>;
   }
 
   return (
-    <div className="admin-panel">
-      <div className="panel-header">
-        <h2 className="panel-title">Ürün Yönetimi</h2>
-        <button className="add-btn primary" onClick={handleAddProduct}>
+    <div className="AdminPanel">
+      <div className="AdminPanelHeader">
+        <h2 className="AdminPanelTitle">Ürün Yönetimi</h2>
+        <button className="AdminAddBtn primary" onClick={handleAddProduct}>
           + Yeni Ürün Ekle
         </button>
       </div>
 
-      <div className="products-grid">
+      <div className="AdminProductsGrid">
         {products.length === 0 ? (
-          <div className="no-products">
+          <div className="AdminNoProducts">
             <p>Henüz ürün bulunmuyor.</p>
           </div>
         ) : (
           products.map((product) => (
-            <div key={product.id} className="product-card">
-              <div className="product-image">
+            <div key={product.id} className="AdminProductCard">
+              <div className="AdminProductImage">
                 {(() => {
                   if (product.productImage && product.productImage.path) {
                     return (
@@ -188,43 +188,43 @@ const Products = () => {
                   }
 
                   return (
-                    <div className="no-image">
+                    <div className="AdminNoImage">
                       <span>Görsel Yok</span>
                     </div>
                   );
                 })()}
               </div>
 
-              <div className="product-info">
-                <h3 className="product-name">{product.name}</h3>
-                <p className="product-title">
+              <div className="AdminProductInfo">
+                <h3 className="AdminProductName">{product.name}</h3>
+                <p className="AdminProductTitle">
                   {product.titles && product.titles[0]
                     ? product.titles[0]
                     : "Başlık yok"}
                 </p>
                 {/* Alt başlıklar */}
                 {product.subtitles && product.subtitles.length > 0 && (
-                  <div className="product-subtitles">
+                  <div className="AdminProductSubtitles">
                     {product.subtitles.slice(0, 2).map((subtitle, index) => (
-                      <span key={index} className="product-subtitle">
+                      <span key={index} className="AdminProductSubtitle">
                         {subtitle}
                       </span>
                     ))}
                     {product.subtitles.length > 2 && (
-                      <span className="more-subtitles">
+                      <span className="AdminMoreSubtitles">
                         +{product.subtitles.length - 2} daha
                       </span>
                     )}
                   </div>
                 )}
-                <p className="product-description">
+                <p className="AdminProductDescription">
                   {product.descriptions && product.descriptions[0]
                     ? product.descriptions[0].substring(0, 100) + "..."
                     : "Açıklama yok"}
                 </p>
                 {/* Liste öğeleri */}
                 {product.listItems && product.listItems.length > 0 && (
-                  <div className="product-list-items">
+                  <div className="AdminProductListItems">
                     {product.listTitles && product.listTitles.length > 0 && (
                       <h5>{product.listTitles[0]}</h5>
                     )}
@@ -233,7 +233,7 @@ const Products = () => {
                         <li key={index}>{item}</li>
                       ))}
                       {product.listItems.length > 3 && (
-                        <li className="more-items">
+                        <li className="AdminMoreItems">
                           +{product.listItems.length - 3} madde daha
                         </li>
                       )}
@@ -241,9 +241,9 @@ const Products = () => {
                   </div>
                 )}
 
-                <div className="product-actions">
+                <div className="AdminProductActions">
                   <button
-                    className="edit-btn"
+                    className="AdminEditBtn"
                     onClick={() => handleEditProduct(product)}
                   >
                     <svg viewBox="0 0 24 24" fill="currentColor">
@@ -251,7 +251,7 @@ const Products = () => {
                         </svg> Düzenle
                   </button>
                   <button
-                    className="delete-btn"
+                    className="AdminDeleteBtn"
                     onClick={() => handleDeleteClick(product)}
                   >
                     <svg viewBox="0 0 24 24" fill="currentColor">
@@ -267,23 +267,23 @@ const Products = () => {
 
       {/* Pagination */}
       {pagination.totalPages > 1 && (
-        <div className="pagination">
+        <div className="AdminPagination">
           <button
             onClick={() => handlePageChange(pagination.pageIndex - 1)}
             disabled={pagination.pageIndex === 1}
-            className="pagination-btn"
+            className="AdminPaginationBtn"
           >
             « Önceki
           </button>
 
-          <span className="pagination-info">
+          <span className="AdminPaginationInfo">
             Sayfa {pagination.pageIndex} / {pagination.totalPages}
           </span>
 
           <button
             onClick={() => handlePageChange(pagination.pageIndex + 1)}
             disabled={pagination.pageIndex >= pagination.totalPages}
-            className="pagination-btn"
+            className="AdminPaginationBtn"
           >
             Sonraki »
           </button>
