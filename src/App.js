@@ -53,6 +53,20 @@ const AppContent = () => {
     };
 
     checkAuthStatus();
+    const interval = setInterval(() => {
+      const token = localStorage.getItem("token");
+      const tokenExpiration = localStorage.getItem("tokenExpiration");
+      if (token && tokenExpiration) {
+        const currentTime = Date.now();
+        const expirationTime = parseInt(tokenExpiration, 10);
+        if (currentTime >= expirationTime) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("tokenExpiration");
+          setIsAuthenticated(false);
+        }
+      }
+    }, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   if (isLoading) {
