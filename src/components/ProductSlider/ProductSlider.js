@@ -26,6 +26,55 @@ const ProductSlider = ({ products }) => {
     }
   };
 
+  const getProductMainImage = (product) => {
+    if (product.productMainImage && product.productMainImage.path) {
+      return product.productMainImage.path.startsWith('http')
+        ? product.productMainImage.path
+        : BASE_URL + product.productMainImage.path;
+    }
+    if (product.productMainImageId && product.files && product.files.length > 0) {
+      const mainImage = product.files.find(file => {
+        const fileId = String(file.id).toLowerCase();
+        const productMainImageId = String(product.productMainImageId).toLowerCase();
+        return fileId === productMainImageId && file.path;
+      });
+      if (mainImage && mainImage.path) {
+        return mainImage.path.startsWith('http')
+          ? mainImage.path
+          : BASE_URL + mainImage.path;
+      }
+    }
+    if (product.ProductMainImageId && product.files && product.files.length > 0) {
+      const mainImage = product.files.find(file => {
+        const fileId = String(file.id).toLowerCase();
+        const productMainImageId = String(product.ProductMainImageId).toLowerCase();
+        return fileId === productMainImageId && file.path;
+      });
+      if (mainImage && mainImage.path) {
+        return mainImage.path.startsWith('http')
+          ? mainImage.path
+          : BASE_URL + mainImage.path;
+      }
+    }
+    if (product.files && product.files.length > 0) {
+      const firstFile = product.files.find(file => file.path);
+      if (firstFile) {
+        return firstFile.path.startsWith('http')
+          ? firstFile.path
+          : BASE_URL + firstFile.path;
+      }
+    }
+    if (product.mainImageUrl) {
+      return product.mainImageUrl.startsWith('http')
+        ? product.mainImageUrl
+        : BASE_URL + product.mainImageUrl;
+    }
+    if (product.image) {
+      return product.image;
+    }
+    return "/assets/images/Group 300.webp";
+  };
+
   return (
     <div className="slider-container">
       <div className="slider-title">Ürün ve Hizmetlerimiz</div>
@@ -38,36 +87,12 @@ const ProductSlider = ({ products }) => {
               onClick={() => handleProductClick(index)}
             >
               <img
-                src={(() => {
-                  if (product.productImage && product.productImage.path) {
-                    return product.productImage.path.startsWith('http') 
-                      ? product.productImage.path 
-                      : BASE_URL + product.productImage.path;
-                  }
-                  if (product.productImageId && product.files) {
-                    const productImageFile = product.files.find(file => 
-                      file.id === product.productImageId || 
-                      file.id === String(product.productImageId) || 
-                      String(file.id) === String(product.productImageId)
-                    );
-                    if (productImageFile && productImageFile.path) {
-                      return productImageFile.path.startsWith('http') 
-                        ? productImageFile.path 
-                        : BASE_URL + productImageFile.path;
-                    }
-                  }
-                  if (product.files && product.files[0] && product.files[0].path) {
-                    return product.files[0].path.startsWith('http') 
-                      ? product.files[0].path 
-                      : BASE_URL + product.files[0].path;
-                  }
-                  if (product.image) {
-                    return product.image;
-                  }
-                  return "/assets/images/Group 300.webp";
-                })()}
+                src={getProductMainImage(product)}
                 className="product-slider-image"
                 alt={product.title}
+                onError={(e) => {
+                  e.target.src = "/assets/images/Group 300.webp";
+                }}
               />
               <h3 className="product-slider-title">{product.title}</h3>
             </li>
