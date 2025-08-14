@@ -465,13 +465,13 @@ input[type="file"]:hover {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .files-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 10px;
     padding: 15px;
   }
-  
+
   .file-selector-modal {
     width: 95%;
     max-height: 85vh;
@@ -511,13 +511,18 @@ input[type="file"]:hover {
 
 /* Progress bar animation for active upload */
 .progress-fill::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
   animation: progressShine 2s infinite;
 }
 

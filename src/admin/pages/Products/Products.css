@@ -54,6 +54,9 @@
   overflow: hidden;
   transition: all 0.3s ease;
   border: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .product-card:hover {
@@ -100,6 +103,10 @@
 .product-info {
   padding: 20px;
   background: transparent;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .product-name {
@@ -111,22 +118,23 @@
 }
 
 .product-title {
-  font-size: 16px;
-  color: #ffffff;
-  margin: 0 0 10px 0;
+  font-size: 18px !important;
+  color: #333 !important;
+  margin: 0.5rem 0 !important;
   font-weight: 600;
 }
 
 .product-description {
-  font-size: 14px;
+  font-size: 18px;
   color: #666;
-  margin: 0 0 20px 0;
+  margin: 1rem 0 !important;
   line-height: 1.5;
 }
 
 /* Subtitle styles */
 .product-subtitles {
-  margin: 8px 0;
+  font-size: 18px !important;
+  margin: 0.5rem 0 !important;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -140,6 +148,7 @@
   font-size: 0.8rem;
   font-weight: 500;
   display: inline;
+  font-size: 16px !important;
 }
 
 .more-subtitles {
@@ -182,10 +191,10 @@
   font-style: italic;
   color: #a0aec0 !important;
 }
-
 .product-actions {
   display: flex;
   gap: 10px;
+  margin-top: auto;
 }
 
 /* .edit-btn, .delete-btn {
@@ -316,7 +325,7 @@
 }
 
 .product-modal {
-  width: 600px;
+  width: 1200px;
 }
 
 .delete-modal {
@@ -344,8 +353,8 @@
   font-size: 24px;
   cursor: pointer;
   color: #666;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -360,7 +369,7 @@
 
 .modal-form {
   padding: 25px;
-  max-height: 70vh;
+  max-height: 80vh;
   overflow-y: auto;
 }
 
@@ -387,7 +396,7 @@
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  font-weight: 600; 
+  font-weight: 600;
   color: #333;
   font-size: 14px;
 }
@@ -450,29 +459,23 @@
   background: #c82333;
 }
 
-/* .add-btn {
+.add-btn {
   background: #f68b1f;
   color: white;
   border: none;
   padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s ease;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .add-btn:hover {
   background: #ee5c30;
 }
-
-.add-btn.secondary {
-  background: #6c757d;
-}
-
-.add-btn.secondary:hover {
-  background: #545b62;
-} */
 
 .file-input {
   margin-bottom: 15px;
@@ -607,40 +610,40 @@
   .admin-panel {
     padding: 15px;
   }
-  
+
   .panel-header {
     flex-direction: column;
     gap: 15px;
     text-align: center;
   }
-  
+
   .products-grid {
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .product-modal {
     width: 95vw;
   }
-  
+
   .delete-modal {
     width: 95vw;
     max-width: 400px;
   }
-  
+
   .modal-form {
     max-height: 60vh;
   }
-  
+
   .image-preview-grid {
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   }
-  
+
   .image-preview-item {
     width: 80px;
     height: 80px;
   }
-  
+
   .pagination {
     flex-direction: column;
     gap: 10px;
@@ -659,12 +662,12 @@
   gap: 10px;
 }
 
-/* .file-select-btn {
+.file-select-btn {
   background: #f68b1f;
-  color: white;
+  color: white !important;
   border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
+  padding: 10px 20px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 14px;
   transition: background 0.3s ease;
@@ -680,7 +683,7 @@
 
 .file-select-btn.primary:hover {
   background: #ee5c30;
-} */
+}
 
 .banner-preview {
   margin-top: 10px;
@@ -739,12 +742,15 @@
 .selected-image-item {
   display: flex;
   justify-content: space-between;
+  gap: 4px;
   align-items: center;
   padding: 8px;
   background: #f8f9fa;
   border: 1px solid #e9ecef;
   border-radius: 4px;
 }
+
+
 
 .selected-images {
   display: flex;
