@@ -198,19 +198,19 @@ const ProductInfo = ({ productData }) => {
   })();
 
   return (
-    <div className="product-info-container">
+  <div className="info-product-container">
       {/* Ürün Bilgileri ve Ana Görsel - Üst Kısım */}
-      <div className="product-info-content">
-        <div className="product-info-text">
+  <div className="info-product-content">
+  <div className="info-product-text">
           {/* Ana başlık */}
-          <h2 className="product-info-title">
+          <h2 className="info-product-title">
             {titles[0] || name}
           </h2>
           
           {/* Açıklamalar */}
           {descriptions.map((description, index) => (
             description && (
-              <p key={index} className="product-info-description">
+              <p key={index} className="info-product-description">
                 {description}
               </p>
             )
@@ -224,7 +224,7 @@ const ProductInfo = ({ productData }) => {
           {/* Ek bilgiler */}
           {titles.slice(1).map((title, index) => (
             title && (
-              <p key={`info-${index}`} className="product-info-info">
+              <p key={`info-${index}`} className="info-product-info">
                 <strong>{title}:</strong> {descriptions[index + 1] || subtitles[index + 1] || ''}
               </p>
             )
@@ -232,12 +232,12 @@ const ProductInfo = ({ productData }) => {
 
           {/* Özellikler Listesi */}
           {listItems.length > 0 && listItems.some(item => item) && (
-            <div className="product-info-features">
+            <div className="info-product-features">
               {listTitles.length > 0 && listTitles.some(title => title) && (
                 <div className="list-titles">
                   {listTitles.map((title, index) => (
                     title && (
-                      <h4 key={index} className="product-info-subtitle">{title}</h4>
+                      <h4 key={index} className="info-product-subtitle">{title}</h4>
                     )
                   ))}
                 </div>
@@ -254,7 +254,7 @@ const ProductInfo = ({ productData }) => {
 
           {/* Dökümanlar - documents array veya documentImages ile URLs eşleştirilerek */}
           {documentImages.length > 0 && (
-            <div className="product-info-documents">
+            <div className="info-product-documents">
           {documentImages.map((file, index) => {
             console.log("Rendering document:", file);
             
@@ -343,7 +343,7 @@ const ProductInfo = ({ productData }) => {
           )}
 
           {/* İletişim metni - orijinal tasarım gibi */}
-          <p className="product-info-contact">
+          <p className="info-product-contact">
             Daha fazla bilgi için{" "}
             <a href="/contact">
               <span>bizimle iletişime geçin</span>
@@ -352,8 +352,8 @@ const ProductInfo = ({ productData }) => {
         </div>
         
         {/* Ana görsel - sağ tarafta */}
-        <div className="product-info-image">
-          <div className="main-image">
+        <div className="info-product-image">
+          <div className="info-product-main-image">
             <img
               src={mainImage}
               alt={titles[0] || name}
@@ -364,7 +364,7 @@ const ProductInfo = ({ productData }) => {
       
       {/* Ürün Detay Görselleri Galerisi - Alt Kısım Ayrı Div */}
       {productDetailImages.length > 0 && (
-        <div className="product-detail-gallery-section">
+        <div className="info-product-detail-gallery-section">
           <Gallery images={productDetailImages} title="Görseller" />
         </div>
       )}

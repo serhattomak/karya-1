@@ -226,10 +226,27 @@ function ProductDetailPage() {
         title={productData.titles?.[0] || productData.name}
       />
       <ProductInfo productData={productData} />
-      {/* <RelatedProducts
-        currentProductId={productData.id}
-        productName={productData.name}
-      /> */}
+      {/* Video Section */}
+      {productData.videoUrl && (
+        <div className="details-video-section">
+          <div className="details-video-content">
+            <h2 className="details-video-title">Ürün Videosu</h2>
+            <hr className="details-video-line" />
+            <div className="details-video-wrapper">
+              <iframe
+                className="details-video-iframe"
+                width="640"
+                height="360"
+                src={productData.videoUrl}
+                title="Ürün Videosu"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
       <ContactSection />
       <Footer />
     </div>
