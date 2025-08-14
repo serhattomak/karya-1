@@ -269,13 +269,10 @@ export const uploadFile = (formData, options = {}) => {
 
 // DOCUMENT
 export const getDocuments = (params = {}) => {
-  // Önce hiç parametre göndermeyerek test edelim
   console.log("API getDocuments - Raw params:", params);
   
-  // Parametreleri temizle
   const cleanParams = {};
   
-  // Sadece gerekli parametreleri ekle
   if (params.PageIndex !== undefined && params.PageIndex !== null) {
     cleanParams.PageIndex = Math.max(0, parseInt(params.PageIndex) || 0);
   }
@@ -295,16 +292,25 @@ export const getDocuments = (params = {}) => {
 export const getDocument = (id) =>
   axios.get(`${API_URL}/api/Document/${id}`, { headers: getAuthHeader() });
 
-export const getDocumentByName = (name) =>
-  axios.get(`${API_URL}/api/Document/name/${name}`, { headers: getAuthHeader() });
+export const uploadMultipleFiles = (formData, options = {}) => {
+  console.log("📤 Çoklu dosya yükleme başlıyor...");
+  return axios.post(`${API_URL}/api/File/upload-multiple`, formData, {
+    headers: {
+      ...getAuthHeader()
+    },
+    ...options
+  });
+};
 
-export const getDocumentBySlug = (slug) =>
-  axios.get(`${API_URL}/api/Document/slug/${slug}`, { headers: getAuthHeader() });
-
-export const getDocumentsByCategory = (category) =>
-  axios.get(`${API_URL}/api/Document/category/${category}`, { headers: getAuthHeader() });
-
-export const getActiveDocuments = () =>
+export const uploadDocument = (formData) => {
+  console.log("Upload Document API - FormData:", formData);
+  console.log("Upload Document API - URL:", `${API_URL}/api/Document/upload`);
+  return axios.post(`${API_URL}/api/Document/upload`, formData, {
+    headers: {
+      ...getAuthHeader()
+    },
+  });
+};
   axios.get(`${API_URL}/api/Document/active`, { headers: getAuthHeader() });
 
 export const createDocument = (data) => {
@@ -345,18 +351,6 @@ export const updateDocument = (data) => {
 
 export const deleteDocument = (id) =>
   axios.delete(`${API_URL}/api/Document/${id}`, { headers: getAuthHeader() });
-
-export const uploadDocument = (formData) => {
-  console.log("Upload Document API - FormData:", formData);
-  console.log("Upload Document API - URL:", `${API_URL}/api/Document/upload`);
-  
-  return axios.post(`${API_URL}/api/Document/upload`, formData, {
-    headers: { 
-      ...getAuthHeader(), 
-      "Content-Type": "multipart/form-data" 
-    },
-  });
-};
 
 export const downloadDocument = (id) =>
   axios.post(`${API_URL}/api/Document/${id}/download`, {}, { 
