@@ -498,7 +498,7 @@ const Home = () => {
       <div className="AdminHomeSection">
         <div className="AdminSectionHeader">
           <h2 className="AdminSectionTitle">Ana Sayfa Banner</h2>
-          <button className="AdminEditBtn primary" onClick={openBannerModal}>
+          <button className="edit-btn primary" onClick={openBannerModal}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -533,7 +533,7 @@ const Home = () => {
       <div className="AdminHomeSection">
         <div className="AdminSectionHeader">
           <h2 className="AdminSectionTitle">Ana Sayfada Gösterilecek Ürünler</h2>
-          <button className="AdminAddBtn primary" onClick={openProductModal}>
+          <button className="add-btn primary" onClick={openProductModal}>
             Ürün Seç
           </button>
         </div>
@@ -576,7 +576,7 @@ const Home = () => {
                   <div className="AdminProductActions">
                     <span className="AdminOrderNumber">{index + 1}</span>
                     <button
-                      className="AdminRemoveBtn"
+                      className="remove-btn"
                       onClick={() => removeProductFromHome(product.id)}
                     >
                       ×
@@ -589,7 +589,7 @@ const Home = () => {
         </div>
 
         <div className="AdminSaveSection">
-          <button className="AdminSaveBtn primary" onClick={saveAllChanges}>
+          <button className="save-btn primary" onClick={saveAllChanges}>
             Değişiklikleri Kaydet
           </button>
         </div>
@@ -601,12 +601,12 @@ const Home = () => {
           <div className="AdminModalContent">
             <div className="AdminModalHeader">
               <h3>Banner Düzenle</h3>
-              <button className="AdminCloseBtn" onClick={closeBannerModal}>
+              <button className="close-btn" onClick={closeBannerModal}>
                 ×
               </button>
             </div>
             <div className="AdminModalBody">
-              <div className="AdminFormGroup">
+              <div className="form-group">
                 <label>Başlık</label>
                 <input
                   type="text"
@@ -615,7 +615,7 @@ const Home = () => {
                   placeholder="Banner başlığını girin"
                 />
               </div>
-              <div className="AdminFormGroup">
+              <div className="form-group">
                 <label>Alt Başlık</label>
                 <input
                   type="text"
@@ -626,10 +626,10 @@ const Home = () => {
               </div>
             </div>
             <div className="AdminModalFooter">
-              <button className="AdminCancelBtn" onClick={closeBannerModal}>
+              <button className="cancel-btn" onClick={closeBannerModal}>
                 İptal
               </button>
-              <button className="AdminSaveBtn" onClick={saveBannerChanges}>
+              <button className="save-btn" onClick={saveBannerChanges}>
                 Kaydet
               </button>
             </div>
@@ -643,7 +643,7 @@ const Home = () => {
           <div className="AdminModalContent large">
             <div className="AdminModalHeader">
               <h3>Ürün Seç</h3>
-              <button className="AdminCloseBtn" onClick={closeProductModal}>
+              <button className="close-btn" onClick={closeProductModal}>
                 ×
               </button>
             </div>
@@ -728,7 +728,7 @@ const Home = () => {
               )}
             </div>
             <div className="AdminModalFooter">
-              <button className="AdminCancelBtn" onClick={closeProductModal}>
+              <button className="cancel-btn" onClick={closeProductModal}>
                 Kapat
               </button>
             </div>

@@ -2,20 +2,24 @@ import React, { useState, useEffect, useRef } from "react";
 import { createProduct, updateProduct, getFiles, getDocuments, getDocument } from "../../../api";
 import { createSlugFromProduct } from "../../../utils/slugUtils";
 import Swal from 'sweetalert2';
+import { uploadFile as uploadFileApi } from "../../../api";
 
 const BASE_URL = "https://localhost:7103/";
 
+// Dosya yükleme işlemi artık api.js'deki uploadFile fonksiyonunu kullanıyor
 const uploadFile = async (file) => {
   const formData = new FormData();
   formData.append("file", file);
-  const token = localStorage.getItem("token");
-  const response = await fetch("https://localhost:7103/api/File/upload", {
-    method: "POST",
-    body: formData,
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-  });
-  if (!response.ok) throw new Error("Dosya yüklenemedi");
-  return await response.json();
+  try {
+    const response = await uploadFileApi(formData);
+    if (response && response.data) {
+      return response.data;
+    }
+    return null;
+  } catch (error) {
+    console.error("Dosya yükleme hatası:", error);
+    throw error;
+  }
 };
 
 const ProductModal = ({ product, onClose, onSave }) => {
@@ -473,11 +477,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
       <div className="AdminModalContent AdminProductModal">
         <div className="AdminModalHeader">
           <h3>{product ? "Ürün Düzenle" : "Yeni Ürün Ekle"}</h3>
-          <button className="AdminCloseBtn" onClick={onClose}>×</button>
+          <button className="delete-btn" onClick={onClose}>×</button>
         </div>
 
         <form onSubmit={handleSubmit} className="AdminModalForm">
-          <div className="AdminFormGroup">
+          <div className="form-group">
             <label>Ürün Adı *</label>
             <input
               type="text"
@@ -500,7 +504,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
           </div>
 
           {/* Slug */}
-          <div className="AdminFormGroup">
+          <div className="form-group">
             <label>URL Slug *</label>
             <input
               type="text"
@@ -515,7 +519,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
           </div>
 
           {/* Başlıklar */}
-          <div className="AdminFormGroup">
+          <div className="form-group">
             <label>Başlıklar</label>
             {titles.map((title, index) => (
               <div key={index} className="AdminInputGroup">
@@ -528,7 +532,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 {titles.length > 1 && (
                   <button
                     type="button"
-                    className="AdminRemoveBtn danger"
+                    className="delete-btn"
                     onClick={() => removeTitle(index)}
                   >
                     ×
@@ -536,13 +540,13 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="AdminAddBtn secondary" onClick={addTitle}>
-              + Başlık Ekle
+            <button type="button" className="add-btn secondary" onClick={addTitle}>
+              <span>+ Başlık Ekle</span>
             </button>
           </div>
 
           {/* Alt Başlıklar */}
-          <div className="AdminFormGroup">
+          <div className="form-group">
             <label>Alt Başlıklar</label>
             {subtitles.map((subtitle, index) => (
               <div key={index} className="AdminInputGroup">
@@ -555,7 +559,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 {subtitles.length > 1 && (
                   <button
                     type="button"
-                    className="AdminRemoveBtn danger"
+                    className="delete-btn"
                     onClick={() => removeSubtitle(index)}
                   >
                     ×
@@ -563,13 +567,13 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="AdminAddBtn secondary" onClick={addSubtitle}>
-              + Alt Başlık Ekle
+            <button type="button" className="add-btn secondary" onClick={addSubtitle}>
+              <span>+ Alt Başlık Ekle</span>
             </button>
           </div>
 
           {/* Açıklamalar */}
-          <div className="AdminFormGroup">
+          <div className="form-group">
             <label>Açıklamalar</label>
             {descriptions.map((description, index) => (
               <div key={index} className="AdminInputGroup">
@@ -582,7 +586,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 {descriptions.length > 1 && (
                   <button
                     type="button"
-                    className="AdminRemoveBtn danger"
+                    className="delete-btn"
                     onClick={() => removeDescription(index)}
                   >
                     ×
@@ -590,13 +594,13 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="AdminAddBtn secondary" onClick={addDescription}>
-              + Açıklama Ekle
+            <button type="button" className="add-btn secondary" onClick={addDescription}>
+              <span>+ Açıklama Ekle</span>
             </button>
           </div>
 
           {/* Liste Başlıkları */}
-          <div className="AdminFormGroup">
+          <div className="form-group">
             <label>Liste Başlıkları</label>
             {listTitles.map((listTitle, index) => (
               <div key={index} className="AdminInputGroup">
@@ -609,7 +613,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 {listTitles.length > 1 && (
                   <button
                     type="button"
-                    className="AdminRemoveBtn danger"
+                    className="delete-btn"
                     onClick={() => removeListTitle(index)}
                   >
                     ×
@@ -617,13 +621,13 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="AdminAddBtn secondary" onClick={addListTitle}>
-              + Liste Başlığı Ekle
+            <button type="button" className="add-btn secondary" onClick={addListTitle}>
+              <span>+ Liste Başlığı Ekle</span>
             </button>
           </div>
 
           {/* Liste Öğeleri */}
-          <div className="AdminFormGroup">
+          <div className="form-group">
             <label>Liste Öğeleri</label>
             {listItems.map((item, index) => (
               <div key={index} className="AdminInputGroup">
@@ -636,7 +640,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 {listItems.length > 1 && (
                   <button
                     type="button"
-                    className="AdminRemoveBtn danger"
+                    className="delete-btn"
                     onClick={() => removeListItem(index)}
                   >
                     ×
@@ -644,13 +648,13 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="AdminAddBtn secondary" onClick={addListItem}>
-              + Liste Öğesi Ekle
+            <button type="button" className="add-btn secondary" onClick={addListItem}>
+              <span>+ Liste Öğesi Ekle</span>
             </button>
           </div>
 
           {/* URL'ler */}
-          <div className="AdminFormGroup">
+          <div className="form-group">
             <label>URL'ler</label>
             {urls.map((url, index) => (
               <div key={index} className="AdminInputGroup">
@@ -663,7 +667,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 {urls.length > 1 && (
                   <button
                     type="button"
-                    className="AdminRemoveBtn danger"
+                    className="delete-btn"
                     onClick={() => removeUrl(index)}
                   >
                     ×
@@ -671,13 +675,13 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="AdminAddBtn secondary" onClick={addUrl}>
-              + URL Ekle
+            <button type="button" className="add-btn secondary" onClick={addUrl}>
+              <span>+ URL Ekle</span>
             </button>
           </div>
 
           {/* Banner Image URL */}
-          <div className="AdminFormGroup">
+          <div className="form-group">
             <label>Banner Görseli</label>
             <div className="AdminBannerImageInput">
               <input
@@ -695,11 +699,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   id="banner-file-input"
                 />
                 <label htmlFor="banner-file-input" className="AdminFileSelectBtn primary">
-                  Dosya Seç
+                  <span className="file-select-btn">Dosya Seç</span>
                 </label>
                 <button
                   type="button"
-                  className="AdminFileSelectBtn primary"
+                  className="file-select-btn"
                   onClick={() => openFileSelector('banner')}
                 >
                   Sistemden Seç
@@ -714,7 +718,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
           </div>
 
           {/* Product Image ID */}
-          <div className="AdminFormGroup">
+          <div className="form-group">
             <label>Ana Ürün Görseli</label>
             <div className="AdminProductImageSelector">
               <div className="AdminUploadControls">
@@ -744,11 +748,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   id="product-image-input"
                 />
                 <label htmlFor="product-image-input" className="AdminFileSelectBtn primary">
-                  Yeni Görsel Yükle
+                  <span className="file-select-btn">Yeni Görsel Yükle</span>
                 </label>
                 <button
                   type="button"
-                  className="AdminFileSelectBtn primary"
+                  className="file-select-btn"
                   onClick={() => openFileSelector('productImage')}
                 >
                   Sistemden Seç
@@ -775,7 +779,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   </div>
                   <button
                     type="button"
-                    className="AdminRemoveBtn danger"
+                    className="delete-btn"
                     onClick={() => setProductImageId('')}
                   >
                     ×
@@ -786,13 +790,13 @@ const ProductModal = ({ product, onClose, onSave }) => {
           </div>
 
           {/* Product Documents */}
-          <div className="AdminFormGroup">
+          <div className="form-group">
             <label>Ürün Dökümanları</label>
             <div className="AdminDocumentsSelector">
               <div className="AdminUploadControls">
                 <button
                   type="button"
-                  className="AdminFileSelectBtn primary"
+                  className="file-select-btn"
                   onClick={openDocumentSelector}
                 >
                   Döküman Seç
@@ -835,7 +839,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                         </div>
                         <button
                           type="button"
-                          className="AdminRemoveItemBtn"
+                          className="delete-btn"
                           onClick={() => removeDocument(documentId)}
                         >
                           ×
@@ -849,7 +853,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
           </div>
 
           {/* Product Detail Image IDs */}
-          <div className="AdminFormGroup">
+          <div className="form-group">
             <label>Ürün Detay Görselleri</label>
             <div className="AdminProductDetailImagesSelector">
               <div className="AdminUploadControls">
@@ -879,11 +883,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   id="detail-image-input"
                 />
                 <label htmlFor="detail-image-input" className="AdminFileSelectBtn primary">
-                  Yeni Görsel Yükle
+                  <span className="file-select-btn">Yeni Görsel Yükle</span>
                 </label>
                 <button
                   type="button"
-                  className="AdminFileSelectBtn primary"
+                  className="file-select-btn"
                   onClick={() => openFileSelector('productDetailImage')}
                 >
                   Sistemden Seç
@@ -894,25 +898,36 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   {productDetailImageIds.map((id, index) => {
                     const image = productDetailImages.find(img => img.id === id);
                     return (
-                      <div key={index} className="AdminSelectedImageItem">
-                        {image ? (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <div key={id} className="AdminSelectedFileItem">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          {image && image.url ? (
                             <img 
                               src={image.url} 
-                              alt={image.name || `Detay görseli ${index + 1}`}
+                              alt={image.name}
                               style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }}
                             />
-                            <span>{image.name || `Detay görseli ${index + 1}`}</span>
-                          </div>
-                        ) : (
-                          <span>Görsel ID: {id}</span>
-                        )}
+                          ) : (
+                            <div style={{ 
+                              width: '40px', 
+                              height: '40px', 
+                              background: '#f0f0f0', 
+                              borderRadius: '4px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '12px'
+                            }}>
+                              📄
+                            </div>
+                          )}
+                          <span>{image ? image.name : 'Görsel'}</span>
+                        </div>
                         <button
                           type="button"
-                          className="AdminRemoveBtn danger"
+                          className="delete-btn"
                           onClick={() => {
-                            setProductDetailImageIds(productDetailImageIds.filter((_, i) => i !== index));
-                            setProductDetailImages(prev => prev.filter(img => img.id !== id));
+                            setProductDetailImageIds(ids => ids.filter(i => i !== id));
+                            setProductDetailImages(imgs => imgs.filter(img => img.id !== id));
                           }}
                         >
                           ×
@@ -925,93 +940,12 @@ const ProductModal = ({ product, onClose, onSave }) => {
             </div>
           </div>
 
-          {/* Ürün Dosyaları/Dökümanları */}
-          <div className="AdminFormGroup">
-            <label>Ürün Dosyaları/Dökümanları</label>
-            <div className="AdminDocumentFilesSelector">
-              <div className="AdminUploadControls">
-                <input
-                  type="file"
-                  multiple
-                  onChange={(e) => {
-                    const files = Array.from(e.target.files);
-                    files.forEach(file => {
-                      const reader = new FileReader();
-                      reader.onload = (event) => {
-                        setDocumentFiles(prev => [...prev, {
-                          id: `temp_${Date.now()}_${Math.random()}`,
-                          name: file.name,
-                          path: file.name,
-                          url: event.target.result,
-                          file: file,
-                          isExisting: false,
-                          isDocumentImage: false
-                        }]);
-                      };
-                      reader.readAsDataURL(file);
-                    });
-                  }}
-                  style={{ display: 'none' }}
-                  id="document-file-input"
-                />
-                <label htmlFor="document-file-input" className="AdminFileSelectBtn primary">
-                  Yeni Dosya Yükle
-                </label>
-                <button
-                  type="button"
-                  className="AdminFileSelectBtn primary"
-                  onClick={() => openFileSelector('documentFile')}
-                >
-                  Sistemden Seç
-                </button>
-              </div>
-              {documentFiles.filter(doc => !doc.isDocumentImage).length > 0 && (
-                <div className="AdminSelectedFiles">
-                  {documentFiles.filter(doc => !doc.isDocumentImage).map((doc, index) => (
-                    <div key={doc.id} className="AdminSelectedFileItem">
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        {doc.url && doc.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
-                          <img 
-                            src={doc.url} 
-                            alt={doc.name}
-                            style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }}
-                          />
-                        ) : (
-                          <div style={{ 
-                            width: '40px', 
-                            height: '40px', 
-                            background: '#f0f0f0', 
-                            borderRadius: '4px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '12px'
-                          }}>
-                            📄
-                          </div>
-                        )}
-                        <span>{doc.name}</span>
-                      </div>
-                      <button
-                        type="button"
-                        className="AdminRemoveBtn danger"
-                        onClick={() => removeDocumentFile(doc.id)}
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
           <div className="AdminModalFooter">
-            <button type="button" className="AdminCancelBtn danger" onClick={onClose}>
-              İptal
+            <button type="button" className="cancel-btn" onClick={onClose}>
+              <span>İptal</span>
             </button>
-            <button type="submit" className="AdminSaveBtn primary" disabled={loading}>
-              {loading ? "Kaydediliyor..." : "Kaydet"}
+            <button type="submit" className="save-btn" disabled={loading}>
+              <span>{loading ? "Kaydediliyor..." : "Kaydet"}</span>
             </button>
           </div>
         </form>
@@ -1025,7 +959,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
               <h3>Dosya Seç</h3>
               <button
                 type="button"
-                className="AdminCloseBtn"
+                className="delete-btn"
                 onClick={() => setShowFileSelector(false)}
               >
                 ×
@@ -1082,7 +1016,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
               <h3>Döküman Seç</h3>
               <button
                 type="button"
-                className="AdminCloseBtn"
+                className="delete-btn"
                 onClick={() => setShowDocumentSelector(false)}
               >
                 ×

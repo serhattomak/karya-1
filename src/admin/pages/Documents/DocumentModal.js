@@ -951,10 +951,10 @@ startxref
           </div>
 
           <div className="AdminModalActions">
-            <button type="button" onClick={onClose} className="AdminCancelBtn">
+            <button type="button" onClick={onClose} className="cancel-btn">
               İptal
             </button>
-            <button type="submit" disabled={loading} className="AdminSaveBtn">
+            <button type="submit" disabled={loading} className="save-btn">
               {loading ? 'Kaydediliyor...' : 'Kaydet'}
             </button>
           </div>
@@ -1013,7 +1013,7 @@ const FileSelector = ({ files = [], onSelect, onClose, title, filterType }) => {
       <div className="AdminFileSelectorModal">
         <div className="AdminModalHeader">
           <h3>{title}</h3>
-          <button onClick={onClose} className="AdminCloseBtn">×</button>
+          <button onClick={onClose} className="close-btn">×</button>
         </div>
         
         <div className="AdminModalContent">
@@ -1071,7 +1071,7 @@ const FileSelector = ({ files = [], onSelect, onClose, title, filterType }) => {
         </div>
         
         <div className="AdminModalActions">
-          <button onClick={onClose} className="AdminCancelBtn">İptal</button>
+          <button onClick={onClose} className="cancel-btn">İptal</button>
         </div>
       </div>
     </div>

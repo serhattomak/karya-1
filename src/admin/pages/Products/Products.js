@@ -29,7 +29,7 @@ const Products = () => {
     try {
       setLoading(true);
       const params = {
-        PageIndex: Math.max(1, pagination.pageIndex - 1),
+        PageIndex: Math.max(0, pagination.pageIndex - 1),
         PageSize: Math.max(1, pagination.pageSize),
       };
       console.log("API'ye gönderilen parametreler:", params);
@@ -44,10 +44,11 @@ const Products = () => {
       }));
     } catch (error) {
       console.error("Ürünler yüklenirken hata:", error);
+      let errorMsg = error?.message || "Ürünler yüklenirken bir hata oluştu.";
       Swal.fire({
         icon: "error",
         title: "Hata!",
-        text: "Ürünler yüklenirken bir hata oluştu.",
+        text: errorMsg,
         confirmButtonText: "Tamam",
         confirmButtonColor: "#dc3545",
       });
@@ -125,7 +126,7 @@ const Products = () => {
     <div className="AdminPanel">
       <div className="AdminPanelHeader">
         <h2 className="AdminPanelTitle">Ürün Yönetimi</h2>
-        <button className="AdminAddBtn primary" onClick={handleAddProduct}>
+        <button className="add-btn primary" onClick={handleAddProduct}>
           + Yeni Ürün Ekle
         </button>
       </div>
@@ -151,7 +152,6 @@ const Products = () => {
                       />
                     );
                   }
-
                   if (product.productImageId && product.files) {
                     const mainImage = product.files.find(
                       (file) =>
@@ -171,7 +171,6 @@ const Products = () => {
                       );
                     }
                   }
-
                   if (product.files && product.files.length > 0) {
                     const firstFile = product.files.find((file) => file.path);
                     if (firstFile) {
@@ -186,7 +185,6 @@ const Products = () => {
                       );
                     }
                   }
-
                   return (
                     <div className="AdminNoImage">
                       <span>Görsel Yok</span>
@@ -194,7 +192,6 @@ const Products = () => {
                   );
                 })()}
               </div>
-
               <div className="AdminProductInfo">
                 <h3 className="AdminProductName">{product.name}</h3>
                 <p className="AdminProductTitle">
@@ -240,25 +237,24 @@ const Products = () => {
                     </ul>
                   </div>
                 )}
-
-                <div className="AdminProductActions">
-                  <button
-                    className="AdminEditBtn"
-                    onClick={() => handleEditProduct(product)}
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-                        </svg> Düzenle
-                  </button>
-                  <button
-                    className="AdminDeleteBtn"
-                    onClick={() => handleDeleteClick(product)}
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-                      </svg> Sil
-                  </button>
-                </div>
+              </div>
+              <div className="AdminProductActions">
+                <button
+                  className="edit-btn"
+                  onClick={() => handleEditProduct(product)}
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                      </svg> Düzenle
+                </button>
+                <button
+                  className="delete-btn"
+                  onClick={() => handleDeleteClick(product)}
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg> Sil
+                </button>
               </div>
             </div>
           ))
