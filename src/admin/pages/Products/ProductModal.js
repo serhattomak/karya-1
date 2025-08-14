@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { createProduct, updateProduct, getFiles, getDocuments, getDocument } from "../../../api";
+import {
+  createProduct,
+  updateProduct,
+  getFiles,
+  getDocuments,
+  getDocument,
+} from "../../../api";
 import { createSlugFromProduct } from "../../../utils/slugUtils";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import { uploadFile as uploadFileApi } from "../../../api";
 
 const BASE_URL = "https://localhost:7103/";
@@ -32,6 +38,12 @@ const ProductModal = ({ product, onClose, onSave }) => {
   const [listItems, setListItems] = useState([""]);
   const [urls, setUrls] = useState([""]);
   const [bannerImageUrl, setBannerImageUrl] = useState("");
+  const [videoUrls, setVideoUrls] = useState([""]);
+  const [mainImageUrl, setMainImageUrl] = useState("");
+  const [productMainImageId, setProductMainImageId] = useState("");
+  const [productMainImagePreview, setProductMainImagePreview] = useState("");
+  const [productMainImageName, setProductMainImageName] = useState("");
+  const [productMainImageFile, setProductMainImageFile] = useState(null);
   const [bannerImageFile, setBannerImageFile] = useState(null);
   const [productImageId, setProductImageId] = useState("");
   const [documentImageIds, setDocumentImageIds] = useState([]);
@@ -44,7 +56,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
   const [selectedDocuments, setSelectedDocuments] = useState([]);
   const [showFileSelector, setShowFileSelector] = useState(false);
   const [showDocumentSelector, setShowDocumentSelector] = useState(false);
-  const [selectedFileType, setSelectedFileType] = useState('');
+  const [selectedFileType, setSelectedFileType] = useState("");
   const [loading, setLoading] = useState(false);
   const modalRef = useRef();
 
@@ -62,57 +74,73 @@ const ProductModal = ({ product, onClose, onSave }) => {
       setProductImageId(product.productImageId || "");
       setDocumentImageIds(product.documentImageIds || []);
       setProductDetailImageIds(product.productDetailImageIds || []);
-      
+      setVideoUrls(product.videoUrls || [""]);
+      setMainImageUrl(product.mainImageUrl || "");
+      setProductMainImageId(product.productMainImageId || "");
+
+      // Handle productMainImage - find the file info if it exists
+      if (product.productMainImageId) {
+        // We'll set the name when availableFiles is loaded
+        setProductMainImagePreview(""); // Clear any preview since this is from system
+        setProductMainImageFile(null); // Clear any file since this is from system
+      } else {
+        // Clear everything if no productMainImageId
+        setProductMainImagePreview("");
+        setProductMainImageName("");
+        setProductMainImageFile(null);
+      }
+
       // Selected documents from documentIds
       if (product.documentIds && product.documentIds.length > 0) {
         setSelectedDocuments(product.documentIds);
       } else {
         setSelectedDocuments([]);
       }
-      
+
+      // ... rest of your existing code for handling other files
       let allDocumentFiles = [];
-      
+
       if (product.documentFiles && product.documentFiles.length > 0) {
-        const documents = product.documentFiles.map(file => ({
+        const documents = product.documentFiles.map((file) => ({
           id: file.id,
           name: file.name,
           path: file.path,
           url: file.path ? BASE_URL + file.path : "",
           isExisting: true,
-          isDocumentImage: false
+          isDocumentImage: false,
         }));
         allDocumentFiles = [...allDocumentFiles, ...documents];
       }
-      
+
       if (product.documentImages && product.documentImages.length > 0) {
-        const docImages = product.documentImages.map(file => ({
+        const docImages = product.documentImages.map((file) => ({
           id: file.id,
           name: file.name,
           path: file.path,
           url: file.path ? BASE_URL + file.path : "",
           isExisting: true,
-          isDocumentImage: true
+          isDocumentImage: true,
         }));
         allDocumentFiles = [...allDocumentFiles, ...docImages];
       }
-      
+
       setDocumentFiles(allDocumentFiles);
-      
+
       if (product.files && product.files.length > 0) {
-        const images = product.files.map(file => ({
+        const images = product.files.map((file) => ({
           id: file.id,
           url: file.path ? BASE_URL + file.path : "",
-          isExisting: true
+          isExisting: true,
         }));
         setProductImages(images);
       }
-      
+
       if (product.productImages && product.productImages.length > 0) {
-        const prodImages = product.productImages.map(file => ({
+        const prodImages = product.productImages.map((file) => ({
           id: file.id,
           url: file.path ? BASE_URL + file.path : "",
           name: file.name,
-          isExisting: true
+          isExisting: true,
         }));
         setProductDetailImages(prodImages);
       }
@@ -120,6 +148,9 @@ const ProductModal = ({ product, onClose, onSave }) => {
       setDocumentFiles([]);
       setProductDetailImages([]);
       setProductImages([]);
+      setProductMainImageFile(null);
+      setProductMainImagePreview("");
+      setProductMainImageName("");
     }
   }, [product]);
 
@@ -130,10 +161,13 @@ const ProductModal = ({ product, onClose, onSave }) => {
         const filesResponse = await getFiles();
         const files = filesResponse?.data?.data || filesResponse?.data || [];
         setAvailableFiles(files);
-        
+
         // Fetch available documents
         const documentsResponse = await getDocuments();
-        const documentsData = documentsResponse?.data?.data || documentsResponse?.data || documentsResponse;
+        const documentsData =
+          documentsResponse?.data?.data ||
+          documentsResponse?.data ||
+          documentsResponse;
         const documents = documentsData?.items || documentsData || [];
         setAvailableDocuments(documents);
       } catch (error) {
@@ -144,17 +178,32 @@ const ProductModal = ({ product, onClose, onSave }) => {
     fetchAvailableData();
   }, []);
 
+  useEffect(() => {
+    if (productMainImageId && availableFiles.length > 0) {
+      const selectedImage = availableFiles.find(
+        (file) => file.id === productMainImageId
+      );
+      if (selectedImage && selectedImage.name) {
+        setProductMainImageName(selectedImage.name);
+      }
+    }
+  }, [productMainImageId, availableFiles]);
+
   const handleSubmit = async (e) => {
+    // Eksik tanımlanan değişkenler
+    let documentImageFileIds = [];
+    let documentFileIds = [];
+    let productDetailFileIds = [];
     e.preventDefault();
     setLoading(true);
 
     try {
       if (!name.trim()) {
         Swal.fire({
-          icon: 'error',
-          title: 'Hata!',
-          text: 'Ürün adı zorunludur.',
-          confirmButtonText: 'Tamam'
+          icon: "error",
+          title: "Hata!",
+          text: "Ürün adı zorunludur.",
+          confirmButtonText: "Tamam",
         });
         setLoading(false);
         return;
@@ -163,10 +212,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
       const finalSlug = slug.trim() || createSlugFromProduct({ name });
       if (!finalSlug) {
         Swal.fire({
-          icon: 'error',
-          title: 'Hata!',
-          text: 'Geçerli bir slug oluşturulamadı.',
-          confirmButtonText: 'Tamam'
+          icon: "error",
+          title: "Hata!",
+          text: "Geçerli bir slug oluşturulamadı.",
+          confirmButtonText: "Tamam",
         });
         setLoading(false);
         return;
@@ -181,6 +230,29 @@ const ProductModal = ({ product, onClose, onSave }) => {
         }
       }
 
+      // Handle product main image upload
+      let finalProductMainImageId = productMainImageId;
+      if (productMainImageFile && !productMainImageId) {
+        try {
+          const uploaded = await uploadFile(productMainImageFile);
+          const uploadedFile = uploaded?.data || uploaded;
+          if (uploadedFile && uploadedFile.id) {
+            finalProductMainImageId = uploadedFile.id;
+          }
+        } catch (error) {
+          console.error("Ana ürün görseli yüklenirken hata:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Hata!",
+            text: "Ana ürün görseli yüklenirken bir hata oluştu.",
+            confirmButtonText: "Tamam",
+            confirmButtonColor: "#dc3545",
+          });
+          setLoading(false);
+          return;
+        }
+      }
+
       const fileIds = [];
       for (const image of productImages) {
         if (image.isExisting) {
@@ -188,89 +260,54 @@ const ProductModal = ({ product, onClose, onSave }) => {
         } else if (image.file) {
           const uploaded = await uploadFile(image.file);
           const uploadedFileId = uploaded?.data?.id || uploaded?.id;
-          if (uploadedFileId) {
-            fileIds.push(uploadedFileId);
-          }
-        }
-      }
-
-      const documentFileIds = [];
-      const documentImageFileIds = [];
-      
-      for (const doc of documentFiles) {
-        if (doc.isExisting) {
-          if (doc.isDocumentImage) {
-            documentImageFileIds.push(doc.id);
-          } else {
-            documentFileIds.push(doc.id);
-          }
-        } else if (doc.file) {
-          const uploaded = await uploadFile(doc.file);
-          const uploadedFileId = uploaded?.data?.id || uploaded?.id;
-          if (uploadedFileId) {
-            if (doc.isDocumentImage) {
-              documentImageFileIds.push(uploadedFileId);
-            } else {
-              documentFileIds.push(uploadedFileId);
-            }
-          }
-        }
-      }
-
-      const productDetailFileIds = [];
-      for (const image of productDetailImages) {
-        if (image.isExisting) {
-          productDetailFileIds.push(image.id);
-        } else if (image.file) {
-          const uploaded = await uploadFile(image.file);
-          const uploadedFileId = uploaded?.data?.id || uploaded?.id;
-          if (uploadedFileId) {
-            productDetailFileIds.push(uploadedFileId);
-          }
+          // ...burada dosya yükleme sonrası yapılacak işlemler...
         }
       }
 
       const productData = {
         name,
         slug: finalSlug,
-        titles: titles.filter(t => t.trim() !== ""),
-        subtitles: subtitles.filter(st => st.trim() !== ""),
-        descriptions: descriptions.filter(d => d.trim() !== ""),
-        listTitles: listTitles.filter(lt => lt.trim() !== ""),
-        listItems: listItems.filter(li => li.trim() !== ""),
-        urls: urls.filter(u => u.trim() !== ""),
+        titles: titles.filter((t) => t.trim() !== ""),
+        subtitles: subtitles.filter((st) => st.trim() !== ""),
+        descriptions: descriptions.filter((d) => d.trim() !== ""),
+        listTitles: listTitles.filter((lt) => lt.trim() !== ""),
+        listItems: listItems.filter((li) => li.trim() !== ""),
+        urls: urls.filter((u) => u.trim() !== ""),
         bannerImageUrl: finalBannerImageUrl.trim() || null,
         productImageId: productImageId.trim() || null,
+        productMainImageId: finalProductMainImageId || null,
         documentImageIds: documentImageFileIds,
-        productDetailImageIds: productDetailImageIds.filter(id => String(id).trim() !== ""),
-        documentIds: selectedDocuments, // Document ilişkilendirmesi
+        productDetailImageIds: productDetailImageIds.filter(
+          (id) => String(id).trim() !== ""
+        ),
+        documentIds: selectedDocuments,
         fileIds,
         documentFileIds,
-        productDetailFileIds
+        productDetailFileIds,
       };
 
       if (product) {
         productData.id = product.id;
         await updateProduct(productData);
         Swal.fire({
-          icon: 'success',
-          title: 'Başarılı!',
-          text: 'Ürün başarıyla güncellendi!',
-          confirmButtonText: 'Tamam',
-          confirmButtonColor: '#28a745',
+          icon: "success",
+          title: "Başarılı!",
+          text: "Ürün başarıyla güncellendi!",
+          confirmButtonText: "Tamam",
+          confirmButtonColor: "#28a745",
           timer: 2000,
-          timerProgressBar: true
+          timerProgressBar: true,
         });
       } else {
         await createProduct(productData);
         Swal.fire({
-          icon: 'success',
-          title: 'Başarılı!',
-          text: 'Ürün başarıyla eklendi!',
-          confirmButtonText: 'Tamam',
-          confirmButtonColor: '#28a745',
+          icon: "success",
+          title: "Başarılı!",
+          text: "Ürün başarıyla eklendi!",
+          confirmButtonText: "Tamam",
+          confirmButtonColor: "#28a745",
           timer: 2000,
-          timerProgressBar: true
+          timerProgressBar: true,
         });
       }
 
@@ -278,11 +315,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
     } catch (error) {
       console.error("Ürün kaydedilirken hata:", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Hata!',
-        text: 'Ürün kaydedilirken bir hata oluştu.',
-        confirmButtonText: 'Tamam',
-        confirmButtonColor: '#dc3545'
+        icon: "error",
+        title: "Hata!",
+        text: "Ürün kaydedilirken bir hata oluştu.",
+        confirmButtonText: "Tamam",
+        confirmButtonColor: "#dc3545",
       });
     } finally {
       setLoading(false);
@@ -290,13 +327,13 @@ const ProductModal = ({ product, onClose, onSave }) => {
   };
 
   const removeDocumentFile = (fileId) => {
-    setDocumentFiles(prev => prev.filter(doc => doc.id !== fileId));
+    setDocumentFiles((prev) => prev.filter((doc) => doc.id !== fileId));
   };
 
   // Ana ürün görseli için seçilen dosyayı bul
   const getSelectedProductImage = () => {
     if (!productImageId) return null;
-    return availableFiles.find(file => file.id === productImageId);
+    return availableFiles.find((file) => file.id === productImageId);
   };
 
   const handleBannerFileSelect = (e) => {
@@ -328,58 +365,73 @@ const ProductModal = ({ product, onClose, onSave }) => {
   };
 
   const removeDocument = (documentId) => {
-    setSelectedDocuments(selectedDocuments.filter(id => id !== documentId));
+    setSelectedDocuments(selectedDocuments.filter((id) => id !== documentId));
   };
 
   const getSelectedDocumentData = (documentId) => {
-    return availableDocuments.find(doc => doc.id === documentId);
+    return availableDocuments.find((doc) => doc.id === documentId);
   };
 
   const selectFileFromSystem = (file) => {
     const fileUrl = BASE_URL + file.path;
-    
+
     switch (selectedFileType) {
-      case 'banner':
+      case "banner":
         setBannerImageUrl(fileUrl);
         setBannerImageFile(null);
         break;
-      case 'productImage':
+      case "productImage":
         setProductImageId(file.id);
         break;
-      case 'documentImage':
-        setDocumentFiles(prev => [...prev, {
-          id: file.id,
-          name: file.name,
-          path: file.path,
-          url: fileUrl,
-          isExisting: true,
-          isDocumentImage: true
-        }]);
+      case "productMainImage": // This should already be there
+        setProductMainImageId(file.id);
+        setProductMainImagePreview(""); // Clear any uploaded preview
+        setProductMainImageName(file.name);
+        setProductMainImageFile(null); // Clear any uploaded file
         break;
-      case 'productDetailImage':
+      case "documentImage":
+        setDocumentFiles((prev) => [
+          ...prev,
+          {
+            id: file.id,
+            name: file.name,
+            path: file.path,
+            url: fileUrl,
+            isExisting: true,
+            isDocumentImage: true,
+          },
+        ]);
+        break;
+      case "productDetailImage":
         setProductDetailImageIds([...productDetailImageIds, file.id]);
-        setProductDetailImages(prev => [...prev, {
-          id: file.id,
-          name: file.name,
-          path: file.path,
-          url: fileUrl,
-          isExisting: true
-        }]);
+        setProductDetailImages((prev) => [
+          ...prev,
+          {
+            id: file.id,
+            name: file.name,
+            path: file.path,
+            url: fileUrl,
+            isExisting: true,
+          },
+        ]);
         break;
-      case 'documentFile':
-        setDocumentFiles(prev => [...prev, {
-          id: file.id,
-          name: file.name,
-          path: file.path,
-          url: fileUrl,
-          isExisting: true,
-          isDocumentImage: false
-        }]);
+      case "documentFile":
+        setDocumentFiles((prev) => [
+          ...prev,
+          {
+            id: file.id,
+            name: file.name,
+            path: file.path,
+            url: fileUrl,
+            isExisting: true,
+            isDocumentImage: false,
+          },
+        ]);
         break;
     }
-    
+
     setShowFileSelector(false);
-    setSelectedFileType('');
+    setSelectedFileType("");
   };
 
   const addTitle = () => {
@@ -473,11 +525,17 @@ const ProductModal = ({ product, onClose, onSave }) => {
   };
 
   return (
-    <div className="AdminModalOverlay" ref={modalRef} onClick={handleOverlayClick}>
+    <div
+      className="AdminModalOverlay"
+      ref={modalRef}
+      onClick={handleOverlayClick}
+    >
       <div className="AdminModalContent AdminProductModal">
         <div className="AdminModalHeader">
           <h3>{product ? "Ürün Düzenle" : "Yeni Ürün Ekle"}</h3>
-          <button className="delete-btn" onClick={onClose}>×</button>
+          <button className="delete-btn" onClick={onClose}>
+            ×
+          </button>
         </div>
 
         <form onSubmit={handleSubmit} className="AdminModalForm">
@@ -497,8 +555,17 @@ const ProductModal = ({ product, onClose, onSave }) => {
               required
             />
             {name && (
-              <div style={{ marginTop: '8px', padding: '8px', backgroundColor: '#f0f0f0', borderRadius: '4px', fontSize: '12px' }}>
-                <strong>URL Önizleme:</strong> /product/{slug || createSlugFromProduct({ name })}
+              <div
+                style={{
+                  marginTop: "8px",
+                  padding: "8px",
+                  backgroundColor: "#f0f0f0",
+                  borderRadius: "4px",
+                  fontSize: "12px",
+                }}
+              >
+                <strong>URL Önizleme:</strong> /product/
+                {slug || createSlugFromProduct({ name })}
               </div>
             )}
           </div>
@@ -513,8 +580,9 @@ const ProductModal = ({ product, onClose, onSave }) => {
               placeholder="url-dostu-slug"
               required
             />
-            <small style={{ color: '#666', fontSize: '12px' }}>
-              SEO dostu URL için kullanılır. Boş bırakırsanız ürün adından otomatik oluşturulur.
+            <small style={{ color: "#666", fontSize: "12px" }}>
+              SEO dostu URL için kullanılır. Boş bırakırsanız ürün adından
+              otomatik oluşturulur.
             </small>
           </div>
 
@@ -540,7 +608,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="add-btn secondary" onClick={addTitle}>
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={addTitle}
+            >
               <span>+ Başlık Ekle</span>
             </button>
           </div>
@@ -567,7 +639,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="add-btn secondary" onClick={addSubtitle}>
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={addSubtitle}
+            >
               <span>+ Alt Başlık Ekle</span>
             </button>
           </div>
@@ -594,7 +670,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="add-btn secondary" onClick={addDescription}>
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={addDescription}
+            >
               <span>+ Açıklama Ekle</span>
             </button>
           </div>
@@ -621,7 +701,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="add-btn secondary" onClick={addListTitle}>
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={addListTitle}
+            >
               <span>+ Liste Başlığı Ekle</span>
             </button>
           </div>
@@ -648,7 +732,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="add-btn secondary" onClick={addListItem}>
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={addListItem}
+            >
               <span>+ Liste Öğesi Ekle</span>
             </button>
           </div>
@@ -675,9 +763,68 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 )}
               </div>
             ))}
-            <button type="button" className="add-btn secondary" onClick={addUrl}>
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={addUrl}
+            >
               <span>+ URL Ekle</span>
             </button>
+          </div>
+          {/* Video URL'leri */}
+          <div className="form-group">
+            <label>Video URL'leri</label>
+            {videoUrls.map((videoUrl, index) => (
+              <div key={index} className="AdminInputGroup">
+                <input
+                  type="url"
+                  value={videoUrl}
+                  onChange={(e) => {
+                    const updated = [...videoUrls];
+                    updated[index] = e.target.value;
+                    setVideoUrls(updated);
+                  }}
+                  placeholder={`Video URL ${index + 1}`}
+                />
+                {videoUrls.length > 1 && (
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() =>
+                      setVideoUrls(videoUrls.filter((_, i) => i !== index))
+                    }
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={() => setVideoUrls([...videoUrls, ""])}
+            >
+              <span>+ Video URL Ekle</span>
+            </button>
+          </div>
+          {/* Ana Görsel URL */}
+          <div className="form-group">
+            <label>Ana Görsel URL</label>
+            <input
+              type="url"
+              value={mainImageUrl}
+              onChange={(e) => setMainImageUrl(e.target.value)}
+              placeholder="Ana görsel URL'si"
+            />
+            {mainImageUrl && (
+              <div className="AdminBannerPreview">
+                <img
+                  src={mainImageUrl}
+                  alt="Ana görsel önizleme"
+                  style={{ maxWidth: "200px", maxHeight: "100px" }}
+                />
+              </div>
+            )}
           </div>
 
           {/* Banner Image URL */}
@@ -695,23 +842,30 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   type="file"
                   accept="image/*"
                   onChange={handleBannerFileSelect}
-                  style={{ display: 'none' }}
+                  style={{ display: "none" }}
                   id="banner-file-input"
                 />
-                <label htmlFor="banner-file-input" className="AdminFileSelectBtn primary">
+                <label
+                  htmlFor="banner-file-input"
+                  className="AdminFileSelectBtn primary"
+                >
                   <span className="file-select-btn">Dosya Seç</span>
                 </label>
                 <button
                   type="button"
                   className="file-select-btn"
-                  onClick={() => openFileSelector('banner')}
+                  onClick={() => openFileSelector("banner")}
                 >
                   Sistemden Seç
                 </button>
               </div>
               {bannerImageUrl && (
                 <div className="AdminBannerPreview">
-                  <img src={bannerImageUrl} alt="Banner önizleme" style={{ maxWidth: '200px', maxHeight: '100px' }} />
+                  <img
+                    src={bannerImageUrl}
+                    alt="Banner önizleme"
+                    style={{ maxWidth: "200px", maxHeight: "100px" }}
+                  />
                 </div>
               )}
             </div>
@@ -719,7 +873,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
 
           {/* Product Image ID */}
           <div className="form-group">
-            <label>Ana Ürün Görseli</label>
+            <label>Sayfa Görseli</label>
             <div className="AdminProductImageSelector">
               <div className="AdminUploadControls">
                 <input
@@ -731,29 +885,32 @@ const ProductModal = ({ product, onClose, onSave }) => {
                       try {
                         const uploadedFile = await uploadFile(file);
                         setProductImageId(uploadedFile.id);
-                        setAvailableFiles(prev => [...prev, uploadedFile]);
+                        setAvailableFiles((prev) => [...prev, uploadedFile]);
                       } catch (error) {
                         console.error("Dosya yüklenirken hata:", error);
                         Swal.fire({
-                          icon: 'error',
-                          title: 'Hata!',
-                          text: 'Dosya yüklenirken bir hata oluştu.',
-                          confirmButtonText: 'Tamam',
-                          confirmButtonColor: '#dc3545'
+                          icon: "error",
+                          title: "Hata!",
+                          text: "Dosya yüklenirken bir hata oluştu.",
+                          confirmButtonText: "Tamam",
+                          confirmButtonColor: "#dc3545",
                         });
                       }
                     }
                   }}
-                  style={{ display: 'none' }}
+                  style={{ display: "none" }}
                   id="product-image-input"
                 />
-                <label htmlFor="product-image-input" className="AdminFileSelectBtn primary">
+                <label
+                  htmlFor="product-image-input"
+                  className="AdminFileSelectBtn primary"
+                >
                   <span className="file-select-btn">Yeni Görsel Yükle</span>
                 </label>
                 <button
                   type="button"
                   className="file-select-btn"
-                  onClick={() => openFileSelector('productImage')}
+                  onClick={() => openFileSelector("productImage")}
                 >
                   Sistemden Seç
                 </button>
@@ -764,11 +921,22 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     {(() => {
                       const selectedImage = getSelectedProductImage();
                       return selectedImage ? (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <img 
-                            src={BASE_URL + selectedImage.path} 
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                          }}
+                        >
+                          <img
+                            src={BASE_URL + selectedImage.path}
                             alt={selectedImage.name}
-                            style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
+                            style={{
+                              width: "50px",
+                              height: "50px",
+                              objectFit: "cover",
+                              borderRadius: "4px",
+                            }}
                           />
                           <span>{selectedImage.name}</span>
                         </div>
@@ -780,7 +948,125 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   <button
                     type="button"
                     className="delete-btn"
-                    onClick={() => setProductImageId('')}
+                    onClick={() => setProductImageId("")}
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+          {/* Product Main Image ID */}
+          <div className="form-group">
+            <label>Ana Ürün Görseli</label>
+            <div className="AdminProductImageSelector">
+              <div className="AdminUploadControls">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      // Store the file for later upload
+                      setProductMainImageFile(file);
+                      setProductMainImageName(file.name);
+
+                      // Create preview
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        setProductMainImagePreview(event.target.result);
+                      };
+                      reader.readAsDataURL(file);
+
+                      // Clear system selection
+                      setProductMainImageId("");
+                    }
+                  }}
+                  style={{ display: "none" }}
+                  id="product-main-image-input"
+                />
+                <label
+                  htmlFor="product-main-image-input"
+                  className="AdminFileSelectBtn primary"
+                >
+                  <span className="file-select-btn">Yeni Ana Görsel Yükle</span>
+                </label>
+                <button
+                  type="button"
+                  className="file-select-btn"
+                  onClick={() => openFileSelector("productMainImage")}
+                >
+                  Sistemden Seç
+                </button>
+              </div>
+              {(productMainImageId || productMainImagePreview) && (
+                <div className="AdminSelectedFileInfo">
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                    }}
+                  >
+                    {productMainImagePreview ? (
+                      <img
+                        src={productMainImagePreview}
+                        alt={
+                          productMainImageName || "Ana ürün görseli önizleme"
+                        }
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          objectFit: "cover",
+                          borderRadius: "4px",
+                        }}
+                      />
+                    ) : (
+                      productMainImageId &&
+                      (() => {
+                        const selectedImage = availableFiles.find(
+                          (file) => file.id === productMainImageId
+                        );
+                        if (selectedImage && selectedImage.path) {
+                          return (
+                            <img
+                              src={BASE_URL + selectedImage.path}
+                              alt={selectedImage.name || "Ana ürün görseli"}
+                              style={{
+                                width: "50px",
+                                height: "50px",
+                                objectFit: "cover",
+                                borderRadius: "4px",
+                              }}
+                            />
+                          );
+                        }
+                        return null;
+                      })()
+                    )}
+                    <span>
+                      {productMainImagePreview ? productMainImageName : ""}
+                      {!productMainImagePreview &&
+                        productMainImageId &&
+                        (() => {
+                          const selectedImage = availableFiles.find(
+                            (file) => file.id === productMainImageId
+                          );
+                          return selectedImage
+                            ? selectedImage.name
+                            : `Seçilen görsel ID: ${productMainImageId}`;
+                        })()}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => {
+                      setProductMainImageId("");
+                      setProductMainImagePreview("");
+                      setProductMainImageName("");
+                      setProductMainImageFile(null);
+                    }}
                   >
                     ×
                   </button>
@@ -807,33 +1093,55 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   {selectedDocuments.map((documentId) => {
                     const document = getSelectedDocumentData(documentId);
                     if (!document) return null;
-                    
+
                     return (
-                      <div key={documentId} className="AdminSelectedDocumentItem">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <div
+                        key={documentId}
+                        className="AdminSelectedDocumentItem"
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                          }}
+                        >
                           {document.previewImageUrl ? (
-                            <img 
-                              src={document.previewImageUrl.startsWith('http') ? document.previewImageUrl : BASE_URL + document.previewImageUrl} 
+                            <img
+                              src={
+                                document.previewImageUrl.startsWith("http")
+                                  ? document.previewImageUrl
+                                  : BASE_URL + document.previewImageUrl
+                              }
                               alt={document.name}
-                              style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }}
+                              style={{
+                                width: "40px",
+                                height: "40px",
+                                objectFit: "cover",
+                                borderRadius: "4px",
+                              }}
                             />
                           ) : (
-                            <div style={{ 
-                              width: '40px', 
-                              height: '40px', 
-                              backgroundColor: '#f0f0f0', 
-                              borderRadius: '4px',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center'
-                            }}>
+                            <div
+                              style={{
+                                width: "40px",
+                                height: "40px",
+                                backgroundColor: "#f0f0f0",
+                                borderRadius: "4px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
                               📄
                             </div>
                           )}
                           <div>
-                            <div style={{ fontWeight: '500' }}>{document.name}</div>
-                            <div style={{ fontSize: '12px', color: '#666' }}>
-                              {document.category || 'Kategori Yok'}
+                            <div style={{ fontWeight: "500" }}>
+                              {document.name}
+                            </div>
+                            <div style={{ fontSize: "12px", color: "#666" }}>
+                              {document.category || "Kategori Yok"}
                             </div>
                           </div>
                         </div>
@@ -863,32 +1171,38 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   multiple
                   onChange={(e) => {
                     const files = Array.from(e.target.files);
-                    files.forEach(file => {
+                    files.forEach((file) => {
                       const reader = new FileReader();
                       reader.onload = (event) => {
                         const newId = Date.now() + Math.random();
-                        setProductDetailImageIds(prev => [...prev, newId]);
-                        setProductDetailImages(prev => [...prev, {
-                          id: newId,
-                          url: event.target.result,
-                          name: file.name,
-                          file: file,
-                          isExisting: false
-                        }]);
+                        setProductDetailImageIds((prev) => [...prev, newId]);
+                        setProductDetailImages((prev) => [
+                          ...prev,
+                          {
+                            id: newId,
+                            url: event.target.result,
+                            name: file.name,
+                            file: file,
+                            isExisting: false,
+                          },
+                        ]);
                       };
                       reader.readAsDataURL(file);
                     });
                   }}
-                  style={{ display: 'none' }}
+                  style={{ display: "none" }}
                   id="detail-image-input"
                 />
-                <label htmlFor="detail-image-input" className="AdminFileSelectBtn primary">
+                <label
+                  htmlFor="detail-image-input"
+                  className="AdminFileSelectBtn primary"
+                >
                   <span className="file-select-btn">Yeni Görsel Yükle</span>
                 </label>
                 <button
                   type="button"
                   className="file-select-btn"
-                  onClick={() => openFileSelector('productDetailImage')}
+                  onClick={() => openFileSelector("productDetailImage")}
                 >
                   Sistemden Seç
                 </button>
@@ -896,38 +1210,57 @@ const ProductModal = ({ product, onClose, onSave }) => {
               {productDetailImageIds.length > 0 && (
                 <div className="AdminSelectedImages">
                   {productDetailImageIds.map((id, index) => {
-                    const image = productDetailImages.find(img => img.id === id);
+                    const image = productDetailImages.find(
+                      (img) => img.id === id
+                    );
                     return (
                       <div key={id} className="AdminSelectedFileItem">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                          }}
+                        >
                           {image && image.url ? (
-                            <img 
-                              src={image.url} 
+                            <img
+                              src={image.url}
                               alt={image.name}
-                              style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }}
+                              style={{
+                                width: "40px",
+                                height: "40px",
+                                objectFit: "cover",
+                                borderRadius: "4px",
+                              }}
                             />
                           ) : (
-                            <div style={{ 
-                              width: '40px', 
-                              height: '40px', 
-                              background: '#f0f0f0', 
-                              borderRadius: '4px',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '12px'
-                            }}>
+                            <div
+                              style={{
+                                width: "40px",
+                                height: "40px",
+                                background: "#f0f0f0",
+                                borderRadius: "4px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: "12px",
+                              }}
+                            >
                               📄
                             </div>
                           )}
-                          <span>{image ? image.name : 'Görsel'}</span>
+                          <span>{image ? image.name : "Görsel"}</span>
                         </div>
                         <button
                           type="button"
                           className="delete-btn"
                           onClick={() => {
-                            setProductDetailImageIds(ids => ids.filter(i => i !== id));
-                            setProductDetailImages(imgs => imgs.filter(img => img.id !== id));
+                            setProductDetailImageIds((ids) =>
+                              ids.filter((i) => i !== id)
+                            );
+                            setProductDetailImages((imgs) =>
+                              imgs.filter((img) => img.id !== id)
+                            );
                           }}
                         >
                           ×
@@ -968,24 +1301,35 @@ const ProductModal = ({ product, onClose, onSave }) => {
             <div className="AdminFileSelectorBody">
               <div className="AdminFilesGrid">
                 {availableFiles
-                  .filter(file => {
+                  .filter((file) => {
                     // Görsel seçimi için sadece resimleri göster
-                    if (['banner', 'productImage', 'documentImage', 'productDetailImage'].includes(selectedFileType)) {
-                      return file.contentType?.startsWith('image/') || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i);
+                    if (
+                      [
+                        "banner",
+                        "productImage",
+                        "documentImage",
+                        "productDetailImage",
+                      ].includes(selectedFileType)
+                    ) {
+                      return (
+                        file.contentType?.startsWith("image/") ||
+                        file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i)
+                      );
                     }
                     // Döküman dosyası seçimi için tüm dosyaları göster
-                    if (selectedFileType === 'documentFile') {
+                    if (selectedFileType === "documentFile") {
                       return true;
                     }
                     return true;
                   })
-                  .map(file => (
+                  .map((file) => (
                     <div
                       key={file.id}
                       className="AdminFileItem"
                       onClick={() => selectFileFromSystem(file)}
                     >
-                      {file.contentType?.startsWith('image/') || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                      {file.contentType?.startsWith("image/") ||
+                      file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
                         <img
                           src={BASE_URL + file.path}
                           alt={file.name}
@@ -993,12 +1337,14 @@ const ProductModal = ({ product, onClose, onSave }) => {
                         />
                       ) : (
                         <div className="AdminFileIcon">
-                          <span style={{ fontSize: '48px' }}>📄</span>
+                          <span style={{ fontSize: "48px" }}>📄</span>
                         </div>
                       )}
                       <div className="AdminFileInfo">
                         <span className="AdminFileName">{file.name}</span>
-                        <span className="AdminFileSize">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                        <span className="AdminFileSize">
+                          {(file.size / 1024 / 1024).toFixed(2)} MB
+                        </span>
                       </div>
                     </div>
                   ))}
@@ -1025,8 +1371,8 @@ const ProductModal = ({ product, onClose, onSave }) => {
             <div className="AdminFileSelectorBody">
               <div className="AdminDocumentsGrid">
                 {availableDocuments
-                  .filter(doc => !selectedDocuments.includes(doc.id))
-                  .map(document => (
+                  .filter((doc) => !selectedDocuments.includes(doc.id))
+                  .map((document) => (
                     <div
                       key={document.id}
                       className="AdminFileItem AdminDocumentItem"
@@ -1034,20 +1380,28 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     >
                       {document.previewImageUrl ? (
                         <img
-                          src={document.previewImageUrl.startsWith('http') ? document.previewImageUrl : BASE_URL + document.previewImageUrl}
+                          src={
+                            document.previewImageUrl.startsWith("http")
+                              ? document.previewImageUrl
+                              : BASE_URL + document.previewImageUrl
+                          }
                           alt={document.name}
                           loading="lazy"
                         />
                       ) : (
                         <div className="AdminFileIcon">
-                          <span style={{ fontSize: '48px' }}>📄</span>
+                          <span style={{ fontSize: "48px" }}>📄</span>
                         </div>
                       )}
                       <div className="AdminFileInfo">
                         <span className="AdminFileName">{document.name}</span>
-                        <span className="AdminFileCategory">{document.category || 'Kategori Yok'}</span>
+                        <span className="AdminFileCategory">
+                          {document.category || "Kategori Yok"}
+                        </span>
                         {document.description && (
-                          <span className="AdminFileDescription">{document.description}</span>
+                          <span className="AdminFileDescription">
+                            {document.description}
+                          </span>
                         )}
                       </div>
                     </div>

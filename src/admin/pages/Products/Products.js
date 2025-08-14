@@ -57,6 +57,69 @@ const Products = () => {
     }
   };
 
+  // Helper function to get product main image
+  const getProductMainImage = (product) => {
+    console.log("Product data:", product); // Debug log
+    
+    // Method 1: Check if productMainImage exists directly
+    if (product.productMainImage && product.productMainImage.path) {
+      console.log("Found productMainImage:", product.productMainImage);
+      return BASE_URL + product.productMainImage.path;
+    }
+
+    // Method 2: Check ProductMainImageId with files array
+    if (product.productMainImageId && product.files && product.files.length > 0) {
+      console.log("Looking for ProductMainImageId:", product.productMainImageId);
+      console.log("Available files:", product.files);
+      
+      const mainImage = product.files.find(file => {
+        // Try different comparison methods since IDs might be strings or UUIDs
+        const fileId = String(file.id).toLowerCase();
+        const productMainImageId = String(product.productMainImageId).toLowerCase();
+        return fileId === productMainImageId;
+      });
+      
+      if (mainImage && mainImage.path) {
+        console.log("Found main image via ProductMainImageId:", mainImage);
+        return BASE_URL + mainImage.path;
+      }
+    }
+
+    // Method 3: Check alternative casing (productMainImageId vs ProductMainImageId)
+    if (product.ProductMainImageId && product.files && product.files.length > 0) {
+      console.log("Looking for ProductMainImageId (capital P):", product.ProductMainImageId);
+      
+      const mainImage = product.files.find(file => {
+        const fileId = String(file.id).toLowerCase();
+        const productMainImageId = String(product.ProductMainImageId).toLowerCase();
+        return fileId === productMainImageId;
+      });
+      
+      if (mainImage && mainImage.path) {
+        console.log("Found main image via ProductMainImageId (capital P):", mainImage);
+        return BASE_URL + mainImage.path;
+      }
+    }
+
+    // Method 4: Fallback to first available file
+    if (product.files && product.files.length > 0) {
+      const firstFile = product.files.find(file => file.path);
+      if (firstFile) {
+        console.log("Using first available file:", firstFile);
+        return BASE_URL + firstFile.path;
+      }
+    }
+
+    // Method 5: Check mainImageUrl
+    if (product.mainImageUrl) {
+      console.log("Found mainImageUrl:", product.mainImageUrl);
+      return product.mainImageUrl.startsWith('http') ? product.mainImageUrl : BASE_URL + product.mainImageUrl;
+    }
+
+    console.log("No image found for product");
+    return null;
+  };
+
   const handleAddProduct = () => {
     setSelectedProduct(null);
     setShowModal(true);
@@ -141,50 +204,24 @@ const Products = () => {
             <div key={product.id} className="AdminProductCard">
               <div className="AdminProductImage">
                 {(() => {
-                  if (product.productImage && product.productImage.path) {
+                  const imageUrl = getProductMainImage(product);
+                  
+                  if (imageUrl) {
                     return (
                       <img
-                        src={BASE_URL + product.productImage.path}
-                        alt={product.name}
+                        src={imageUrl}
+                        alt={product.name || 'Product image'}
                         onError={(e) => {
+                          console.log("Image failed to load:", imageUrl);
                           e.target.src = "/placeholder.jpg";
+                        }}
+                        onLoad={() => {
+                          console.log("Image loaded successfully:", imageUrl);
                         }}
                       />
                     );
                   }
-                  if (product.productImageId && product.files) {
-                    const mainImage = product.files.find(
-                      (file) =>
-                        file.id === product.productImageId ||
-                        file.id === String(product.productImageId) ||
-                        String(file.id) === String(product.productImageId)
-                    );
-                    if (mainImage && mainImage.path) {
-                      return (
-                        <img
-                          src={BASE_URL + mainImage.path}
-                          alt={product.name}
-                          onError={(e) => {
-                            e.target.src = "/placeholder.jpg";
-                          }}
-                        />
-                      );
-                    }
-                  }
-                  if (product.files && product.files.length > 0) {
-                    const firstFile = product.files.find((file) => file.path);
-                    if (firstFile) {
-                      return (
-                        <img
-                          src={BASE_URL + firstFile.path}
-                          alt={product.name}
-                          onError={(e) => {
-                            e.target.src = "/placeholder.jpg";
-                          }}
-                        />
-                      );
-                    }
-                  }
+                  
                   return (
                     <div className="AdminNoImage">
                       <span>Görsel Yok</span>
