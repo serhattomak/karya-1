@@ -29,8 +29,11 @@ const uploadFile = async (file) => {
 };
 
 const ProductModal = ({ product, onClose, onSave }) => {
+  // Checkbox için state
+  const [showContact, setShowContact] = useState(false);
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
+  const [homePageSubtitle, setHomePageSubtitle] = useState("");
   const [titles, setTitles] = useState([""]);
   const [subtitles, setSubtitles] = useState([""]);
   const [descriptions, setDescriptions] = useState([""]);
@@ -64,6 +67,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
     if (product) {
       setName(product.name || "");
       setSlug(product.slug || "");
+      setHomePageSubtitle(product.homePageSubtitle || "");
       setTitles(product.titles || [""]);
       setSubtitles(product.subtitles || [""]);
       setDescriptions(product.descriptions || [""]);
@@ -77,6 +81,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
       setVideoUrls(product.videoUrls || [""]);
       setMainImageUrl(product.mainImageUrl || "");
       setProductMainImageId(product.productMainImageId || "");
+      setShowContact(product.showContact === true);
 
       // Handle productMainImage - find the file info if it exists
       if (product.productMainImageId) {
@@ -151,6 +156,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
       setProductMainImageFile(null);
       setProductMainImagePreview("");
       setProductMainImageName("");
+      setShowContact(false);
     }
   }, [product]);
 
@@ -284,6 +290,8 @@ const ProductModal = ({ product, onClose, onSave }) => {
         fileIds,
         documentFileIds,
         productDetailFileIds,
+        homePageSubtitle,
+        showContact,
       };
 
       if (product) {
@@ -583,6 +591,20 @@ const ProductModal = ({ product, onClose, onSave }) => {
             <small style={{ color: "#666", fontSize: "12px" }}>
               SEO dostu URL için kullanılır. Boş bırakırsanız ürün adından
               otomatik oluşturulur.
+            </small>
+          </div>
+
+          {/* Ana Sayfa Alt Başlık */}
+          <div className="form-group">
+            <label>Ana Sayfa Alt Başlık *</label>
+            <input
+              type="text"
+              value={homePageSubtitle}
+              onChange={(e) => setHomePageSubtitle(e.target.value)}
+              placeholder="Ana sayfa alt başlığını girin  "
+            />
+            <small style={{ color: "#666", fontSize: "12px" }}>
+              Ana Sayfada gösterilecek ürünün alt başlığı olarak kullanılır.
             </small>
           </div>
 
@@ -1273,6 +1295,18 @@ const ProductModal = ({ product, onClose, onSave }) => {
             </div>
           </div>
 
+          <div className="form-group" style={{ marginBottom: "16px", display: "flex", alignItems: "center", gap: "12px" }}>
+            <label htmlFor="showContactCheckbox" style={{ marginBottom: 0 }}>
+              İletişim Linki Gözüksün mü?
+            </label>
+            <input
+              id="showContactCheckbox"
+              type="checkbox"
+              checked={showContact}
+              onChange={e => setShowContact(e.target.checked)}
+              style={{ width: "18px", height: "18px" }}
+            />
+          </div>
           <div className="AdminModalFooter">
             <button type="button" className="cancel-btn" onClick={onClose}>
               <span>İptal</span>

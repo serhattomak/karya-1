@@ -83,7 +83,11 @@ const ProductSlider = ({ products }) => {
           {products.map((product, index) => (
             <li
               key={index}
-              className="slide"
+              className={
+                product.homePageSubtitle
+                  ? "slide with-subtitle"
+                  : "slide"
+              }
               onClick={() => handleProductClick(index)}
             >
               <img
@@ -94,7 +98,10 @@ const ProductSlider = ({ products }) => {
                   e.target.src = "/assets/images/Group 300.webp";
                 }}
               />
-              <h3 className="product-slider-title">{product.title}</h3>
+              <h3 className={product.homePageSubtitle ? "product-title" : "product-slider-title"}>{product.title}</h3>
+              {product.homePageSubtitle && (
+                <p className="product-subtitle">{product.homePageSubtitle}</p>
+              )}
             </li>
           ))}
         </ul>
