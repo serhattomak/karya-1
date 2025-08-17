@@ -141,71 +141,18 @@ const AboutUs = () => {
         }
         setApplicationAreaImages(appImages);
 
+        // Dosya listesini getFiles ile çek
         try {
-          const imagesResponse = await fetch(`${API_BASE_URL}/api/File`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          });
-
-          if (imagesResponse.ok) {
-            const imagesData = await imagesResponse.json();
-            const files = imagesData?.data || imagesData || [];
-            const imageFiles = files
-              .filter(
-                (f) => f.contentType?.startsWith("image/") && f.path && f.id
-              )
-              .map((f) => ({ id: f.id, path: f.path }));
-            setAvailableImages(imageFiles);
+          const api = await import("../../../api");
+          const filesResponse = await api.getFiles();
+          let files = filesResponse?.data?.data || filesResponse?.data || filesResponse;
+          if (Array.isArray(files)) {
+            setAvailableImages(files);
           } else {
-            setAvailableImages([
-              {
-                id: "11111111-1111-1111-1111-111111111111",
-                path: "uploads/1738834392185.webp",
-              },
-              {
-                id: "22222222-2222-2222-2222-222222222222",
-                path: "uploads/1738834413931.webp",
-              },
-              {
-                id: "33333333-3333-3333-3333-333333333333",
-                path: "uploads/1738834418863.webp",
-              },
-              {
-                id: "44444444-4444-4444-4444-444444444444",
-                path: "uploads/1738834423358.webp",
-              },
-              {
-                id: "55555555-5555-5555-5555-555555555555",
-                path: "uploads/1738835993151.jpeg",
-              },
-            ]);
+            setAvailableImages([]);
           }
-        } catch {
-          setAvailableImages([
-            {
-              id: "11111111-1111-1111-1111-111111111111",
-              path: "uploads/1738834392185.webp",
-            },
-            {
-              id: "22222222-2222-2222-2222-222222222222",
-              path: "uploads/1738834413931.webp",
-            },
-            {
-              id: "33333333-3333-3333-3333-333333333333",
-              path: "uploads/1738834418863.webp",
-            },
-            {
-              id: "44444444-4444-4444-4444-444444444444",
-              path: "uploads/1738834423358.webp",
-            },
-            {
-              id: "55555555-5555-5555-5555-555555555555",
-              path: "uploads/1738835993151.jpeg",
-            },
-          ]);
+        } catch (err) {
+          setAvailableImages([]);
         }
       } catch (error) {
         console.error("Veri çekme hatası: ", error);
@@ -213,8 +160,6 @@ const AboutUs = () => {
           icon: "error",
           title: "Hata!",
           text: "Veriler yüklenirken bir hata oluştu.",
-          confirmButtonText: "Tamam",
-          confirmButtonColor: "#dc3545",
         });
       } finally {
         setLoading(false);
@@ -727,7 +672,6 @@ const AboutUs = () => {
                         ? mainImageName
                         : mainImageName ||
                           (mainImageUrl?.split("/")?.pop() ?? "")}
-                      {mainImageId ? ` • ID: ${mainImageId}` : ""}
                     </span>
                   </div>
                   <button
