@@ -29,7 +29,8 @@ const uploadFile = async (file) => {
 };
 
 const ProductModal = ({ product, onClose, onSave }) => {
-  // Checkbox için state
+  const [fileSearchTerm, setFileSearchTerm] = useState("");
+  const [fileSortAsc, setFileSortAsc] = useState(true);
   const [showContact, setShowContact] = useState(false);
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
@@ -1348,10 +1349,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
       </div>
 
       {/* Dosya Seçici Modal */}
+
       {showFileSelector && (
         <div className="AdminFileSelectorModal">
-          <div className="AdminFileSelectorContent">
-            <div className="AdminFileSelectorHeader">
+          <div className="AdminFileSelectorContent modern">
+            <div className="AdminFileSelectorHeader modern">
               <h3>Dosya Seç</h3>
               <button
                 type="button"
@@ -1361,57 +1363,74 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 ×
               </button>
             </div>
-            <div className="AdminFileSelectorBody">
-              <div className="AdminFilesGrid">
+            <div className="AdminFileSelectorBody modern">
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                <input
+                  type="text"
+                  className="AdminFileSearchInput"
+                  placeholder="Dosya ismiyle ara..."
+                  value={fileSearchTerm || ""}
+                  onChange={e => setFileSearchTerm(e.target.value)}
+                  style={{ flex: 1, padding: "8px 12px", borderRadius: 8, border: "1px solid #e9ecef", fontSize: 14, marginRight: 12 }}
+                />
+                <button
+                  type="button"
+                  className="sort-btn"
+                  style={{ padding: "8px 16px", borderRadius: 8, border: "none", background: "#f68b1f", color: "white", fontWeight: 600, cursor: "pointer" }}
+                  onClick={() => setFileSortAsc(!fileSortAsc)}
+                >
+                  {fileSortAsc ? "A-Z" : "Z-A"}
+                </button>
+              </div>
+              <div className="AdminFilesGrid modern">
                 {availableFiles
                   .filter((file) => {
                     // Görsel seçimi için sadece resimleri göster
-                    if (
-                      [
-                        "banner",
-                        "productImage",
-                        "documentImage",
-                        "productDetailImage",
-                      ].includes(selectedFileType)
-                    ) {
-                      return (
-                        file.contentType?.startsWith("image/") ||
-                        file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i)
-                      );
+                    if (["banner", "productImage", "documentImage", "productDetailImage"].includes(selectedFileType)) {
+                      if (!(file.contentType?.startsWith("image/") || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i))) return false;
                     }
-                    // Döküman dosyası seçimi için tüm dosyaları göster
-                    if (selectedFileType === "documentFile") {
-                      return true;
-                    }
+                    // Arama filtresi
+                    if (fileSearchTerm && !file.name.toLowerCase().includes(fileSearchTerm.toLowerCase())) return false;
                     return true;
+                  })
+                  .sort((a, b) => {
+                    if (fileSortAsc) {
+                      return a.name.localeCompare(b.name);
+                    } else {
+                      return b.name.localeCompare(a.name);
+                    }
                   })
                   .map((file) => (
                     <div
                       key={file.id}
-                      className="AdminFileItem"
+                      className="AdminFileItem modern"
                       onClick={() => selectFileFromSystem(file)}
+                      style={{ boxShadow: "0 2px 8px rgba(246,139,31,0.08)", border: "1px solid #f68b1f", borderRadius: 12, padding: 12, cursor: "pointer", transition: "all 0.2s", background: "#fff", display: "flex", flexDirection: "column", alignItems: "center" }}
                     >
-                      {file.contentType?.startsWith("image/") ||
-                      file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                      {file.contentType?.startsWith("image/") || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
                         <img
                           src={BASE_URL + file.path}
                           alt={file.name}
                           loading="lazy"
+                          style={{ width: "100%", height: "100px", objectFit: "cover", borderRadius: "8px", marginBottom: "8px", boxShadow: "0 1px 4px rgba(0,0,0,0.07)" }}
                         />
                       ) : (
-                        <div className="AdminFileIcon">
+                        <div className="AdminFileIcon" style={{ width: "100%", height: "100px", display: "flex", alignItems: "center", justifyContent: "center", background: "#f8f9fa", borderRadius: "8px", marginBottom: "8px" }}>
                           <span style={{ fontSize: "48px" }}>📄</span>
                         </div>
                       )}
-                      <div className="AdminFileInfo">
-                        <span className="AdminFileName">{file.name}</span>
-                        <span className="AdminFileSize">
+                      <div className="AdminFileInfo" style={{ textAlign: "center" }}>
+                        <span className="AdminFileName" style={{ fontWeight: 600, color: "#333", fontSize: 14 }}>{file.name}</span>
+                        <span className="AdminFileSize" style={{ color: "#666", fontSize: 12 }}>
                           {(file.size / 1024 / 1024).toFixed(2)} MB
                         </span>
                       </div>
                     </div>
                   ))}
               </div>
+              {availableFiles.length === 0 && (
+                <div style={{ textAlign: "center", color: "#999", marginTop: 32 }}>Hiç dosya bulunamadı.</div>
+              )}
             </div>
           </div>
         </div>

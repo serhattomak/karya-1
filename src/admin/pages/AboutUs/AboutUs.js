@@ -20,6 +20,8 @@ const uploadFile = async (file) => {
 };
 
 const AboutUs = () => {
+  const [mainImageSearchTerm, setMainImageSearchTerm] = useState("");
+  const [mainImageSortAsc, setMainImageSortAsc] = useState(true);
   const [pageData, setPageData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -30,7 +32,6 @@ const AboutUs = () => {
   const [image, setImage] = useState("");
   const [bannerImageUrl, setBannerImageUrl] = useState("");
 
-  // { id, path } formatı
   const [availableImages, setAvailableImages] = useState([]);
   const [showImageSelector, setShowImageSelector] = useState(false);
 
@@ -40,7 +41,6 @@ const AboutUs = () => {
     { title: "Hizmetlerimiz", items: [""] },
   ]);
 
-  // Galeri görselleri (id, url)
   const [applicationAreaImages, setApplicationAreaImages] = useState([
     null,
     null,
@@ -48,7 +48,7 @@ const AboutUs = () => {
     null,
   ]);
 
-  const [selectedFile, setSelectedFile] = useState(null); // Banner için dosya
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const [pageType, setPageType] = useState(0);
   const [name, setName] = useState("");
@@ -141,7 +141,6 @@ const AboutUs = () => {
         }
         setApplicationAreaImages(appImages);
 
-        // /api/File -> {id, path}
         try {
           const imagesResponse = await fetch(`${API_BASE_URL}/api/File`, {
             method: "GET",
@@ -161,7 +160,6 @@ const AboutUs = () => {
               .map((f) => ({ id: f.id, path: f.path }));
             setAvailableImages(imageFiles);
           } else {
-            // Geliştirici/test fallback (fake guid + path)
             setAvailableImages([
               {
                 id: "11111111-1111-1111-1111-111111111111",
@@ -228,7 +226,6 @@ const AboutUs = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 1) Banner upload (varsa)
     let uploadedBannerUrl = bannerImageUrl || null;
     if (selectedFile) {
       try {
@@ -248,7 +245,6 @@ const AboutUs = () => {
       }
     }
 
-    // 1-bis) Ana görsel upload (varsa)
     let uploadedMainImageUrl = mainImageUrl?.trim()
       ? mainImageUrl.trim()
       : null;
@@ -272,7 +268,6 @@ const AboutUs = () => {
       }
     }
 
-    // 2) Güvenli alanlar
     const safeName =
       typeof name === "string" && name.trim() ? name.trim() : "Hakkımızda";
     const safeSlug =
@@ -322,7 +317,6 @@ const AboutUs = () => {
         ? backgroundImageUrl.trim()
         : null;
 
-    // 3) UUID kontrolleri
     const uuidRe =
       /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
 
@@ -349,7 +343,6 @@ const AboutUs = () => {
           .map((f) => f.trim())
       : [];
 
-    // 4) Payload (KÖKTE)
     const payload = {
       id: pageData?.id || null,
       pageType: typeof pageType === "number" ? pageType : 0,
@@ -372,7 +365,6 @@ const AboutUs = () => {
       additionalFields: safeAdditionalFields,
     };
 
-    // 5) PUT çağrısı
     try {
       const token = localStorage.getItem("token");
       const resp = await fetch(`${API_BASE_URL}/api/Page`, {
@@ -389,7 +381,6 @@ const AboutUs = () => {
         throw new Error(`HTTP ${resp.status}: ${errorText}`);
       }
 
-      // PUT sonrası GET ile doğrulama
       const getResp = await fetch(`${API_BASE_URL}/api/Page/${payload.id}`, {
         method: "GET",
         headers: {
@@ -556,7 +547,6 @@ const AboutUs = () => {
   const openImageSelector = () => setShowImageSelector(true);
 
   const selectImageFromSystem = (filePath) => {
-    // filePath artık path değil; availableImages objesi gönderiyoruz, burası sadece banner seçimi için path bekliyor
     setBannerImageUrl(`${API_BASE_URL}/${filePath}`);
     setShowImageSelector(false);
   };
@@ -564,7 +554,7 @@ const AboutUs = () => {
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      setSelectedFile(file); // banner
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onloadend = () => setImage(reader.result);
       reader.readAsDataURL(file);
@@ -758,12 +748,12 @@ const AboutUs = () => {
             </div>
           </div>
 
-          {/* Ana görsel sistem seçici */}
+          {/* Dosya Seçici Modal (ProductModal ile aynı yapı) */}
           {showMainImageSelector && (
             <div className="AdminFileSelectorModal">
-              <div className="AdminFileSelectorContent">
-                <div className="AdminFileSelectorHeader">
-                  <h3>Ana Görsel Seç</h3>
+              <div className="AdminFileSelectorContent modern">
+                <div className="AdminFileSelectorHeader modern">
+                  <h3>Dosya Seç</h3>
                   <button
                     type="button"
                     className="delete-btn"
@@ -772,43 +762,77 @@ const AboutUs = () => {
                     ×
                   </button>
                 </div>
-                <div className="AdminFileSelectorBody">
-                  <div className="AdminFilesGrid">
-                    {availableImages.map((file, idx) => (
-                      <div
-                        key={idx}
-                        className="AdminFileItem"
-                        onClick={() => {
-                          setMainImageUrl(`${API_BASE_URL}/${file.path}`);
-                          setMainImageId(file.id); // gerçek UUID
-                          setMainImagePreview("");
-                          setMainImageFile(null);
-                          setMainImageName(file.path.split("/").pop());
-                          setShowMainImageSelector(false);
-                        }}
-                      >
-                        <img
-                          src={`${API_BASE_URL}/${file.path}`}
-                          alt={file.path.split("/").pop()}
-                          style={{
-                            width: "100%",
-                            height: 80,
-                            objectFit: "cover",
-                            borderRadius: 6,
-                          }}
-                        />
-                        <div
-                          style={{
-                            padding: 6,
-                            fontSize: 12,
-                            textAlign: "center",
-                          }}
-                        >
-                          {file.path.split("/").pop()}
-                        </div>
-                      </div>
-                    ))}
+                <div className="AdminFileSelectorBody modern">
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                    <input
+                      type="text"
+                      className="AdminFileSearchInput"
+                      placeholder="Dosya ismiyle ara..."
+                      value={mainImageSearchTerm || ""}
+                      onChange={e => setMainImageSearchTerm(e.target.value)}
+                      style={{ flex: 1, padding: "8px 12px", borderRadius: 8, border: "1px solid #e9ecef", fontSize: 14, marginRight: 12 }}
+                    />
+                    <button
+                      type="button"
+                      className="sort-btn"
+                      style={{ padding: "8px 16px", borderRadius: 8, border: "none", background: "#f68b1f", color: "white", fontWeight: 600, cursor: "pointer" }}
+                      onClick={() => setMainImageSortAsc(!mainImageSortAsc)}
+                    >
+                      {mainImageSortAsc ? "A-Z" : "Z-A"}
+                    </button>
                   </div>
+                  <div className="AdminFilesGrid modern">
+                    {availableImages
+                      .filter((file) => {
+                        if (!(file.contentType?.startsWith("image/") || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i))) return false;
+                        const fileName = file.name || (file.path?.split("/").pop() || "");
+                        if (mainImageSearchTerm && !fileName.toLowerCase().includes(mainImageSearchTerm.toLowerCase())) return false;
+                        return true;
+                      })
+                      .sort((a, b) => {
+                        const nameA = a.name || (a.path?.split("/").pop() || "");
+                        const nameB = b.name || (b.path?.split("/").pop() || "");
+                        if (mainImageSortAsc) {
+                          return nameA.localeCompare(nameB);
+                        } else {
+                          return nameB.localeCompare(nameA);
+                        }
+                      })
+                      .map((file) => {
+                        const fileName = file.name || (file.path?.split("/").pop() || "");
+                        return (
+                          <div
+                            key={file.id}
+                            className="AdminFileItem modern"
+                            onClick={() => {
+                              setMainImageUrl(`${API_BASE_URL}/${file.path}`);
+                              setMainImageId(file.id);
+                              setMainImagePreview("");
+                              setMainImageFile(null);
+                              setMainImageName(fileName);
+                              setShowMainImageSelector(false);
+                            }}
+                            style={{ boxShadow: "0 2px 8px rgba(246,139,31,0.08)", border: "1px solid #f68b1f", borderRadius: 12, padding: 12, cursor: "pointer", transition: "all 0.2s", background: "#fff", display: "flex", flexDirection: "column", alignItems: "center" }}
+                          >
+                            <img
+                              src={`${API_BASE_URL}/${file.path}`}
+                              alt={fileName}
+                              loading="lazy"
+                              style={{ width: "100%", height: "100px", objectFit: "cover", borderRadius: "8px", marginBottom: "8px", boxShadow: "0 1px 4px rgba(0,0,0,0.07)" }}
+                            />
+                            <div className="AdminFileInfo" style={{ textAlign: "center" }}>
+                              <span className="AdminFileName" style={{ fontWeight: 600, color: "#333", fontSize: 14 }}>{file.name}</span>
+                              <span className="AdminFileSize" style={{ color: "#666", fontSize: 12 }}>
+                                {(file.size / 1024 / 1024).toFixed(2)} MB
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                  {availableImages.length === 0 && (
+                    <div style={{ textAlign: "center", color: "#999", marginTop: 32 }}>Hiç dosya bulunamadı.</div>
+                  )}
                 </div>
               </div>
             </div>
@@ -1144,8 +1168,8 @@ const AboutUs = () => {
           {/* Galeri Sistem Seçici */}
           {showGalleryImageSelectorIndex !== null && (
             <div className="AdminFileSelectorModal">
-              <div className="AdminFileSelectorContent">
-                <div className="AdminFileSelectorHeader">
+              <div className="AdminFileSelectorContent modern">
+                <div className="AdminFileSelectorHeader modern">
                   <h3>Galeri Görseli Seç</h3>
                   <button
                     type="button"
@@ -1155,41 +1179,32 @@ const AboutUs = () => {
                     ×
                   </button>
                 </div>
-                <div className="AdminFileSelectorBody">
-                  <div className="AdminFilesGrid">
+                <div className="AdminFileSelectorBody modern">
+                  <div className="AdminFilesGrid modern">
                     {availableImages.map((file, idx) => (
                       <div
                         key={idx}
-                        className="AdminFileItem"
+                        className="AdminFileItem modern"
                         onClick={() => {
                           setApplicationAreaImages((prev) => {
                             const updated = [...prev];
                             updated[showGalleryImageSelectorIndex] = {
-                              id: file.id, // gerçek UUID
+                              id: file.id,
                               url: `${API_BASE_URL}/${file.path}`,
+                              name: file.path.split("/").pop(),
                             };
                             return updated;
                           });
                           setShowGalleryImageSelector(null);
                         }}
+                        style={{ boxShadow: "0 2px 8px rgba(246,139,31,0.08)", border: "1px solid #f68b1f", borderRadius: 12, padding: 12, cursor: "pointer", transition: "all 0.2s", background: "#fff", display: "flex", flexDirection: "column", alignItems: "center" }}
                       >
                         <img
                           src={`${API_BASE_URL}/${file.path}`}
                           alt={file.path.split("/").pop()}
-                          style={{
-                            width: "100%",
-                            height: 80,
-                            objectFit: "cover",
-                            borderRadius: 6,
-                          }}
+                          style={{ width: "100%", height: 80, objectFit: "cover", borderRadius: 8, marginBottom: 8, boxShadow: "0 1px 4px rgba(0,0,0,0.07)" }}
                         />
-                        <div
-                          style={{
-                            padding: 6,
-                            fontSize: 12,
-                            textAlign: "center",
-                          }}
-                        >
+                        <div style={{ padding: 6, fontSize: 13, textAlign: "center", fontWeight: 600, color: "#333" }}>
                           {file.path.split("/").pop()}
                         </div>
                       </div>

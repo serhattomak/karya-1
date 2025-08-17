@@ -777,22 +777,25 @@
   z-index: 1001;
 }
 
-.AdminFileSelectorContent {
-  background: white;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 800px;
-  max-height: 80vh;
+.AdminFileSelectorContent.modern {
+  background: #fff;
+  border-radius: 18px;
+  width: 95%;
+  max-width: 900px;
+  max-height: 85vh;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 8px 32px rgba(246,139,31,0.12);
+  border: 1.5px solid #f68b1f;
 }
 
-.AdminFileSelectorHeader {
+.AdminFileSelectorHeader.modern {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid #e9ecef;
+  padding: 24px 32px 16px 32px;
+  border-bottom: 2px solid #f68b1f;
+  background: linear-gradient(135deg, #fff7ed, #f8f9fa);
 }
 
 .AdminFileSelectorHeader h3 {
@@ -800,23 +803,59 @@
   font-size: 18px;
 }
 
-.AdminFileSelectorBody {
-  padding: 20px;
+.AdminFileSelectorBody.modern {
+  padding: 24px 32px;
   overflow-y: auto;
 }
 
-.AdminFilesGrid {
+.AdminFilesGrid.modern {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+  margin-top: 8px;
 }
 
-.AdminFileItem {
+.AdminFileItem.modern {
+  border: 1.5px solid #f68b1f;
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: box-shadow 0.2s, border-color 0.2s;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(246,139,31,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.AdminFileItem.modern:hover {
+  border-color: #ee5c30;
+  box-shadow: 0 4px 16px rgba(246,139,31,0.18);
+}
+.AdminFileSearchInput {
   border: 1px solid #e9ecef;
   border-radius: 8px;
-  padding: 10px;
+  padding: 8px 12px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-right: 12px;
+}
+.AdminFileSearchInput:focus {
+  border-color: #f68b1f;
+}
+.sort-btn {
+  background: #f68b1f;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.2s;
+}
+.sort-btn:hover {
+  background: #ee5c30;
 }
 
 .AdminFileItem:hover {

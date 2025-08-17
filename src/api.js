@@ -124,7 +124,6 @@ export const deleteFile = (id) =>
 export const uploadFile = (formData, options = {}) => {
   console.log("📤 Upload File API başlıyor...");
   
-  // FormData'dan dosya bilgilerini al
   let fileInfo = {};
   for (let [key, value] of formData.entries()) {
     if (value instanceof File) {
