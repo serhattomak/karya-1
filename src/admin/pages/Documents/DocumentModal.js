@@ -989,6 +989,8 @@ startxref
 // File Selector Component
 const FileSelector = ({ files = [], onSelect, onClose, title, filterType }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [fileSortAsc, setFileSortAsc] = useState(true);
+  const [typeFilter, setTypeFilter] = useState("all");
 
   // files'ın array olduğundan emin ol
   const safeFiles = Array.isArray(files) ? files : [];
@@ -1011,67 +1013,90 @@ const FileSelector = ({ files = [], onSelect, onClose, title, filterType }) => {
   return (
     <div className="AdminModalOverlay">
       <div className="AdminFileSelectorModal">
-        <div className="AdminModalHeader">
-          <h3>{title}</h3>
-          <button onClick={onClose} className="close-btn">×</button>
-        </div>
-        
-        <div className="AdminModalContent">
-          <div className="AdminSearchSection">
-            <input
-              type="text"
-              placeholder="Dosya ara..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="AdminSearchInput"
-            />
+        <div className="AdminFileSelectorContent modern">
+          <div className="AdminFileSelectorHeader modern">
+            <h3>{title || "Dosya Seç"}</h3>
+            <button
+              type="button"
+              className="delete-btn"
+              onClick={onClose}
+            >
+              ×
+            </button>
           </div>
-          
-          <div className="AdminFilesGrid">
-            {filteredFiles.map(file => (
-              <div key={file.id} className="AdminFileItem" onClick={() => onSelect(file)}>
-                <div className="AdminFilePreview">
-                  {isImageFile(file.contentType) ? (
-                    <img 
-                      src={`https://localhost:7103/${file.path}`} 
-                      alt={file.name}
-                      className="AdminFileThumbnail"
-                      onLoad={() => console.log("✅ Görsel yüklendi:", file.name, file.path)}
-                      onError={(e) => {
-                        console.error("❌ Görsel yüklenemedi:", file.name, file.path);
-                        console.error("❌ Error event:", e);
-                        console.error("❌ Full URL:", `https://localhost:7103/${file.path}`);
-                        e.target.style.display = 'none';
-                      }}
-                    />
-                  ) : (
-                    <div className="AdminFileIcon">
-                      {file.contentType?.includes('pdf') ? '📄' :
-                       file.contentType?.includes('word') ? '📝' :
-                       file.contentType?.includes('excel') ? '📊' :
-                       file.contentType?.includes('powerpoint') ? '📋' :
-                       file.contentType?.includes('zip') ? '📦' :
-                       '📄'}
-                    </div>
-                  )}
-                </div>
-                <div className="AdminFileInfo">
-                  <div className="AdminFileName">{file.name}</div>
-                  <div className="AdminFileSize">{formatFileSize(file.size)}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          {filteredFiles.length === 0 && (
-            <div className="AdminNoFiles">
-              {searchTerm ? "Arama sonucu bulunamadı." : "Henüz dosya yüklenmemiş."}
+          <div className="AdminFileSelectorBody modern">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, gap: 12 }}>
+              <input
+                type="text"
+                className="AdminFileSearchInput"
+                placeholder="Dosya ismiyle ara..."
+                value={searchTerm || ""}
+                onChange={e => setSearchTerm(e.target.value)}
+                style={{ flex: 2, padding: "8px 12px", borderRadius: 8, border: "1px solid #e9ecef", fontSize: 14 }}
+              />
+              <select
+                value={typeFilter}
+                onChange={e => setTypeFilter(e.target.value)}
+                style={{ flex: 1, padding: "8px 12px", borderRadius: 8, border: "1px solid #e9ecef", fontSize: 14 }}
+              >
+                <option value="all">Tümü</option>
+                <option value="image">Görseller</option>
+                <option value="pdf">PDF</option>
+                <option value="doc">Word/Excel/PowerPoint</option>
+                <option value="other">Diğer</option>
+              </select>
+              <button
+                type="button"
+                className="sort-btn"
+                style={{ padding: "8px 16px", borderRadius: 8, border: "none", background: "#f68b1f", color: "white", fontWeight: 600, cursor: "pointer" }}
+                onClick={() => setFileSortAsc(prev => !prev)}
+              >
+                {fileSortAsc ? "A-Z" : "Z-A"}
+              </button>
             </div>
-          )}
-        </div>
-        
-        <div className="AdminModalActions">
-          <button onClick={onClose} className="cancel-btn">İptal</button>
+            <div className="AdminFilesGrid modern">
+              {filteredFiles
+                .filter(file => {
+                  if (typeFilter === "all") return true;
+                  if (typeFilter === "image") return file.contentType?.startsWith("image/") || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i);
+                  if (typeFilter === "pdf") return file.contentType?.includes("pdf") || file.path?.match(/\.pdf$/i);
+                  if (typeFilter === "doc") return file.contentType?.includes("word") || file.contentType?.includes("excel") || file.contentType?.includes("powerpoint") || file.path?.match(/\.(docx?|xlsx?|pptx?)/i);
+                  if (typeFilter === "other") return !((file.contentType?.startsWith("image/") || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i)) || (file.contentType?.includes("pdf") || file.path?.match(/\.pdf$/i)) || (file.contentType?.includes("word") || file.contentType?.includes("excel") || file.contentType?.includes("powerpoint") || file.path?.match(/\.(docx?|xlsx?|pptx?)/i)));
+                  return true;
+                })
+                .sort((a, b) => fileSortAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name))
+                .map((file) => (
+                  <div
+                    key={file.id}
+                    className="AdminFileItem modern"
+                    onClick={() => onSelect(file)}
+                    style={{ boxShadow: "0 2px 8px rgba(246,139,31,0.08)", border: "1px solid #f68b1f", borderRadius: 12, padding: 12, cursor: "pointer", transition: "all 0.2s", background: "#fff", display: "flex", flexDirection: "column", alignItems: "center" }}
+                  >
+                    {file.contentType?.startsWith("image/") || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                      <img
+                        src={`https://localhost:7103/${file.path}`}
+                        alt={file.name}
+                        loading="lazy"
+                        style={{ width: "100%", height: "100px", objectFit: "cover", borderRadius: "8px", marginBottom: "8px", boxShadow: "0 1px 4px rgba(0,0,0,0.07)" }}
+                      />
+                    ) : (
+                      <div className="AdminFileIcon" style={{ width: "100%", height: "100px", display: "flex", alignItems: "center", justifyContent: "center", background: "#f8f9fa", borderRadius: "8px", marginBottom: "8px" }}>
+                        <span style={{ fontSize: "48px" }}>📄</span>
+                      </div>
+                    )}
+                    <div className="AdminFileInfo" style={{ textAlign: "center" }}>
+                      <span className="AdminFileName" style={{ fontWeight: 600, color: "#333", fontSize: 14 }}>{file.name}</span>
+                      <span className="AdminFileSize" style={{ color: "#666", fontSize: 12 }}>
+                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                      </span>
+                    </div>
+                  </div>
+                ))}
+            </div>
+            {filteredFiles.length === 0 && (
+              <div style={{ textAlign: "center", color: "#999", marginTop: 32 }}>Hiç dosya bulunamadı.</div>
+            )}
+          </div>
         </div>
       </div>
     </div>

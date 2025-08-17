@@ -1439,8 +1439,8 @@ const ProductModal = ({ product, onClose, onSave }) => {
       {/* Document Seçici Modal */}
       {showDocumentSelector && (
         <div className="AdminFileSelectorModal">
-          <div className="AdminFileSelectorContent">
-            <div className="AdminFileSelectorHeader">
+          <div className="AdminFileSelectorContent modern">
+            <div className="AdminFileSelectorHeader modern">
               <h3>Döküman Seç</h3>
               <button
                 type="button"
@@ -1450,15 +1450,45 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 ×
               </button>
             </div>
-            <div className="AdminFileSelectorBody">
-              <div className="AdminDocumentsGrid">
+            <div className="AdminFileSelectorBody modern">
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                <input
+                  type="text"
+                  className="AdminFileSearchInput"
+                  placeholder="Döküman ismiyle ara..."
+                  value={fileSearchTerm || ""}
+                  onChange={e => setFileSearchTerm(e.target.value)}
+                  style={{ flex: 1, padding: "8px 12px", borderRadius: 8, border: "1px solid #e9ecef", fontSize: 14, marginRight: 12 }}
+                />
+                <button
+                  type="button"
+                  className="sort-btn"
+                  style={{ padding: "8px 16px", borderRadius: 8, border: "none", background: "#f68b1f", color: "white", fontWeight: 600, cursor: "pointer" }}
+                  onClick={() => setFileSortAsc(!fileSortAsc)}
+                >
+                  {fileSortAsc ? "A-Z" : "Z-A"}
+                </button>
+              </div>
+              <div className="AdminFilesGrid modern">
                 {availableDocuments
                   .filter((doc) => !selectedDocuments.includes(doc.id))
+                  .filter((doc) => {
+                    if (fileSearchTerm && !doc.name.toLowerCase().includes(fileSearchTerm.toLowerCase())) return false;
+                    return true;
+                  })
+                  .sort((a, b) => {
+                    if (fileSortAsc) {
+                      return a.name.localeCompare(b.name);
+                    } else {
+                      return b.name.localeCompare(a.name);
+                    }
+                  })
                   .map((document) => (
                     <div
                       key={document.id}
-                      className="AdminFileItem AdminDocumentItem"
+                      className="AdminFileItem modern"
                       onClick={() => selectDocument(document)}
+                      style={{ boxShadow: "0 2px 8px rgba(246,139,31,0.08)", border: "1px solid #f68b1f", borderRadius: 12, padding: 12, cursor: "pointer", transition: "all 0.2s", background: "#fff", display: "flex", flexDirection: "column", alignItems: "center" }}
                     >
                       {document.previewImageUrl ? (
                         <img
@@ -1469,19 +1499,20 @@ const ProductModal = ({ product, onClose, onSave }) => {
                           }
                           alt={document.name}
                           loading="lazy"
+                          style={{ width: "100%", height: "100px", objectFit: "cover", borderRadius: "8px", marginBottom: "8px", boxShadow: "0 1px 4px rgba(0,0,0,0.07)" }}
                         />
                       ) : (
-                        <div className="AdminFileIcon">
+                        <div className="AdminFileIcon" style={{ width: "100%", height: "100px", display: "flex", alignItems: "center", justifyContent: "center", background: "#f8f9fa", borderRadius: "8px", marginBottom: "8px" }}>
                           <span style={{ fontSize: "48px" }}>📄</span>
                         </div>
                       )}
-                      <div className="AdminFileInfo">
-                        <span className="AdminFileName">{document.name}</span>
-                        <span className="AdminFileCategory">
+                      <div className="AdminFileInfo" style={{ textAlign: "center" }}>
+                        <span className="AdminFileName" style={{ fontWeight: 600, color: "#333", fontSize: 14 }}>{document.name}</span>
+                        <span className="AdminFileCategory" style={{ color: "#666", fontSize: 12 }}>
                           {document.category || "Kategori Yok"}
                         </span>
                         {document.description && (
-                          <span className="AdminFileDescription">
+                          <span className="AdminFileDescription" style={{ color: "#888", fontSize: 12 }}>
                             {document.description}
                           </span>
                         )}
@@ -1489,6 +1520,9 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     </div>
                   ))}
               </div>
+              {availableDocuments.filter((doc) => !selectedDocuments.includes(doc.id)).length === 0 && (
+                <div style={{ textAlign: "center", color: "#999", marginTop: 32 }}>Hiç döküman bulunamadı.</div>
+              )}
             </div>
           </div>
         </div>
