@@ -60,16 +60,16 @@ const Products = () => {
   // Helper function to get product main image
   const getProductMainImage = (product) => {
     console.log("Product data:", product); // Debug log
-    
-    // Method 1: Check if productMainImage exists directly
-    if (product.productMainImage && product.productMainImage.path) {
-      console.log("Found productMainImage:", product.productMainImage);
-      return BASE_URL + product.productMainImage.path;
+
+    // Method 1: Check if productImage exists directly
+    if (product.productImage && product.productImage.path) {
+      console.log("Found productImage:", product.productImage);
+      return BASE_URL + product.productImage.path;
     }
 
-    // Method 2: Check ProductMainImageId with files array
-    if (product.productMainImageId && product.files && product.files.length > 0) {
-      console.log("Looking for ProductMainImageId:", product.productMainImageId);
+    // Method 2: Check ProductImageId with files array
+    if (product.productImageId && product.files && product.files.length > 0) {
+      console.log("Looking for ProductImageId:", product.productImageId);
       console.log("Available files:", product.files);
       
       const mainImage = product.files.find(file => {

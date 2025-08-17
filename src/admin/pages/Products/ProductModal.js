@@ -270,6 +270,16 @@ const ProductModal = ({ product, onClose, onSave }) => {
         }
       }
 
+      // Ürün detay görselleri için sadece GUID olanları productDetailImageIds'e ekle
+      const validProductDetailImageIds = productDetailImageIds.filter(id => {
+        // GUID ise string ve 36 karakter olmalı, tireli
+        return typeof id === 'string' && /^[0-9a-fA-F-]{36}$/.test(id);
+      });
+      // Yeni yüklenen dosyalar için id'yi productDetailFileIds'e ekle
+      const validProductDetailFileIds = productDetailImages
+        .filter(img => img.isExisting === false && img.file && typeof img.id !== 'string')
+        .map(img => img.id);
+
       const productData = {
         name,
         slug: finalSlug,
@@ -283,13 +293,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
         productImageId: productImageId.trim() || null,
         productMainImageId: finalProductMainImageId || null,
         documentImageIds: documentImageFileIds,
-        productDetailImageIds: productDetailImageIds.filter(
-          (id) => String(id).trim() !== ""
-        ),
+        productDetailImageIds: validProductDetailImageIds,
         documentIds: selectedDocuments,
         fileIds,
         documentFileIds,
-        productDetailFileIds,
+        productDetailFileIds: validProductDetailFileIds,
         homePageSubtitle,
         showContact,
       };
@@ -529,6 +537,44 @@ const ProductModal = ({ product, onClose, onSave }) => {
   const handleOverlayClick = (e) => {
     if (e.target === modalRef.current) {
       onClose();
+    }
+  };
+
+  // Ürün detay görselleri yükleme ve GUID ile ekleme
+  const handleDetailImagesUpload = async (files) => {
+    setLoading(true);
+    try {
+      const uploadedIds = [];
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append("file", file);
+        const response = await uploadFile(file);
+        const uploadedFile = response?.data || response;
+        if (uploadedFile && uploadedFile.id) {
+          uploadedIds.push(uploadedFile.id);
+          setProductDetailImages((prev) => [
+            ...prev,
+            {
+              id: uploadedFile.id,
+              url: BASE_URL + uploadedFile.path,
+              name: uploadedFile.name,
+              isExisting: true,
+            },
+          ]);
+        }
+      }
+      setProductDetailImageIds((prev) => [...prev, ...uploadedIds]);
+    } catch (error) {
+      console.error("Detay görseli yüklenirken hata:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Hata!",
+        text: "Detay görseli yüklenirken bir hata oluştu.",
+        confirmButtonText: "Tamam",
+        confirmButtonColor: "#dc3545",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -1191,26 +1237,9 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   type="file"
                   accept="image/*"
                   multiple
-                  onChange={(e) => {
+                  onChange={async (e) => {
                     const files = Array.from(e.target.files);
-                    files.forEach((file) => {
-                      const reader = new FileReader();
-                      reader.onload = (event) => {
-                        const newId = Date.now() + Math.random();
-                        setProductDetailImageIds((prev) => [...prev, newId]);
-                        setProductDetailImages((prev) => [
-                          ...prev,
-                          {
-                            id: newId,
-                            url: event.target.result,
-                            name: file.name,
-                            file: file,
-                            isExisting: false,
-                          },
-                        ]);
-                      };
-                      reader.readAsDataURL(file);
-                    });
+                    await handleDetailImagesUpload(files);
                   }}
                   style={{ display: "none" }}
                   id="detail-image-input"

@@ -13,14 +13,57 @@ const ProductInfo = ({ productData }) => {
     descriptions = [],
     listTitles = [],
     listItems = [],
-    mainImage,
     documentImages: apiDocumentImages = [],
+    productImages: apiProductImages = [],
     productDetailImages = [],
     documents = [],
     urls = [],
     files = [],
+    productMainImageId = null,
+    productMainImage = null,
   } = productData;
   const documentImageIds = productData.documentImageIds || [];
+
+  const mainImage = (() => {
+    console.log("ProductInfo - Calculating main image:");
+    console.log("- productImage:", productMainImage);
+    console.log("- productImageId:", productMainImageId);
+    console.log("- files:", files);
+    console.log("- apiProductImages:", apiProductImages);
+    console.log("- All productData keys:", Object.keys(productData));
+
+    if (productMainImage && productMainImage.path) {
+      console.log("Using productMainImage.path:", productMainImage.path);
+      return productMainImage.path.startsWith('http') ? productMainImage.path : BASE_URL + productMainImage.path;
+    }
+
+    if (productData.productMainImage && productData.productMainImage.path) {
+      console.log("Using productData.productMainImage.path:", productData.productMainImage.path);
+      return productData.productMainImage.path.startsWith('http') ? productData.productMainImage.path : BASE_URL + productData.productMainImage.path;
+    }
+
+    if (productMainImageId && files && files.length > 0) {
+      const productMainImageFile = files.find(file => {
+        const match = file.id === productMainImageId || 
+                     file.id === String(productMainImageId) || 
+                     String(file.id) === String(productMainImageId);
+        console.log(`Checking file ${file.id} against productMainImageId ${productMainImageId}: ${match}`);
+        return match;
+      });
+      console.log("Found productMainImageFile:", productMainImageFile);
+
+      if (productMainImageFile && productMainImageFile.path) {
+        const finalUrl = productMainImageFile.path.startsWith('http') ? productMainImageFile.path : BASE_URL + productMainImageFile.path;
+        console.log("Using productMainImageFile:", finalUrl);
+        return finalUrl;
+      }
+    }
+    
+    if (files && files[0] && files[0].path) {
+      console.log("Using first file:", files[0].path);
+      return files[0].path.startsWith('http') ? files[0].path : BASE_URL + files[0].path;
+    }
+  })();
 
   const documentImages = (() => {
     console.log("ProductInfo - Calculating documentImages:");
@@ -222,13 +265,15 @@ const ProductInfo = ({ productData }) => {
               </ul>
             </div>
           ) : (
-            <div className="info-product-main-image">
-              <img
-                src={mainImage || "/assets/images/Group 300.webp"}
-                alt={titles[0] || name}
-                loading="lazy"
-              />
-            </div>
+            !!mainImage && (
+              <div className="info-product-main-image">
+                <img
+                  src={mainImage}
+                  alt={titles[0] || name}
+                  loading="lazy"
+                />
+              </div>
+            )
           )}
         </div>
       </div>
