@@ -1,7 +1,8 @@
-/* ProductDetailPage.css */
 
+/* ProductDetailPage Modern Styles */
 .details-product-detail-page {
   min-height: 100vh;
+  background: #f7f7f7;
 }
 
 .details-product-detail-loading,
@@ -9,6 +10,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .details-loading-container,
@@ -70,28 +73,6 @@
   background-color: #ee5c30;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .details-loading-container,
-  .details-error-container {
-    padding: 40px 15px;
-  }
-  
-  .details-error-container h2 {
-    font-size: 24px;
-  }
-  
-  .details-loading-container p,
-  .details-error-container p {
-    font-size: 14px;
-  }
-  
-  .details-error-container button {
-    padding: 10px 20px;
-    font-size: 14px;
-  }
-}
-
 /* Video Section Styles */
 .details-video-section {
   width: 100%;
@@ -116,7 +97,7 @@
 .details-video-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #f68b1f;
+  color: #000000;
   margin-bottom: 10px;
   text-align: center;
 }
@@ -144,6 +125,21 @@
 }
 
 @media (max-width: 768px) {
+  .details-loading-container,
+  .details-error-container {
+    padding: 40px 15px;
+  }
+  .details-error-container h2 {
+    font-size: 24px;
+  }
+  .details-loading-container p,
+  .details-error-container p {
+    font-size: 14px;
+  }
+  .details-error-container button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
   .details-video-content {
     padding: 20px 8px;
   }
