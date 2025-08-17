@@ -20,10 +20,11 @@ const ProductInfo = ({ productData }) => {
 
   return (
     <div className="info-product-container">
-      <div className="info-product-left-content">
-        <div className="info-product-text">
+      <div className="info-product-row">
+        {/* Sol: Başlık, alt başlık, açıklama */}
+        <div className="info-product-col info-product-col-left">
           <h2 className="info-product-title">{titles[0] || name}</h2>
-          <hr className="line" />
+              <hr className="line" />
           {descriptions.map((description, index) => (
             description ? (
               <p key={index} className="info-product-description">
@@ -38,22 +39,11 @@ const ProductInfo = ({ productData }) => {
             </a>
           </p>
         </div>
-        <div className="info-product-image">
-          <div className="info-product-main-image">
-            {mainImage && (
-              <img
-                src={mainImage || "/assets/images/Group 300.webp"}
-                alt={titles[0] || name}
-                loading="lazy"
-              />
-            )}
-          </div>
-        </div>
-      </div>
-      <div className="info-product-right-content">
-          {listTitles.length > 0 && listItems.length > 0 && (
+        {/* Sağ: ListItem varsa uygulama alanları, yoksa mainImage */}
+        <div className="info-product-col info-product-col-right">
+          {listItems.length > 0 ? (
             <div className="info-product-list">
-              <h2 className="p-title">{listTitles[0]}</h2>
+              {listTitles.length > 0 && <h2 className="p-title">{listTitles[0]}</h2>}
               <hr className="line" />
               <ul>
                 {listItems.map((item, idx) => (
@@ -61,8 +51,18 @@ const ProductInfo = ({ productData }) => {
                 ))}
               </ul>
             </div>
+          ) : (
+            <div className="info-product-main-image">
+              <img
+                src={mainImage || "/assets/images/Group 300.webp"}
+                alt={titles[0] || name}
+                loading="lazy"
+              />
+            </div>
           )}
+        </div>
       </div>
+      {/* Galeri */}
       {productDetailImages.length > 0 && (
         <div className="info-product-detail-gallery-section">
           <h2 className="p-title">Uygulama Alanlarına Ait Görseller</h2>

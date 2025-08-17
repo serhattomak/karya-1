@@ -1,8 +1,12 @@
 
 /* ProductDetailPage Modern Styles */
+/* Ürün detay sayfası arka planı ve düzeni */
 .details-product-detail-page {
   min-height: 100vh;
   background: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 .details-product-detail-loading,
@@ -74,32 +78,37 @@
 }
 
 /* Video Section Styles */
+/* Video alanı iki sütunlu düzen */
 .details-video-section {
-  width: 100%;
-  display: flex;
-  justify-content: center;
   align-items: center;
-  margin: 40px 0;
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  height: 70vh;
+  justify-content: center;
 }
 
 .details-video-content {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-  padding: 32px 24px;
-  max-width: 800px;
-  width: 100%;
+  align-items: flex-start;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  gap: 40px;
+  justify-content: space-around;
+  max-width: 1200px;
+  width: 95%;
+}
+
+.details-video-col {
+  flex: 1 1;
+  max-width: 500px;
+  text-align: left;
 }
 
 .details-video-title {
+  color: #333;
   font-size: 2rem;
   font-weight: 700;
-  color: #000000;
-  margin-bottom: 10px;
-  text-align: center;
+  line-height: 1.3;
+  margin-bottom: 20px;
 }
 
 .details-video-line {
@@ -109,19 +118,46 @@
   margin-bottom: 24px;
 }
 
-.details-video-wrapper {
-  width: 100%;
+.details-video-description {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.8;
+  margin-top: 15px;
+}
+
+.details-video-col-right {
   display: flex;
+  flex: 1 1;
   justify-content: center;
-  align-items: center;
 }
 
 .details-video-iframe {
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px #0003;
   width: 100%;
-  max-width: 640px;
-  height: 360px;
+  max-width: 685px;
+  height: 420px;
+}
+@media (max-width: 1100px) {
+  .details-video-content {
+    flex-direction: column;
+    gap: 40px;
+    padding: 24px 8px;
+    max-width: 100%;
+  }
+  .details-video-col {
+    max-width: 100%;
+    min-width: unset;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .details-video-title {
+    font-size: 1.3rem;
+  }
+  .details-video-iframe {
+    max-width: 100%;
+    height: 200px;
+  }
 }
 
 @media (max-width: 768px) {

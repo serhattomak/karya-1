@@ -128,16 +128,18 @@ function ProductDetailPage() {
         title={productData.titles?.[0] || productData.name}
       />
       <ProductInfo productData={productData} />
-      {/* Video veya ek bilgi alanı */}
+      {/* Video alanı iki sütunlu düzen */}
       {productData.videoUrl ? (
         <div className="details-video-section">
           <div className="details-video-content">
-            <h2 className="details-video-title">{productData.titles?.[1] || "Ürün Videosu"}</h2>
-            <hr className="details-video-line" />
-            <div className="details-video-wrapper">
-              {productData.descriptions?.[1] && (
-                <p className="details-video-description">{productData.descriptions[1]}</p>
+            <div className="details-video-col">
+              <h2 className="details-video-title">{productData.titles?.[1] || "Ürün Videosu"}</h2>
+              <hr className="line" />
+              {productData.descriptions?.[2] && (
+                <p className="details-video-description">{productData.descriptions[2]}</p>
               )}
+            </div>
+            <div className="details-video-col details-video-col-right">
               <iframe
                 className="details-video-iframe"
                 width="640"
