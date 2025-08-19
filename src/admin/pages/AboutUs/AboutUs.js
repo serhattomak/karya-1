@@ -72,6 +72,9 @@ const AboutUs = () => {
   const [productIds, setProductIds] = useState([]);
   const [additionalFields, setAdditionalFields] = useState([]);
 
+  const [videoTitles, setVideoTitles] = useState([""]);
+  const [videoDescriptions, setVideoDescriptions] = useState([""]);
+
   const applicationFileInputRefs = useRef([]);
   const selectedApplicationImageIndexRef = useRef(0);
 
@@ -85,6 +88,8 @@ const AboutUs = () => {
         setTitles(data.titles?.length ? data.titles : [""]);
         setSubtitles(data.subtitles?.length ? data.subtitles : [""]);
         setDescriptions(data.descriptions?.length ? data.descriptions : [""]);
+        setVideoTitles(data.videoTitles?.length ? data.videoTitles : [""]);
+        setVideoDescriptions(data.videoDescriptions?.length ? data.videoDescriptions : [""]);
 
         setImage(data.bannerImageUrl || "");
         setBannerImageUrl(data.bannerImageUrl || "");
@@ -484,6 +489,34 @@ const AboutUs = () => {
     }
   };
 
+  const addVideoDescription = () => {
+    setVideoDescriptions([...videoDescriptions, ""]);
+  };
+  const updateVideoDescription = (index, value) => {
+    const updated = [...videoDescriptions];
+    updated[index] = value;
+    setVideoDescriptions(updated);
+  };
+  const removeVideoDescription = (index) => {
+    if (videoDescriptions.length > 1) {
+      setVideoDescriptions(videoDescriptions.filter((_, i) => i !== index));
+    }
+  };
+
+  const addVideoTitle = () => {
+    setVideoTitles([...videoTitles, ""]);
+  };
+  const updateVideoTitle = (index, value) => {
+    const updated = [...videoTitles];
+    updated[index] = value;
+    setVideoTitles(updated);
+  };
+  const removeVideoTitle = (index) => {
+    if (videoTitles.length > 1) {
+      setVideoTitles(videoTitles.filter((_, i) => i !== index));
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "bannerImageUrl") setBannerImageUrl(value);
@@ -782,8 +815,55 @@ const AboutUs = () => {
             </div>
           )}
 
+          {/* Video Başlıkları */}
+          {/* <div className="form-group">
+            <div
+              className="section-header"
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 10,
+              }}
+            >
+              <label className="form-label">Video Başlıkları:</label>
+              <button
+                type="button"
+                onClick={addVideoTitle}
+                className="add-btn primary btn-sm"
+              >
+                + Video Başlığı Ekle
+              </button>
+            </div>
+            {videoTitles.map((title, index) => (
+              <div
+                key={index}
+                className="AdminMultiFieldItem"
+                style={{ display: "flex", gap: 10, marginBottom: 10 }}
+              >
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => updateVideoTitle(index, e.target.value)}
+                  className="form-input"
+                  placeholder={`Video Başlığı ${index + 1}`}
+                  style={{ flex: 1 }}
+                />
+                {videoTitles.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeVideoTitle(index)}
+                    className="btn btn-danger btn-sm"
+                  >
+                    Sil
+                  </button>
+                )}
+              </div>
+            ))}
+          </div> */}
+
           {/* Video URL'leri */}
-          <div className="form-group">
+          {/* <div className="form-group">
             <div
               className="section-header"
               style={{
@@ -833,7 +913,54 @@ const AboutUs = () => {
                 )}
               </div>
             ))}
-          </div>
+          </div> */}
+
+          {/* Video Açıklamaları */}
+          {/* <div className="form-group">
+            <div
+              className="section-header"
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 10,
+              }}
+            >
+              <label className="form-label">Video Açıklamaları:</label>
+              <button
+                type="button"
+                onClick={addVideoDescription}
+                className="add-btn primary btn-sm"
+              >
+                + Video Açıklaması Ekle
+              </button>
+            </div>
+            {videoDescriptions.map((description, index) => (
+              <div
+                key={index}
+                className="AdminMultiFieldItem"
+                style={{ display: "flex", gap: 10, marginBottom: 10 }}
+              >
+                <input
+                  type="text"
+                  value={description}
+                  onChange={(e) => updateVideoDescription(index, e.target.value)}
+                  className="form-input"
+                  placeholder={`Video Açıklaması ${index + 1}`}
+                  style={{ flex: 1 }}
+                />
+                {videoDescriptions.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeVideoDescription(index)}
+                    className="btn btn-danger btn-sm"
+                  >
+                    Sil
+                  </button>
+                )}
+              </div>
+            ))}
+          </div> */}
 
           {/* Başlık / Alt başlık / Paragraflar */}
           <div className="form-group">
