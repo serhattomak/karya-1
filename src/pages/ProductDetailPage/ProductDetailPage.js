@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Banner from "../../components/Banner/Banner";
@@ -9,6 +8,19 @@ import { getProductBySlug, getFile } from "../../api";
 import "./ProductDetailPage.css";
 
 const BASE_URL = "https://localhost:7103/";
+
+function getEmbedUrl(url) {
+  if (!url) return '';
+  const ytShort = url.match(/^https?:\/\/youtu\.be\/([\w-]+)/);
+  if (ytShort) {
+    return `https://www.youtube.com/embed/${ytShort[1]}`;
+  }
+  const ytWatch = url.match(/^https?:\/\/(www\.)?youtube\.com\/watch\?v=([\w-]+)/);
+  if (ytWatch) {
+    return `https://www.youtube.com/embed/${ytWatch[2]}`;
+  }
+  return url;
+}
 
 function ProductDetailPage() {
   const { slug } = useParams();
@@ -24,7 +36,6 @@ function ProductDetailPage() {
         const response = await getProductBySlug(slug);
         const data = response?.data?.data || response?.data || response;
 
-        // Ana görseli ve detay görsellerini fetch et*
         let mainImage = null;
         if (data.mainImageId) {
           try {
@@ -38,7 +49,6 @@ function ProductDetailPage() {
           }
         }
 
-        // Detay görselleri
         let productDetailImages = [];
         if (data.productDetailImageIds && data.productDetailImageIds.length > 0) {
           const detailImagePromises = data.productDetailImageIds.map(async (imageId) => {
@@ -56,7 +66,6 @@ function ProductDetailPage() {
           productDetailImages = detailImages.filter(Boolean);
         }
 
-        // Banner görseli
         let bannerImage = data.bannerImageUrl;
         if (bannerImage && !bannerImage.startsWith("http")) {
           bannerImage = BASE_URL + bannerImage;
@@ -65,7 +74,6 @@ function ProductDetailPage() {
           bannerImage = "/assets/images/Group 300.webp";
         }
 
-        // Video
         let videoUrl = null;
         if (data.videoUrls && data.videoUrls.length > 0) {
           videoUrl = data.videoUrls[0];
@@ -133,10 +141,10 @@ function ProductDetailPage() {
         <div className="details-video-section">
           <div className="details-video-content">
             <div className="details-video-col">
-              <h2 className="details-video-title">{productData.titles?.[1] || "Ürün Videosu"}</h2>
+              <h2 className="details-video-title">{productData.videoTitles?.[0] || "Ürün Videosu"}</h2>
               <hr className="line" />
-              {productData.descriptions?.[2] && (
-                <p className="details-video-description">{productData.descriptions[2]}</p>
+              {productData.videoDescriptions?.[0] && (
+                <p className="details-video-description">{productData.videoDescriptions[0]}</p>
               )}
             </div>
             <div className="details-video-col details-video-col-right">
@@ -144,7 +152,7 @@ function ProductDetailPage() {
                 className="details-video-iframe"
                 width="640"
                 height="360"
-                src={productData.videoUrl}
+                src={getEmbedUrl(productData.videoUrl)}
                 title="Ürün Videosu"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

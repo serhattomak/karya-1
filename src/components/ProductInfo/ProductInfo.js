@@ -279,20 +279,24 @@ const ProductInfo = ({ productData }) => {
       </div>
       {/* Galeri */}
       {productDetailImages.length > 0 && (
-        <div className="info-product-detail-gallery-section">
-          <h2 className="p-title">Görseller</h2>
-          <hr className="line" />
-          <div className="info-product-gallery-images">
-            {productDetailImages.map((imgSrc, idx) => (
-              <img
-                key={idx}
-                src={imgSrc}
-                alt={`Detay Görsel ${idx + 1}`}
-                loading="lazy"
-              />
-            ))}
+        productDetailImages.length > 4 ? (
+          <div className="info-product-detail-gallery-section">
+            <h2 className="p-title">Görseller</h2>
+            <hr className="line" />
+            <div className="info-product-gallery-images">
+              {productDetailImages.map((imgSrc, idx) => (
+                <img
+                  key={idx}
+                  src={imgSrc}
+                  alt={`Detay Görsel ${idx + 1}`}
+                  loading="lazy"
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <Gallery images={productDetailImages} title="Görseller" />
+        )
       )}
     </div>
   );

@@ -10,9 +10,21 @@ import { createSlugFromProduct } from "../../../utils/slugUtils";
 import Swal from "sweetalert2";
 import { uploadFile as uploadFileApi } from "../../../api";
 
+const getEmbedUrl = (url) => {
+  if (!url) return '';
+  const ytShort = url.match(/^https?:\/\/youtu\.be\/([\w-]+)/);
+  if (ytShort) {
+    return `https://www.youtube.com/embed/${ytShort[1]}`;
+  }
+  const ytWatch = url.match(/^https?:\/\/(www\.)?youtube\.com\/watch\?v=([\w-]+)/);
+  if (ytWatch) {
+    return `https://www.youtube.com/embed/${ytWatch[2]}`;
+  }
+  return url;
+};
+
 const BASE_URL = "https://localhost:7103/";
 
-// Dosya yükleme işlemi artık api.js'deki uploadFile fonksiyonunu kullanıyor
 const uploadFile = async (file) => {
   const formData = new FormData();
   formData.append("file", file);
@@ -29,6 +41,7 @@ const uploadFile = async (file) => {
 };
 
 const ProductModal = ({ product, onClose, onSave }) => {
+  const [showSlugCollapse, setShowSlugCollapse] = useState(false);
   const [fileSearchTerm, setFileSearchTerm] = useState("");
   const [fileSortAsc, setFileSortAsc] = useState(true);
   const [showContact, setShowContact] = useState(false);
@@ -63,6 +76,36 @@ const ProductModal = ({ product, onClose, onSave }) => {
   const [selectedFileType, setSelectedFileType] = useState("");
   const [loading, setLoading] = useState(false);
   const modalRef = useRef();
+  const [videoTitles, setVideoTitles] = useState([""]);
+  const [videoDescriptions, setVideoDescriptions] = useState([""]);
+
+  const addVideoDescription = () => {
+    setVideoDescriptions([...videoDescriptions, ""]);
+  };
+  const updateVideoDescription = (index, value) => {
+    const updated = [...videoDescriptions];
+    updated[index] = value;
+    setVideoDescriptions(updated);
+  };
+  const removeVideoDescription = (index) => {
+    if (videoDescriptions.length > 1) {
+      setVideoDescriptions(videoDescriptions.filter((_, i) => i !== index));
+    }
+  };
+
+  const addVideoTitle = () => {
+    setVideoTitles([...videoTitles, ""]);
+  };
+  const updateVideoTitle = (index, value) => {
+    const updated = [...videoTitles];
+    updated[index] = value;
+    setVideoTitles(updated);
+  };
+  const removeVideoTitle = (index) => {
+    if (videoTitles.length > 1) {
+      setVideoTitles(videoTitles.filter((_, i) => i !== index));
+    }
+  };
 
   useEffect(() => {
     if (product) {
@@ -79,29 +122,28 @@ const ProductModal = ({ product, onClose, onSave }) => {
       setProductImageId(product.productImageId || "");
       setDocumentImageIds(product.documentImageIds || []);
       setProductDetailImageIds(product.productDetailImageIds || []);
+      setVideoTitles(product.videoTitles || [""]);
       setVideoUrls(product.videoUrls || [""]);
+      setVideoDescriptions(product.videoDescriptions || [""]);
       setMainImageUrl(product.mainImageUrl || "");
       setProductMainImageId(product.productMainImageId || "");
       setShowContact(product.showContact === true);
 
-      // Handle productMainImage - find the file info if it exists
       if (product.productMainImageId) {
-        // We'll set the name when availableFiles is loaded
-        setProductMainImagePreview(""); // Clear any preview since this is from system
-        setProductMainImageFile(null); // Clear any file since this is from system
+        setProductMainImagePreview("");
+        setProductMainImageFile(null);
       } else {
-        // Clear everything if no productMainImageId
         setProductMainImagePreview("");
         setProductMainImageName("");
         setProductMainImageFile(null);
       }
 
-      // Selected documents from documentIds
       if (product.documentIds && product.documentIds.length > 0) {
         setSelectedDocuments(product.documentIds);
       } else {
         setSelectedDocuments([]);
       }
+
       let allDocumentFiles = [];
 
       if (product.documentFiles && product.documentFiles.length > 0) {
@@ -162,12 +204,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
   useEffect(() => {
     const fetchAvailableData = async () => {
       try {
-        // Fetch available files
         const filesResponse = await getFiles();
         const files = filesResponse?.data?.data || filesResponse?.data || [];
         setAvailableFiles(files);
 
-        // Fetch available documents
         const documentsResponse = await getDocuments();
         const documentsData =
           documentsResponse?.data?.data ||
@@ -195,7 +235,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
   }, [productMainImageId, availableFiles]);
 
   const handleSubmit = async (e) => {
-    // Eksik tanımlanan değişkenler
     let documentImageFileIds = [];
     let documentFileIds = [];
     let productDetailFileIds = [];
@@ -235,7 +274,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
         }
       }
 
-      // Handle product main image upload
       let finalProductMainImageId = productMainImageId;
       if (productMainImageFile && !productMainImageId) {
         try {
@@ -260,46 +298,17 @@ const ProductModal = ({ product, onClose, onSave }) => {
 
       const fileIds = [];
       for (const image of productImages) {
-      const documentFileIds = [];
-      const documentImageFileIds = [];
-
-      for (const doc of documentFiles) {
-        if (doc.isExisting) {
-          if (doc.isDocumentImage) {
-            documentImageFileIds.push(doc.id);
-          } else {
-            documentFileIds.push(doc.id);
-          }
-        } else if (doc.file) {
-          const uploaded = await uploadFile(doc.file);
-          const uploadedFileId = uploaded?.data?.id || uploaded?.id;
-          if (uploadedFileId) {
-            if (doc.isDocumentImage) {
-              documentImageFileIds.push(uploadedFileId);
-            } else {
-              documentFileIds.push(uploadedFileId);
-            }
-          }
-        }
-      }
-
-      const productDetailFileIds = [];
-      for (const image of productDetailImages) {
         if (image.isExisting) {
           fileIds.push(image.id);
         } else if (image.file) {
           const uploaded = await uploadFile(image.file);
           const uploadedFileId = uploaded?.data?.id || uploaded?.id;
-          // ...burada dosya yükleme sonrası yapılacak işlemler...
         }
       }
 
-      // Ürün detay görselleri için sadece GUID olanları productDetailImageIds'e ekle
       const validProductDetailImageIds = productDetailImageIds.filter(id => {
-        // GUID ise string ve 36 karakter olmalı, tireli
         return typeof id === 'string' && /^[0-9a-fA-F-]{36}$/.test(id);
       });
-      // Yeni yüklenen dosyalar için id'yi productDetailFileIds'e ekle
       const validProductDetailFileIds = productDetailImages
         .filter(img => img.isExisting === false && img.file && typeof img.id !== 'string')
         .map(img => img.id);
@@ -313,6 +322,9 @@ const ProductModal = ({ product, onClose, onSave }) => {
         listTitles: listTitles.filter((lt) => lt.trim() !== ""),
         listItems: listItems.filter((li) => li.trim() !== ""),
         urls: urls.filter((u) => u.trim() !== ""),
+        videoTitles: videoTitles.filter((v) => v.trim() !== ""),
+        videoUrls: videoUrls.filter((v) => v.trim() !== ""),
+        videoDescriptions: videoDescriptions.filter((d) => d.trim() !== ""),
         bannerImageUrl: finalBannerImageUrl.trim() || null,
         productImageId: productImageId.trim() || null,
         productMainImageId: finalProductMainImageId || null,
@@ -564,7 +576,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
     }
   };
 
-  // Ürün detay görselleri yükleme ve GUID ile ekleme
   const handleDetailImagesUpload = async (files) => {
     setLoading(true);
     try {
@@ -611,7 +622,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
       <div className="AdminModalContent AdminProductModal">
         <div className="AdminModalHeader">
           <h3>{product ? "Ürün Düzenle" : "Yeni Ürün Ekle"}</h3>
-          <button className="close-btn" onClick={onClose}>
+          <button className="delete-btn" onClick={onClose}>
             ×
           </button>
         </div>
@@ -648,20 +659,44 @@ const ProductModal = ({ product, onClose, onSave }) => {
             )}
           </div>
 
-          {/* Slug */}
-          {/* <div className="form-group">
-            <label>URL Slug *</label>
-            <input
-              type="text"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              placeholder="url-dostu-slug"
-              required
-            />
-            <small style={{ color: "#666", fontSize: "12px" }}>
-              SEO dostu URL için kullanılır. Boş bırakırsanız ürün adından
-              otomatik oluşturulur.
-            </small>
+          {/* Slug - Collapsable */}
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <button
+              type="button"
+              onClick={() => setShowSlugCollapse((prev) => !prev)}
+              style={{
+                background: "#f68b1f",
+                color: "white",
+                border: "none",
+                borderRadius: "6px",
+                padding: "6px 14px",
+                fontWeight: 600,
+                cursor: "pointer",
+                marginBottom: "8px",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px"
+              }}
+            >
+              <span>{showSlugCollapse ? "▼" : "►"}</span>
+              <span>URL Slug Ayarları</span>
+            </button>
+            {showSlugCollapse && (
+              <div style={{ marginTop: "8px" }}>
+                <label>URL Slug *</label>
+                <input
+                  type="text"
+                  value={slug}
+                  onChange={(e) => setSlug(e.target.value)}
+                  placeholder="url-dostu-slug"
+                  required
+                />
+                <small style={{ color: "#666", fontSize: "12px" }}>
+                  SEO dostu URL için kullanılır. Boş bırakırsanız ürün adından
+                  otomatik oluşturulur.
+                </small>
+              </div>
+            )}
           </div>
 
           {/* Ana Sayfa Alt Başlık */}
@@ -676,7 +711,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
             <small style={{ color: "#666", fontSize: "12px" }}>
               Ana Sayfada gösterilecek ürünün alt başlığı olarak kullanılır.
             </small>
-          </div> */}
+          </div>
 
           {/* Başlıklar */}
           <div className="form-group">
@@ -726,7 +761,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     className="delete-btn"
                     onClick={() => removeSubtitle(index)}
                   >
-                    + Yeni Görsel Yükle
+                    ×
                   </button>
                 )}
               </div>
@@ -757,84 +792,8 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     className="delete-btn"
                     onClick={() => removeDescription(index)}
                   >
-                    Sistemden Seç
+                    ×
                   </button>
-                </div>
-                {productImageId && (
-                  <div
-                    style={{
-                      position: "relative",
-                      display: "flex",
-                      alignItems: "center",
-                      background: "#f9f9f9",
-                      borderRadius: "8px",
-                      padding: "8px 12px",
-                      boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-                      gap: "10px",
-                      width: "fit-content",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                      }}
-                    >
-                      {(() => {
-                        const selectedImage = getSelectedProductImage();
-                        return selectedImage ? (
-                          <>
-                            <img
-                              src={BASE_URL + selectedImage.path}
-                              alt={selectedImage.name}
-                              style={{
-                                width: "60px",
-                                height: "60px",
-                                objectFit: "cover",
-                                borderRadius: "6px",
-                                border: "1px solid #ddd",
-                              }}
-                            />
-                            <span
-                              style={{
-                                fontSize: "14px",
-                                color: "#333",
-                                fontWeight: 500,
-                              }}
-                            >
-                              {selectedImage.name}
-                            </span>
-                          </>
-                        ) : (
-                          <span>Seçilen görsel ID: {productImageId}</span>
-                        );
-                      })()}
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => setProductImageId("")}
-                      style={{
-                        position: "absolute",
-                        top: "-6px",
-                        right: "-6px",
-                        background: "#e74c3c",
-                        color: "#fff",
-                        border: "none",
-                        borderRadius: "50%",
-                        width: "20px",
-                        height: "20px",
-                        fontSize: "14px",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      ×
-                    </button>
-                  </div>
                 )}
               </div>
             ))}
@@ -864,7 +823,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     className="delete-btn"
                     onClick={() => removeListTitle(index)}
                   >
-                    Dosya Seç
+                    ×
                   </button>
                 )}
               </div>
@@ -895,7 +854,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     className="delete-btn"
                     onClick={() => removeListItem(index)}
                   >
-                    Sistemden Seç
+                    ×
                   </button>
                 )}
               </div>
@@ -916,149 +875,17 @@ const ProductModal = ({ product, onClose, onSave }) => {
               <div key={index} className="AdminInputGroup">
                 <input
                   type="url"
-                  value={bannerImageUrl}
-                  onChange={(e) => setBannerImageUrl(e.target.value)}
-                  placeholder="Banner görsel URL'si girebilir ya da dosya seçebilirsiniz"
+                  value={url}
+                  onChange={(e) => updateUrl(index, e.target.value)}
+                  placeholder={`URL ${index + 1}`}
                 />
-              </div>
-            </div>
-
-            {/* Açıklamalar */}
-            <div className="form-group">
-              <label>İçerik Paragrafı</label>
-
-              {descriptions.map((description, index) => (
-                <div key={index} className="input-group">
-                  <textarea
-                    value={description}
-                    onChange={(e) => updateDescription(index, e.target.value)}
-                    placeholder={`Açıklama ${index + 1}`}
-                    rows="3"
-                  />
-                  {descriptions.length > 1 && (
-                    <button
-                      type="button"
-                      className="remove-btn danger"
-                      onClick={() => removeDescription(index)}
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-              ))}
-              <button
-                type="button"
-                className="add-btn secondary"
-                onClick={addDescription}
-              >
-                + Açıklama Ekle
-              </button>
-            </div>
-
-            {/* Liste Başlıkları */}
-            <div className="form-group">
-              <label>Liste Başlıkları</label>
-              {listTitles.map((listTitle, index) => (
-                <div key={index} className="input-group">
-                  <input
-                    type="text"
-                    value={listTitle}
-                    onChange={(e) => updateListTitle(index, e.target.value)}
-                    placeholder={`Liste başlığı ${index + 1}`}
-                  />
-                  {listTitles.length > 1 && (
-                    <button
-                      type="button"
-                      className="remove-btn danger"
-                      onClick={() => removeListTitle(index)}
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-              ))}
-              <button
-                type="button"
-                className="add-btn secondary"
-                onClick={addListTitle}
-              >
-                + Liste Başlığı Ekle
-              </button>
-            </div>
-
-            {/* Liste Öğeleri */}
-            <div className="form-group">
-              <label>Liste Öğeleri</label>
-              {listItems.map((item, index) => (
-                <div key={index} className="input-group">
-                  <input
-                    type="text"
-                    value={item}
-                    onChange={(e) => updateListItem(index, e.target.value)}
-                    placeholder={`Liste öğesi ${index + 1}`}
-                  />
-                  {listItems.length > 1 && (
-                    <button
-                      type="button"
-                      className="remove-btn danger"
-                      onClick={() => removeListItem(index)}
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-              ))}
-              <button
-                type="button"
-                className="add-btn secondary"
-                onClick={addListItem}
-              >
-                + Liste Öğesi Ekle
-              </button>
-            </div>
-
-            {/* URL'ler */}
-            <div className="form-group">
-              <label>URL'ler</label>
-              {urls.map((url, index) => (
-                <div key={index} className="input-group">
-                  <input
-                    type="url"
-                    value={url}
-                    onChange={(e) => updateUrl(index, e.target.value)}
-                    placeholder={`URL ${index + 1}`}
-                  />
-                  {urls.length > 1 && (
-                    <button
-                      type="button"
-                      className="remove-btn danger"
-                      onClick={() => removeUrl(index)}
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-              ))}
-              <button
-                type="button"
-                className="add-btn secondary"
-                onClick={addUrl}
-              >
-                + URL Ekle
-              </button>
-            </div>
-
-            {/* Product Documents */}
-            <div className="form-group">
-              <label>Ürün Dökümanları</label>
-              <div className="documents-selector">
-                <div className="upload-controls">
+                {urls.length > 1 && (
                   <button
                     type="button"
                     className="delete-btn"
                     onClick={() => removeUrl(index)}
                   >
-                    Döküman Seç
+                    ×
                   </button>
                 )}
               </div>
@@ -1071,28 +898,23 @@ const ProductModal = ({ product, onClose, onSave }) => {
               <span>+ URL Ekle</span>
             </button>
           </div>
-          {/* Video URL'leri */}
+
+          {/* Video Başlıkları */}
           <div className="form-group">
-            <label>Video URL'leri</label>
-            {videoUrls.map((videoUrl, index) => (
+            <label>Video Başlıkları</label>
+            {videoTitles.map((videoTitle, index) => (
               <div key={index} className="AdminInputGroup">
                 <input
-                  type="url"
-                  value={videoUrl}
-                  onChange={(e) => {
-                    const updated = [...videoUrls];
-                    updated[index] = e.target.value;
-                    setVideoUrls(updated);
-                  }}
-                  placeholder={`Video URL ${index + 1}`}
+                  type="text"
+                  value={videoTitle}
+                  onChange={(e) => updateVideoTitle(index, e.target.value)}
+                  placeholder={`Video Başlığı ${index + 1}`}
                 />
-                {videoUrls.length > 1 && (
+                {videoTitles.length > 1 && (
                   <button
                     type="button"
                     className="delete-btn"
-                    onClick={() =>
-                      setVideoUrls(videoUrls.filter((_, i) => i !== index))
-                    }
+                    onClick={() => removeVideoTitle(index)}
                   >
                     ×
                   </button>
@@ -1102,9 +924,94 @@ const ProductModal = ({ product, onClose, onSave }) => {
             <button
               type="button"
               className="add-btn secondary"
+              onClick={addVideoTitle}
+            >
+              <span>+ Video Başlığı Ekle</span>
+            </button>
+          </div>
+
+          {/* Video URL'leri */}
+          <div className="form-group">
+            <label>Video URL'leri</label>
+            {videoUrls.map((videoUrl, index) => (
+              <div key={index} className="AdminInputGroup" style={{ flexDirection: "column", alignItems: "flex-start" }}>
+                <div style={{ display: "flex", width: "100%", gap: "8px" }}>
+                  <input
+                    type="url"
+                    value={videoUrl}
+                    onChange={(e) => {
+                      const updated = [...videoUrls];
+                      updated[index] = e.target.value;
+                      setVideoUrls(updated);
+                    }}
+                    placeholder={`Video URL ${index + 1}`}
+                    style={{ flex: 1 }}
+                  />
+                  {videoUrls.length > 1 && (
+                    <button
+                      type="button"
+                      className="delete-btn"
+                      onClick={() =>
+                        setVideoUrls(videoUrls.filter((_, i) => i !== index))
+                      }
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+                {/* Video embed önizleme */}
+                {videoUrl && (
+                  <div style={{ marginTop: "8px", width: "100%" }}>
+                    <iframe
+                      src={getEmbedUrl(videoUrl)}
+                      title={`Video Preview ${index + 1}`}
+                      width="100%"
+                      height="220"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      style={{ borderRadius: "8px", background: "#f8f9fa" }}
+                    ></iframe>
+                  </div>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              className="add-btn secondary"
               onClick={() => setVideoUrls([...videoUrls, ""])}
             >
               <span>+ Video URL Ekle</span>
+            </button>
+          </div>
+          {/* Video Açıklamaları */}
+          <div className="form-group">
+            <label>Video Açıklamaları</label>
+            {videoDescriptions.map((description, index) => (
+              <div key={index} className="AdminInputGroup">
+                <textarea
+                  value={description}
+                  onChange={(e) => updateVideoDescription(index, e.target.value)}
+                  placeholder={`Video Açıklama ${index + 1}`}
+                  rows="3"
+                />
+                {videoDescriptions.length > 1 && (
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => removeVideoDescription(index)}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={addVideoDescription}
+            >
+              <span>+ Video Açıklama Ekle</span>
             </button>
           </div>
           {/* Ana Görsel URL */}
@@ -1167,11 +1074,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     style={{ maxWidth: "200px", maxHeight: "100px" }}
                   />
                 </div>
-                {selectedDocuments.length > 0 && (
-                  <div className="selected-documents">
-                    {selectedDocuments.map((documentId) => {
-                      const document = getSelectedDocumentData(documentId);
-                      if (!document) return null;
+              )}
+            </div>
+          </div>
+
           {/* Product Image ID */}
           <div className="form-group">
             <label>Sayfa Görseli</label>
@@ -1241,52 +1147,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
                           />
                           <span>{selectedImage.name}</span>
                         </div>
+                      ) : (
+                        <span>Seçilen görsel ID: {productImageId}</span>
                       );
-                    })}
+                    })()}
                   </div>
-                )}
-              </div>
-            </div>
-
-            {/* Product Detail Image IDs */}
-            <div className="form-group">
-              <label>Ürün Detay Görselleri</label>
-              <div className="product-detail-images-selector">
-                <div className="upload-controls">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={(e) => {
-                      const files = Array.from(e.target.files);
-                      files.forEach((file) => {
-                        const reader = new FileReader();
-                        reader.onload = (event) => {
-                          const newId = Date.now() + Math.random();
-                          setProductDetailImageIds((prev) => [...prev, newId]);
-                          setProductDetailImages((prev) => [
-                            ...prev,
-                            {
-                              id: newId,
-                              url: event.target.result,
-                              name: file.name,
-                              file: file,
-                              isExisting: false,
-                            },
-                          ]);
-                        };
-                        reader.readAsDataURL(file);
-                      });
-                    }}
-                    style={{ display: "none" }}
-                    id="detail-image-input"
-                  />
-                  <button
-                    htmlFor="detail-image-input"
-                    className="file-select-btn primary"
-                  >
-                    + Yeni Görsel Yükle
-                  </button>
                   <button
                     type="button"
                     className="delete-btn"
@@ -1309,18 +1174,15 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   onChange={async (e) => {
                     const file = e.target.files[0];
                     if (file) {
-                      // Store the file for later upload
                       setProductMainImageFile(file);
                       setProductMainImageName(file.name);
 
-                      // Create preview
                       const reader = new FileReader();
                       reader.onload = (event) => {
                         setProductMainImagePreview(event.target.result);
                       };
                       reader.readAsDataURL(file);
 
-                      // Clear system selection
                       setProductMainImageId("");
                     }
                   }}
@@ -1410,7 +1272,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                       setProductMainImageFile(null);
                     }}
                   >
-                    Sistemden Seç
+                    ×
                   </button>
                 </div>
               )}
@@ -1436,6 +1298,15 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     const document = getSelectedDocumentData(documentId);
                     if (!document) return null;
 
+                    let previewImgSrc = "";
+                    if (document.previewImageFile && document.previewImageFile.path) {
+                      previewImgSrc = BASE_URL + document.previewImageFile.path;
+                    } else if (document.previewImageUrl) {
+                      previewImgSrc = document.previewImageUrl.startsWith("http")
+                        ? document.previewImageUrl
+                        : BASE_URL + document.previewImageUrl;
+                    }
+
                     return (
                       <div
                         key={documentId}
@@ -1448,13 +1319,9 @@ const ProductModal = ({ product, onClose, onSave }) => {
                             gap: "10px",
                           }}
                         >
-                          {document.previewImageUrl ? (
+                          {previewImgSrc ? (
                             <img
-                              src={
-                                document.previewImageUrl.startsWith("http")
-                                  ? document.previewImageUrl
-                                  : BASE_URL + document.previewImageUrl
-                              }
+                              src={previewImgSrc}
                               alt={document.name}
                               style={{
                                 width: "40px",
@@ -1477,8 +1344,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
                             >
                               📄
                             </div>
-                          ) : (
-                            <span>Görsel ID: {id}</span>
                           )}
                           <div>
                             <div style={{ fontWeight: "500" }}>
@@ -1598,6 +1463,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 </div>
               )}
             </div>
+          </div>
 
           <div className="form-group" style={{ marginBottom: "16px", display: "flex", alignItems: "center", gap: "12px" }}>
             <label htmlFor="showContactCheckbox" style={{ marginBottom: 0 }}>
@@ -1659,11 +1525,9 @@ const ProductModal = ({ product, onClose, onSave }) => {
               <div className="AdminFilesGrid modern">
                 {availableFiles
                   .filter((file) => {
-                    // Görsel seçimi için sadece resimleri göster
                     if (["banner", "productImage", "documentImage", "productDetailImage"].includes(selectedFileType)) {
                       if (!(file.contentType?.startsWith("image/") || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i))) return false;
                     }
-                    // Arama filtresi
                     if (fileSearchTerm && !file.name.toLowerCase().includes(fileSearchTerm.toLowerCase())) return false;
                     return true;
                   })
