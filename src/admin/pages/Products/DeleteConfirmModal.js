@@ -10,27 +10,27 @@ const DeleteConfirmModal = ({ productName, onConfirm, onCancel }) => {
   };
 
   return (
-    <div className="modal-overlay" ref={modalRef} onClick={handleOverlayClick}>
-      <div className="modal-content delete-modal">
-        <div className="modal-header">
+    <div className="AdminModalOverlay" ref={modalRef} onClick={handleOverlayClick}>
+      <div className="AdminModalContent AdminDeleteModal">
+        <div className="AdminModalHeader">
           <h3>Ürünü Sil</h3>
         </div>
 
-        <div className="modal-body">
-          <div className="warning-icon">⚠️</div>
+        <div className="AdminModalBody">
+          <div className="AdminWarningIcon">⚠️</div>
           <p>
             <strong>"{productName}"</strong> adlı ürünü silmek istediğinizden emin misiniz?
           </p>
-          <p className="warning-text">
+          <p className="AdminWarningText">
             Bu işlem geri alınamaz!
           </p>
         </div>
 
-        <div className="modal-footer">
-          <button type="button" className="cancel-btn" onClick={onCancel}>
+        <div className="AdminModalFooter">
+          <button type="button" className="AdminCancelBtn" onClick={onCancel}>
             İptal
           </button>
-          <button type="button" className="delete-btn danger" onClick={onConfirm}>
+          <button type="button" className="AdminDeleteBtn danger" onClick={onConfirm}>
             Sil
           </button>
         </div>

@@ -428,27 +428,27 @@ const DocumentModal = ({ document, onSave, onClose }) => {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="document-modal">
-        <div className="modal-header">
+    <div className="AdminModalOverlay">
+      <div className="AdminDocumentModal">
+        <div className="AdminModalHeader">
           <h2>{document ? "Dosya Düzenle" : "Yeni Dosya"}</h2>
-          <div className="header-actions">
+          <div className="AdminHeaderActions">
             <button 
               type="button"
               onClick={handleHealthCheck}
               disabled={checkingHealth}
-              className={`health-check-btn ${backendHealthy === true ? 'healthy' : backendHealthy === false ? 'unhealthy' : ''}`}
+              className={`AdminHealthCheckBtn ${backendHealthy === true ? 'healthy' : backendHealthy === false ? 'unhealthy' : ''}`}
               title="Backend durumunu kontrol et"
             >
               {checkingHealth ? '🔄' : backendHealthy === true ? '✅' : backendHealthy === false ? '❌' : '🔍'}
             </button>
-            <button onClick={onClose} className="close-btn">×</button>
+            <button onClick={onClose} className="AdminCloseBtn">×</button>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="modal-form">
-          <div className="form-row">
-            <div className="form-group">
+        <form onSubmit={handleSubmit} className="AdminModalForm">
+          <div className="AdminFormRow">
+            <div className="AdminFormGroup">
               <label htmlFor="name">Dosya Adı *</label>
               <input
                 type="text"
@@ -460,7 +460,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
                 placeholder="Dosya adını girin"
               />
             </div>
-            <div className="form-group">
+            <div className="AdminFormGroup">
               <label htmlFor="slug">URL Slug *</label>
               <input
                 type="text"
@@ -471,13 +471,13 @@ const DocumentModal = ({ document, onSave, onClose }) => {
                 required
                 placeholder="URL-dostu slug"
               />
-              <small className="field-hint">
+              <small className="AdminFieldHint">
                 Dosya adı girildiğinde otomatik oluşturulur
               </small>
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label htmlFor="description">Açıklama</label>
             <textarea
               id="description"
@@ -489,8 +489,8 @@ const DocumentModal = ({ document, onSave, onClose }) => {
             />
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
+          <div className="AdminFormRow">
+            <div className="AdminFormGroup">
               <label htmlFor="category">Kategori</label>
               <input
                 type="text"
@@ -501,7 +501,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
                 placeholder="Kategori adı"
               />
             </div>
-            <div className="form-group">
+            <div className="AdminFormGroup">
               <label htmlFor="order">Sıra</label>
               <input
                 type="number"
@@ -514,7 +514,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label htmlFor="url">Harici URL</label>
             <input
               type="url"
@@ -526,10 +526,10 @@ const DocumentModal = ({ document, onSave, onClose }) => {
             />
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
+          <div className="AdminFormRow">
+            <div className="AdminFormGroup">
               <label htmlFor="file">Ana Dosya</label>
-              <div className="file-input-group">
+              <div className="AdminFileInputGroup">
                 <input
                   type="file"
                   id="file"
@@ -539,42 +539,42 @@ const DocumentModal = ({ document, onSave, onClose }) => {
                 <button 
                   type="button" 
                   onClick={() => setShowFileSelector(true)}
-                  className="select-existing-btn"
+                  className="AdminSelectExistingBtn"
                 >
                   Sistemdeki Dosyalardan Seç
                 </button>
               </div>
               {selectedFile && (
-                <div className="file-info">
+                <div className="AdminFileInfo">
                   <span>Yeni dosya: {selectedFile.name}</span>
                   <span>({formatFileSize(selectedFile.size)})</span>
                 </div>
               )}
               {formData.fileId && !selectedFile && (
-                <div className="file-info">
+                <div className="AdminFileInfo">
                   <span>Mevcut dosya seçili (ID: {formData.fileId})</span>
                 </div>
               )}
               {uploadingFile && uploadProgress > 0 && (
-                <div className="upload-progress">
-                  <div className="progress-bar">
+                <div className="AdminUploadProgress">
+                  <div className="AdminProgressBar">
                     <div 
-                      className="progress-fill" 
+                      className="AdminProgressFill" 
                       style={{ width: `${uploadProgress}%` }}
                     ></div>
                   </div>
-                  <span className="progress-text">{uploadProgress}% yüklendi</span>
+                  <span className="AdminProgressText">{uploadProgress}% yüklendi</span>
                 </div>
               )}
               {filePreviewUrl && (
-                <div className="file-preview">
-                  <img src={filePreviewUrl} alt="Dosya önizlemesi" className="file-preview-image" />
+                <div className="AdminFilePreview">
+                  <img src={filePreviewUrl} alt="Dosya önizlemesi" className="AdminFilePreviewImage" />
                 </div>
               )}
             </div>
-            <div className="form-group">
+            <div className="AdminFormGroup">
               <label htmlFor="previewImage">Önizleme Resmi</label>
-              <div className="file-input-group">
+              <div className="AdminFileInputGroup">
                 <input
                   type="file"
                   id="previewImage"
@@ -584,30 +584,30 @@ const DocumentModal = ({ document, onSave, onClose }) => {
                 <button 
                   type="button" 
                   onClick={() => setShowImageSelector(true)}
-                  className="select-existing-btn"
+                  className="AdminSelectExistingBtn"
                 >
                   Sistemdeki Görsellerden Seç
                 </button>
               </div>
               {selectedPreviewImage && (
-                <div className="file-info">
+                <div className="AdminFileInfo">
                   <span>Yeni görsel: {selectedPreviewImage.name}</span>
                 </div>
               )}
               {formData.previewImageFileId && !selectedPreviewImage && (
-                <div className="file-info">
+                <div className="AdminFileInfo">
                   <span>Mevcut görsel seçili (ID: {formData.previewImageFileId})</span>
                 </div>
               )}
               {previewUrl && (
-                <div className="preview-image-container">
-                  <img src={previewUrl} alt="Önizleme" className="preview-image-modal" />
+                <div className="AdminPreviewImageContainer">
+                  <img src={previewUrl} alt="Önizleme" className="AdminPreviewImageModal" />
                 </div>
               )}
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label htmlFor="previewImageUrl">Önizleme Resmi URL</label>
             <input
               type="url"
@@ -619,8 +619,8 @@ const DocumentModal = ({ document, onSave, onClose }) => {
             />
           </div>
 
-          <div className="form-group">
-            <label className="checkbox-label">
+          <div className="AdminFormGroup">
+            <label className="AdminCheckboxLabel">
               <input
                 type="checkbox"
                 name="isActive"
@@ -631,11 +631,11 @@ const DocumentModal = ({ document, onSave, onClose }) => {
             </label>
           </div>
 
-          <div className="modal-actions">
-            <button type="button" onClick={onClose} className="cancel-btn">
+          <div className="AdminModalActions">
+            <button type="button" onClick={onClose} className="AdminCancelBtn">
               İptal
             </button>
-            <button type="submit" disabled={loading} className="save-btn">
+            <button type="submit" disabled={loading} className="AdminSaveBtn">
               {loading ? 'Kaydediliyor...' : 'Kaydet'}
             </button>
           </div>
@@ -687,36 +687,36 @@ const FileSelector = ({ files, onSelect, onClose, title, filterType }) => {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="file-selector-modal">
-        <div className="modal-header">
+    <div className="AdminModalOverlay">
+      <div className="AdminFileSelectorModal">
+        <div className="AdminModalHeader">
           <h3>{title}</h3>
-          <button onClick={onClose} className="close-btn">×</button>
+          <button onClick={onClose} className="AdminCloseBtn">×</button>
         </div>
         
-        <div className="modal-content">
-          <div className="search-section">
+        <div className="AdminModalContent">
+          <div className="AdminSearchSection">
             <input
               type="text"
               placeholder="Dosya ara..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
+              className="AdminSearchInput"
             />
           </div>
           
-          <div className="files-grid">
+          <div className="AdminFilesGrid">
             {filteredFiles.map(file => (
-              <div key={file.id} className="file-item" onClick={() => onSelect(file)}>
-                <div className="file-preview">
+              <div key={file.id} className="AdminFileItem" onClick={() => onSelect(file)}>
+                <div className="AdminFilePreview">
                   {isImageFile(file.contentType) ? (
                     <img 
                       src={`https://localhost:7103/${file.path}`} 
                       alt={file.name}
-                      className="file-thumbnail"
+                      className="AdminFileThumbnail"
                     />
                   ) : (
-                    <div className="file-icon">
+                    <div className="AdminFileIcon">
                       {file.contentType?.includes('pdf') ? '📄' :
                        file.contentType?.includes('word') ? '📝' :
                        file.contentType?.includes('excel') ? '📊' :
@@ -726,23 +726,23 @@ const FileSelector = ({ files, onSelect, onClose, title, filterType }) => {
                     </div>
                   )}
                 </div>
-                <div className="file-info">
-                  <div className="file-name">{file.name}</div>
-                  <div className="file-size">{formatFileSize(file.size)}</div>
+                <div className="AdminFileInfo">
+                  <div className="AdminFileName">{file.name}</div>
+                  <div className="AdminFileSize">{formatFileSize(file.size)}</div>
                 </div>
               </div>
             ))}
           </div>
           
           {filteredFiles.length === 0 && (
-            <div className="no-files">
+            <div className="AdminNoFiles">
               {searchTerm ? "Arama sonucu bulunamadı." : "Henüz dosya yüklenmemiş."}
             </div>
           )}
         </div>
         
-        <div className="modal-actions">
-          <button onClick={onClose} className="cancel-btn">İptal</button>
+        <div className="AdminModalActions">
+          <button onClick={onClose} className="AdminCancelBtn">İptal</button>
         </div>
       </div>
     </div>

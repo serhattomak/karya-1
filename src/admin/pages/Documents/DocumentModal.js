@@ -733,15 +733,15 @@ startxref
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="document-modal">
-        <div className="modal-header">
+    <div className="AdminModalOverlay">
+      <div className="AdminDocumentModal">
+        <div className="AdminModalHeader">
           <h2>{document ? "Dosya Düzenle" : "Yeni Dosya"}</h2>
-          <div className="header-actions">
+          <div className="AdminHeaderActions">
             <button 
               type="button"
               onClick={handlePDFTest}
-              className="test-btn"
+              className="AdminTestBtn"
               title="PDF yükleme testi yap"
             >
               🧪 PDF Test
@@ -750,18 +750,18 @@ startxref
               type="button"
               onClick={handleHealthCheck}
               disabled={checkingHealth}
-              className={`health-check-btn ${backendHealthy === true ? 'healthy' : backendHealthy === false ? 'unhealthy' : ''}`}
+              className={`AdminHealthCheckBtn ${backendHealthy === true ? 'healthy' : backendHealthy === false ? 'unhealthy' : ''}`}
               title="Backend durumunu kontrol et"
             >
               {checkingHealth ? '🔄' : backendHealthy === true ? '✅' : backendHealthy === false ? '❌' : '🔍'}
             </button>
-            <button onClick={onClose} className="close-btn">×</button>
+            <button onClick={onClose} className="AdminCloseBtn">×</button>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="modal-form">
-          <div className="form-row">
-            <div className="form-group">
+        <form onSubmit={handleSubmit} className="AdminModalForm">
+          <div className="AdminFormRow">
+            <div className="AdminFormGroup">
               <label htmlFor="name">Dosya Adı *</label>
               <input
                 type="text"
@@ -773,7 +773,7 @@ startxref
                 placeholder="Dosya adını girin"
               />
             </div>
-            <div className="form-group">
+            <div className="AdminFormGroup">
               <label htmlFor="slug">URL Slug *</label>
               <input
                 type="text"
@@ -784,13 +784,13 @@ startxref
                 required
                 placeholder="URL-dostu slug"
               />
-              <small className="field-hint">
+              <small className="AdminFieldHint">
                 Dosya adı girildiğinde otomatik oluşturulur
               </small>
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label htmlFor="description">Açıklama</label>
             <textarea
               id="description"
@@ -802,8 +802,8 @@ startxref
             />
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
+          <div className="AdminFormRow">
+            <div className="AdminFormGroup">
               <label htmlFor="category">Kategori</label>
               <input
                 type="text"
@@ -814,7 +814,7 @@ startxref
                 placeholder="Kategori adı"
               />
             </div>
-            <div className="form-group">
+            <div className="AdminFormGroup">
               <label htmlFor="order">Sıra</label>
               <input
                 type="number"
@@ -827,7 +827,7 @@ startxref
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label htmlFor="url">Harici URL</label>
             <input
               type="url"
@@ -837,15 +837,15 @@ startxref
               onChange={handleInputChange}
               placeholder="https://example.com/file.pdf"
             />
-            <small className="field-hint">
+            <small className="AdminFieldHint">
               Harici URL kullanıyorsanız aşağıdaki "Ana Dosya" alanını boş bırakabilirsiniz.
             </small>
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
+          <div className="AdminFormRow">
+            <div className="AdminFormGroup">
               <label htmlFor="file">Ana Dosya</label>
-              <div className="file-input-group">
+              <div className="AdminFileInputGroup">
                 <input
                   type="file"
                   id="file"
@@ -855,45 +855,45 @@ startxref
                 <button 
                   type="button" 
                   onClick={() => setShowFileSelector(true)}
-                  className="select-existing-btn"
+                  className="AdminSelectExistingBtn"
                 >
                   Sistemdeki Dosyalardan Seç
                 </button>
               </div>
-              <small className="field-hint">
+              <small className="AdminFieldHint">
                 Dosya yüklemek yerine yukarıdaki "Harici URL" alanını da kullanabilirsiniz.
               </small>
               {selectedFile && (
-                <div className="file-info">
+                <div className="AdminFileInfo">
                   <span>Yeni dosya: {selectedFile.name}</span>
                   <span>({formatFileSize(selectedFile.size)})</span>
                 </div>
               )}
               {formData.fileId && !selectedFile && (
-                <div className="file-info">
+                <div className="AdminFileInfo">
                   <span>Mevcut dosya seçili (ID: {formData.fileId})</span>
                 </div>
               )}
               {uploadingFile && uploadProgress > 0 && (
-                <div className="upload-progress">
-                  <div className="progress-bar">
+                <div className="AdminUploadProgress">
+                  <div className="AdminProgressBar">
                     <div 
-                      className="progress-fill" 
+                      className="AdminProgressFill" 
                       style={{ width: `${uploadProgress}%` }}
                     ></div>
                   </div>
-                  <span className="progress-text">{uploadProgress}% yüklendi</span>
+                  <span className="AdminProgressText">{uploadProgress}% yüklendi</span>
                 </div>
               )}
               {filePreviewUrl && (
-                <div className="file-preview">
-                  <img src={filePreviewUrl} alt="Dosya önizlemesi" className="file-preview-image" />
+                <div className="AdminFilePreview">
+                  <img src={filePreviewUrl} alt="Dosya önizlemesi" className="AdminFilePreviewImage" />
                 </div>
               )}
             </div>
-            <div className="form-group">
+            <div className="AdminFormGroup">
               <label htmlFor="previewImage">Önizleme Resmi</label>
-              <div className="file-input-group">
+              <div className="AdminFileInputGroup">
                 <input
                   type="file"
                   id="previewImage"
@@ -903,30 +903,30 @@ startxref
                 <button 
                   type="button" 
                   onClick={() => setShowImageSelector(true)}
-                  className="select-existing-btn"
+                  className="AdminSelectExistingBtn"
                 >
                   Sistemdeki Görsellerden Seç
                 </button>
               </div>
               {selectedPreviewImage && (
-                <div className="file-info">
+                <div className="AdminFileInfo">
                   <span>Yeni görsel: {selectedPreviewImage.name}</span>
                 </div>
               )}
               {formData.previewImageFileId && !selectedPreviewImage && (
-                <div className="file-info">
+                <div className="AdminFileInfo">
                   <span>Mevcut görsel seçili (ID: {formData.previewImageFileId})</span>
                 </div>
               )}
               {previewUrl && (
-                <div className="preview-image-container">
-                  <img src={previewUrl} alt="Önizleme" className="preview-image-modal" />
+                <div className="AdminPreviewImageContainer">
+                  <img src={previewUrl} alt="Önizleme" className="AdminPreviewImageModal" />
                 </div>
               )}
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="AdminFormGroup">
             <label htmlFor="previewImageUrl">Önizleme Resmi URL</label>
             <input
               type="url"
@@ -938,8 +938,8 @@ startxref
             />
           </div>
 
-          <div className="form-group">
-            <label className="checkbox-label">
+          <div className="AdminFormGroup">
+            <label className="AdminCheckboxLabel">
               <input
                 type="checkbox"
                 name="isActive"
@@ -950,7 +950,7 @@ startxref
             </label>
           </div>
 
-          <div className="modal-actions">
+          <div className="AdminModalActions">
             <button type="button" onClick={onClose} className="cancel-btn">
               İptal
             </button>
@@ -989,6 +989,8 @@ startxref
 // File Selector Component
 const FileSelector = ({ files = [], onSelect, onClose, title, filterType }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [fileSortAsc, setFileSortAsc] = useState(true);
+  const [typeFilter, setTypeFilter] = useState("all");
 
   // files'ın array olduğundan emin ol
   const safeFiles = Array.isArray(files) ? files : [];
@@ -1009,69 +1011,92 @@ const FileSelector = ({ files = [], onSelect, onClose, title, filterType }) => {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="file-selector-modal">
-        <div className="modal-header">
-          <h3>{title}</h3>
-          <button onClick={onClose} className="close-btn">×</button>
-        </div>
-        
-        <div className="modal-content">
-          <div className="search-section">
-            <input
-              type="text"
-              placeholder="Dosya ara..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-            />
+    <div className="AdminModalOverlay">
+      <div className="AdminFileSelectorModal">
+        <div className="AdminFileSelectorContent modern">
+          <div className="AdminFileSelectorHeader modern">
+            <h3>{title || "Dosya Seç"}</h3>
+            <button
+              type="button"
+              className="delete-btn"
+              onClick={onClose}
+            >
+              ×
+            </button>
           </div>
-          
-          <div className="files-grid">
-            {filteredFiles.map(file => (
-              <div key={file.id} className="file-item" onClick={() => onSelect(file)}>
-                <div className="file-preview">
-                  {isImageFile(file.contentType) ? (
-                    <img 
-                      src={`https://localhost:7103/${file.path}`} 
-                      alt={file.name}
-                      className="file-thumbnail"
-                      onLoad={() => console.log("✅ Görsel yüklendi:", file.name, file.path)}
-                      onError={(e) => {
-                        console.error("❌ Görsel yüklenemedi:", file.name, file.path);
-                        console.error("❌ Error event:", e);
-                        console.error("❌ Full URL:", `https://localhost:7103/${file.path}`);
-                        e.target.style.display = 'none';
-                      }}
-                    />
-                  ) : (
-                    <div className="file-icon">
-                      {file.contentType?.includes('pdf') ? '📄' :
-                       file.contentType?.includes('word') ? '📝' :
-                       file.contentType?.includes('excel') ? '📊' :
-                       file.contentType?.includes('powerpoint') ? '📋' :
-                       file.contentType?.includes('zip') ? '📦' :
-                       '📄'}
-                    </div>
-                  )}
-                </div>
-                <div className="file-info">
-                  <div className="file-name">{file.name}</div>
-                  <div className="file-size">{formatFileSize(file.size)}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          {filteredFiles.length === 0 && (
-            <div className="no-files">
-              {searchTerm ? "Arama sonucu bulunamadı." : "Henüz dosya yüklenmemiş."}
+          <div className="AdminFileSelectorBody modern">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, gap: 12 }}>
+              <input
+                type="text"
+                className="AdminFileSearchInput"
+                placeholder="Dosya ismiyle ara..."
+                value={searchTerm || ""}
+                onChange={e => setSearchTerm(e.target.value)}
+                style={{ flex: 2, padding: "8px 12px", borderRadius: 8, border: "1px solid #e9ecef", fontSize: 14 }}
+              />
+              <select
+                value={typeFilter}
+                onChange={e => setTypeFilter(e.target.value)}
+                style={{ flex: 1, padding: "8px 12px", borderRadius: 8, border: "1px solid #e9ecef", fontSize: 14 }}
+              >
+                <option value="all">Tümü</option>
+                <option value="image">Görseller</option>
+                <option value="pdf">PDF</option>
+                <option value="doc">Word/Excel/PowerPoint</option>
+                <option value="other">Diğer</option>
+              </select>
+              <button
+                type="button"
+                className="sort-btn"
+                style={{ padding: "8px 16px", borderRadius: 8, border: "none", background: "#f68b1f", color: "white", fontWeight: 600, cursor: "pointer" }}
+                onClick={() => setFileSortAsc(prev => !prev)}
+              >
+                {fileSortAsc ? "A-Z" : "Z-A"}
+              </button>
             </div>
-          )}
-        </div>
-        
-        <div className="modal-actions">
-          <button onClick={onClose} className="cancel-btn">İptal</button>
+            <div className="AdminFilesGrid modern">
+              {filteredFiles
+                .filter(file => {
+                  if (typeFilter === "all") return true;
+                  if (typeFilter === "image") return file.contentType?.startsWith("image/") || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i);
+                  if (typeFilter === "pdf") return file.contentType?.includes("pdf") || file.path?.match(/\.pdf$/i);
+                  if (typeFilter === "doc") return file.contentType?.includes("word") || file.contentType?.includes("excel") || file.contentType?.includes("powerpoint") || file.path?.match(/\.(docx?|xlsx?|pptx?)/i);
+                  if (typeFilter === "other") return !((file.contentType?.startsWith("image/") || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i)) || (file.contentType?.includes("pdf") || file.path?.match(/\.pdf$/i)) || (file.contentType?.includes("word") || file.contentType?.includes("excel") || file.contentType?.includes("powerpoint") || file.path?.match(/\.(docx?|xlsx?|pptx?)/i)));
+                  return true;
+                })
+                .sort((a, b) => fileSortAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name))
+                .map((file) => (
+                  <div
+                    key={file.id}
+                    className="AdminFileItem modern"
+                    onClick={() => onSelect(file)}
+                    style={{ boxShadow: "0 2px 8px rgba(246,139,31,0.08)", border: "1px solid #f68b1f", borderRadius: 12, padding: 12, cursor: "pointer", transition: "all 0.2s", background: "#fff", display: "flex", flexDirection: "column", alignItems: "center" }}
+                  >
+                    {file.contentType?.startsWith("image/") || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                      <img
+                        src={`https://localhost:7103/${file.path}`}
+                        alt={file.name}
+                        loading="lazy"
+                        style={{ width: "100%", height: "100px", objectFit: "cover", borderRadius: "8px", marginBottom: "8px", boxShadow: "0 1px 4px rgba(0,0,0,0.07)" }}
+                      />
+                    ) : (
+                      <div className="AdminFileIcon" style={{ width: "100%", height: "100px", display: "flex", alignItems: "center", justifyContent: "center", background: "#f8f9fa", borderRadius: "8px", marginBottom: "8px" }}>
+                        <span style={{ fontSize: "48px" }}>📄</span>
+                      </div>
+                    )}
+                    <div className="AdminFileInfo" style={{ textAlign: "center" }}>
+                      <span className="AdminFileName" style={{ fontWeight: 600, color: "#333", fontSize: 14 }}>{file.name}</span>
+                      <span className="AdminFileSize" style={{ color: "#666", fontSize: 12 }}>
+                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                      </span>
+                    </div>
+                  </div>
+                ))}
+            </div>
+            {filteredFiles.length === 0 && (
+              <div style={{ textAlign: "center", color: "#999", marginTop: 32 }}>Hiç dosya bulunamadı.</div>
+            )}
+          </div>
         </div>
       </div>
     </div>

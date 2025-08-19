@@ -1,12 +1,11 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Navbar from "../../components/Navbar/navbar";
 import Banner from "../../components/Banner/Banner";
 import ProductInfo from "../../components/ProductInfo/ProductInfo";
 import ContactSection from "../../components/ContactSection/ContactSection";
 import Footer from "../../components/Footer/Footer";
-import RelatedProducts from "../../components/RelatedProducts/RelatedProducts";
-import { getProductBySlug, getFile, getDocument } from "../../api";
+import { getProductBySlug, getFile } from "../../api";
 import "./ProductDetailPage.css";
 
 const BASE_URL = "https://localhost:7103/";
@@ -22,140 +21,66 @@ function ProductDetailPage() {
       try {
         setLoading(true);
         setError(null);
-        console.log("Fetching product with slug:", slug);
-
         const response = await getProductBySlug(slug);
         const data = response?.data?.data || response?.data || response;
-        console.log("Product data received:", data);
-        console.log("Product files:", data?.files);
-        console.log("Product productImageId:", data?.productImageId);
-        console.log("Product bannerImageUrl:", data?.bannerImageUrl);
-        console.log(
-          "Product productDetailImageIds:",
-          data?.productDetailImageIds
-        );
-        console.log("Product productImages:", data?.productImages);
-        console.log("Product documentImages:", data?.documentImages);
-        console.log("Product documentIds:", data?.documentIds);
-        console.log("Full product object keys:", Object.keys(data));
 
-        setProductData(data);
-
-        if (
-          data &&
-          (!data.files || data.files.length === 0) &&
-          data.productImageId
-        ) {
+        // Ana görseli ve detay görsellerini fetch et*
+        let mainImage = null;
+        if (data.mainImageId) {
           try {
-            console.log(
-              "Files array is empty but productImageId exists, fetching file separately..."
-            );
-            const fileResponse = await getFile(data.productImageId);
-            const fileData =
-              fileResponse?.data?.data || fileResponse?.data || fileResponse;
-            console.log("Fetched file data:", fileData);
-
-            if (fileData) {
-              const updatedData = {
-                ...data,
-                files: [fileData],
-                productImage: fileData,
-              };
-              console.log(
-                "Updated product data with fetched file:",
-                updatedData
-              );
-              setProductData(updatedData);
+            const fileResponse = await getFile(data.mainImageId);
+            const fileData = fileResponse?.data?.data || fileResponse?.data || fileResponse;
+            if (fileData && fileData.path) {
+              mainImage = fileData.path.startsWith("http") ? fileData.path : BASE_URL + fileData.path;
             }
-          } catch (fileError) {
-            console.error("Error fetching product image file:", fileError);
+          } catch (err) {
+            mainImage = null;
           }
         }
 
-        if (
-          data &&
-          data.productDetailImageIds &&
-          data.productDetailImageIds.length > 0
-        ) {
-          try {
-            console.log("Fetching product detail images...");
-            const detailImagePromises = data.productDetailImageIds.map(
-              async (imageId) => {
-                try {
-                  const imageResponse = await getFile(imageId);
-                  return (
-                    imageResponse?.data?.data ||
-                    imageResponse?.data ||
-                    imageResponse
-                  );
-                } catch (err) {
-                  console.error(`Error fetching detail image ${imageId}:`, err);
-                  return null;
-                }
+        // Detay görselleri
+        let productDetailImages = [];
+        if (data.productDetailImageIds && data.productDetailImageIds.length > 0) {
+          const detailImagePromises = data.productDetailImageIds.map(async (imageId) => {
+            try {
+              const imageResponse = await getFile(imageId);
+              const imageData = imageResponse?.data?.data || imageResponse?.data || imageResponse;
+              if (imageData && imageData.path) {
+                return imageData.path.startsWith("http") ? imageData.path : BASE_URL + imageData.path;
               }
-            );
-
-            const detailImages = await Promise.all(detailImagePromises);
-            const validDetailImages = detailImages.filter(Boolean);
-
-            if (validDetailImages.length > 0) {
-              console.log("Fetched detail images:", validDetailImages);
-              setProductData((prevData) => ({
-                ...prevData,
-                productImages: validDetailImages,
-                files: [...(prevData.files || []), ...validDetailImages],
-              }));
+            } catch (err) {
+              return null;
             }
-          } catch (detailError) {
-            console.error("Error fetching detail images:", detailError);
-          }
+          });
+          const detailImages = await Promise.all(detailImagePromises);
+          productDetailImages = detailImages.filter(Boolean);
         }
 
-        // Fetch documents if documentIds exist
-        if (data && data.documentIds && data.documentIds.length > 0) {
-          try {
-            console.log("Fetching product documents...");
-            const documentPromises = data.documentIds.map(
-              async (documentId) => {
-                try {
-                  const documentResponse = await getDocument(documentId);
-                  return (
-                    documentResponse?.data?.data ||
-                    documentResponse?.data ||
-                    documentResponse
-                  );
-                } catch (err) {
-                  console.error(`Error fetching document ${documentId}:`, err);
-                  return null;
-                }
-              }
-            );
-
-            const documents = await Promise.all(documentPromises);
-            const validDocuments = documents.filter(Boolean);
-
-            if (validDocuments.length > 0) {
-              console.log("Fetched documents:", validDocuments);
-              setProductData((prevData) => ({
-                ...prevData,
-                documents: validDocuments,
-              }));
-            }
-          } catch (documentError) {
-            console.error("Error fetching documents:", documentError);
-          }
+        // Banner görseli
+        let bannerImage = data.bannerImageUrl;
+        if (bannerImage && !bannerImage.startsWith("http")) {
+          bannerImage = BASE_URL + bannerImage;
+        }
+        if (!bannerImage) {
+          bannerImage = "/assets/images/Group 300.webp";
         }
 
-        if (data) {
-          document.title = `${data.titles?.[0] || data.name} - Karya Yapı`;
+        // Video
+        let videoUrl = null;
+        if (data.videoUrls && data.videoUrls.length > 0) {
+          videoUrl = data.videoUrls[0];
         }
+
+        setProductData({
+          ...data,
+          mainImage,
+          productDetailImages,
+          bannerImage,
+          videoUrl,
+        });
+        document.title = `${data.titles?.[0] || data.name} - Karya Yapı`;
       } catch (error) {
-        console.error("Ürün verileri alınırken hata oluştu:", error);
-        if (error.response?.status === 404) {
-          setError("Aradığınız ürün bulunamadı.");
-        } else {
-          setError("Ürün verileri yüklenirken bir hata oluştu.");
-        }
+        setError("Ürün verileri yüklenirken bir hata oluştu.");
       } finally {
         setLoading(false);
       }
@@ -175,61 +100,60 @@ function ProductDetailPage() {
 
   if (loading) {
     return (
-      <div className="product-detail-loading">
-        <Navbar />
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
+      <div className="details-product-detail-loading">
+        <div className="details-loading-container">
+          <div className="details-loading-spinner"></div>
           <p>Ürün bilgileri yükleniyor...</p>
         </div>
-        <Footer />
       </div>
     );
   }
 
   if (error || !productData) {
     return (
-      <div className="product-detail-error">
-        <Navbar />
-        <div className="error-container">
+      <div className="details-product-detail-error">
+        <div className="details-error-container">
           <h2>Ürün Bulunamadı</h2>
           <p>{error || "Aradığınız ürün mevcut değil."}</p>
           <button onClick={() => window.history.back()}>Geri Dön</button>
         </div>
-        <Footer />
       </div>
     );
   }
 
-  const bannerImage = (() => {
-    if (productData.bannerImageUrl) {
-      return productData.bannerImageUrl.startsWith("http")
-        ? productData.bannerImageUrl
-        : BASE_URL + productData.bannerImageUrl;
-    }
-    if (
-      productData.files &&
-      productData.files[0] &&
-      productData.files[0].path
-    ) {
-      return productData.files[0].path.startsWith("http")
-        ? productData.files[0].path
-        : BASE_URL + productData.files[0].path;
-    }
-    return "/assets/images/Group 300.webp";
-  })();
-
   return (
-    <div className="product-detail-page">
-      {/* <Navbar /> */}
+    <div className="details-product-detail-page">
       <Banner
-        imageSrc={bannerImage}
+        imageSrc={productData.bannerImage}
         title={productData.titles?.[0] || productData.name}
       />
       <ProductInfo productData={productData} />
-      <RelatedProducts
-        currentProductId={productData.id}
-        productName={productData.name}
-      />
+      {/* Video alanı iki sütunlu düzen */}
+      {productData.videoUrl ? (
+        <div className="details-video-section">
+          <div className="details-video-content">
+            <div className="details-video-col">
+              <h2 className="details-video-title">{productData.titles?.[1] || "Ürün Videosu"}</h2>
+              <hr className="line" />
+              {productData.descriptions?.[2] && (
+                <p className="details-video-description">{productData.descriptions[2]}</p>
+              )}
+            </div>
+            <div className="details-video-col details-video-col-right">
+              <iframe
+                className="details-video-iframe"
+                width="640"
+                height="360"
+                src={productData.videoUrl}
+                title="Ürün Videosu"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      ) : null}
       <ContactSection />
       <Footer />
     </div>

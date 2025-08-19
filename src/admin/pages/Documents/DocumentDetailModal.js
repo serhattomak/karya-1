@@ -122,16 +122,16 @@ const DocumentDetailModal = ({ document, onClose }) => {
   if (!document) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="document-detail-modal">
-        <div className="modal-header">
+    <div className="AdminModalOverlay">
+      <div className="AdminDocumentDetailModal">
+        <div className="AdminModalHeader">
           <h2>Dosya Detayları</h2>
-          <button onClick={onClose} className="close-btn">×</button>
+          <button onClick={onClose} className="AdminCloseBtn">×</button>
         </div>
 
-        <div className="modal-content">
-          <div className="document-info-section">
-            <div className="document-preview-section">
+        <div className="AdminModalContent">
+          <div className="AdminDocumentInfoSection">
+            <div className="AdminDocumentPreviewSection">
               {(document.previewImageUrl || document.previewImageFile?.path) ? (
                 <img 
                   src={
@@ -144,10 +144,10 @@ const DocumentDetailModal = ({ document, onClose }) => {
                           : null
                   } 
                   alt={document.name}
-                  className="preview-image-large"
+                  className="AdminPreviewImageLarge"
                 />
               ) : (
-                <div className="no-preview-large">
+                <div className="AdminNoPreviewLarge">
                   {document.mimeType?.includes('image') ? '�️' :
                    document.mimeType?.includes('pdf') ? '�📄' :
                    document.mimeType?.includes('word') ? '📝' :
@@ -159,105 +159,105 @@ const DocumentDetailModal = ({ document, onClose }) => {
               )}
             </div>
 
-            <div className="document-details">
+            <div className="AdminDocumentDetails">
               <h3>{document.name}</h3>
               
-              <div className="detail-grid">
-                <div className="detail-item">
+              <div className="AdminDetailGrid">
+                <div className="AdminDetailItem">
                   <label>Kategori:</label>
-                  <span className="category-badge">
+                  <span className="AdminCategoryBadge">
                     {document.category || 'Kategori Yok'}
                   </span>
                 </div>
 
-                <div className="detail-item">
+                <div className="AdminDetailItem">
                   <label>Durum:</label>
-                  <span className={`status-badge ${document.isActive ? 'active' : 'inactive'}`}>
+                  <span className={`AdminStatusBadge ${document.isActive ? 'active' : 'inactive'}`}>
                     {document.isActive ? 'Aktif' : 'Pasif'}
                   </span>
                 </div>
 
-                <div className="detail-item">
+                <div className="AdminDetailItem">
                   <label>Dosya Boyutu:</label>
                   <span>{formatFileSize(document.fileSize)}</span>
                 </div>
 
-                <div className="detail-item">
+                <div className="AdminDetailItem">
                   <label>MIME Tipi:</label>
                   <span>{formatMimeType(document.mimeType)}</span>
                 </div>
 
-                <div className="detail-item">
+                <div className="AdminDetailItem">
                   <label>Sıra:</label>
                   <span>{document.order || document.order === 0 ? document.order : 'Belirlenmemiş'}</span>
                 </div>
 
-                <div className="detail-item">
+                <div className="AdminDetailItem">
                   <label>Slug:</label>
-                  <span className="slug-text">{document.slug}</span>
+                  <span className="AdminSlugText">{document.slug}</span>
                 </div>
               </div>
 
               {document.description && (
-                <div className="description-section">
+                <div className="AdminDescriptionSection">
                   <label>Açıklama:</label>
-                  <p className="description-text">{document.description}</p>
+                  <p className="AdminDescriptionText">{document.description}</p>
                 </div>
               )}
 
               {document.url && (
-                <div className="url-section">
+                <div className="AdminUrlSection">
                   <label>Harici URL:</label>
-                  <a href={document.url} target="_blank" rel="noopener noreferrer" className="external-link">
+                  <a href={document.url} target="_blank" rel="noopener noreferrer" className="AdminExternalLink">
                     {document.url}
                   </a>
                 </div>
               )}
 
-              <div className="action-section">
-                <button onClick={handleDownload} className="download-btn">
+              <div className="AdminActionSection">
+                <button onClick={handleDownload} className="AdminDownloadBtn">
                   📥 Dosyayı İndir
                 </button>
               </div>
             </div>
           </div>
 
-          <div className="related-content-section">
+          <div className="AdminRelatedContentSection">
             <h4>İlişkili İçerik</h4>
             
             {loading ? (
-              <div className="loading-related">Yükleniyor...</div>
+              <div className="AdminLoadingRelated">Yükleniyor...</div>
             ) : (
               <>
-                <div className="related-products">
+                <div className="AdminRelatedProducts">
                   <h5>İlişkili Ürünler ({relatedProducts.length})</h5>
                   {relatedProducts.length > 0 ? (
-                    <div className="related-list">
+                    <div className="AdminRelatedList">
                       {relatedProducts.map(product => (
-                        <div key={product.id} className="related-item">
-                          <span className="item-name">{product.name}</span>
-                          <span className="item-slug">{product.slug}</span>
+                        <div key={product.id} className="AdminRelatedItem">
+                          <span className="AdminItemName">{product.name}</span>
+                          <span className="AdminItemSlug">{product.slug}</span>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="no-related">Bu dosyayı kullanan ürün bulunamadı.</p>
+                    <p className="AdminNoRelated">Bu dosyayı kullanan ürün bulunamadı.</p>
                   )}
                 </div>
 
-                <div className="related-pages">
+                <div className="AdminRelatedPages">
                   <h5>İlişkili Sayfalar ({relatedPages.length})</h5>
                   {relatedPages.length > 0 ? (
-                    <div className="related-list">
+                    <div className="AdminRelatedList">
                       {relatedPages.map(page => (
-                        <div key={page.id} className="related-item">
-                          <span className="item-name">{page.name}</span>
-                          <span className="item-slug">{page.slug}</span>
+                        <div key={page.id} className="AdminRelatedItem">
+                          <span className="AdminItemName">{page.name}</span>
+                          <span className="AdminItemSlug">{page.slug}</span>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="no-related">Bu dosyayı kullanan sayfa bulunamadı.</p>
+                    <p className="AdminNoRelated">Bu dosyayı kullanan sayfa bulunamadı.</p>
                   )}
                 </div>
               </>
@@ -265,8 +265,8 @@ const DocumentDetailModal = ({ document, onClose }) => {
           </div>
         </div>
 
-        <div className="modal-actions">
-          <button onClick={onClose} className="close-modal-btn">
+        <div className="AdminModalActions">
+          <button onClick={onClose} className="AdminCloseModalBtn">
             Kapat
           </button>
         </div>

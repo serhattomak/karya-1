@@ -8,25 +8,33 @@ import {
 } from "../../../api";
 import { createSlugFromProduct } from "../../../utils/slugUtils";
 import Swal from "sweetalert2";
+import { uploadFile as uploadFileApi } from "../../../api";
 
 const BASE_URL = "https://localhost:7103/";
 
+// Dosya yükleme işlemi artık api.js'deki uploadFile fonksiyonunu kullanıyor
 const uploadFile = async (file) => {
   const formData = new FormData();
   formData.append("file", file);
-  const token = localStorage.getItem("token");
-  const response = await fetch("https://localhost:7103/api/File/upload", {
-    method: "POST",
-    body: formData,
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-  });
-  if (!response.ok) throw new Error("Dosya yüklenemedi");
-  return await response.json();
+  try {
+    const response = await uploadFileApi(formData);
+    if (response && response.data) {
+      return response.data;
+    }
+    return null;
+  } catch (error) {
+    console.error("Dosya yükleme hatası:", error);
+    throw error;
+  }
 };
 
 const ProductModal = ({ product, onClose, onSave }) => {
+  const [fileSearchTerm, setFileSearchTerm] = useState("");
+  const [fileSortAsc, setFileSortAsc] = useState(true);
+  const [showContact, setShowContact] = useState(false);
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
+  const [homePageSubtitle, setHomePageSubtitle] = useState("");
   const [titles, setTitles] = useState([""]);
   const [subtitles, setSubtitles] = useState([""]);
   const [descriptions, setDescriptions] = useState([""]);
@@ -34,6 +42,12 @@ const ProductModal = ({ product, onClose, onSave }) => {
   const [listItems, setListItems] = useState([""]);
   const [urls, setUrls] = useState([""]);
   const [bannerImageUrl, setBannerImageUrl] = useState("");
+  const [videoUrls, setVideoUrls] = useState([""]);
+  const [mainImageUrl, setMainImageUrl] = useState("");
+  const [productMainImageId, setProductMainImageId] = useState("");
+  const [productMainImagePreview, setProductMainImagePreview] = useState("");
+  const [productMainImageName, setProductMainImageName] = useState("");
+  const [productMainImageFile, setProductMainImageFile] = useState(null);
   const [bannerImageFile, setBannerImageFile] = useState(null);
   const [productImageId, setProductImageId] = useState("");
   const [documentImageIds, setDocumentImageIds] = useState([]);
@@ -54,6 +68,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
     if (product) {
       setName(product.name || "");
       setSlug(product.slug || "");
+      setHomePageSubtitle(product.homePageSubtitle || "");
       setTitles(product.titles || [""]);
       setSubtitles(product.subtitles || [""]);
       setDescriptions(product.descriptions || [""]);
@@ -64,6 +79,22 @@ const ProductModal = ({ product, onClose, onSave }) => {
       setProductImageId(product.productImageId || "");
       setDocumentImageIds(product.documentImageIds || []);
       setProductDetailImageIds(product.productDetailImageIds || []);
+      setVideoUrls(product.videoUrls || [""]);
+      setMainImageUrl(product.mainImageUrl || "");
+      setProductMainImageId(product.productMainImageId || "");
+      setShowContact(product.showContact === true);
+
+      // Handle productMainImage - find the file info if it exists
+      if (product.productMainImageId) {
+        // We'll set the name when availableFiles is loaded
+        setProductMainImagePreview(""); // Clear any preview since this is from system
+        setProductMainImageFile(null); // Clear any file since this is from system
+      } else {
+        // Clear everything if no productMainImageId
+        setProductMainImagePreview("");
+        setProductMainImageName("");
+        setProductMainImageFile(null);
+      }
 
       // Selected documents from documentIds
       if (product.documentIds && product.documentIds.length > 0) {
@@ -71,7 +102,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
       } else {
         setSelectedDocuments([]);
       }
-
       let allDocumentFiles = [];
 
       if (product.documentFiles && product.documentFiles.length > 0) {
@@ -122,6 +152,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
       setDocumentFiles([]);
       setProductDetailImages([]);
       setProductImages([]);
+      setProductMainImageFile(null);
+      setProductMainImagePreview("");
+      setProductMainImageName("");
+      setShowContact(false);
     }
   }, [product]);
 
@@ -149,7 +183,22 @@ const ProductModal = ({ product, onClose, onSave }) => {
     fetchAvailableData();
   }, []);
 
+  useEffect(() => {
+    if (productMainImageId && availableFiles.length > 0) {
+      const selectedImage = availableFiles.find(
+        (file) => file.id === productMainImageId
+      );
+      if (selectedImage && selectedImage.name) {
+        setProductMainImageName(selectedImage.name);
+      }
+    }
+  }, [productMainImageId, availableFiles]);
+
   const handleSubmit = async (e) => {
+    // Eksik tanımlanan değişkenler
+    let documentImageFileIds = [];
+    let documentFileIds = [];
+    let productDetailFileIds = [];
     e.preventDefault();
     setLoading(true);
 
@@ -186,19 +235,31 @@ const ProductModal = ({ product, onClose, onSave }) => {
         }
       }
 
-      const fileIds = [];
-      for (const image of productImages) {
-        if (image.isExisting) {
-          fileIds.push(image.id);
-        } else if (image.file) {
-          const uploaded = await uploadFile(image.file);
-          const uploadedFileId = uploaded?.data?.id || uploaded?.id;
-          if (uploadedFileId) {
-            fileIds.push(uploadedFileId);
+      // Handle product main image upload
+      let finalProductMainImageId = productMainImageId;
+      if (productMainImageFile && !productMainImageId) {
+        try {
+          const uploaded = await uploadFile(productMainImageFile);
+          const uploadedFile = uploaded?.data || uploaded;
+          if (uploadedFile && uploadedFile.id) {
+            finalProductMainImageId = uploadedFile.id;
           }
+        } catch (error) {
+          console.error("Ana ürün görseli yüklenirken hata:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Hata!",
+            text: "Ana ürün görseli yüklenirken bir hata oluştu.",
+            confirmButtonText: "Tamam",
+            confirmButtonColor: "#dc3545",
+          });
+          setLoading(false);
+          return;
         }
       }
 
+      const fileIds = [];
+      for (const image of productImages) {
       const documentFileIds = [];
       const documentImageFileIds = [];
 
@@ -225,15 +286,23 @@ const ProductModal = ({ product, onClose, onSave }) => {
       const productDetailFileIds = [];
       for (const image of productDetailImages) {
         if (image.isExisting) {
-          productDetailFileIds.push(image.id);
+          fileIds.push(image.id);
         } else if (image.file) {
           const uploaded = await uploadFile(image.file);
           const uploadedFileId = uploaded?.data?.id || uploaded?.id;
-          if (uploadedFileId) {
-            productDetailFileIds.push(uploadedFileId);
-          }
+          // ...burada dosya yükleme sonrası yapılacak işlemler...
         }
       }
+
+      // Ürün detay görselleri için sadece GUID olanları productDetailImageIds'e ekle
+      const validProductDetailImageIds = productDetailImageIds.filter(id => {
+        // GUID ise string ve 36 karakter olmalı, tireli
+        return typeof id === 'string' && /^[0-9a-fA-F-]{36}$/.test(id);
+      });
+      // Yeni yüklenen dosyalar için id'yi productDetailFileIds'e ekle
+      const validProductDetailFileIds = productDetailImages
+        .filter(img => img.isExisting === false && img.file && typeof img.id !== 'string')
+        .map(img => img.id);
 
       const productData = {
         name,
@@ -246,14 +315,15 @@ const ProductModal = ({ product, onClose, onSave }) => {
         urls: urls.filter((u) => u.trim() !== ""),
         bannerImageUrl: finalBannerImageUrl.trim() || null,
         productImageId: productImageId.trim() || null,
+        productMainImageId: finalProductMainImageId || null,
         documentImageIds: documentImageFileIds,
-        productDetailImageIds: productDetailImageIds.filter(
-          (id) => String(id).trim() !== ""
-        ),
-        documentIds: selectedDocuments, // Document ilişkilendirmesi
+        productDetailImageIds: validProductDetailImageIds,
+        documentIds: selectedDocuments,
         fileIds,
         documentFileIds,
-        productDetailFileIds,
+        productDetailFileIds: validProductDetailFileIds,
+        homePageSubtitle,
+        showContact,
       };
 
       if (product) {
@@ -352,6 +422,12 @@ const ProductModal = ({ product, onClose, onSave }) => {
         break;
       case "productImage":
         setProductImageId(file.id);
+        break;
+      case "productMainImage": // This should already be there
+        setProductMainImageId(file.id);
+        setProductMainImagePreview(""); // Clear any uploaded preview
+        setProductMainImageName(file.name);
+        setProductMainImageFile(null); // Clear any uploaded file
         break;
       case "documentImage":
         setDocumentFiles((prev) => [
@@ -488,17 +564,59 @@ const ProductModal = ({ product, onClose, onSave }) => {
     }
   };
 
+  // Ürün detay görselleri yükleme ve GUID ile ekleme
+  const handleDetailImagesUpload = async (files) => {
+    setLoading(true);
+    try {
+      const uploadedIds = [];
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append("file", file);
+        const response = await uploadFile(file);
+        const uploadedFile = response?.data || response;
+        if (uploadedFile && uploadedFile.id) {
+          uploadedIds.push(uploadedFile.id);
+          setProductDetailImages((prev) => [
+            ...prev,
+            {
+              id: uploadedFile.id,
+              url: BASE_URL + uploadedFile.path,
+              name: uploadedFile.name,
+              isExisting: true,
+            },
+          ]);
+        }
+      }
+      setProductDetailImageIds((prev) => [...prev, ...uploadedIds]);
+    } catch (error) {
+      console.error("Detay görseli yüklenirken hata:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Hata!",
+        text: "Detay görseli yüklenirken bir hata oluştu.",
+        confirmButtonText: "Tamam",
+        confirmButtonColor: "#dc3545",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="modal-overlay" ref={modalRef} onClick={handleOverlayClick}>
-      <div className="modal-content product-modal">
-        <div className="modal-header">
+    <div
+      className="AdminModalOverlay"
+      ref={modalRef}
+      onClick={handleOverlayClick}
+    >
+      <div className="AdminModalContent AdminProductModal">
+        <div className="AdminModalHeader">
           <h3>{product ? "Ürün Düzenle" : "Yeni Ürün Ekle"}</h3>
           <button className="close-btn" onClick={onClose}>
             ×
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="modal-form">
+        <form onSubmit={handleSubmit} className="AdminModalForm">
           <div className="form-group">
             <label>Ürün Adı *</label>
             <input
@@ -519,6 +637,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 style={{
                   marginTop: "8px",
                   padding: "8px",
+                  backgroundColor: "#f0f0f0",
                   borderRadius: "4px",
                   fontSize: "12px",
                 }}
@@ -543,131 +662,100 @@ const ProductModal = ({ product, onClose, onSave }) => {
               SEO dostu URL için kullanılır. Boş bırakırsanız ürün adından
               otomatik oluşturulur.
             </small>
+          </div>
+
+          {/* Ana Sayfa Alt Başlık */}
+          <div className="form-group">
+            <label>Ana Sayfa Alt Başlık *</label>
+            <input
+              type="text"
+              value={homePageSubtitle}
+              onChange={(e) => setHomePageSubtitle(e.target.value)}
+              placeholder="Ana sayfa alt başlığını girin  "
+            />
+            <small style={{ color: "#666", fontSize: "12px" }}>
+              Ana Sayfada gösterilecek ürünün alt başlığı olarak kullanılır.
+            </small>
           </div> */}
 
           {/* Başlıklar */}
-          <div
-            style={{
-              backgroundColor: "#f3f3f3",
-              padding: "10px",
-              borderRadius: "10px",
-            }}
-          >
-            <small
-              style={{ color: "#333", fontSize: "18px", fontWeight: "500" }}
-            >
-              Anasayfa Ürün Kartı Düzenleme{" "}
-            </small>
-            <div className="form-group">
-              <label>Başlıklar</label>
-
-              {titles.map((title, index) => (
-                <div key={index} className="input-group">
-                  <input
-                    type="text"
-                    value={title}
-                    onChange={(e) => updateTitle(index, e.target.value)}
-                    placeholder={`Başlık ${index + 1}`}
-                  />
-
-                  {titles.length > 1 && (
-                    <button
-                      type="button"
-                      className="remove-btn danger"
-                      onClick={() => removeTitle(index)}
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-              ))}
-              <small style={{ color: "#666", fontSize: "12px" }}>
-                Anasayfa kart başlığı ile ürün sayfasındaki açıklama başlığını
-                kapsar
-              </small>
-              <button
-                type="button"
-                className="add-btn secondary"
-                onClick={addTitle}
-              >
-                + Başlık Ekle
-              </button>
-            </div>
-
-            {/* Alt Başlıklar */}
-            <div className="form-group">
-              <label>Alt Başlıklar</label>
-              {subtitles.map((subtitle, index) => (
-                <div key={index} className="input-group">
-                  <input
-                    type="text"
-                    value={subtitle}
-                    onChange={(e) => updateSubtitle(index, e.target.value)}
-                    placeholder={`Alt başlık ${index + 1}`}
-                  />
-                  {subtitles.length > 1 && (
-                    <button
-                      type="button"
-                      className="remove-btn danger"
-                      onClick={() => removeSubtitle(index)}
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-              ))}
-              <small style={{ color: "#666", fontSize: "12px" }}>
-                Anasayfadaki karta alt başlık ekle
-              </small>
-              <button
-                type="button"
-                className="add-btn secondary"
-                onClick={addSubtitle}
-              >
-                + Alt Başlık Ekle
-              </button>
-            </div>
-
-            {/* Product Image ID */}
-            <div className="form-group">
-              <label>Ana Ürün Görseli</label>
-              <div className="product-image-selector">
-                <div className="upload-controls">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={async (e) => {
-                      const file = e.target.files[0];
-                      if (file) {
-                        try {
-                          const uploadedFile = await uploadFile(file);
-                          setProductImageId(uploadedFile.id);
-                          setAvailableFiles((prev) => [...prev, uploadedFile]);
-                        } catch (error) {
-                          console.error("Dosya yüklenirken hata:", error);
-                          Swal.fire({
-                            icon: "error",
-                            title: "Hata!",
-                            text: "Dosya yüklenirken bir hata oluştu.",
-                            confirmButtonText: "Tamam",
-                            confirmButtonColor: "#dc3545",
-                          });
-                        }
-                      }
-                    }}
-                    style={{ display: "none" }}
-                    id="product-image-input"
-                  />
+          <div className="form-group">
+            <label>Başlıklar</label>
+            {titles.map((title, index) => (
+              <div key={index} className="AdminInputGroup">
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => updateTitle(index, e.target.value)}
+                  placeholder={`Başlık ${index + 1}`}
+                />
+                {titles.length > 1 && (
                   <button
-                    htmlFor="product-image-input"
-                    className="file-select-btn primary"
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => removeTitle(index)}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={addTitle}
+            >
+              <span>+ Başlık Ekle</span>
+            </button>
+          </div>
+
+          {/* Alt Başlıklar */}
+          <div className="form-group">
+            <label>Alt Başlıklar</label>
+            {subtitles.map((subtitle, index) => (
+              <div key={index} className="AdminInputGroup">
+                <input
+                  type="text"
+                  value={subtitle}
+                  onChange={(e) => updateSubtitle(index, e.target.value)}
+                  placeholder={`Alt başlık ${index + 1}`}
+                />
+                {subtitles.length > 1 && (
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => removeSubtitle(index)}
                   >
                     + Yeni Görsel Yükle
                   </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={addSubtitle}
+            >
+              <span>+ Alt Başlık Ekle</span>
+            </button>
+          </div>
+
+          {/* Açıklamalar */}
+          <div className="form-group">
+            <label>Açıklamalar</label>
+            {descriptions.map((description, index) => (
+              <div key={index} className="AdminInputGroup">
+                <textarea
+                  value={description}
+                  onChange={(e) => updateDescription(index, e.target.value)}
+                  placeholder={`Açıklama ${index + 1}`}
+                  rows="3"
+                />
+                {descriptions.length > 1 && (
                   <button
                     type="button"
-                    className="file-select-btn primary"
-                    onClick={() => openFileSelector("productImage")}
+                    className="delete-btn"
+                    onClick={() => removeDescription(index)}
                   >
                     Sistemden Seç
                   </button>
@@ -749,67 +837,83 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   </div>
                 )}
               </div>
-            </div>
+            ))}
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={addDescription}
+            >
+              <span>+ Açıklama Ekle</span>
+            </button>
           </div>
 
-          <div
-            style={{
-              backgroundColor: "#f3f3f3",
-              padding: "10px",
-              borderRadius: "10px",
-              marginTop: "20px",
-            }}
-          >
-            <small
-              style={{
-                color: "#333",
-                fontSize: "18px",
-                fontWeight: "500",
-              }}
-            >
-              Ürün Sayfası İçerik Düzenleme{" "}
-            </small>
-
-            {/* Banner Image URL */}
-            <div className="form-group">
-              <label>Banner Görseli</label>
-              <div className="banner-image-input">
-                {bannerImageUrl && (
-                  <div className="page-banner">
-                    <img
-                      src={bannerImageUrl}
-                      alt="Banner önizleme"
-                      style={{
-                        maxWidth: "500px",
-                        minHeight: "200px",
-                        borderRadius: "10px",
-                      }}
-                    />
-                  </div>
-                )}
-                <div className="banner-image-controls">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleBannerFileSelect}
-                    style={{ display: "none" }}
-                    id="banner-file-input"
-                  />
+          {/* Liste Başlıkları */}
+          <div className="form-group">
+            <label>Liste Başlıkları</label>
+            {listTitles.map((listTitle, index) => (
+              <div key={index} className="AdminInputGroup">
+                <input
+                  type="text"
+                  value={listTitle}
+                  onChange={(e) => updateListTitle(index, e.target.value)}
+                  placeholder={`Liste başlığı ${index + 1}`}
+                />
+                {listTitles.length > 1 && (
                   <button
-                    htmlFor="banner-file-input"
-                    className="file-select-btn primary"
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => removeListTitle(index)}
                   >
                     Dosya Seç
                   </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={addListTitle}
+            >
+              <span>+ Liste Başlığı Ekle</span>
+            </button>
+          </div>
+
+          {/* Liste Öğeleri */}
+          <div className="form-group">
+            <label>Liste Öğeleri</label>
+            {listItems.map((item, index) => (
+              <div key={index} className="AdminInputGroup">
+                <input
+                  type="text"
+                  value={item}
+                  onChange={(e) => updateListItem(index, e.target.value)}
+                  placeholder={`Liste öğesi ${index + 1}`}
+                />
+                {listItems.length > 1 && (
                   <button
                     type="button"
-                    className="file-select-btn primary"
-                    onClick={() => openFileSelector("banner")}
+                    className="delete-btn"
+                    onClick={() => removeListItem(index)}
                   >
                     Sistemden Seç
                   </button>
-                </div>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={addListItem}
+            >
+              <span>+ Liste Öğesi Ekle</span>
+            </button>
+          </div>
 
+          {/* URL'ler */}
+          <div className="form-group">
+            <label>URL'ler</label>
+            {urls.map((url, index) => (
+              <div key={index} className="AdminInputGroup">
                 <input
                   type="url"
                   value={bannerImageUrl}
@@ -951,76 +1055,191 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 <div className="upload-controls">
                   <button
                     type="button"
-                    className="file-select-btn primary"
-                    onClick={openDocumentSelector}
+                    className="delete-btn"
+                    onClick={() => removeUrl(index)}
                   >
                     Döküman Seç
                   </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={addUrl}
+            >
+              <span>+ URL Ekle</span>
+            </button>
+          </div>
+          {/* Video URL'leri */}
+          <div className="form-group">
+            <label>Video URL'leri</label>
+            {videoUrls.map((videoUrl, index) => (
+              <div key={index} className="AdminInputGroup">
+                <input
+                  type="url"
+                  value={videoUrl}
+                  onChange={(e) => {
+                    const updated = [...videoUrls];
+                    updated[index] = e.target.value;
+                    setVideoUrls(updated);
+                  }}
+                  placeholder={`Video URL ${index + 1}`}
+                />
+                {videoUrls.length > 1 && (
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() =>
+                      setVideoUrls(videoUrls.filter((_, i) => i !== index))
+                    }
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={() => setVideoUrls([...videoUrls, ""])}
+            >
+              <span>+ Video URL Ekle</span>
+            </button>
+          </div>
+          {/* Ana Görsel URL */}
+          <div className="form-group">
+            <label>Ana Görsel URL</label>
+            <input
+              type="url"
+              value={mainImageUrl}
+              onChange={(e) => setMainImageUrl(e.target.value)}
+              placeholder="Ana görsel URL'si"
+            />
+            {mainImageUrl && (
+              <div className="AdminBannerPreview">
+                <img
+                  src={mainImageUrl}
+                  alt="Ana görsel önizleme"
+                  style={{ maxWidth: "200px", maxHeight: "100px" }}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Banner Image URL */}
+          <div className="form-group">
+            <label>Banner Görseli</label>
+            <div className="AdminBannerImageInput">
+              <input
+                type="url"
+                value={bannerImageUrl}
+                onChange={(e) => setBannerImageUrl(e.target.value)}
+                placeholder="Banner görsel URL'si girebilir ya da dosya seçebilirsiniz"
+              />
+              <div className="AdminBannerImageControls">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleBannerFileSelect}
+                  style={{ display: "none" }}
+                  id="banner-file-input"
+                />
+                <label
+                  htmlFor="banner-file-input"
+                  className="AdminFileSelectBtn primary"
+                >
+                  <span className="file-select-btn">Dosya Seç</span>
+                </label>
+                <button
+                  type="button"
+                  className="file-select-btn"
+                  onClick={() => openFileSelector("banner")}
+                >
+                  Sistemden Seç
+                </button>
+              </div>
+              {bannerImageUrl && (
+                <div className="AdminBannerPreview">
+                  <img
+                    src={bannerImageUrl}
+                    alt="Banner önizleme"
+                    style={{ maxWidth: "200px", maxHeight: "100px" }}
+                  />
                 </div>
                 {selectedDocuments.length > 0 && (
                   <div className="selected-documents">
                     {selectedDocuments.map((documentId) => {
                       const document = getSelectedDocumentData(documentId);
                       if (!document) return null;
-
-                      return (
+          {/* Product Image ID */}
+          <div className="form-group">
+            <label>Sayfa Görseli</label>
+            <div className="AdminProductImageSelector">
+              <div className="AdminUploadControls">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      try {
+                        const uploadedFile = await uploadFile(file);
+                        setProductImageId(uploadedFile.id);
+                        setAvailableFiles((prev) => [...prev, uploadedFile]);
+                      } catch (error) {
+                        console.error("Dosya yüklenirken hata:", error);
+                        Swal.fire({
+                          icon: "error",
+                          title: "Hata!",
+                          text: "Dosya yüklenirken bir hata oluştu.",
+                          confirmButtonText: "Tamam",
+                          confirmButtonColor: "#dc3545",
+                        });
+                      }
+                    }
+                  }}
+                  style={{ display: "none" }}
+                  id="product-image-input"
+                />
+                <label
+                  htmlFor="product-image-input"
+                  className="AdminFileSelectBtn primary"
+                >
+                  <span className="file-select-btn">Yeni Görsel Yükle</span>
+                </label>
+                <button
+                  type="button"
+                  className="file-select-btn"
+                  onClick={() => openFileSelector("productImage")}
+                >
+                  Sistemden Seç
+                </button>
+              </div>
+              {productImageId && (
+                <div className="AdminSelectedFileInfo">
+                  <div className="AdminSelectedImagePreview">
+                    {(() => {
+                      const selectedImage = getSelectedProductImage();
+                      return selectedImage ? (
                         <div
-                          key={documentId}
-                          className="selected-document-item"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                          }}
                         >
-                          <div
+                          <img
+                            src={BASE_URL + selectedImage.path}
+                            alt={selectedImage.name}
                             style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "10px",
+                              width: "50px",
+                              height: "50px",
+                              objectFit: "cover",
+                              borderRadius: "4px",
                             }}
-                          >
-                            {document.previewImageUrl ? (
-                              <img
-                                src={
-                                  document.previewImageUrl.startsWith("http")
-                                    ? document.previewImageUrl
-                                    : BASE_URL + document.previewImageUrl
-                                }
-                                alt={document.name}
-                                style={{
-                                  width: "40px",
-                                  height: "40px",
-                                  objectFit: "cover",
-                                  borderRadius: "4px",
-                                }}
-                              />
-                            ) : (
-                              <div
-                                style={{
-                                  width: "40px",
-                                  height: "40px",
-                                  backgroundColor: "#f0f0f0",
-                                  borderRadius: "4px",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                }}
-                              >
-                                📄
-                              </div>
-                            )}
-                            <div>
-                              <div style={{ fontWeight: "500" }}>
-                                {document.name}
-                              </div>
-                              <div style={{ fontSize: "12px", color: "#666" }}>
-                                {document.category || "Kategori Yok"}
-                              </div>
-                            </div>
-                          </div>
-                          <button
-                            type="button"
-                            className="remove-item-btn"
-                            onClick={() => removeDocument(documentId)}
-                          >
-                            ×
-                          </button>
+                          />
+                          <span>{selectedImage.name}</span>
                         </div>
                       );
                     })}
@@ -1070,258 +1289,422 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   </button>
                   <button
                     type="button"
-                    className="file-select-btn primary"
-                    onClick={() => openFileSelector("productDetailImage")}
+                    className="delete-btn"
+                    onClick={() => setProductImageId("")}
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+          {/* Product Main Image ID */}
+          <div className="form-group">
+            <label>Ana Ürün Görseli</label>
+            <div className="AdminProductImageSelector">
+              <div className="AdminUploadControls">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      // Store the file for later upload
+                      setProductMainImageFile(file);
+                      setProductMainImageName(file.name);
+
+                      // Create preview
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        setProductMainImagePreview(event.target.result);
+                      };
+                      reader.readAsDataURL(file);
+
+                      // Clear system selection
+                      setProductMainImageId("");
+                    }
+                  }}
+                  style={{ display: "none" }}
+                  id="product-main-image-input"
+                />
+                <label
+                  htmlFor="product-main-image-input"
+                  className="AdminFileSelectBtn primary"
+                >
+                  <span className="file-select-btn">Yeni Ana Görsel Yükle</span>
+                </label>
+                <button
+                  type="button"
+                  className="file-select-btn"
+                  onClick={() => openFileSelector("productMainImage")}
+                >
+                  Sistemden Seç
+                </button>
+              </div>
+              {(productMainImageId || productMainImagePreview) && (
+                <div className="AdminSelectedFileInfo">
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                    }}
+                  >
+                    {productMainImagePreview ? (
+                      <img
+                        src={productMainImagePreview}
+                        alt={
+                          productMainImageName || "Ana ürün görseli önizleme"
+                        }
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          objectFit: "cover",
+                          borderRadius: "4px",
+                        }}
+                      />
+                    ) : (
+                      productMainImageId &&
+                      (() => {
+                        const selectedImage = availableFiles.find(
+                          (file) => file.id === productMainImageId
+                        );
+                        if (selectedImage && selectedImage.path) {
+                          return (
+                            <img
+                              src={BASE_URL + selectedImage.path}
+                              alt={selectedImage.name || "Ana ürün görseli"}
+                              style={{
+                                width: "50px",
+                                height: "50px",
+                                objectFit: "cover",
+                                borderRadius: "4px",
+                              }}
+                            />
+                          );
+                        }
+                        return null;
+                      })()
+                    )}
+                    <span>
+                      {productMainImagePreview ? productMainImageName : ""}
+                      {!productMainImagePreview &&
+                        productMainImageId &&
+                        (() => {
+                          const selectedImage = availableFiles.find(
+                            (file) => file.id === productMainImageId
+                          );
+                          return selectedImage
+                            ? selectedImage.name
+                            : `Seçilen görsel ID: ${productMainImageId}`;
+                        })()}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => {
+                      setProductMainImageId("");
+                      setProductMainImagePreview("");
+                      setProductMainImageName("");
+                      setProductMainImageFile(null);
+                    }}
                   >
                     Sistemden Seç
                   </button>
                 </div>
-                {productDetailImageIds.length > 0 && (
-                  <div className="selected-images">
-                    {productDetailImageIds.map((id, index) => {
-                      const image = productDetailImages.find(
-                        (img) => img.id === id
-                      );
-                      return (
-                        <div key={index} className="selected-image-item">
-                          {image ? (
+              )}
+            </div>
+          </div>
+
+          {/* Product Documents */}
+          <div className="form-group">
+            <label>Ürün Dökümanları</label>
+            <div className="AdminDocumentsSelector">
+              <div className="AdminUploadControls">
+                <button
+                  type="button"
+                  className="file-select-btn"
+                  onClick={openDocumentSelector}
+                >
+                  Döküman Seç
+                </button>
+              </div>
+              {selectedDocuments.length > 0 && (
+                <div className="AdminSelectedDocuments">
+                  {selectedDocuments.map((documentId) => {
+                    const document = getSelectedDocumentData(documentId);
+                    if (!document) return null;
+
+                    return (
+                      <div
+                        key={documentId}
+                        className="AdminSelectedDocumentItem"
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                          }}
+                        >
+                          {document.previewImageUrl ? (
+                            <img
+                              src={
+                                document.previewImageUrl.startsWith("http")
+                                  ? document.previewImageUrl
+                                  : BASE_URL + document.previewImageUrl
+                              }
+                              alt={document.name}
+                              style={{
+                                width: "40px",
+                                height: "40px",
+                                objectFit: "cover",
+                                borderRadius: "4px",
+                              }}
+                            />
+                          ) : (
                             <div
                               style={{
+                                width: "40px",
+                                height: "40px",
+                                backgroundColor: "#f0f0f0",
+                                borderRadius: "4px",
                                 display: "flex",
                                 alignItems: "center",
-                                gap: "10px",
+                                justifyContent: "center",
                               }}
                             >
-                              <img
-                                src={image.url}
-                                alt={image.name || `Detay görseli ${index + 1}`}
-                                style={{
-                                  width: "40px",
-                                  height: "40px",
-                                  objectFit: "cover",
-                                  borderRadius: "4px",
-                                }}
-                              />
-                              <span>
-                                {image.name || `Detay görseli ${index + 1}`}
-                              </span>
+                              📄
                             </div>
                           ) : (
                             <span>Görsel ID: {id}</span>
                           )}
-                          <button
-                            type="button"
-                            className="remove-btn danger"
-                            onClick={() => {
-                              setProductDetailImageIds(
-                                productDetailImageIds.filter(
-                                  (_, i) => i !== index
-                                )
-                              );
-                              setProductDetailImages((prev) =>
-                                prev.filter((img) => img.id !== id)
-                              );
-                            }}
-                          >
-                            ×
-                          </button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Ürün Dosyaları/Dökümanları */}
-            <div className="form-group">
-              <label>Ürün Dosyaları/Dökümanları</label>
-              <div className="document-files-selector">
-                <div className="upload-controls">
-                  <input
-                    type="file"
-                    multiple
-                    onChange={(e) => {
-                      const files = Array.from(e.target.files);
-                      files.forEach((file) => {
-                        const reader = new FileReader();
-                        reader.onload = (event) => {
-                          setDocumentFiles((prev) => [
-                            ...prev,
-                            {
-                              id: `temp_${Date.now()}_${Math.random()}`,
-                              name: file.name,
-                              path: file.name,
-                              url: event.target.result,
-                              file: file,
-                              isExisting: false,
-                              isDocumentImage: false,
-                            },
-                          ]);
-                        };
-                        reader.readAsDataURL(file);
-                      });
-                    }}
-                    style={{ display: "none" }}
-                    id="document-file-input"
-                  />
-                  <button
-                    htmlFor="document-file-input"
-                    className="file-select-btn primary"
-                  >
-                    + Yeni Dosya Yükle
-                  </button>
-                  <button
-                    type="button"
-                    className="file-select-btn primary"
-                    onClick={() => openFileSelector("documentFile")}
-                  >
-                    Sistemden Seç
-                  </button>
-                </div>
-                {documentFiles.filter((doc) => !doc.isDocumentImage).length >
-                  0 && (
-                  <div className="selected-files">
-                    {documentFiles
-                      .filter((doc) => !doc.isDocumentImage)
-                      .map((doc, index) => (
-                        <div key={doc.id} className="selected-file-item">
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "10px",
-                            }}
-                          >
-                            {doc.url &&
-                            doc.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
-                              <img
-                                src={doc.url}
-                                alt={doc.name}
-                                style={{
-                                  width: "40px",
-                                  height: "40px",
-                                  objectFit: "cover",
-                                  borderRadius: "4px",
-                                }}
-                              />
-                            ) : (
-                              <div
-                                style={{
-                                  width: "40px",
-                                  height: "40px",
-                                  background: "#f0f0f0",
-                                  borderRadius: "4px",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  fontSize: "12px",
-                                }}
-                              >
-                                📄
-                              </div>
-                            )}
-                            <span>{doc.name}</span>
+                          <div>
+                            <div style={{ fontWeight: "500" }}>
+                              {document.name}
+                            </div>
+                            <div style={{ fontSize: "12px", color: "#666" }}>
+                              {document.category || "Kategori Yok"}
+                            </div>
                           </div>
-                          <button
-                            type="button"
-                            className="remove-btn danger"
-                            onClick={() => removeDocumentFile(doc.id)}
-                          >
-                            ×
-                          </button>
                         </div>
-                      ))}
-                  </div>
-                )}
-              </div>
+                        <button
+                          type="button"
+                          className="delete-btn"
+                          onClick={() => removeDocument(documentId)}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
 
-          <div className="modal-footer">
-            <button
-              type="button"
-              className="cancel-btn danger"
-              onClick={onClose}
-            >
-              İptal
+          {/* Product Detail Image IDs */}
+          <div className="form-group">
+            <label>Ürün Detay Görselleri</label>
+            <div className="AdminProductDetailImagesSelector">
+              <div className="AdminUploadControls">
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={async (e) => {
+                    const files = Array.from(e.target.files);
+                    await handleDetailImagesUpload(files);
+                  }}
+                  style={{ display: "none" }}
+                  id="detail-image-input"
+                />
+                <label
+                  htmlFor="detail-image-input"
+                  className="AdminFileSelectBtn primary"
+                >
+                  <span className="file-select-btn">Yeni Görsel Yükle</span>
+                </label>
+                <button
+                  type="button"
+                  className="file-select-btn"
+                  onClick={() => openFileSelector("productDetailImage")}
+                >
+                  Sistemden Seç
+                </button>
+              </div>
+              {productDetailImageIds.length > 0 && (
+                <div className="AdminSelectedImages">
+                  {productDetailImageIds.map((id, index) => {
+                    const image = productDetailImages.find(
+                      (img) => img.id === id
+                    );
+                    return (
+                      <div key={id} className="AdminSelectedFileItem">
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                          }}
+                        >
+                          {image && image.url ? (
+                            <img
+                              src={image.url}
+                              alt={image.name}
+                              style={{
+                                width: "40px",
+                                height: "40px",
+                                objectFit: "cover",
+                                borderRadius: "4px",
+                              }}
+                            />
+                          ) : (
+                            <div
+                              style={{
+                                width: "40px",
+                                height: "40px",
+                                background: "#f0f0f0",
+                                borderRadius: "4px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: "12px",
+                              }}
+                            >
+                              📄
+                            </div>
+                          )}
+                          <span>{image ? image.name : "Görsel"}</span>
+                        </div>
+                        <button
+                          type="button"
+                          className="delete-btn"
+                          onClick={() => {
+                            setProductDetailImageIds((ids) =>
+                              ids.filter((i) => i !== id)
+                            );
+                            setProductDetailImages((imgs) =>
+                              imgs.filter((img) => img.id !== id)
+                            );
+                          }}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+          <div className="form-group" style={{ marginBottom: "16px", display: "flex", alignItems: "center", gap: "12px" }}>
+            <label htmlFor="showContactCheckbox" style={{ marginBottom: 0 }}>
+              İletişim Linki Gözüksün mü?
+            </label>
+            <input
+              id="showContactCheckbox"
+              type="checkbox"
+              checked={showContact}
+              onChange={e => setShowContact(e.target.checked)}
+              style={{ width: "18px", height: "18px" }}
+            />
+          </div>
+          <div className="AdminModalFooter">
+            <button type="button" className="cancel-btn" onClick={onClose}>
+              <span>İptal</span>
             </button>
-            <button
-              type="submit"
-              className="save-btn primary"
-              disabled={loading}
-            >
-              {loading ? "Kaydediliyor..." : "Kaydet"}
+            <button type="submit" className="save-btn" disabled={loading}>
+              <span>{loading ? "Kaydediliyor..." : "Kaydet"}</span>
             </button>
           </div>
         </form>
       </div>
 
       {/* Dosya Seçici Modal */}
+
       {showFileSelector && (
-        <div className="file-selector-modal">
-          <div className="file-selector-content">
-            <div className="file-selector-header">
+        <div className="AdminFileSelectorModal">
+          <div className="AdminFileSelectorContent modern">
+            <div className="AdminFileSelectorHeader modern">
               <h3>Dosya Seç</h3>
               <button
                 type="button"
-                className="close-btn"
+                className="delete-btn"
                 onClick={() => setShowFileSelector(false)}
               >
                 ×
               </button>
             </div>
-            <div className="file-selector-body">
-              <div className="files-grid">
+            <div className="AdminFileSelectorBody modern">
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                <input
+                  type="text"
+                  className="AdminFileSearchInput"
+                  placeholder="Dosya ismiyle ara..."
+                  value={fileSearchTerm || ""}
+                  onChange={e => setFileSearchTerm(e.target.value)}
+                  style={{ flex: 1, padding: "8px 12px", borderRadius: 8, border: "1px solid #e9ecef", fontSize: 14, marginRight: 12 }}
+                />
+                <button
+                  type="button"
+                  className="sort-btn"
+                  style={{ padding: "8px 16px", borderRadius: 8, border: "none", background: "#f68b1f", color: "white", fontWeight: 600, cursor: "pointer" }}
+                  onClick={() => setFileSortAsc(!fileSortAsc)}
+                >
+                  {fileSortAsc ? "A-Z" : "Z-A"}
+                </button>
+              </div>
+              <div className="AdminFilesGrid modern">
                 {availableFiles
                   .filter((file) => {
                     // Görsel seçimi için sadece resimleri göster
-                    if (
-                      [
-                        "banner",
-                        "productImage",
-                        "documentImage",
-                        "productDetailImage",
-                      ].includes(selectedFileType)
-                    ) {
-                      return (
-                        file.contentType?.startsWith("image/") ||
-                        file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i)
-                      );
+                    if (["banner", "productImage", "documentImage", "productDetailImage"].includes(selectedFileType)) {
+                      if (!(file.contentType?.startsWith("image/") || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i))) return false;
                     }
-                    // Döküman dosyası seçimi için tüm dosyaları göster
-                    if (selectedFileType === "documentFile") {
-                      return true;
-                    }
+                    // Arama filtresi
+                    if (fileSearchTerm && !file.name.toLowerCase().includes(fileSearchTerm.toLowerCase())) return false;
                     return true;
+                  })
+                  .sort((a, b) => {
+                    if (fileSortAsc) {
+                      return a.name.localeCompare(b.name);
+                    } else {
+                      return b.name.localeCompare(a.name);
+                    }
                   })
                   .map((file) => (
                     <div
                       key={file.id}
-                      className="file-item"
+                      className="AdminFileItem modern"
                       onClick={() => selectFileFromSystem(file)}
+                      style={{ boxShadow: "0 2px 8px rgba(246,139,31,0.08)", border: "1px solid #f68b1f", borderRadius: 12, padding: 12, cursor: "pointer", transition: "all 0.2s", background: "#fff", display: "flex", flexDirection: "column", alignItems: "center" }}
                     >
-                      {file.contentType?.startsWith("image/") ||
-                      file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                      {file.contentType?.startsWith("image/") || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
                         <img
                           src={BASE_URL + file.path}
                           alt={file.name}
                           loading="lazy"
+                          style={{ width: "100%", height: "100px", objectFit: "cover", borderRadius: "8px", marginBottom: "8px", boxShadow: "0 1px 4px rgba(0,0,0,0.07)" }}
                         />
                       ) : (
-                        <div className="file-icon">
+                        <div className="AdminFileIcon" style={{ width: "100%", height: "100px", display: "flex", alignItems: "center", justifyContent: "center", background: "#f8f9fa", borderRadius: "8px", marginBottom: "8px" }}>
                           <span style={{ fontSize: "48px" }}>📄</span>
                         </div>
                       )}
-                      <div className="file-info">
-                        <span className="file-name">{file.name}</span>
-                        <span className="file-size">
+                      <div className="AdminFileInfo" style={{ textAlign: "center" }}>
+                        <span className="AdminFileName" style={{ fontWeight: 600, color: "#333", fontSize: 14 }}>{file.name}</span>
+                        <span className="AdminFileSize" style={{ color: "#666", fontSize: 12 }}>
                           {(file.size / 1024 / 1024).toFixed(2)} MB
                         </span>
                       </div>
                     </div>
                   ))}
               </div>
+              {availableFiles.length === 0 && (
+                <div style={{ textAlign: "center", color: "#999", marginTop: 32 }}>Hiç dosya bulunamadı.</div>
+              )}
             </div>
           </div>
         </div>
@@ -1329,27 +1712,57 @@ const ProductModal = ({ product, onClose, onSave }) => {
 
       {/* Document Seçici Modal */}
       {showDocumentSelector && (
-        <div className="file-selector-modal">
-          <div className="file-selector-content">
-            <div className="file-selector-header">
+        <div className="AdminFileSelectorModal">
+          <div className="AdminFileSelectorContent modern">
+            <div className="AdminFileSelectorHeader modern">
               <h3>Döküman Seç</h3>
               <button
                 type="button"
-                className="close-btn"
+                className="delete-btn"
                 onClick={() => setShowDocumentSelector(false)}
               >
                 ×
               </button>
             </div>
-            <div className="file-selector-body">
-              <div className="documents-grid">
+            <div className="AdminFileSelectorBody modern">
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                <input
+                  type="text"
+                  className="AdminFileSearchInput"
+                  placeholder="Döküman ismiyle ara..."
+                  value={fileSearchTerm || ""}
+                  onChange={e => setFileSearchTerm(e.target.value)}
+                  style={{ flex: 1, padding: "8px 12px", borderRadius: 8, border: "1px solid #e9ecef", fontSize: 14, marginRight: 12 }}
+                />
+                <button
+                  type="button"
+                  className="sort-btn"
+                  style={{ padding: "8px 16px", borderRadius: 8, border: "none", background: "#f68b1f", color: "white", fontWeight: 600, cursor: "pointer" }}
+                  onClick={() => setFileSortAsc(!fileSortAsc)}
+                >
+                  {fileSortAsc ? "A-Z" : "Z-A"}
+                </button>
+              </div>
+              <div className="AdminFilesGrid modern">
                 {availableDocuments
                   .filter((doc) => !selectedDocuments.includes(doc.id))
+                  .filter((doc) => {
+                    if (fileSearchTerm && !doc.name.toLowerCase().includes(fileSearchTerm.toLowerCase())) return false;
+                    return true;
+                  })
+                  .sort((a, b) => {
+                    if (fileSortAsc) {
+                      return a.name.localeCompare(b.name);
+                    } else {
+                      return b.name.localeCompare(a.name);
+                    }
+                  })
                   .map((document) => (
                     <div
                       key={document.id}
-                      className="file-item document-item"
+                      className="AdminFileItem modern"
                       onClick={() => selectDocument(document)}
+                      style={{ boxShadow: "0 2px 8px rgba(246,139,31,0.08)", border: "1px solid #f68b1f", borderRadius: 12, padding: 12, cursor: "pointer", transition: "all 0.2s", background: "#fff", display: "flex", flexDirection: "column", alignItems: "center" }}
                     >
                       {document.previewImageUrl ? (
                         <img
@@ -1360,19 +1773,20 @@ const ProductModal = ({ product, onClose, onSave }) => {
                           }
                           alt={document.name}
                           loading="lazy"
+                          style={{ width: "100%", height: "100px", objectFit: "cover", borderRadius: "8px", marginBottom: "8px", boxShadow: "0 1px 4px rgba(0,0,0,0.07)" }}
                         />
                       ) : (
-                        <div className="file-icon">
+                        <div className="AdminFileIcon" style={{ width: "100%", height: "100px", display: "flex", alignItems: "center", justifyContent: "center", background: "#f8f9fa", borderRadius: "8px", marginBottom: "8px" }}>
                           <span style={{ fontSize: "48px" }}>📄</span>
                         </div>
                       )}
-                      <div className="file-info">
-                        <span className="file-name">{document.name}</span>
-                        <span className="file-category">
+                      <div className="AdminFileInfo" style={{ textAlign: "center" }}>
+                        <span className="AdminFileName" style={{ fontWeight: 600, color: "#333", fontSize: 14 }}>{document.name}</span>
+                        <span className="AdminFileCategory" style={{ color: "#666", fontSize: 12 }}>
                           {document.category || "Kategori Yok"}
                         </span>
                         {document.description && (
-                          <span className="file-description">
+                          <span className="AdminFileDescription" style={{ color: "#888", fontSize: 12 }}>
                             {document.description}
                           </span>
                         )}
@@ -1380,6 +1794,9 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     </div>
                   ))}
               </div>
+              {availableDocuments.filter((doc) => !selectedDocuments.includes(doc.id)).length === 0 && (
+                <div style={{ textAlign: "center", color: "#999", marginTop: 32 }}>Hiç döküman bulunamadı.</div>
+              )}
             </div>
           </div>
         </div>
