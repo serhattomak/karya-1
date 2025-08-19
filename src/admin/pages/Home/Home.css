@@ -86,7 +86,6 @@
 /* Banner Preview */
 
 .AdminBannerPreview {
-
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 12px;
   padding: 48px 32px;
@@ -96,6 +95,11 @@
   overflow: hidden;
 }
 
+.AdminBannerPreview,
+.bannerImage {
+  background: none;
+  padding: 10px;
+}
 
 .AdminBannerPreview::before {
   content: "";
@@ -491,14 +495,13 @@
   .AdminPanel {
     padding: 16px;
   }
- 
+
   .AdminHomeSection {
     padding: 16px;
     margin-bottom: 20px;
   }
-  
-  .AdminSectionHeader {
 
+  .AdminSectionHeader {
     flex-direction: column;
     gap: 16px;
     align-items: stretch;
@@ -508,38 +511,37 @@
     font-size: 20px;
     text-align: center;
   }
-  
+
   .AdminBannerPreview {
     padding: 32px 20px;
   }
-  
+
   .AdminBannerTitle {
     font-size: 28px;
   }
-  
+
   .AdminProductsGrid {
     grid-template-columns: 1fr;
   }
-  
+
   .AdminModalContent {
     margin: 10px;
     max-width: none;
   }
-  
+
   .AdminModalHeader {
     padding: 20px 24px;
   }
-  
+
   .AdminModalHeader h3 {
     font-size: 20px;
   }
-  
+
   .AdminModalBody {
     padding: 24px;
   }
-  
-  .AdminModalFooter {
 
+  .AdminModalFooter {
     padding: 20px 24px;
     flex-direction: column;
   }
@@ -549,7 +551,6 @@
   }
 
   .AdminAvailableProductsGrid {
-
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 }
