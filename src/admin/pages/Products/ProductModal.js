@@ -1189,6 +1189,16 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     const document = getSelectedDocumentData(documentId);
                     if (!document) return null;
 
+                    // Öncelik: previewImageFile > previewImageUrl > default
+                    let previewImgSrc = "";
+                    if (document.previewImageFile && document.previewImageFile.path) {
+                      previewImgSrc = BASE_URL + document.previewImageFile.path;
+                    } else if (document.previewImageUrl) {
+                      previewImgSrc = document.previewImageUrl.startsWith("http")
+                        ? document.previewImageUrl
+                        : BASE_URL + document.previewImageUrl;
+                    }
+
                     return (
                       <div
                         key={documentId}
@@ -1201,13 +1211,9 @@ const ProductModal = ({ product, onClose, onSave }) => {
                             gap: "10px",
                           }}
                         >
-                          {document.previewImageUrl ? (
+                          {previewImgSrc ? (
                             <img
-                              src={
-                                document.previewImageUrl.startsWith("http")
-                                  ? document.previewImageUrl
-                                  : BASE_URL + document.previewImageUrl
-                              }
+                              src={previewImgSrc}
                               alt={document.name}
                               style={{
                                 width: "40px",
