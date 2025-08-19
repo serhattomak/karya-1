@@ -98,11 +98,7 @@
 
 
 .AdminBannerPreview::before {
-  content: '';
-
-.banner-preview::before {
   content: "";
-
   position: absolute;
   top: 0;
   left: 0;
