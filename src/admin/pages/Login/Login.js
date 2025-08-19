@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import { login } from "../../../api";
 import "./Login.css";
 import logo from "./KaryaLogo.png";
@@ -22,9 +22,9 @@ const Login = ({ setIsAuthenticated }) => {
       if (response.data && response.data.data && response.data.data.token) {
         const token = response.data.data.token;
         localStorage.setItem("token", token);
-        const expirationTime = Date.now() + (24 * 60 * 60 * 1000);
+        const expirationTime = Date.now() + 24 * 60 * 60 * 1000;
         localStorage.setItem("tokenExpiration", expirationTime.toString());
-        
+
         setIsAuthenticated(true);
         navigate("/admin/Home");
       } else {
@@ -33,11 +33,11 @@ const Login = ({ setIsAuthenticated }) => {
     } catch (error) {
       console.error("Login error:", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Giriş Başarısız!',
-        text: 'Kullanıcı adı veya şifre hatalı.',
-        confirmButtonText: 'Tamam',
-        confirmButtonColor: '#dc3545'
+        icon: "error",
+        title: "Giriş Başarısız!",
+        text: "Kullanıcı adı veya şifre hatalı.",
+        confirmButtonText: "Tamam",
+        confirmButtonColor: "#dc3545",
       });
     }
   };
@@ -80,7 +80,6 @@ const Login = ({ setIsAuthenticated }) => {
           </button>
         </form>
       </div>
-      <div className="background"></div>
     </div>
   );
 };

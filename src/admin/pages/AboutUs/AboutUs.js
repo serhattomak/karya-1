@@ -394,10 +394,10 @@ const AboutUs = () => {
       
       <form onSubmit={handleSubmit} className="form-container">
         <div className="form-section">
-          <h3 className="form-section-title">📝 Temel Bilgiler</h3>
+          <h3 className="form-section-title"> Temel Bilgiler</h3>
 
           {/* Banner Image Section */}
-          <div className="form-group">
+          <div className="form-group ">
             <label htmlFor="bannerImageUrl" className="form-label">Banner Görsel URL:</label>
             <input
               type="text"
@@ -432,7 +432,7 @@ const AboutUs = () => {
                 className="add-btn secondary"
                 onClick={openImageSelector}
               >
-                📁 Sistemden Görsel Seç
+               Sistemden Görsel Seç
               </button>
             </div>
             
@@ -472,7 +472,7 @@ const AboutUs = () => {
                     onClick={() => removeTitle(index)}
                     className="btn btn-danger btn-sm"
                   >
-                    Sil
+                    x
                   </button>
                 )}
               </div>
@@ -507,7 +507,7 @@ const AboutUs = () => {
                     onClick={() => removeSubtitle(index)}
                     className="btn btn-danger btn-sm"
                   >
-                    Sil
+                    x
                   </button>
                 )}
               </div>
@@ -543,7 +543,7 @@ const AboutUs = () => {
                     className="remove-btn danger btn-sm"
                     style={{ alignSelf: 'flex-start' }}
                   >
-                    Sil
+                    x
                   </button>
                 )}
               </div>
@@ -588,7 +588,7 @@ const AboutUs = () => {
                     const updated = servicesList.filter((_, i) => i !== index);
                     setServicesList(updated);
                   }}
-                  title="Sil"
+                  title="x"
                 >
                   ×
                 </button>

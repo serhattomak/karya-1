@@ -28,9 +28,13 @@
 
 /* Form Container */
 .form-container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
+  background-color: #f3f3f3;
+  padding: 10px;
 }
+
+
 
 /* Service Section Specific */
 .service-section {
@@ -191,6 +195,13 @@
   justify-content: center;
 }
 
+/* form type */
+
+.form-section-title {
+  font-size: 18px;
+  font-weight: 500;
+}
+
 /* Loading State */
 .loading {
   display: flex;
@@ -212,8 +223,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading p {
@@ -227,24 +242,24 @@
   .panel-title {
     font-size: 1.5rem;
   }
-  
+
   .gallery-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
-  
+
   .service-item-row {
     flex-direction: column;
     align-items: stretch;
     gap: 0.5rem;
   }
-  
+
   .service-item-row .index {
     align-self: flex-start;
     min-width: auto;
     width: 2rem;
   }
-  
+
   .form-container {
     padding: 0 1rem;
   }
@@ -254,11 +269,11 @@
   .gallery-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .panel-title {
     font-size: 1.25rem;
   }
-  
+
   .plus-icon {
     width: 2rem;
     height: 2rem;
@@ -420,7 +435,7 @@
   .gallery-item {
     border-color: #000;
   }
-  
+
   .image-overlay {
     background: rgba(0, 0, 0, 0.8);
   }
