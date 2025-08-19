@@ -29,6 +29,8 @@ const uploadFile = async (file) => {
 };
 
 const ProductModal = ({ product, onClose, onSave }) => {
+  // Collapsable Slug için state
+  const [showSlugCollapse, setShowSlugCollapse] = useState(false);
   const [fileSearchTerm, setFileSearchTerm] = useState("");
   const [fileSortAsc, setFileSortAsc] = useState(true);
   const [showContact, setShowContact] = useState(false);
@@ -625,20 +627,44 @@ const ProductModal = ({ product, onClose, onSave }) => {
             )}
           </div>
 
-          {/* Slug */}
-          <div className="form-group">
-            <label>URL Slug *</label>
-            <input
-              type="text"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              placeholder="url-dostu-slug"
-              required
-            />
-            <small style={{ color: "#666", fontSize: "12px" }}>
-              SEO dostu URL için kullanılır. Boş bırakırsanız ürün adından
-              otomatik oluşturulur.
-            </small>
+          {/* Slug - Collapsable */}
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <button
+              type="button"
+              onClick={() => setShowSlugCollapse((prev) => !prev)}
+              style={{
+                background: "#f68b1f",
+                color: "white",
+                border: "none",
+                borderRadius: "6px",
+                padding: "6px 14px",
+                fontWeight: 600,
+                cursor: "pointer",
+                marginBottom: "8px",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px"
+              }}
+            >
+              <span>{showSlugCollapse ? "▼" : "►"}</span>
+              <span>URL Slug Ayarları</span>
+            </button>
+            {showSlugCollapse && (
+              <div style={{ marginTop: "8px" }}>
+                <label>URL Slug *</label>
+                <input
+                  type="text"
+                  value={slug}
+                  onChange={(e) => setSlug(e.target.value)}
+                  placeholder="url-dostu-slug"
+                  required
+                />
+                <small style={{ color: "#666", fontSize: "12px" }}>
+                  SEO dostu URL için kullanılır. Boş bırakırsanız ürün adından
+                  otomatik oluşturulur.
+                </small>
+              </div>
+            )}
           </div>
 
           {/* Ana Sayfa Alt Başlık */}
