@@ -141,10 +141,10 @@ function ProductDetailPage() {
         <div className="details-video-section">
           <div className="details-video-content">
             <div className="details-video-col">
-              <h2 className="details-video-title">{productData.titles?.[1] || "Ürün Videosu"}</h2>
+              <h2 className="details-video-title">{productData.videoTitles?.[0] || "Ürün Videosu"}</h2>
               <hr className="line" />
-              {productData.descriptions?.[2] && (
-                <p className="details-video-description">{productData.descriptions[2]}</p>
+              {productData.videoDescriptions?.[0] && (
+                <p className="details-video-description">{productData.videoDescriptions[0]}</p>
               )}
             </div>
             <div className="details-video-col details-video-col-right">

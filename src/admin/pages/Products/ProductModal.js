@@ -76,6 +76,36 @@ const ProductModal = ({ product, onClose, onSave }) => {
   const [selectedFileType, setSelectedFileType] = useState("");
   const [loading, setLoading] = useState(false);
   const modalRef = useRef();
+  const [videoTitles, setVideoTitles] = useState([""]);
+  const [videoDescriptions, setVideoDescriptions] = useState([""]);
+
+  const addVideoDescription = () => {
+    setVideoDescriptions([...videoDescriptions, ""]);
+  };
+  const updateVideoDescription = (index, value) => {
+    const updated = [...videoDescriptions];
+    updated[index] = value;
+    setVideoDescriptions(updated);
+  };
+  const removeVideoDescription = (index) => {
+    if (videoDescriptions.length > 1) {
+      setVideoDescriptions(videoDescriptions.filter((_, i) => i !== index));
+    }
+  };
+
+  const addVideoTitle = () => {
+    setVideoTitles([...videoTitles, ""]);
+  };
+  const updateVideoTitle = (index, value) => {
+    const updated = [...videoTitles];
+    updated[index] = value;
+    setVideoTitles(updated);
+  };
+  const removeVideoTitle = (index) => {
+    if (videoTitles.length > 1) {
+      setVideoTitles(videoTitles.filter((_, i) => i !== index));
+    }
+  };
 
   useEffect(() => {
     if (product) {
@@ -92,7 +122,9 @@ const ProductModal = ({ product, onClose, onSave }) => {
       setProductImageId(product.productImageId || "");
       setDocumentImageIds(product.documentImageIds || []);
       setProductDetailImageIds(product.productDetailImageIds || []);
+      setVideoTitles(product.videoTitles || [""]);
       setVideoUrls(product.videoUrls || [""]);
+      setVideoDescriptions(product.videoDescriptions || [""]);
       setMainImageUrl(product.mainImageUrl || "");
       setProductMainImageId(product.productMainImageId || "");
       setShowContact(product.showContact === true);
@@ -290,7 +322,9 @@ const ProductModal = ({ product, onClose, onSave }) => {
         listTitles: listTitles.filter((lt) => lt.trim() !== ""),
         listItems: listItems.filter((li) => li.trim() !== ""),
         urls: urls.filter((u) => u.trim() !== ""),
+        videoTitles: videoTitles.filter((v) => v.trim() !== ""),
         videoUrls: videoUrls.filter((v) => v.trim() !== ""),
+        videoDescriptions: videoDescriptions.filter((d) => d.trim() !== ""),
         bannerImageUrl: finalBannerImageUrl.trim() || null,
         productImageId: productImageId.trim() || null,
         productMainImageId: finalProductMainImageId || null,
@@ -864,6 +898,38 @@ const ProductModal = ({ product, onClose, onSave }) => {
               <span>+ URL Ekle</span>
             </button>
           </div>
+
+          {/* Video Başlıkları */}
+          <div className="form-group">
+            <label>Video Başlıkları</label>
+            {videoTitles.map((videoTitle, index) => (
+              <div key={index} className="AdminInputGroup">
+                <input
+                  type="text"
+                  value={videoTitle}
+                  onChange={(e) => updateVideoTitle(index, e.target.value)}
+                  placeholder={`Video Başlığı ${index + 1}`}
+                />
+                {videoTitles.length > 1 && (
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => removeVideoTitle(index)}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={addVideoTitle}
+            >
+              <span>+ Video Başlığı Ekle</span>
+            </button>
+          </div>
+
           {/* Video URL'leri */}
           <div className="form-group">
             <label>Video URL'leri</label>
@@ -916,6 +982,36 @@ const ProductModal = ({ product, onClose, onSave }) => {
               onClick={() => setVideoUrls([...videoUrls, ""])}
             >
               <span>+ Video URL Ekle</span>
+            </button>
+          </div>
+          {/* Video Açıklamaları */}
+          <div className="form-group">
+            <label>Video Açıklamaları</label>
+            {videoDescriptions.map((description, index) => (
+              <div key={index} className="AdminInputGroup">
+                <textarea
+                  value={description}
+                  onChange={(e) => updateVideoDescription(index, e.target.value)}
+                  placeholder={`Video Açıklama ${index + 1}`}
+                  rows="3"
+                />
+                {videoDescriptions.length > 1 && (
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => removeVideoDescription(index)}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={addVideoDescription}
+            >
+              <span>+ Video Açıklama Ekle</span>
             </button>
           </div>
           {/* Ana Görsel URL */}
