@@ -29,7 +29,7 @@ const Products = () => {
     try {
       setLoading(true);
       const params = {
-        PageIndex: Math.max(1, pagination.pageIndex - 1),
+        PageIndex: Math.max(0, pagination.pageIndex - 1),
         PageSize: Math.max(1, pagination.pageSize),
       };
       console.log("API'ye gönderilen parametreler:", params);
@@ -44,16 +44,80 @@ const Products = () => {
       }));
     } catch (error) {
       console.error("Ürünler yüklenirken hata:", error);
+      let errorMsg = error?.message || "Ürünler yüklenirken bir hata oluştu.";
       Swal.fire({
         icon: "error",
         title: "Hata!",
-        text: "Ürünler yüklenirken bir hata oluştu.",
+        text: errorMsg,
         confirmButtonText: "Tamam",
         confirmButtonColor: "#dc3545",
       });
     } finally {
       setLoading(false);
     }
+  };
+
+  // Helper function to get product main image
+  const getProductMainImage = (product) => {
+    console.log("Product data:", product); // Debug log
+
+    // Method 1: Check if productImage exists directly
+    if (product.productImage && product.productImage.path) {
+      console.log("Found productImage:", product.productImage);
+      return BASE_URL + product.productImage.path;
+    }
+
+    // Method 2: Check ProductImageId with files array
+    if (product.productImageId && product.files && product.files.length > 0) {
+      console.log("Looking for ProductImageId:", product.productImageId);
+      console.log("Available files:", product.files);
+      
+      const mainImage = product.files.find(file => {
+        // Try different comparison methods since IDs might be strings or UUIDs
+        const fileId = String(file.id).toLowerCase();
+        const productMainImageId = String(product.productMainImageId).toLowerCase();
+        return fileId === productMainImageId;
+      });
+      
+      if (mainImage && mainImage.path) {
+        console.log("Found main image via ProductMainImageId:", mainImage);
+        return BASE_URL + mainImage.path;
+      }
+    }
+
+    // Method 3: Check alternative casing (productMainImageId vs ProductMainImageId)
+    if (product.ProductMainImageId && product.files && product.files.length > 0) {
+      console.log("Looking for ProductMainImageId (capital P):", product.ProductMainImageId);
+      
+      const mainImage = product.files.find(file => {
+        const fileId = String(file.id).toLowerCase();
+        const productMainImageId = String(product.ProductMainImageId).toLowerCase();
+        return fileId === productMainImageId;
+      });
+      
+      if (mainImage && mainImage.path) {
+        console.log("Found main image via ProductMainImageId (capital P):", mainImage);
+        return BASE_URL + mainImage.path;
+      }
+    }
+
+    // Method 4: Fallback to first available file
+    if (product.files && product.files.length > 0) {
+      const firstFile = product.files.find(file => file.path);
+      if (firstFile) {
+        console.log("Using first available file:", firstFile);
+        return BASE_URL + firstFile.path;
+      }
+    }
+
+    // Method 5: Check mainImageUrl
+    if (product.mainImageUrl) {
+      console.log("Found mainImageUrl:", product.mainImageUrl);
+      return product.mainImageUrl.startsWith('http') ? product.mainImageUrl : BASE_URL + product.mainImageUrl;
+    }
+
+    console.log("No image found for product");
+    return null;
   };
 
   const handleAddProduct = () => {
@@ -118,113 +182,83 @@ const Products = () => {
   };
 
   if (loading) {
-    return <div className="loading">Yükleniyor...</div>;
+    return <div className="AdminLoading">Yükleniyor...</div>;
   }
 
   return (
-    <div className="admin-panel">
-      <div className="panel-header">
-        <h2 className="panel-title">Ürün Yönetimi</h2>
+    <div className="AdminPanel">
+      <div className="AdminPanelHeader">
+        <h2 className="AdminPanelTitle">Ürün Yönetimi</h2>
         <button className="add-btn primary" onClick={handleAddProduct}>
           + Yeni Ürün Ekle
         </button>
       </div>
 
-      <div className="products-grid">
+      <div className="AdminProductsGrid">
         {products.length === 0 ? (
-          <div className="no-products">
+          <div className="AdminNoProducts">
             <p>Henüz ürün bulunmuyor.</p>
           </div>
         ) : (
           products.map((product) => (
-            <div key={product.id} className="product-card">
-              <div className="product-image">
+            <div key={product.id} className="AdminProductCard">
+              <div className="AdminProductImage">
                 {(() => {
-                  if (product.productImage && product.productImage.path) {
+                  const imageUrl = getProductMainImage(product);
+                  
+                  if (imageUrl) {
                     return (
                       <img
-                        src={BASE_URL + product.productImage.path}
-                        alt={product.name}
+                        src={imageUrl}
+                        alt={product.name || 'Product image'}
                         onError={(e) => {
+                          console.log("Image failed to load:", imageUrl);
                           e.target.src = "/placeholder.jpg";
+                        }}
+                        onLoad={() => {
+                          console.log("Image loaded successfully:", imageUrl);
                         }}
                       />
                     );
                   }
-
-                  if (product.productImageId && product.files) {
-                    const mainImage = product.files.find(
-                      (file) =>
-                        file.id === product.productImageId ||
-                        file.id === String(product.productImageId) ||
-                        String(file.id) === String(product.productImageId)
-                    );
-                    if (mainImage && mainImage.path) {
-                      return (
-                        <img
-                          src={BASE_URL + mainImage.path}
-                          alt={product.name}
-                          onError={(e) => {
-                            e.target.src = "/placeholder.jpg";
-                          }}
-                        />
-                      );
-                    }
-                  }
-
-                  if (product.files && product.files.length > 0) {
-                    const firstFile = product.files.find((file) => file.path);
-                    if (firstFile) {
-                      return (
-                        <img
-                          src={BASE_URL + firstFile.path}
-                          alt={product.name}
-                          onError={(e) => {
-                            e.target.src = "/placeholder.jpg";
-                          }}
-                        />
-                      );
-                    }
-                  }
-
+                  
                   return (
-                    <div className="no-image">
+                    <div className="AdminNoImage">
                       <span>Görsel Yok</span>
                     </div>
                   );
                 })()}
               </div>
-
-              <div className="product-info">
-                {/* <h3 className="product-name">{product.name}</h3> */}
-                <p className="product-title">
+              <div className="AdminProductInfo">
+                <h3 className="AdminProductName">{product.name}</h3>
+                <p className="AdminProductTitle">
                   {product.titles && product.titles[0]
                     ? product.titles[0]
                     : "Başlık yok"}
                 </p>
                 {/* Alt başlıklar */}
                 {product.subtitles && product.subtitles.length > 0 && (
-                  <div className="product-subtitles">
+                  <div className="AdminProductSubtitles">
                     {product.subtitles.slice(0, 2).map((subtitle, index) => (
-                      <span key={index} className="product-subtitle">
+                      <span key={index} className="AdminProductSubtitle">
                         {subtitle}
                       </span>
                     ))}
                     {product.subtitles.length > 2 && (
-                      <span className="more-subtitles">
+                      <span className="AdminMoreSubtitles">
                         +{product.subtitles.length - 2} daha
                       </span>
                     )}
                   </div>
                 )}
-                <p className="product-description">
+                <p className="AdminProductDescription">
                   {product.descriptions && product.descriptions[0]
                     ? product.descriptions[0].substring(0, 100) + "..."
                     : "Açıklama yok"}
                 </p>
-                {/* Liste öğeleri 
-               {product.listItems && product.listItems.length > 0 && (
-                  <div className="product-list-items">
+                {/* Liste öğeleri */}
+                {product.listItems && product.listItems.length > 0 && (
+                  <div className="AdminProductListItems">
                     {product.listTitles && product.listTitles.length > 0 && (
                       <h5>{product.listTitles[0]}</h5>
                     )}
@@ -233,34 +267,31 @@ const Products = () => {
                         <li key={index}>{item}</li>
                       ))}
                       {product.listItems.length > 3 && (
-                        <li className="more-items">
+                        <li className="AdminMoreItems">
                           +{product.listItems.length - 3} madde daha
                         </li>
                       )}
                     </ul>
                   </div>
-                )} */}
-
-                <div className="product-actions">
-                  <button
-                    className="edit-btn"
-                    onClick={() => handleEditProduct(product)}
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
-                    </svg>{" "}
-                    Düzenle
-                  </button>
-                  <button
-                    className="delete-btn"
-                    onClick={() => handleDeleteClick(product)}
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
-                    </svg>{" "}
-                    Sil
-                  </button>
-                </div>
+                )}
+              </div>
+              <div className="AdminProductActions">
+                <button
+                  className="edit-btn"
+                  onClick={() => handleEditProduct(product)}
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                      </svg> Düzenle
+                </button>
+                <button
+                  className="delete-btn"
+                  onClick={() => handleDeleteClick(product)}
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg> Sil
+                </button>
               </div>
             </div>
           ))
@@ -269,23 +300,23 @@ const Products = () => {
 
       {/* Pagination */}
       {pagination.totalPages > 1 && (
-        <div className="pagination">
+        <div className="AdminPagination">
           <button
             onClick={() => handlePageChange(pagination.pageIndex - 1)}
             disabled={pagination.pageIndex === 1}
-            className="pagination-btn"
+            className="AdminPaginationBtn"
           >
             « Önceki
           </button>
 
-          <span className="pagination-info">
+          <span className="AdminPaginationInfo">
             Sayfa {pagination.pageIndex} / {pagination.totalPages}
           </span>
 
           <button
             onClick={() => handlePageChange(pagination.pageIndex + 1)}
             disabled={pagination.pageIndex >= pagination.totalPages}
-            className="pagination-btn"
+            className="AdminPaginationBtn"
           >
             Sonraki »
           </button>

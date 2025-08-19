@@ -10,52 +10,51 @@ const ProductInfo = ({ productData }) => {
   const {
     name,
     titles = [],
-    subtitles = [],
     descriptions = [],
     listTitles = [],
     listItems = [],
-    urls = [],
-    files = [],
-    documents = [],
-    productImage = null,
     documentImages: apiDocumentImages = [],
     productImages: apiProductImages = [],
-    documentImageIds = [],
-    productDetailImageIds = [],
-    productImageId = null
+    productDetailImages = [],
+    documents = [],
+    urls = [],
+    files = [],
+    productMainImageId = null,
+    productMainImage = null,
   } = productData;
+  const documentImageIds = productData.documentImageIds || [];
 
   const mainImage = (() => {
     console.log("ProductInfo - Calculating main image:");
-    console.log("- productImage:", productImage);
-    console.log("- productImageId:", productImageId);
+    console.log("- productImage:", productMainImage);
+    console.log("- productImageId:", productMainImageId);
     console.log("- files:", files);
     console.log("- apiProductImages:", apiProductImages);
     console.log("- All productData keys:", Object.keys(productData));
-    
-    if (productImage && productImage.path) {
-      console.log("Using productImage.path:", productImage.path);
-      return productImage.path.startsWith('http') ? productImage.path : BASE_URL + productImage.path;
+
+    if (productMainImage && productMainImage.path) {
+      console.log("Using productMainImage.path:", productMainImage.path);
+      return productMainImage.path.startsWith('http') ? productMainImage.path : BASE_URL + productMainImage.path;
     }
-    
-    if (productData.productImage && productData.productImage.path) {
-      console.log("Using productData.productImage.path:", productData.productImage.path);
-      return productData.productImage.path.startsWith('http') ? productData.productImage.path : BASE_URL + productData.productImage.path;
+
+    if (productData.productMainImage && productData.productMainImage.path) {
+      console.log("Using productData.productMainImage.path:", productData.productMainImage.path);
+      return productData.productMainImage.path.startsWith('http') ? productData.productMainImage.path : BASE_URL + productData.productMainImage.path;
     }
-    
-    if (productImageId && files && files.length > 0) {
-      const productImageFile = files.find(file => {
-        const match = file.id === productImageId || 
-                     file.id === String(productImageId) || 
-                     String(file.id) === String(productImageId);
-        console.log(`Checking file ${file.id} against productImageId ${productImageId}: ${match}`);
+
+    if (productMainImageId && files && files.length > 0) {
+      const productMainImageFile = files.find(file => {
+        const match = file.id === productMainImageId || 
+                     file.id === String(productMainImageId) || 
+                     String(file.id) === String(productMainImageId);
+        console.log(`Checking file ${file.id} against productMainImageId ${productMainImageId}: ${match}`);
         return match;
       });
-      console.log("Found productImageFile:", productImageFile);
-      
-      if (productImageFile && productImageFile.path) {
-        const finalUrl = productImageFile.path.startsWith('http') ? productImageFile.path : BASE_URL + productImageFile.path;
-        console.log("Using productImageFile:", finalUrl);
+      console.log("Found productMainImageFile:", productMainImageFile);
+
+      if (productMainImageFile && productMainImageFile.path) {
+        const finalUrl = productMainImageFile.path.startsWith('http') ? productMainImageFile.path : BASE_URL + productMainImageFile.path;
+        console.log("Using productMainImageFile:", finalUrl);
         return finalUrl;
       }
     }
@@ -64,14 +63,6 @@ const ProductInfo = ({ productData }) => {
       console.log("Using first file:", files[0].path);
       return files[0].path.startsWith('http') ? files[0].path : BASE_URL + files[0].path;
     }
-    
-    if (apiProductImages && apiProductImages.length > 0 && apiProductImages[0].path) {
-      console.log("Using first apiProductImage:", apiProductImages[0].path);
-      return apiProductImages[0].path.startsWith('http') ? apiProductImages[0].path : BASE_URL + apiProductImages[0].path;
-    }
-    
-    console.log("Using fallback image");
-    return "/assets/images/Group 300.webp";
   })();
 
   const documentImages = (() => {
@@ -146,115 +137,24 @@ const ProductInfo = ({ productData }) => {
     return [];
   })();
 
-  const productDetailImages = (() => {
-    console.log("ProductInfo - Calculating productDetailImages:");
-    console.log("- apiProductImages:", apiProductImages);
-    console.log("- productDetailImageIds:", productDetailImageIds);
-    console.log("- files for detail images:", files);
-    
-    if (apiProductImages && apiProductImages.length > 0) {
-      console.log("Using apiProductImages");
-      return apiProductImages.map(img => ({
-        src: img.path.startsWith('http') ? img.path : BASE_URL + img.path,
-        alt: img.name || name
-      }));
-    }
-    
-    if (productDetailImageIds.length > 0) {
-      console.log("Using productDetailImageIds to find files");
-      const detailImages = productDetailImageIds.map(imageId => {
-        const file = files.find(f => 
-          f.id === imageId || 
-          f.id === String(imageId) || 
-          String(f.id) === String(imageId)
-        );
-        console.log(`Looking for imageId ${imageId}, found file:`, file);
-        
-        if (file && file.path) {
-          return {
-            src: file.path.startsWith('http') ? file.path : BASE_URL + file.path,
-            alt: file.name || name
-          };
-        }
-        return null;
-      }).filter(Boolean);
-      
-      console.log("Final detailImages from productDetailImageIds:", detailImages);
-      return detailImages;
-    }
-    
-    if (files && files.length > 1) {
-      console.log("Using fallback: remaining files as detail images");
-      const fallbackImages = files.slice(1).map(file => ({
-        src: file.path.startsWith('http') ? file.path : BASE_URL + file.path,
-        alt: file.name || name
-      }));
-      console.log("Fallback detail images:", fallbackImages);
-      return fallbackImages;
-    }
-    
-    console.log("No detail images found");
-    return [];
-  })();
-
   return (
-    <div className="product-info-container">
-      {/* Ürün Bilgileri ve Ana Görsel - Üst Kısım */}
-      <div className="product-info-content">
-        <div className="product-info-text">
-          {/* Ana başlık */}
-          <h2 className="product-info-title">
-            {titles[0] || name}
-          </h2>
-          
-          {/* Açıklamalar */}
+    <div className="info-product-container">
+      <div className="info-product-row">
+        {/* Sol: Başlık, açıklama, dökümanlar */}
+        <div className="info-product-col info-product-col-left">
+          <h2 className="info-product-title">{titles[0] || name}</h2>
+          <hr className="line" />
           {descriptions.map((description, index) => (
-            description && (
-              <p key={index} className="product-info-description">
+            description ? (
+              <p key={index} className="info-product-description">
                 {description}
               </p>
-            )
+            ) : null
           ))}
-
-          {/* Alt başlık ayrı bölüm olarak */}
-          {/* {subtitles[0] && (
-            <p className="product-info-details">{subtitles[0]}</p>
-          )} */}
-
-          {/* Ek bilgiler */}
-          {titles.slice(1).map((title, index) => (
-            title && (
-              <p key={`info-${index}`} className="product-info-info">
-                <strong>{title}:</strong> {descriptions[index + 1] || subtitles[index + 1] || ''}
-              </p>
-            )
-          ))}
-
-          {/* Özellikler Listesi */}
-          {listItems.length > 0 && listItems.some(item => item) && (
-            <div className="product-info-features">
-              {listTitles.length > 0 && listTitles.some(title => title) && (
-                <div className="list-titles">
-                  {listTitles.map((title, index) => (
-                    title && (
-                      <h4 key={index} className="product-info-subtitle">{title}</h4>
-                    )
-                  ))}
-                </div>
-              )}
-              <ul>
-                {listItems.map((item, index) => (
-                  item && (
-                    <li key={index}>{item}</li>
-                  )
-                ))}
-              </ul>
-            </div>
-          )}
 
           {/* Dökümanlar - documents array veya documentImages ile URLs eşleştirilerek */}
           {documentImages.length > 0 && (
-            <div className="product-info-documents">
+            <div className="info-product-documents">
           {documentImages.map((file, index) => {
             console.log("Rendering document:", file);
             
@@ -342,31 +242,61 @@ const ProductInfo = ({ productData }) => {
             </div>
           )}
 
-          {/* İletişim metni - orijinal tasarım gibi */}
-          <p className="product-info-contact">
-            Daha fazla bilgi için{" "}
-            <a href="/contact">
-              <span>bizimle iletişime geçin</span>
-            </a>
-          </p>
+          {/* İletişim metni: showContact true ise göster */}
+          {productData.showContact && (
+            <p className="info-product-contact">
+              {productData.name} hakkında daha fazla bilgi almak için {" "}
+              <a href="/contact">
+                <span>bize ulaşın!</span>
+              </a>
+            </p>
+          )}
         </div>
-        
-        {/* Ana görsel - sağ tarafta */}
-        <div className="product-info-image">
-          <div className="main-image">
-            <img
-              src={mainImage}
-              alt={titles[0] || name}
-            />
-          </div>
+        {/* Sağ: ListItem varsa uygulama alanları, yoksa mainImage */}
+        <div className="info-product-col info-product-col-right">
+          {listItems.length > 0 ? (
+            <div className="info-product-list">
+              {listTitles.length > 0 && <h2 className="p-title">{listTitles[0]}</h2>}
+              <hr className="line" />
+              <ul>
+                {listItems.map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            !!mainImage && (
+              <div className="info-product-main-image">
+                <img
+                  src={mainImage}
+                  alt={titles[0] || name}
+                  loading="lazy"
+                />
+              </div>
+            )
+          )}
         </div>
       </div>
-      
-      {/* Ürün Detay Görselleri Galerisi - Alt Kısım Ayrı Div */}
+      {/* Galeri */}
       {productDetailImages.length > 0 && (
-        <div className="product-detail-gallery-section">
+        productDetailImages.length > 4 ? (
+          <div className="info-product-detail-gallery-section">
+            <h2 className="p-title">Görseller</h2>
+            <hr className="line" />
+            <div className="info-product-gallery-images">
+              {productDetailImages.map((imgSrc, idx) => (
+                <img
+                  key={idx}
+                  src={imgSrc}
+                  alt={`Detay Görsel ${idx + 1}`}
+                  loading="lazy"
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
           <Gallery images={productDetailImages} title="Görseller" />
-        </div>
+        )
       )}
     </div>
   );

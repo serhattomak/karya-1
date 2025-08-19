@@ -1,4 +1,22 @@
-.modal-overlay {
+.AdminFormGroup input[type="text"],
+.AdminFormGroup input[type="number"] {
+  height: 44px;
+  padding: 12px 16px;
+  font-size: 16px;
+}
+/* Ensure text input borders are visible */
+.AdminFormGroup input[type="text"] {
+  border: 2px solid #e9ecef !important;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+/* Ensure number input borders are visible */
+.AdminFormGroup input[type="number"] {
+  border: 2px solid #e9ecef !important;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+.AdminModalOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,7 +30,7 @@
   padding: 20px;
 }
 
-.document-modal {
+.AdminDocumentModal {
   background: white;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -24,7 +42,7 @@
   flex-direction: column;
 }
 
-.modal-header {
+.AdminModalHeader {
   padding: 24px;
   border-bottom: 2px solid #f1f3f4;
   display: flex;
@@ -33,20 +51,20 @@
   background: #f8f9fa;
 }
 
-.modal-header h2 {
+.AdminModalHeader h2 {
   margin: 0;
   color: #333;
   font-size: 24px;
   font-weight: 600;
 }
 
-.header-actions {
+.AdminHeaderActions {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.test-btn {
+.AdminTestBtn {
   background: #e3f2fd;
   border: 2px solid #2196f3;
   border-radius: 6px;
@@ -59,12 +77,12 @@
   white-space: nowrap;
 }
 
-.test-btn:hover {
+.AdminTestBtn:hover {
   background: #bbdefb;
   border-color: #1976d2;
 }
 
-.health-check-btn {
+.AdminHealthCheckBtn {
   background: #f8f9fa;
   border: 2px solid #dee2e6;
   border-radius: 6px;
@@ -79,29 +97,29 @@
   justify-content: center;
 }
 
-.health-check-btn:hover {
+.AdminHealthCheckBtn:hover {
   background: #e9ecef;
   border-color: #adb5bd;
 }
 
-.health-check-btn:disabled {
+.AdminHealthCheckBtn:disabled {
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-.health-check-btn.healthy {
+.AdminHealthCheckBtn.AdminHealthy {
   background: #d4edda;
   border-color: #28a745;
   color: #155724;
 }
 
-.health-check-btn.unhealthy {
+.AdminHealthCheckBtn.AdminUnhealthy {
   background: #f8d7da;
   border-color: #dc3545;
   color: #721c24;
 }
 
-.close-btn {
+.AdminCloseBtn {
   background: none;
   border: none;
   font-size: 28px;
@@ -112,29 +130,29 @@
   transition: all 0.3s ease;
 }
 
-.close-btn:hover {
+.AdminCloseBtn:hover {
   background: #e9ecef;
   color: #333;
 }
 
-.modal-form {
+.AdminModalForm {
   padding: 24px;
   overflow-y: auto;
   flex: 1;
 }
 
-.form-row {
+.AdminFormRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   margin-bottom: 20px;
 }
 
-.form-group {
+.AdminFormGroup {
   margin-bottom: 20px;
 }
 
-.form-group label {
+.AdminFormGroup label {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
@@ -142,9 +160,9 @@
   font-size: 14px;
 }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
+.AdminFormGroup input,
+.AdminFormGroup textarea,
+.AdminFormGroup select {
   width: 100%;
   padding: 12px 16px;
   border: 2px solid #e9ecef;
@@ -155,20 +173,20 @@
   box-sizing: border-box;
 }
 
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
+.AdminFormGroup input:focus,
+.AdminFormGroup textarea:focus,
+.AdminFormGroup select:focus {
   outline: none;
   border-color: #007bff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
-.form-group textarea {
+.AdminFormGroup textarea {
   resize: vertical;
   min-height: 80px;
 }
 
-.field-hint {
+.AdminFieldHint {
   font-size: 12px;
   color: #6c757d;
   margin-top: 4px;
@@ -176,7 +194,7 @@
   font-style: italic;
 }
 
-.checkbox-label {
+.AdminCheckboxLabel {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -185,13 +203,13 @@
   color: #333;
 }
 
-.checkbox-label input[type="checkbox"] {
+.AdminCheckboxLabel input[type="checkbox"] {
   width: auto;
-  margin: 0;
+  margin-right: 10px;
   transform: scale(1.2);
 }
 
-.file-info {
+.AdminFileInfo {
   margin-top: 8px;
   padding: 8px 12px;
   background: #f8f9fa;
@@ -204,7 +222,7 @@
   align-items: center;
 }
 
-.modal-actions {
+.AdminModalActions {
   padding: 24px;
   border-top: 2px solid #f1f3f4;
   display: flex;
@@ -264,37 +282,37 @@ input[type="file"]:hover {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .modal-overlay {
+  .AdminModalOverlay {
     padding: 10px;
   }
 
-  .document-modal {
+  .AdminDocumentModal {
     max-width: 100%;
     max-height: 95vh;
   }
 
-  .modal-header {
+  .AdminModalHeader {
     padding: 16px;
   }
 
-  .modal-header h2 {
+  .AdminModalHeader h2 {
     font-size: 20px;
   }
 
-  .modal-form {
+  .AdminModalForm {
     padding: 16px;
   }
 
-  .form-row {
+  .AdminFormRow {
     grid-template-columns: 1fr;
     gap: 0;
   }
 
-  .form-group {
+  .AdminFormGroup {
     margin-bottom: 16px;
   }
 
-  .modal-actions {
+  .AdminModalActions {
     padding: 16px;
     flex-direction: column;
   }

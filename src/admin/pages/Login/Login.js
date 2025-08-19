@@ -22,9 +22,8 @@ const Login = ({ setIsAuthenticated }) => {
       if (response.data && response.data.data && response.data.data.token) {
         const token = response.data.data.token;
         localStorage.setItem("token", token);
-        const expirationTime = Date.now() + 24 * 60 * 60 * 1000;
+        const expirationTime = Date.now() + (60 * 60 * 1000);
         localStorage.setItem("tokenExpiration", expirationTime.toString());
-
         setIsAuthenticated(true);
         navigate("/admin/Home");
       } else {

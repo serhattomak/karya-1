@@ -32,11 +32,18 @@ function AboutPage() {
 
   if (!pageData) return <div>Yükleniyor...</div>;
 
-  const galleryImages = (pageData.files || [])
-    .slice(1)
-    .map(f => f.path ? BASE_URL + f.path : "")
-    .filter(Boolean);
+  let galleryImages = [];
+  if (pageData.files && Array.isArray(pageData.files)) {
+    galleryImages = pageData.files
+      .filter(f => !(pageData.mainImage && f.id === pageData.mainImage.id))
+      .map(f => f.path ? BASE_URL + f.path : "")
+      .filter(Boolean);
+  }
 
+  let mainImageUrl = "/assets/images/hk.jpeg";
+  if (pageData.mainImage && pageData.mainImage.path) {
+    mainImageUrl = BASE_URL + pageData.mainImage.path;
+  }
   return (
     <div>
       <Banner imageSrc={pageData.bannerImageUrl || "/assets/images/aboutbanner.webp"} title={pageData.name || "Hakkımızda"} />
@@ -45,7 +52,8 @@ function AboutPage() {
         titles={pageData.titles ? [pageData.titles[0]] : []}
         subtitles={pageData.subtitles}
         descriptions={pageData.descriptions}
-        image={pageData.files?.[0]?.path ? BASE_URL + pageData.files[0].path : "/assets/images/hk.jpeg"}
+        image={mainImageUrl}
+        mainImageId={pageData.mainImageId}
       />
       <br></br>
       <ServiceSection 
