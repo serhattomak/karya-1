@@ -10,9 +10,21 @@ import { createSlugFromProduct } from "../../../utils/slugUtils";
 import Swal from "sweetalert2";
 import { uploadFile as uploadFileApi } from "../../../api";
 
+const getEmbedUrl = (url) => {
+  if (!url) return '';
+  const ytShort = url.match(/^https?:\/\/youtu\.be\/([\w-]+)/);
+  if (ytShort) {
+    return `https://www.youtube.com/embed/${ytShort[1]}`;
+  }
+  const ytWatch = url.match(/^https?:\/\/(www\.)?youtube\.com\/watch\?v=([\w-]+)/);
+  if (ytWatch) {
+    return `https://www.youtube.com/embed/${ytWatch[2]}`;
+  }
+  return url;
+};
+
 const BASE_URL = "https://localhost:7103/";
 
-// Dosya yükleme işlemi artık api.js'deki uploadFile fonksiyonunu kullanıyor
 const uploadFile = async (file) => {
   const formData = new FormData();
   formData.append("file", file);
@@ -29,7 +41,6 @@ const uploadFile = async (file) => {
 };
 
 const ProductModal = ({ product, onClose, onSave }) => {
-  // Collapsable Slug için state
   const [showSlugCollapse, setShowSlugCollapse] = useState(false);
   const [fileSearchTerm, setFileSearchTerm] = useState("");
   const [fileSortAsc, setFileSortAsc] = useState(true);
@@ -86,26 +97,21 @@ const ProductModal = ({ product, onClose, onSave }) => {
       setProductMainImageId(product.productMainImageId || "");
       setShowContact(product.showContact === true);
 
-      // Handle productMainImage - find the file info if it exists
       if (product.productMainImageId) {
-        // We'll set the name when availableFiles is loaded
-        setProductMainImagePreview(""); // Clear any preview since this is from system
-        setProductMainImageFile(null); // Clear any file since this is from system
+        setProductMainImagePreview("");
+        setProductMainImageFile(null);
       } else {
-        // Clear everything if no productMainImageId
         setProductMainImagePreview("");
         setProductMainImageName("");
         setProductMainImageFile(null);
       }
 
-      // Selected documents from documentIds
       if (product.documentIds && product.documentIds.length > 0) {
         setSelectedDocuments(product.documentIds);
       } else {
         setSelectedDocuments([]);
       }
 
-      // ... rest of your existing code for handling other files
       let allDocumentFiles = [];
 
       if (product.documentFiles && product.documentFiles.length > 0) {
@@ -166,12 +172,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
   useEffect(() => {
     const fetchAvailableData = async () => {
       try {
-        // Fetch available files
         const filesResponse = await getFiles();
         const files = filesResponse?.data?.data || filesResponse?.data || [];
         setAvailableFiles(files);
 
-        // Fetch available documents
         const documentsResponse = await getDocuments();
         const documentsData =
           documentsResponse?.data?.data ||
@@ -199,7 +203,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
   }, [productMainImageId, availableFiles]);
 
   const handleSubmit = async (e) => {
-    // Eksik tanımlanan değişkenler
     let documentImageFileIds = [];
     let documentFileIds = [];
     let productDetailFileIds = [];
@@ -239,7 +242,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
         }
       }
 
-      // Handle product main image upload
       let finalProductMainImageId = productMainImageId;
       if (productMainImageFile && !productMainImageId) {
         try {
@@ -269,16 +271,12 @@ const ProductModal = ({ product, onClose, onSave }) => {
         } else if (image.file) {
           const uploaded = await uploadFile(image.file);
           const uploadedFileId = uploaded?.data?.id || uploaded?.id;
-          // ...burada dosya yükleme sonrası yapılacak işlemler...
         }
       }
 
-      // Ürün detay görselleri için sadece GUID olanları productDetailImageIds'e ekle
       const validProductDetailImageIds = productDetailImageIds.filter(id => {
-        // GUID ise string ve 36 karakter olmalı, tireli
         return typeof id === 'string' && /^[0-9a-fA-F-]{36}$/.test(id);
       });
-      // Yeni yüklenen dosyalar için id'yi productDetailFileIds'e ekle
       const validProductDetailFileIds = productDetailImages
         .filter(img => img.isExisting === false && img.file && typeof img.id !== 'string')
         .map(img => img.id);
@@ -292,6 +290,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
         listTitles: listTitles.filter((lt) => lt.trim() !== ""),
         listItems: listItems.filter((li) => li.trim() !== ""),
         urls: urls.filter((u) => u.trim() !== ""),
+        videoUrls: videoUrls.filter((v) => v.trim() !== ""),
         bannerImageUrl: finalBannerImageUrl.trim() || null,
         productImageId: productImageId.trim() || null,
         productMainImageId: finalProductMainImageId || null,
@@ -543,7 +542,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
     }
   };
 
-  // Ürün detay görselleri yükleme ve GUID ile ekleme
   const handleDetailImagesUpload = async (files) => {
     setLoading(true);
     try {
@@ -870,27 +868,45 @@ const ProductModal = ({ product, onClose, onSave }) => {
           <div className="form-group">
             <label>Video URL'leri</label>
             {videoUrls.map((videoUrl, index) => (
-              <div key={index} className="AdminInputGroup">
-                <input
-                  type="url"
-                  value={videoUrl}
-                  onChange={(e) => {
-                    const updated = [...videoUrls];
-                    updated[index] = e.target.value;
-                    setVideoUrls(updated);
-                  }}
-                  placeholder={`Video URL ${index + 1}`}
-                />
-                {videoUrls.length > 1 && (
-                  <button
-                    type="button"
-                    className="delete-btn"
-                    onClick={() =>
-                      setVideoUrls(videoUrls.filter((_, i) => i !== index))
-                    }
-                  >
-                    ×
-                  </button>
+              <div key={index} className="AdminInputGroup" style={{ flexDirection: "column", alignItems: "flex-start" }}>
+                <div style={{ display: "flex", width: "100%", gap: "8px" }}>
+                  <input
+                    type="url"
+                    value={videoUrl}
+                    onChange={(e) => {
+                      const updated = [...videoUrls];
+                      updated[index] = e.target.value;
+                      setVideoUrls(updated);
+                    }}
+                    placeholder={`Video URL ${index + 1}`}
+                    style={{ flex: 1 }}
+                  />
+                  {videoUrls.length > 1 && (
+                    <button
+                      type="button"
+                      className="delete-btn"
+                      onClick={() =>
+                        setVideoUrls(videoUrls.filter((_, i) => i !== index))
+                      }
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+                {/* Video embed önizleme */}
+                {videoUrl && (
+                  <div style={{ marginTop: "8px", width: "100%" }}>
+                    <iframe
+                      src={getEmbedUrl(videoUrl)}
+                      title={`Video Preview ${index + 1}`}
+                      width="100%"
+                      height="220"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      style={{ borderRadius: "8px", background: "#f8f9fa" }}
+                    ></iframe>
+                  </div>
                 )}
               </div>
             ))}
@@ -1062,18 +1078,15 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   onChange={async (e) => {
                     const file = e.target.files[0];
                     if (file) {
-                      // Store the file for later upload
                       setProductMainImageFile(file);
                       setProductMainImageName(file.name);
 
-                      // Create preview
                       const reader = new FileReader();
                       reader.onload = (event) => {
                         setProductMainImagePreview(event.target.result);
                       };
                       reader.readAsDataURL(file);
 
-                      // Clear system selection
                       setProductMainImageId("");
                     }
                   }}
@@ -1189,7 +1202,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     const document = getSelectedDocumentData(documentId);
                     if (!document) return null;
 
-                    // Öncelik: previewImageFile > previewImageUrl > default
                     let previewImgSrc = "";
                     if (document.previewImageFile && document.previewImageFile.path) {
                       previewImgSrc = BASE_URL + document.previewImageFile.path;
@@ -1417,11 +1429,9 @@ const ProductModal = ({ product, onClose, onSave }) => {
               <div className="AdminFilesGrid modern">
                 {availableFiles
                   .filter((file) => {
-                    // Görsel seçimi için sadece resimleri göster
                     if (["banner", "productImage", "documentImage", "productDetailImage"].includes(selectedFileType)) {
                       if (!(file.contentType?.startsWith("image/") || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i))) return false;
                     }
-                    // Arama filtresi
                     if (fileSearchTerm && !file.name.toLowerCase().includes(fileSearchTerm.toLowerCase())) return false;
                     return true;
                   })
