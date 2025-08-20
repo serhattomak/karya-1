@@ -1032,7 +1032,17 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 <span>+ Açıklama Ekle</span>
               </button>
             </div>
+          </div>
 
+          {/* Liste */}
+          <div
+            style={{
+              backgroundColor: "#f3f3f3",
+              marginTop: "10px",
+              borderRadius: "10px",
+              padding: "10px",
+            }}
+          >
             {/* Liste Başlıkları */}
             <div className="form-group">
               <label>Liste Başlıkları</label>
@@ -1094,38 +1104,17 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 <span>+ Liste Öğesi Ekle</span>
               </button>
             </div>
+          </div>
 
-            {/* URL'ler */}
-            <div className="form-group">
-              <label>URL'ler</label>
-              {urls.map((url, index) => (
-                <div key={index} className="AdminInputGroup">
-                  <input
-                    type="url"
-                    value={url}
-                    onChange={(e) => updateUrl(index, e.target.value)}
-                    placeholder={`URL ${index + 1}`}
-                  />
-                  {urls.length > 1 && (
-                    <button
-                      type="button"
-                      className="delete-btn"
-                      onClick={() => removeUrl(index)}
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-              ))}
-              <button
-                type="button"
-                className="add-btn secondary"
-                onClick={addUrl}
-              >
-                <span>+ URL Ekle</span>
-              </button>
-            </div>
-
+          {/* Video  */}
+          <div
+            style={{
+              backgroundColor: "#f3f3f3",
+              padding: "10px",
+              borderRadius: "10px",
+              marginTop: "10px",
+            }}
+          >
             {/* Video Başlıkları */}
             <div className="form-group">
               <label>Video Başlıkları</label>
@@ -1247,6 +1236,17 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 <span>+ Video Açıklama Ekle</span>
               </button>
             </div>
+          </div>
+
+          {/*Ana Ürün Görseli */}
+          <div
+            style={{
+              backgroundColor: "#f3f3f3",
+              padding: "10px",
+              borderRadius: "10px",
+              marginTop: "10px",
+            }}
+          >
             {/* Ana Görsel URL */}
             <div className="form-group">
               <label>Ana Görsel URL</label>
@@ -1385,7 +1385,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
               </div>
             </div>
           </div>
-
           <div
             style={{
               backgroundColor: "#f3f3f3",
@@ -1595,6 +1594,45 @@ const ProductModal = ({ product, onClose, onSave }) => {
               </div>
             </div>
           </div>
+          {/* URL'ler */}
+          <div
+            className="form-group"
+            style={{
+              backgroundColor: "#f3f3f3",
+              marginTop: "10px",
+              borderRadius: "10px",
+              padding: "10px",
+            }}
+          >
+            <label>URL'ler</label>
+            {urls.map((url, index) => (
+              <div key={index} className="AdminInputGroup">
+                <input
+                  type="url"
+                  value={url}
+                  onChange={(e) => updateUrl(index, e.target.value)}
+                  placeholder={`URL ${index + 1}`}
+                />
+                {urls.length > 1 && (
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => removeUrl(index)}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={addUrl}
+            >
+              <span>+ URL Ekle</span>
+            </button>
+          </div>
+          {/* Modal Footer */}
           <div
             className="form-group"
             style={{
