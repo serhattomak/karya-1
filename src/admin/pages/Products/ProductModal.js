@@ -717,25 +717,61 @@ const ProductModal = ({ product, onClose, onSave }) => {
             )}
           </div>
 
-          {/* Ana Sayfa Alt Başlık */}
+          {/* Başlık */}
           <div
-            className="form-group"
             style={{
               backgroundColor: "#f3f3f3",
               padding: "10px",
               borderRadius: "10px",
             }}
           >
-            <label>Ana Sayfa Alt Başlık *</label>
-            <input
-              type="text"
-              value={homePageSubtitle}
-              onChange={(e) => setHomePageSubtitle(e.target.value)}
-              placeholder="Ana sayfa alt başlığını girin  "
-            />
-            <small style={{ color: "#666", fontSize: "12px" }}>
-              Ana Sayfada gösterilecek ürünün alt başlığı olarak kullanılır.
-            </small>
+            <div className="form-group">
+              <label>Ürün Başlık</label>
+              {titles.map((title, index) => (
+                <div key={index} className="AdminInputGroup">
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => updateTitle(index, e.target.value)}
+                    placeholder={`Başlık ${index + 1}`}
+                  />
+
+                  {titles.length > 1 && (
+                    <button
+                      type="button"
+                      className="delete-btn"
+                      onClick={() => removeTitle(index)}
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              ))}
+              <small style={{ color: "#666", fontSize: "12px" }}>
+                Anasayfa Ürün Kartı ile Ürün İçerik Sayfası Başlık
+              </small>
+
+              <button
+                type="button"
+                className="add-btn secondary"
+                onClick={addTitle}
+              >
+                <span>+ Başlık Ekle</span>
+              </button>
+            </div>
+
+            <div className="form-group">
+              <label>Ana Sayfa Ürün Kart Alt Başlık</label>
+              <input
+                type="text"
+                value={homePageSubtitle}
+                onChange={(e) => setHomePageSubtitle(e.target.value)}
+                placeholder="Ana sayfa alt başlığını girin  "
+              />
+              <small style={{ color: "#666", fontSize: "12px" }}>
+                Ana Sayfada gösterilecek ürünün alt başlığı olarak kullanılır.
+              </small>
+            </div>
           </div>
 
           {/* Product Image ID */}
@@ -745,6 +781,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
               backgroundColor: "#f3f3f3",
               padding: "10px",
               borderRadius: "10px",
+              marginTop: "10px",
             }}
           >
             <label>Sayfa Görseli</label>
@@ -972,7 +1009,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
             </div>
 
             {/* Alt Başlıklar */}
-            <div className="form-group">
+            {/* <div className="form-group">
               <label>Alt Başlıklar</label>
               {subtitles.map((subtitle, index) => (
                 <div key={index} className="AdminInputGroup">
@@ -1000,38 +1037,45 @@ const ProductModal = ({ product, onClose, onSave }) => {
               >
                 <span>+ Alt Başlık Ekle</span>
               </button>
-            </div>
-
-            {/* Açıklamalar */}
-            <div className="form-group">
-              <label>Açıklamalar</label>
-              {descriptions.map((description, index) => (
-                <div key={index} className="AdminInputGroup">
-                  <textarea
-                    value={description}
-                    onChange={(e) => updateDescription(index, e.target.value)}
-                    placeholder={`Açıklama ${index + 1}`}
-                    rows="3"
-                  />
-                  {descriptions.length > 1 && (
-                    <button
-                      type="button"
-                      className="delete-btn"
-                      onClick={() => removeDescription(index)}
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-              ))}
-              <button
-                type="button"
-                className="add-btn secondary"
-                onClick={addDescription}
-              >
-                <span>+ Açıklama Ekle</span>
-              </button>
-            </div>
+            </div> */}
+          </div>
+          {/* Açıklamalar */}
+          <div
+            className="form-group"
+            style={{
+              backgroundColor: "#f3f3f3",
+              padding: "10px",
+              borderRadius: "10px",
+              marginTop: "10px",
+            }}
+          >
+            <label>Açıklamalar</label>
+            {descriptions.map((description, index) => (
+              <div key={index} className="AdminInputGroup">
+                <textarea
+                  value={description}
+                  onChange={(e) => updateDescription(index, e.target.value)}
+                  placeholder={`Açıklama ${index + 1}`}
+                  rows="3"
+                />
+                {descriptions.length > 1 && (
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => removeDescription(index)}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              className="add-btn secondary"
+              onClick={addDescription}
+            >
+              <span>+ Açıklama Ekle</span>
+            </button>
           </div>
 
           {/* Liste */}

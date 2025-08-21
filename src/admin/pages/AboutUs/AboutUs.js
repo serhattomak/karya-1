@@ -653,95 +653,125 @@ const AboutUs = () => {
           </div>
 
           {/* Ana Görsel */}
-          <div className="form-group">
-            <label className="form-label">Ana Görsel</label>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <input
-                type="url"
-                value={mainImageUrl}
-                onChange={(e) => {
-                  setMainImageUrl(e.target.value);
-                  setMainImageId("");
-                  setMainImagePreview(e.target.value);
-                }}
-                className="form-input"
-                placeholder="Ana görsel URL'si girin veya dosya seçin"
-              />
-              <input
-                type="file"
-                accept="image/*"
-                style={{ display: "none" }}
-                id="main-image-file-input"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setMainImageFile(file);
-                    setMainImageId("");
-                    setMainImageName(file.name);
-                    const reader = new FileReader();
-                    reader.onload = (ev) => {
-                      setMainImagePreview(ev.target.result);
-                      setMainImageUrl("");
-                    };
-                    reader.readAsDataURL(file);
-                  }
-                }}
-              />
-              <label
-                htmlFor="main-image-file-input"
-                className="file-select-btn"
-                style={{ width: "fit-content" }}
-              >
-                <span>Dosya Seç</span>
-              </label>
-              <button
-                type="button"
-                className="file-select-btn"
-                style={{ width: "fit-content" }}
-                onClick={() => setShowMainImageSelector(true)}
-              >
-                Sistemden Seç
-              </button>
+         <div className="form-group">
+  <label className="form-label">Ana Görsel</label>
+  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+    <input
+      type="url"
+      value={mainImageUrl}
+      onChange={(e) => {
+        setMainImageUrl(e.target.value);
+        setMainImageId("");
+        setMainImagePreview(e.target.value);
+      }}
+      className="form-input"
+      placeholder="Ana görsel URL'si girin veya dosya seçin"
+    />
+    <input
+      type="file"
+      accept="image/*"
+      style={{ display: "none" }}
+      id="main-image-file-input"
+      onChange={(e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+          setMainImageFile(file);
+          setMainImageId("");
+          setMainImageName(file.name);
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            setMainImagePreview(ev.target.result);
+            setMainImageUrl("");
+          };
+          reader.readAsDataURL(file);
+        }
+      }}
+    />
+    <label
+      htmlFor="main-image-file-input"
+      className="file-select-btn"
+      style={{ width: "fit-content" }}
+    >
+      <span>Dosya Seç</span>
+    </label>
+    <button
+      type="button"
+      className="file-select-btn"
+      style={{ width: "fit-content" }}
+      onClick={() => setShowMainImageSelector(true)}
+    >
+      Sistemden Seç
+    </button>
 
-              {(mainImagePreview || mainImageUrl) && (
-                <div className="AdminSelectedFileInfo">
-                  <div
-                    style={{ display: "flex", alignItems: "center", gap: 10 }}
-                  >
-                    <img
-                      src={mainImagePreview || mainImageUrl}
-                      alt={mainImageName || "Ana görsel"}
-                      style={{
-                        width: 80,
-                        height: 80,
-                        objectFit: "cover",
-                        borderRadius: 6,
-                      }}
-                    />
-                    <span>
-                      {mainImagePreview
-                        ? mainImageName
-                        : mainImageName ||
-                          (mainImageUrl?.split("/")?.pop() ?? "")}
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    className="delete-btn"
-                    onClick={() => {
-                      setMainImageId("");
-                      setMainImagePreview("");
-                      setMainImageName("");
-                      setMainImageFile(null);
-                      setMainImageUrl("");
-                    }}
-                  >
-                    ×
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
+    {(mainImagePreview || mainImageUrl) && (
+      <div
+        className="AdminSelectedFileInfo"
+        style={{
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          background: "#f9f9f9",
+          borderRadius: "8px",
+          padding: "8px 12px",
+          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+          gap: "10px",
+          width: "fit-content",
+          marginTop: "10px",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <img
+            src={mainImagePreview || mainImageUrl}
+            alt={mainImageName || "Ana görsel"}
+            style={{
+              width: 80,
+              height: 80,
+              objectFit: "cover",
+              borderRadius: 6,
+              border: "1px solid #ddd",
+            }}
+          />
+          <span>
+            {mainImagePreview
+              ? mainImageName
+              : mainImageName || (mainImageUrl?.split("/")?.pop() ?? "")}
+          </span>
+        </div>
+
+        {/* Kapatma Butonu */}
+        <button
+          type="button"
+          onClick={() => {
+            setMainImageId("");
+            setMainImagePreview("");
+            setMainImageName("");
+            setMainImageFile(null);
+            setMainImageUrl("");
+          }}
+          style={{
+            position: "absolute",
+            top: "-6px",
+            right: "-6px",
+            background: "#e74c3c",
+            color: "#fff",
+            border: "none",
+            borderRadius: "50%",
+            width: "20px",
+            height: "20px",
+            fontSize: "14px",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          ×
+        </button>
+      </div>
+    )}
+  </div>
+</div>
+
 
           {/* Dosya Seçici Modal (ProductModal ile aynı yapı) */}
           {showMainImageSelector && (
