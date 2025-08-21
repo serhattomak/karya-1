@@ -794,9 +794,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     const file = e.target.files[0];
                     if (file) {
                       try {
-                        const uploadedFile = await uploadFile(file);
-                        setProductImageId(uploadedFile.id);
-                        setAvailableFiles((prev) => [...prev, uploadedFile]);
+                        const response = await uploadFile(file);
+                        const fileObj = response?.data || response;
+                        setProductImageId(fileObj.id);
+                        setAvailableFiles((prev) => [...prev, fileObj]);
                       } catch (error) {
                         console.error("Dosya yüklenirken hata:", error);
                         Swal.fire({
@@ -813,8 +814,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   id="product-image-input"
                 />
                 <button
-                  htmlFor="product-image-input"
+                  type="button"
                   className="AdminFileSelectBtn primary"
+                  onClick={() => document.getElementById('product-image-input').click()}
+                  style={{ cursor: "pointer" }}
                 >
                   <span className="file-select-btn">Yeni Görsel Yükle</span>
                 </button>
@@ -936,8 +939,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   id="banner-file-input"
                 />
                 <button
-                  htmlFor="banner-file-input"
+                  type="button"
                   className="AdminFileSelectBtn primary"
+                  onClick={() => document.getElementById('banner-file-input').click()}
+                  style={{ cursor: "pointer" }}
                 >
                   <span className="file-select-btn">Dosya Seç</span>
                 </button>
@@ -1338,8 +1343,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     id="product-main-image-input"
                   />
                   <button
-                    htmlFor="product-main-image-input"
+                    type="button"
                     className="AdminFileSelectBtn primary"
+                    onClick={() => document.getElementById('product-main-image-input').click()}
+                    style={{ cursor: "pointer" }}
                   >
                     <span className="file-select-btn">
                       Yeni Ana Görsel Yükle
@@ -1559,8 +1566,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     id="detail-image-input"
                   />
                   <button
-                    htmlFor="detail-image-input"
+                    type="button"
                     className="AdminFileSelectBtn primary"
+                    onClick={() => document.getElementById('detail-image-input').click()}
+                    style={{ cursor: "pointer" }}
                   >
                     <span className="file-select-btn">Yeni Görsel Yükle</span>
                   </button>

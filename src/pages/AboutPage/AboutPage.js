@@ -35,9 +35,11 @@ function AboutPage() {
   let galleryImages = [];
   if (pageData.files && Array.isArray(pageData.files)) {
     galleryImages = pageData.files
-      .filter(f => !(pageData.mainImage && f.id === pageData.mainImage.id))
       .map(f => f.path ? BASE_URL + f.path : "")
       .filter(Boolean);
+    if (galleryImages.length > 4) {
+      galleryImages = galleryImages.slice(0, 4);
+    }
   }
 
   let mainImageUrl = "/assets/images/hk.jpeg";
