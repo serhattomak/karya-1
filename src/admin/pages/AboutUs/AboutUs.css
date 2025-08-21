@@ -98,10 +98,14 @@
 }
 
 /* Form Container */
-.AdminFormContainer {
-  max-width: 800px;
+.form-container {
+  max-width: 1200px;
   margin: 0 auto;
+  background-color: #f3f3f3;
+  padding: 10px;
 }
+
+
 
 /* Service Section Specific */
 .AdminServiceSection {
@@ -262,6 +266,13 @@
   justify-content: center;
 }
 
+/* form type */
+
+.form-section-title {
+  font-size: 18px;
+  font-weight: 500;
+}
+
 /* Loading State */
 .AdminLoading {
   display: flex;
@@ -283,8 +294,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .AdminLoading p {

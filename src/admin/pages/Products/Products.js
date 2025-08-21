@@ -71,14 +71,16 @@ const Products = () => {
     if (product.productImageId && product.files && product.files.length > 0) {
       console.log("Looking for ProductImageId:", product.productImageId);
       console.log("Available files:", product.files);
-      
-      const mainImage = product.files.find(file => {
+
+      const mainImage = product.files.find((file) => {
         // Try different comparison methods since IDs might be strings or UUIDs
         const fileId = String(file.id).toLowerCase();
-        const productMainImageId = String(product.productMainImageId).toLowerCase();
+        const productMainImageId = String(
+          product.productMainImageId
+        ).toLowerCase();
         return fileId === productMainImageId;
       });
-      
+
       if (mainImage && mainImage.path) {
         console.log("Found main image via ProductMainImageId:", mainImage);
         return BASE_URL + mainImage.path;
@@ -86,24 +88,36 @@ const Products = () => {
     }
 
     // Method 3: Check alternative casing (productMainImageId vs ProductMainImageId)
-    if (product.ProductMainImageId && product.files && product.files.length > 0) {
-      console.log("Looking for ProductMainImageId (capital P):", product.ProductMainImageId);
-      
-      const mainImage = product.files.find(file => {
+    if (
+      product.ProductMainImageId &&
+      product.files &&
+      product.files.length > 0
+    ) {
+      console.log(
+        "Looking for ProductMainImageId (capital P):",
+        product.ProductMainImageId
+      );
+
+      const mainImage = product.files.find((file) => {
         const fileId = String(file.id).toLowerCase();
-        const productMainImageId = String(product.ProductMainImageId).toLowerCase();
+        const productMainImageId = String(
+          product.ProductMainImageId
+        ).toLowerCase();
         return fileId === productMainImageId;
       });
-      
+
       if (mainImage && mainImage.path) {
-        console.log("Found main image via ProductMainImageId (capital P):", mainImage);
+        console.log(
+          "Found main image via ProductMainImageId (capital P):",
+          mainImage
+        );
         return BASE_URL + mainImage.path;
       }
     }
 
     // Method 4: Fallback to first available file
     if (product.files && product.files.length > 0) {
-      const firstFile = product.files.find(file => file.path);
+      const firstFile = product.files.find((file) => file.path);
       if (firstFile) {
         console.log("Using first available file:", firstFile);
         return BASE_URL + firstFile.path;
@@ -113,7 +127,9 @@ const Products = () => {
     // Method 5: Check mainImageUrl
     if (product.mainImageUrl) {
       console.log("Found mainImageUrl:", product.mainImageUrl);
-      return product.mainImageUrl.startsWith('http') ? product.mainImageUrl : BASE_URL + product.mainImageUrl;
+      return product.mainImageUrl.startsWith("http")
+        ? product.mainImageUrl
+        : BASE_URL + product.mainImageUrl;
     }
 
     console.log("No image found for product");
@@ -205,12 +221,12 @@ const Products = () => {
               <div className="AdminProductImage">
                 {(() => {
                   const imageUrl = getProductMainImage(product);
-                  
+
                   if (imageUrl) {
                     return (
                       <img
                         src={imageUrl}
-                        alt={product.name || 'Product image'}
+                        alt={product.name || "Product image"}
                         onError={(e) => {
                           console.log("Image failed to load:", imageUrl);
                           e.target.src = "/placeholder.jpg";
@@ -221,7 +237,7 @@ const Products = () => {
                       />
                     );
                   }
-                  
+
                   return (
                     <div className="AdminNoImage">
                       <span>Görsel Yok</span>
@@ -229,8 +245,8 @@ const Products = () => {
                   );
                 })()}
               </div>
-              <div className="AdminProductInfo">
-                <h3 className="AdminProductName">{product.name}</h3>
+              <div className="AdminProductInfo" style={{ textAlign: "left" }}>
+                {/* <h3 className="AdminProductName">{product.name}</h3> */}
                 <p className="AdminProductTitle">
                   {product.titles && product.titles[0]
                     ? product.titles[0]
@@ -240,7 +256,11 @@ const Products = () => {
                 {product.subtitles && product.subtitles.length > 0 && (
                   <div className="AdminProductSubtitles">
                     {product.subtitles.slice(0, 2).map((subtitle, index) => (
-                      <span key={index} className="AdminProductSubtitle">
+                      <span
+                        key={index}
+                        className="AdminProductSubtitle"
+                        style={{ textAlign: "left" }}
+                      >
                         {subtitle}
                       </span>
                     ))}
@@ -257,7 +277,7 @@ const Products = () => {
                     : "Açıklama yok"}
                 </p>
                 {/* Liste öğeleri */}
-                {product.listItems && product.listItems.length > 0 && (
+                {/* {product.listItems && product.listItems.length > 0 && (
                   <div className="AdminProductListItems">
                     {product.listTitles && product.listTitles.length > 0 && (
                       <h5>{product.listTitles[0]}</h5>
@@ -273,7 +293,7 @@ const Products = () => {
                       )}
                     </ul>
                   </div>
-                )}
+                )} */}
               </div>
               <div className="AdminProductActions">
                 <button
@@ -281,16 +301,18 @@ const Products = () => {
                   onClick={() => handleEditProduct(product)}
                 >
                   <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-                      </svg> Düzenle
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                  </svg>{" "}
+                  Düzenle
                 </button>
                 <button
                   className="delete-btn"
                   onClick={() => handleDeleteClick(product)}
                 >
                   <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-                    </svg> Sil
+                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                  </svg>{" "}
+                  Sil
                 </button>
               </div>
             </div>

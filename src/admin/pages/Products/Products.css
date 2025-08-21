@@ -57,6 +57,7 @@
   display: flex;
   flex-direction: column;
   position: relative;
+  min-height: 450px;
 }
 
 .AdminProductCard:hover {
@@ -487,9 +488,8 @@
 
 .add-btn.secondary:hover {
   background: #545b62;
-} */
-
-.AdminFileInput {
+}
+*/ .AdminFileInput {
   margin-bottom: 15px;
 }
 
@@ -622,40 +622,40 @@
   .AdminPanel {
     padding: 15px;
   }
-  
+
   .AdminPanelHeader {
     flex-direction: column;
     gap: 15px;
     text-align: center;
   }
-  
+
   .AdminProductsGrid {
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .AdminProductModal {
     width: 95vw;
   }
-  
+
   .AdminDeleteModal {
     width: 95vw;
     max-width: 400px;
   }
-  
+
   .AdminModalForm {
     max-height: 60vh;
   }
-  
+
   .AdminImagePreviewGrid {
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   }
-  
+
   .AdminImagePreviewItem {
     width: 80px;
     height: 80px;
   }
-  
+
   .AdminPagination {
     flex-direction: column;
     gap: 10px;
@@ -762,8 +762,6 @@
   border-radius: 4px;
 }
 
-
-
 .selected-images {
   display: flex;
   flex-direction: column;
@@ -792,7 +790,7 @@
   max-height: 85vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 32px rgba(246,139,31,0.12);
+  box-shadow: 0 8px 32px rgba(246, 139, 31, 0.12);
   border: 1.5px solid #f68b1f;
 }
 
@@ -829,14 +827,14 @@
   cursor: pointer;
   transition: box-shadow 0.2s, border-color 0.2s;
   background: #fff;
-  box-shadow: 0 2px 8px rgba(246,139,31,0.08);
+  box-shadow: 0 2px 8px rgba(246, 139, 31, 0.08);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .AdminFileItem.modern:hover {
   border-color: #ee5c30;
-  box-shadow: 0 4px 16px rgba(246,139,31,0.18);
+  box-shadow: 0 4px 16px rgba(246, 139, 31, 0.18);
 }
 .AdminFileSearchInput {
   border: 1px solid #e9ecef;

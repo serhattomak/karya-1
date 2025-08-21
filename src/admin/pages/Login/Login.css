@@ -1,7 +1,12 @@
 #login-page {
   display: flex;
-  height: 100%;
+  justify-content: center; /* yatay ortala */
+  align-items: center; /* dikey ortala */
+  height: 100vh; /* tam ekran yüksekliği */
+  background-color: #fad961;
+  background-image: linear-gradient(90deg, #232526 0%, #414345 100%);
 }
+
 .notice {
   font-size: 13px;
   text-align: center;
@@ -9,9 +14,10 @@
 }
 .login {
   width: 30%;
-  height: 100vh;
   background: #fff;
   padding: 70px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
 .logo {

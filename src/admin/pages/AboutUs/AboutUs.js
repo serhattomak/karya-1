@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { getPageByName } from "../../../api";
 import Swal from "sweetalert2";
-import "./AboutUs.css";
+import "../AboutUs/AboutUs.css";
 
 const BASE_URL = "https://localhost:7103/";
 const API_BASE_URL = "https://localhost:7103";
@@ -89,7 +89,9 @@ const AboutUs = () => {
         setSubtitles(data.subtitles?.length ? data.subtitles : [""]);
         setDescriptions(data.descriptions?.length ? data.descriptions : [""]);
         setVideoTitles(data.videoTitles?.length ? data.videoTitles : [""]);
-        setVideoDescriptions(data.videoDescriptions?.length ? data.videoDescriptions : [""]);
+        setVideoDescriptions(
+          data.videoDescriptions?.length ? data.videoDescriptions : [""]
+        );
 
         setImage(data.bannerImageUrl || "");
         setBannerImageUrl(data.bannerImageUrl || "");
@@ -150,7 +152,8 @@ const AboutUs = () => {
         try {
           const api = await import("../../../api");
           const filesResponse = await api.getFiles();
-          let files = filesResponse?.data?.data || filesResponse?.data || filesResponse;
+          let files =
+            filesResponse?.data?.data || filesResponse?.data || filesResponse;
           if (Array.isArray(files)) {
             setAvailableImages(files);
           } else {
@@ -551,8 +554,15 @@ const AboutUs = () => {
   }
 
   return (
-    <div className="admin-panel">
-      <div className="AdminSectionHeader">
+    <div className="admin-panel" style={{ padding: "20px" }}>
+      <div
+        className="AdminSectionHeader"
+        style={{
+          backgroundColor: "#f3f3f3",
+          padding: "10px",
+          borderRadius: "10px",
+        }}
+      >
         <h2 className="AdminPanelTitle">🏢 Hakkımızda Sayfası Yönetimi</h2>
         <p className="AdminPanelDescription">
           Şirket hakkında bilgileri, hizmetlerinizi ve galeri görsellerini
@@ -560,7 +570,15 @@ const AboutUs = () => {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="AdminFormContainer">
+      <form
+        onSubmit={handleSubmit}
+        className="AdminFormContainer"
+        style={{
+          backgroundColor: "#f3f3f3",
+          padding: "10px",
+          borderRadius: "10px",
+        }}
+      >
         <div className="form-group">
           <label className="form-label">Slug</label>
           <input
@@ -573,7 +591,7 @@ const AboutUs = () => {
         </div>
 
         <div className="form-section">
-          <h3 className="form-section-title">📝 Temel Bilgiler</h3>
+          <h3 className="form-section-title"> Temel Bilgiler</h3>
 
           {/* Banner */}
           <div className="form-group">
@@ -617,7 +635,7 @@ const AboutUs = () => {
                 className="add-btn secondary"
                 onClick={openImageSelector}
               >
-                📁 Sistemden Görsel Seç
+                Sistemden Görsel Seç
               </button>
             </div>
 
@@ -740,19 +758,41 @@ const AboutUs = () => {
                   </button>
                 </div>
                 <div className="AdminFileSelectorBody modern">
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: 16,
+                    }}
+                  >
                     <input
                       type="text"
                       className="AdminFileSearchInput"
                       placeholder="Dosya ismiyle ara..."
                       value={mainImageSearchTerm || ""}
-                      onChange={e => setMainImageSearchTerm(e.target.value)}
-                      style={{ flex: 1, padding: "8px 12px", borderRadius: 8, border: "1px solid #e9ecef", fontSize: 14, marginRight: 12 }}
+                      onChange={(e) => setMainImageSearchTerm(e.target.value)}
+                      style={{
+                        flex: 1,
+                        padding: "8px 12px",
+                        borderRadius: 8,
+                        border: "1px solid #e9ecef",
+                        fontSize: 14,
+                        marginRight: 12,
+                      }}
                     />
                     <button
                       type="button"
                       className="sort-btn"
-                      style={{ padding: "8px 16px", borderRadius: 8, border: "none", background: "#f68b1f", color: "white", fontWeight: 600, cursor: "pointer" }}
+                      style={{
+                        padding: "8px 16px",
+                        borderRadius: 8,
+                        border: "none",
+                        background: "#f68b1f",
+                        color: "white",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                      }}
                       onClick={() => setMainImageSortAsc(!mainImageSortAsc)}
                     >
                       {mainImageSortAsc ? "A-Z" : "Z-A"}
@@ -761,14 +801,27 @@ const AboutUs = () => {
                   <div className="AdminFilesGrid modern">
                     {availableImages
                       .filter((file) => {
-                        if (!(file.contentType?.startsWith("image/") || file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i))) return false;
-                        const fileName = file.name || (file.path?.split("/").pop() || "");
-                        if (mainImageSearchTerm && !fileName.toLowerCase().includes(mainImageSearchTerm.toLowerCase())) return false;
+                        if (
+                          !(
+                            file.contentType?.startsWith("image/") ||
+                            file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i)
+                          )
+                        )
+                          return false;
+                        const fileName =
+                          file.name || file.path?.split("/").pop() || "";
+                        if (
+                          mainImageSearchTerm &&
+                          !fileName
+                            .toLowerCase()
+                            .includes(mainImageSearchTerm.toLowerCase())
+                        )
+                          return false;
                         return true;
                       })
                       .sort((a, b) => {
-                        const nameA = a.name || (a.path?.split("/").pop() || "");
-                        const nameB = b.name || (b.path?.split("/").pop() || "");
+                        const nameA = a.name || a.path?.split("/").pop() || "";
+                        const nameB = b.name || b.path?.split("/").pop() || "";
                         if (mainImageSortAsc) {
                           return nameA.localeCompare(nameB);
                         } else {
@@ -776,7 +829,8 @@ const AboutUs = () => {
                         }
                       })
                       .map((file) => {
-                        const fileName = file.name || (file.path?.split("/").pop() || "");
+                        const fileName =
+                          file.name || file.path?.split("/").pop() || "";
                         return (
                           <div
                             key={file.id}
@@ -789,17 +843,50 @@ const AboutUs = () => {
                               setMainImageName(fileName);
                               setShowMainImageSelector(false);
                             }}
-                            style={{ boxShadow: "0 2px 8px rgba(246,139,31,0.08)", border: "1px solid #f68b1f", borderRadius: 12, padding: 12, cursor: "pointer", transition: "all 0.2s", background: "#fff", display: "flex", flexDirection: "column", alignItems: "center" }}
+                            style={{
+                              boxShadow: "0 2px 8px rgba(246,139,31,0.08)",
+                              border: "1px solid #f68b1f",
+                              borderRadius: 12,
+                              padding: 12,
+                              cursor: "pointer",
+                              transition: "all 0.2s",
+                              background: "#fff",
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                            }}
                           >
                             <img
                               src={`${API_BASE_URL}/${file.path}`}
                               alt={fileName}
                               loading="lazy"
-                              style={{ width: "100%", height: "100px", objectFit: "cover", borderRadius: "8px", marginBottom: "8px", boxShadow: "0 1px 4px rgba(0,0,0,0.07)" }}
+                              style={{
+                                width: "100%",
+                                height: "100px",
+                                objectFit: "cover",
+                                borderRadius: "8px",
+                                marginBottom: "8px",
+                                boxShadow: "0 1px 4px rgba(0,0,0,0.07)",
+                              }}
                             />
-                            <div className="AdminFileInfo" style={{ textAlign: "center" }}>
-                              <span className="AdminFileName" style={{ fontWeight: 600, color: "#333", fontSize: 14 }}>{file.name}</span>
-                              <span className="AdminFileSize" style={{ color: "#666", fontSize: 12 }}>
+                            <div
+                              className="AdminFileInfo"
+                              style={{ textAlign: "center" }}
+                            >
+                              <span
+                                className="AdminFileName"
+                                style={{
+                                  fontWeight: 600,
+                                  color: "#333",
+                                  fontSize: 14,
+                                }}
+                              >
+                                {file.name}
+                              </span>
+                              <span
+                                className="AdminFileSize"
+                                style={{ color: "#666", fontSize: 12 }}
+                              >
                                 {(file.size / 1024 / 1024).toFixed(2)} MB
                               </span>
                             </div>
@@ -808,7 +895,15 @@ const AboutUs = () => {
                       })}
                   </div>
                   {availableImages.length === 0 && (
-                    <div style={{ textAlign: "center", color: "#999", marginTop: 32 }}>Hiç dosya bulunamadı.</div>
+                    <div
+                      style={{
+                        textAlign: "center",
+                        color: "#999",
+                        marginTop: 32,
+                      }}
+                    >
+                      Hiç dosya bulunamadı.
+                    </div>
                   )}
                 </div>
               </div>
@@ -1002,7 +1097,7 @@ const AboutUs = () => {
                     onClick={() => removeTitle(index)}
                     className="btn btn-danger btn-sm"
                   >
-                    Sil
+                    x
                   </button>
                 )}
               </div>
@@ -1048,7 +1143,7 @@ const AboutUs = () => {
                     onClick={() => removeSubtitle(index)}
                     className="btn btn-danger btn-sm"
                   >
-                    Sil
+                    x
                   </button>
                 )}
               </div>
@@ -1095,7 +1190,7 @@ const AboutUs = () => {
                     className="remove-btn danger btn-sm"
                     style={{ alignSelf: "flex-start" }}
                   >
-                    Sil
+                    x
                   </button>
                 )}
               </div>
@@ -1158,7 +1253,14 @@ const AboutUs = () => {
 
         {/* Galeri */}
         <div className="form-section">
-          <h3 className="form-section-title">🖼️ Galeri Görselleri</h3>
+          <h3
+            className="form-section-title"
+            style={{
+              fontWeight: "500",
+            }}
+          >
+            Galeri Görselleri
+          </h3>
           <p className="form-help">En fazla 4 görsel yükleyebilirsiniz.</p>
           <div className="AdminGalleryGrid">
             {[0, 1, 2, 3].map((index) => {
@@ -1268,14 +1370,40 @@ const AboutUs = () => {
                           });
                           setShowGalleryImageSelector(null);
                         }}
-                        style={{ boxShadow: "0 2px 8px rgba(246,139,31,0.08)", border: "1px solid #f68b1f", borderRadius: 12, padding: 12, cursor: "pointer", transition: "all 0.2s", background: "#fff", display: "flex", flexDirection: "column", alignItems: "center" }}
+                        style={{
+                          boxShadow: "0 2px 8px rgba(246,139,31,0.08)",
+                          border: "1px solid #f68b1f",
+                          borderRadius: 12,
+                          padding: 12,
+                          cursor: "pointer",
+                          transition: "all 0.2s",
+                          background: "#fff",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                        }}
                       >
                         <img
                           src={`${API_BASE_URL}/${file.path}`}
                           alt={file.path.split("/").pop()}
-                          style={{ width: "100%", height: 80, objectFit: "cover", borderRadius: 8, marginBottom: 8, boxShadow: "0 1px 4px rgba(0,0,0,0.07)" }}
+                          style={{
+                            width: "100%",
+                            height: 80,
+                            objectFit: "cover",
+                            borderRadius: 8,
+                            marginBottom: 8,
+                            boxShadow: "0 1px 4px rgba(0,0,0,0.07)",
+                          }}
                         />
-                        <div style={{ padding: 6, fontSize: 13, textAlign: "center", fontWeight: 600, color: "#333" }}>
+                        <div
+                          style={{
+                            padding: 6,
+                            fontSize: 13,
+                            textAlign: "center",
+                            fontWeight: 600,
+                            color: "#333",
+                          }}
+                        >
                           {file.path.split("/").pop()}
                         </div>
                       </div>
