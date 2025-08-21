@@ -1090,9 +1090,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     const file = e.target.files[0];
                     if (file) {
                       try {
-                        const uploadedFile = await uploadFile(file);
-                        setProductImageId(uploadedFile.id);
-                        setAvailableFiles((prev) => [...prev, uploadedFile]);
+                        const response = await uploadFile(file);
+                        const fileObj = response?.data || response;
+                        setProductImageId(fileObj.id);
+                        setAvailableFiles((prev) => [...prev, fileObj]);
                       } catch (error) {
                         console.error("Dosya yüklenirken hata:", error);
                         Swal.fire({
