@@ -777,8 +777,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   id="product-image-input"
                 />
                 <button
-                  htmlFor="product-image-input"
+                  type="button"
                   className="AdminFileSelectBtn primary"
+                  onClick={() => document.getElementById('product-image-input').click()}
+                  style={{ cursor: "pointer" }}
                 >
                   <span className="file-select-btn">Yeni Görsel Yükle</span>
                 </button>
@@ -900,8 +902,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   id="banner-file-input"
                 />
                 <button
-                  htmlFor="banner-file-input"
+                  type="button"
                   className="AdminFileSelectBtn primary"
+                  onClick={() => document.getElementById('banner-file-input').click()}
+                  style={{ cursor: "pointer" }}
                 >
                   <span className="file-select-btn">Dosya Seç</span>
                 </button>
@@ -1295,8 +1299,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     id="product-main-image-input"
                   />
                   <button
-                    htmlFor="product-main-image-input"
+                    type="button"
                     className="AdminFileSelectBtn primary"
+                    onClick={() => document.getElementById('product-main-image-input').click()}
+                    style={{ cursor: "pointer" }}
                   >
                     <span className="file-select-btn">
                       Yeni Ana Görsel Yükle
@@ -1516,8 +1522,10 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     id="detail-image-input"
                   />
                   <button
-                    htmlFor="detail-image-input"
+                    type="button"
                     className="AdminFileSelectBtn primary"
+                    onClick={() => document.getElementById('detail-image-input').click()}
+                    style={{ cursor: "pointer" }}
                   >
                     <span className="file-select-btn">Yeni Görsel Yükle</span>
                   </button>
