@@ -6,7 +6,7 @@
 .service-title {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #212121;
+  color: #333;
   text-align: left;
 }
 
@@ -21,6 +21,7 @@
   padding-left: 0;
   text-align: left;
   max-width: 650px;
+  font-weight: 400;
 }
 
 .service-items li {
@@ -29,20 +30,22 @@
   margin-bottom: 20px;
   padding-left: 45px;
   position: relative;
-  font-size: 1rem;
-
-  color: #212121;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #333;
 }
 
 .service-items li::before {
   content: "➜";
-  color: #212121;
+  color: #333;
   background-color: #d9d9d9;
   border-radius: 50%;
   width: 30px;
   height: 30px;
   display: inline-flex;
   align-items: center;
+  font-weight: 400;
+
   justify-content: center;
   font-size: 1rem;
   position: absolute;

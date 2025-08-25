@@ -816,7 +816,9 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 <button
                   type="button"
                   className="AdminFileSelectBtn primary"
-                  onClick={() => document.getElementById('product-image-input').click()}
+                  onClick={() =>
+                    document.getElementById("product-image-input").click()
+                  }
                   style={{ cursor: "pointer" }}
                 >
                   <span className="file-select-btn">Yeni Görsel Yükle</span>
@@ -885,7 +887,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     })()}
                   </div>
 
-                  {/* Kapatma Butonu */}
                   <button
                     type="button"
                     onClick={() => setProductImageId("")}
@@ -941,7 +942,9 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 <button
                   type="button"
                   className="AdminFileSelectBtn primary"
-                  onClick={() => document.getElementById('banner-file-input').click()}
+                  onClick={() =>
+                    document.getElementById("banner-file-input").click()
+                  }
                   style={{ cursor: "pointer" }}
                 >
                   <span className="file-select-btn">Dosya Seç</span>
@@ -1345,7 +1348,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   <button
                     type="button"
                     className="AdminFileSelectBtn primary"
-                    onClick={() => document.getElementById('product-main-image-input').click()}
+                    onClick={() =>
+                      document
+                        .getElementById("product-main-image-input")
+                        .click()
+                    }
                     style={{ cursor: "pointer" }}
                   >
                     <span className="file-select-btn">
@@ -1568,7 +1575,9 @@ const ProductModal = ({ product, onClose, onSave }) => {
                   <button
                     type="button"
                     className="AdminFileSelectBtn primary"
-                    onClick={() => document.getElementById('detail-image-input').click()}
+                    onClick={() =>
+                      document.getElementById("detail-image-input").click()
+                    }
                     style={{ cursor: "pointer" }}
                   >
                     <span className="file-select-btn">Yeni Görsel Yükle</span>

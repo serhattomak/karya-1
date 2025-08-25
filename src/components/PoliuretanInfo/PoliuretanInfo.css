@@ -48,12 +48,12 @@
   position: relative;
   font-size: 1rem;
 
-  color: #212121;
+  color: #333;
 }
 
 .p-right-content li::before {
   content: "➜";
-  color: #212121;
+  color: #333;
   background-color: #d9d9d9;
   border-radius: 50%;
   width: 30px;

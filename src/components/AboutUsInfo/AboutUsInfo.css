@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   padding-top: 2rem;
-  padding-bottom: 4rem;
+  padding-bottom: 7rem;
   width: 100%;
   justify-content: center;
 }
@@ -10,8 +10,7 @@
 .info-content {
   display: flex;
 
-  justify-content: center;
-  gap: 10rem;
+  justify-content: space-evenly;
   width: 100%;
   font-family: Montserrat;
 }
