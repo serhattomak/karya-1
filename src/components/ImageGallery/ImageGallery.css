@@ -59,7 +59,7 @@
 
 @media (max-width: 1024px) {
   .image-gallery {
-    width: 90%;
+    width: 100%;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }

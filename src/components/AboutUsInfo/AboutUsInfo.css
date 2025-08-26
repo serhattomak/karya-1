@@ -76,9 +76,13 @@
     flex-direction: column;
     width: 100%;
     align-items: left;
-    padding: 2rem;
+    padding: 1rem;
   }
 
+  .info-container {
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+  }
   .info-image-container {
     width: 100%;
 
