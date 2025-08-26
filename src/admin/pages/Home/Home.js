@@ -63,16 +63,16 @@ const Home = () => {
 
             let imagePath = "";
 
-            if (product.productImage && product.productImage.path) {
-              imagePath = product.productImage.path;
-              console.log("productImage.path kullanıldı:", imagePath);
-            } else if (product.productImageId) {
+            if (product.productMainImage && product.productMainImage.path) {
+              imagePath = product.productMainImage.path;
+              console.log("productMainImage.path kullanıldı:", imagePath);
+            } else if (product.productMainImageId) {
               try {
                 console.log(
                   "File API'sinden dosya çekiliyor:",
-                  product.productImageId
+                  product.productMainImageId
                 );
-                const fileResponse = await getFile(product.productImageId);
+                const fileResponse = await getFile(product.productMainImageId);
                 const fileData =
                   fileResponse.data && fileResponse.data.data
                     ? fileResponse.data.data

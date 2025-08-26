@@ -36,16 +36,16 @@ function ProductDetailPage() {
         const response = await getProductBySlug(slug);
         const data = response?.data?.data || response?.data || response;
 
-        let mainImage = null;
-        if (data.mainImageId) {
+        let productImage = null;
+        if (data.productImage) {
           try {
-            const fileResponse = await getFile(data.mainImageId);
+            const fileResponse = await getFile(data.productImageId);
             const fileData = fileResponse?.data?.data || fileResponse?.data || fileResponse;
             if (fileData && fileData.path) {
-              mainImage = fileData.path.startsWith("http") ? fileData.path : BASE_URL + fileData.path;
+              productImage = fileData.path.startsWith("http") ? fileData.path : BASE_URL + fileData.path;
             }
           } catch (err) {
-            mainImage = null;
+            productImage = null;
           }
         }
 
@@ -81,7 +81,7 @@ function ProductDetailPage() {
 
         setProductData({
           ...data,
-          mainImage,
+          productImage,
           productDetailImages,
           bannerImage,
           videoUrl,
