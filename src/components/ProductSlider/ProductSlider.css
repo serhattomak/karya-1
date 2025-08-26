@@ -97,7 +97,7 @@
   font-size: 1rem;
   font-weight: 600;
   color: #ffffff;
-  margin-top: .25rem;
+  margin-top: 0.25rem;
   text-align: left;
 }
 
@@ -124,6 +124,19 @@ a {
 
   .product-slider-title {
     font-size: 0.8rem;
+  }
+  .product-subtitle {
+    font-size: 0.6rem;
+  }
+  .slide.with-subtitle .product-title {
+    font-size: 0.8rem;
+    margin-bottom: 0.1rem; /* Subtitle ile aralığı arttır */
+  }
+
+  /* subtitle içeren kartlar için alt başlık düzenlemesi */
+  .slide.with-subtitle .product-subtitle {
+    font-size: 0.6rem;
+    margin-top: 0.05rem;
   }
 }
 
