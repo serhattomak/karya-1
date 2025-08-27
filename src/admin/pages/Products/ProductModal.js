@@ -774,9 +774,9 @@ const ProductModal = ({ product, onClose, onSave }) => {
             </div>
           </div>
 
-          {/* Product Image ID */}
+          {/* kart görselini buraya koy */}
+          {/*Ana Ürün Görseli */}
           <div
-            className="form-group"
             style={{
               backgroundColor: "#f3f3f3",
               padding: "10px",
@@ -784,133 +784,184 @@ const ProductModal = ({ product, onClose, onSave }) => {
               marginTop: "10px",
             }}
           >
-            <label>Sayfa Görseli</label>
-            <div className="AdminProductImageSelector">
-              <div className="AdminUploadControls">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={async (e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                      try {
-                        const response = await uploadFile(file);
-                        const fileObj = response?.data || response;
-                        setProductImageId(fileObj.id);
-                        setAvailableFiles((prev) => [...prev, fileObj]);
-                      } catch (error) {
-                        console.error("Dosya yüklenirken hata:", error);
-                        Swal.fire({
-                          icon: "error",
-                          title: "Hata!",
-                          text: "Dosya yüklenirken bir hata oluştu.",
-                          confirmButtonText: "Tamam",
-                          confirmButtonColor: "#dc3545",
-                        });
-                      }
-                    }
-                  }}
-                  style={{ display: "none" }}
-                  id="product-image-input"
-                />
-                <button
-                  type="button"
-                  className="AdminFileSelectBtn primary"
-                  onClick={() =>
-                    document.getElementById("product-image-input").click()
-                  }
-                  style={{ cursor: "pointer" }}
-                >
-                  <span className="file-select-btn">Yeni Görsel Yükle</span>
-                </button>
-                <button
-                  type="button"
-                  className="file-select-btn"
-                  onClick={() => openFileSelector("productImage")}
-                >
-                  Sistemden Seç
-                </button>
-              </div>
-
-              {productImageId && (
-                <div
-                  className="AdminSelectedFileInfo"
-                  style={{
-                    position: "relative",
-                    display: "flex",
-                    alignItems: "center",
-                    background: "#f9f9f9",
-                    borderRadius: "8px",
-                    padding: "8px 12px",
-                    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-                    gap: "10px",
-                    width: "fit-content",
-                    marginTop: "10px",
-                  }}
-                >
-                  <div
-                    className="AdminSelectedImagePreview"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                    }}
-                  >
-                    {(() => {
-                      const selectedImage = getSelectedProductImage();
-                      return selectedImage ? (
-                        <>
-                          <img
-                            src={BASE_URL + selectedImage.path}
-                            alt={selectedImage.name}
-                            style={{
-                              width: "60px",
-                              height: "60px",
-                              objectFit: "cover",
-                              borderRadius: "6px",
-                              border: "1px solid #ddd",
-                            }}
-                          />
-                          <span
-                            style={{
-                              fontSize: "14px",
-                              color: "#333",
-                              fontWeight: 500,
-                            }}
-                          >
-                            {selectedImage.name}
-                          </span>
-                        </>
-                      ) : (
-                        <span>Seçilen görsel ID: {productImageId}</span>
-                      );
-                    })()}
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => setProductImageId("")}
-                    style={{
-                      position: "absolute",
-                      top: "-6px",
-                      right: "-6px",
-                      background: "#e74c3c",
-                      color: "#fff",
-                      border: "none",
-                      borderRadius: "50%",
-                      width: "20px",
-                      height: "20px",
-                      fontSize: "14px",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    ×
-                  </button>
+            {/* Ana Görsel URL */}
+            {/* <div className="form-group">
+              <label>Ana Görsel URL</label>
+              <input
+                type="url"
+                value={mainImageUrl}
+                onChange={(e) => setMainImageUrl(e.target.value)}
+                placeholder="Ana görsel URL'si"
+              />
+              {mainImageUrl && (
+                <div className="AdminBannerPreview">
+                  <img
+                    src={mainImageUrl}
+                    alt="Ana görsel önizleme"
+                    style={{ maxWidth: "200px", maxHeight: "100px" }}
+                  />
                 </div>
               )}
+            </div> */}
+
+            {/* Product Main Image ID */}
+            <div className="form-group">
+              <label>Anasayfa Ürün Görseli</label>
+              <div className="AdminProductImageSelector">
+                <div className="AdminUploadControls">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        setProductMainImageFile(file);
+                        setProductMainImageName(file.name);
+
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                          setProductMainImagePreview(event.target.result);
+                        };
+                        reader.readAsDataURL(file);
+
+                        setProductMainImageId("");
+                      }
+                    }}
+                    style={{ display: "none" }}
+                    id="product-main-image-input"
+                  />
+                  <button
+                    type="button"
+                    className="AdminFileSelectBtn primary"
+                    onClick={() =>
+                      document
+                        .getElementById("product-main-image-input")
+                        .click()
+                    }
+                    style={{ cursor: "pointer" }}
+                  >
+                    <span className="file-select-btn">
+                      Yeni Görsel Yükle
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    className="file-select-btn"
+                    onClick={() => openFileSelector("productMainImage")}
+                  >
+                    Sistemden Seç
+                  </button>
+                </div>
+                {(productMainImageId || productMainImagePreview) && (
+      <div
+        className="AdminSelectedFileInfo"
+        style={{
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          background: "#f9f9f9",
+          borderRadius: "8px",
+          padding: "8px 12px",
+          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+          gap: "10px",
+          width: "fit-content",
+          marginTop: "10px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+          }}
+        >
+          {productMainImagePreview ? (
+            <img
+              src={productMainImagePreview}
+              alt={productMainImageName || "Ana ürün görseli önizleme"}
+              style={{
+                width: "60px",
+                height: "60px",
+                objectFit: "cover",
+                borderRadius: "6px",
+                border: "1px solid #ddd",
+              }}
+            />
+          ) : (
+            productMainImageId &&
+            (() => {
+              const selectedImage = availableFiles.find(
+                (file) => file.id === productMainImageId
+              );
+              if (selectedImage && selectedImage.path) {
+                return (
+                  <img
+                    src={BASE_URL + selectedImage.path}
+                    alt={selectedImage.name || "Ana ürün görseli"}
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      objectFit: "cover",
+                      borderRadius: "6px",
+                      border: "1px solid #ddd",
+                    }}
+                  />
+                );
+              }
+              return null;
+            })()
+          )}
+          <span
+            style={{
+              fontSize: "14px",
+              color: "#333",
+              fontWeight: 500,
+            }}
+          >
+            {productMainImagePreview
+              ? productMainImageName
+              : (() => {
+                  const selectedImage = availableFiles.find(
+                    (file) => file.id === productMainImageId
+                  );
+                  return selectedImage
+                    ? selectedImage.name
+                    : `Seçilen görsel ID: ${productMainImageId}`;
+                })()}
+          </span>
+        </div>
+
+                 
+        <button
+          type="button"
+          onClick={() => {
+            setProductMainImageId("");
+            setProductMainImagePreview("");
+            setProductMainImageName("");
+            setProductMainImageFile(null);
+          }}
+          style={{
+            position: "absolute",
+            top: "-6px",
+            right: "-6px",
+            background: "#e74c3c",
+            color: "#fff",
+            border: "none",
+            borderRadius: "50%",
+            width: "20px",
+            height: "20px",
+            fontSize: "14px",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          ×
+        </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -921,6 +972,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
               backgroundColor: "#f3f3f3",
               padding: "10px",
               borderRadius: "10px",
+              marginTop: "10px",
             }}
           >
             <label>Banner Görseli</label>
@@ -1017,7 +1069,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
             </div>
 
             {/* Alt Başlıklar */}
-            {/* <div className="form-group">
+            <div className="form-group">
               <label>Alt Başlıklar</label>
               {subtitles.map((subtitle, index) => (
                 <div key={index} className="AdminInputGroup">
@@ -1045,7 +1097,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
               >
                 <span>+ Alt Başlık Ekle</span>
               </button>
-            </div> */}
+            </div>
           </div>
           {/* Açıklamalar */}
           <div
@@ -1290,8 +1342,9 @@ const ProductModal = ({ product, onClose, onSave }) => {
             </div>
           </div>
 
-          {/*Ana Ürün Görseli */}
+          {/* Product Image ID */}
           <div
+            className="form-group"
             style={{
               backgroundColor: "#f3f3f3",
               padding: "10px",
@@ -1299,150 +1352,138 @@ const ProductModal = ({ product, onClose, onSave }) => {
               marginTop: "10px",
             }}
           >
-            {/* Ana Görsel URL */}
-            <div className="form-group">
-              <label>Ana Görsel URL</label>
-              <input
-                type="url"
-                value={mainImageUrl}
-                onChange={(e) => setMainImageUrl(e.target.value)}
-                placeholder="Ana görsel URL'si"
-              />
-              {mainImageUrl && (
-                <div className="AdminBannerPreview">
-                  <img
-                    src={mainImageUrl}
-                    alt="Ana görsel önizleme"
-                    style={{ maxWidth: "200px", maxHeight: "100px" }}
-                  />
+            <label>İçerik Görseli</label>
+            <div className="AdminProductImageSelector">
+              <div className="AdminUploadControls">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      try {
+                        const response = await uploadFile(file);
+                        const fileObj = response?.data || response;
+                        setProductImageId(fileObj.id);
+                        setAvailableFiles((prev) => [...prev, fileObj]);
+                      } catch (error) {
+                        console.error("Dosya yüklenirken hata:", error);
+                        Swal.fire({
+                          icon: "error",
+                          title: "Hata!",
+                          text: "Dosya yüklenirken bir hata oluştu.",
+                          confirmButtonText: "Tamam",
+                          confirmButtonColor: "#dc3545",
+                        });
+                      }
+                    }
+                  }}
+                  style={{ display: "none" }}
+                  id="product-image-input"
+                />
+                <button
+                  type="button"
+                  className="AdminFileSelectBtn primary"
+                  onClick={() =>
+                    document.getElementById("product-image-input").click()
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  <span className="file-select-btn">Yeni Görsel Yükle</span>
+                </button>
+                <button
+                  type="button"
+                  className="file-select-btn"
+                  onClick={() => openFileSelector("productImage")}
+                >
+                  Sistemden Seç
+                </button>
+              </div>
+
+              {productImageId && (
+                <div
+                  className="AdminSelectedFileInfo"
+                  style={{
+                    position: "relative",
+                    display: "flex",
+                    alignItems: "center",
+                    background: "#f9f9f9",
+                    borderRadius: "8px",
+                    padding: "8px 12px",
+                    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                    gap: "10px",
+                    width: "fit-content",
+                    marginTop: "10px",
+                  }}
+                >
+                  <div
+                    className="AdminSelectedImagePreview"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                    }}
+                  >
+                    {(() => {
+                      const selectedImage = getSelectedProductImage();
+                      return selectedImage ? (
+                        <>
+                          <img
+                            src={BASE_URL + selectedImage.path}
+                            alt={selectedImage.name}
+                            style={{
+                              width: "60px",
+                              height: "60px",
+                              objectFit: "cover",
+                              borderRadius: "6px",
+                              border: "1px solid #ddd",
+                            }}
+                          />
+                          <span
+                            style={{
+                              fontSize: "14px",
+                              color: "#333",
+                              fontWeight: 500,
+                            }}
+                          >
+                            {selectedImage.name}
+                          </span>
+                        </>
+                      ) : (
+                        <span>Seçilen görsel ID: {productImageId}</span>
+                      );
+                    })()}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setProductImageId("")}
+                    style={{
+                      position: "absolute",
+                      top: "-6px",
+                      right: "-6px",
+                      background: "#e74c3c",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "50%",
+                      width: "20px",
+                      height: "20px",
+                      fontSize: "14px",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    ×
+                  </button>
                 </div>
               )}
             </div>
-
-            {/* Product Main Image ID */}
-            <div className="form-group">
-              <label>Ana Ürün Görseli</label>
-              <div className="AdminProductImageSelector">
-                <div className="AdminUploadControls">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={async (e) => {
-                      const file = e.target.files[0];
-                      if (file) {
-                        setProductMainImageFile(file);
-                        setProductMainImageName(file.name);
-
-                        const reader = new FileReader();
-                        reader.onload = (event) => {
-                          setProductMainImagePreview(event.target.result);
-                        };
-                        reader.readAsDataURL(file);
-
-                        setProductMainImageId("");
-                      }
-                    }}
-                    style={{ display: "none" }}
-                    id="product-main-image-input"
-                  />
-                  <button
-                    type="button"
-                    className="AdminFileSelectBtn primary"
-                    onClick={() =>
-                      document
-                        .getElementById("product-main-image-input")
-                        .click()
-                    }
-                    style={{ cursor: "pointer" }}
-                  >
-                    <span className="file-select-btn">
-                      Yeni Ana Görsel Yükle
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    className="file-select-btn"
-                    onClick={() => openFileSelector("productMainImage")}
-                  >
-                    Sistemden Seç
-                  </button>
-                </div>
-                {(productMainImageId || productMainImagePreview) && (
-                  <div className="AdminSelectedFileInfo">
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                      }}
-                    >
-                      {productMainImagePreview ? (
-                        <img
-                          src={productMainImagePreview}
-                          alt={
-                            productMainImageName || "Ana ürün görseli önizleme"
-                          }
-                          style={{
-                            width: "50px",
-                            height: "50px",
-                            objectFit: "cover",
-                            borderRadius: "4px",
-                          }}
-                        />
-                      ) : (
-                        productMainImageId &&
-                        (() => {
-                          const selectedImage = availableFiles.find(
-                            (file) => file.id === productMainImageId
-                          );
-                          if (selectedImage && selectedImage.path) {
-                            return (
-                              <img
-                                src={BASE_URL + selectedImage.path}
-                                alt={selectedImage.name || "Ana ürün görseli"}
-                                style={{
-                                  width: "50px",
-                                  height: "50px",
-                                  objectFit: "cover",
-                                  borderRadius: "4px",
-                                }}
-                              />
-                            );
-                          }
-                          return null;
-                        })()
-                      )}
-                      <span>
-                        {productMainImagePreview ? productMainImageName : ""}
-                        {!productMainImagePreview &&
-                          productMainImageId &&
-                          (() => {
-                            const selectedImage = availableFiles.find(
-                              (file) => file.id === productMainImageId
-                            );
-                            return selectedImage
-                              ? selectedImage.name
-                              : `Seçilen görsel ID: ${productMainImageId}`;
-                          })()}
-                      </span>
-                    </div>
-                    <button
-                      type="button"
-                      className="delete-btn"
-                      onClick={() => {
-                        setProductMainImageId("");
-                        setProductMainImagePreview("");
-                        setProductMainImageName("");
-                        setProductMainImageFile(null);
-                      }}
-                    >
-                      ×
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
           </div>
+
+          {/* Product Documents */}
+
           <div
             style={{
               backgroundColor: "#f3f3f3",
@@ -1451,7 +1492,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
               marginTop: "10px",
             }}
           >
-            {/* Product Documents */}
             <div className="form-group">
               <label>Ürün Dökümanları</label>
               <div className="AdminDocumentsSelector">
@@ -1656,6 +1696,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
               </div>
             </div>
           </div>
+          
           {/* URL'ler */}
           <div
             className="form-group"
