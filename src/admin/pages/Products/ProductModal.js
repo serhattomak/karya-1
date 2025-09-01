@@ -9,6 +9,7 @@ import {
 import { createSlugFromProduct } from "../../../utils/slugUtils";
 import Swal from "sweetalert2";
 import { uploadFile as uploadFileApi } from "../../../api";
+import { API_URL } from "../../../api";
 
 const getEmbedUrl = (url) => {
   if (!url) return "";
@@ -25,7 +26,6 @@ const getEmbedUrl = (url) => {
   return url;
 };
 
-import { API_URL } from "../../../api";
 const BASE_URL = API_URL.endsWith("/") ? API_URL : API_URL + "/";
 
 const uploadFile = async (file) => {

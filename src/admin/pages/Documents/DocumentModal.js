@@ -5,6 +5,7 @@ import {
   uploadFile,
   getFiles,
   checkBackendHealth,
+  API_URL,
 } from "../../../api";
 import Swal from "sweetalert2";
 import "./DocumentModal.css";
