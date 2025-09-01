@@ -85,8 +85,6 @@ const Home = () => {
                 }
               } catch (error) {
                 console.log("File API'sinden dosya çekilirken hata:", error);
-
-                // Fallback: Önce kendi files array'inde ara
                 if (product.files && product.files.length > 0) {
                   const productImageFile = product.files.find(
                     (file) =>
@@ -102,8 +100,6 @@ const Home = () => {
                     );
                   }
                 }
-
-                // Eğer kendi files'ında yoksa, availableProducts'tan ara
                 if (!imagePath && allProducts && allProducts.length > 0) {
                   console.log(
                     "availableProducts'tan aranıyor, allProducts uzunluğu:",
@@ -294,8 +290,6 @@ const Home = () => {
         }
       } catch (error) {
         console.log("File API'sinden dosya çekilirken hata:", error);
-
-        // Fallback: files dizisinden ara
         if (product.files) {
           const productImageFile = product.files.find(
             (file) => file.id === product.productImageId
@@ -494,7 +488,6 @@ const Home = () => {
 
   return (
     <div className="AdminPanel">
-      {/* Banner Bölümü */}
       <div className="AdminHomeSection">
         <div className="AdminSectionHeader">
           <h2 className="AdminSectionTitle">Ana Sayfa Banner</h2>
@@ -528,11 +521,11 @@ const Home = () => {
           </div>
         </div>
       </div>
-
-      {/* Ürünler Bölümü */}
       <div className="AdminHomeSection">
         <div className="AdminSectionHeader">
-          <h2 className="AdminSectionTitle">Ana Sayfada Gösterilecek Ürünler</h2>
+          <h2 className="AdminSectionTitle">
+            Ana Sayfada Gösterilecek Ürünler
+          </h2>
           <button className="add-btn primary" onClick={openProductModal}>
             Ürün Seç
           </button>
@@ -594,8 +587,6 @@ const Home = () => {
           </button>
         </div>
       </div>
-
-      {/* Banner Düzenleme Modalı */}
       {showBannerModal && (
         <div className="AdminModalOverlay">
           <div className="AdminModalContent">
@@ -636,8 +627,6 @@ const Home = () => {
           </div>
         </div>
       )}
-
-      {/* Ürün Seçim Modalı */}
       {showProductModal && (
         <div className="AdminModalOverlay">
           <div className="AdminModalContent large">
@@ -663,16 +652,14 @@ const Home = () => {
 
                     if (product.productImage && product.productImage.path) {
                       imagePath = product.productImage.path;
-                    }
-                    else if (product.productImageId && product.files) {
+                    } else if (product.productImageId && product.files) {
                       const productImageFile = product.files.find(
                         (file) => file.id === product.productImageId
                       );
                       if (productImageFile) {
                         imagePath = productImageFile.path;
                       }
-                    }
-                    else if (
+                    } else if (
                       product.files &&
                       product.files[0] &&
                       product.files[0].path
@@ -689,7 +676,10 @@ const Home = () => {
                     }
 
                     return (
-                      <div key={product.id} className="AdminAvailableProductItem">
+                      <div
+                        key={product.id}
+                        className="AdminAvailableProductItem"
+                      >
                         <div className="AdminProductImage">
                           {imagePath ? (
                             <img src={imagePath} alt={product.name} />

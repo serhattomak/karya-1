@@ -27,7 +27,6 @@ const PartnersSlider = () => {
   return (
     <div className="PartnersSlider">
       <div className="PartnersSlider-track">
-        {/* Resim setini döngü için çoğalt */}
         {[...Array(2)].map((_, trackIndex) => (
           <React.Fragment key={trackIndex}>
             {imageUrls.map((url, imageIndex) => (

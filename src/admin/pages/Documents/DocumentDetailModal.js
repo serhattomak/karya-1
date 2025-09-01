@@ -18,7 +18,6 @@ const DocumentDetailModal = ({ document, onClose }) => {
     try {
       setLoading(true);
       
-      // İlişkili ürünleri ve sayfaları getir
       const [productsResponse, pagesResponse] = await Promise.all([
         getProducts({}),
         getPages({})
@@ -27,7 +26,6 @@ const DocumentDetailModal = ({ document, onClose }) => {
       const products = productsResponse?.data?.data?.items || productsResponse?.data?.items || [];
       const pages = pagesResponse?.data?.data?.items || pagesResponse?.data?.items || [];
 
-      // Dosya ID'si ile ilişkili ürün ve sayfaları filtrele
       const linkedProducts = products.filter(product => 
         product.fileIds && product.fileIds.includes(document.fileId)
       );
@@ -49,7 +47,6 @@ const DocumentDetailModal = ({ document, onClose }) => {
     try {
       const response = await downloadDocument(document.id);
       
-      // Blob'dan dosya oluştur ve indir
       const blob = new Blob([response.data]);
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');

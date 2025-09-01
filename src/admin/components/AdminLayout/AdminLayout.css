@@ -1,11 +1,9 @@
-/* Admin Layout Styles */
 .admin-layout {
   display: flex;
   min-height: 100vh;
   background-color: #f8fafc;
 }
 
-/* Content Area */
 .content-area {
   flex: 1;
   min-height: 100vh;
@@ -13,20 +11,17 @@
   overflow-x: hidden;
 }
 
-/* Desktop Layout */
 .content-area.desktop {
   margin-left: 280px;
   padding: 20px 30px;
 }
 
-/* Mobile Layout */
 .content-area.mobile {
   margin-left: 0;
-  padding: 80px 20px 20px 20px; /* Top padding to account for mobile toggle button */
+  padding: 80px 20px 20px 20px;
   width: 100%;
 }
 
-/* Responsive adjustments */
 @media (min-width: 992px) {
   .content-area {
     margin-left: 280px;
@@ -46,7 +41,6 @@
   }
 }
 
-/* Page transition effects */
 .content-area > * {
   animation: fadeInUp 0.3s ease-out;
 }
@@ -62,7 +56,6 @@
   }
 }
 
-/* Scrollbar styling for content area */
 .content-area::-webkit-scrollbar {
   width: 6px;
 }

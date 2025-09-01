@@ -49,7 +49,6 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         fileSize: document.fileSize || 0
       });
       
-      // Preview URL'lerini set et
       if (document.previewImageUrl) {
         setPreviewUrl(document.previewImageUrl);
       } else if (document.previewImageFile?.path) {
@@ -60,7 +59,6 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         setFilePreviewUrl(`https://localhost:7103/${document.file.path}`);
       }
     } else {
-      // Yeni dosya oluşturma - form sıfırlama
       setFormData({
         name: "",
         slug: "",
@@ -119,7 +117,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
       setFormData(prev => ({
         ...prev,
         [name]: value,
-        slug: generatedSlug || 'document-slug' // Fallback slug
+        slug: generatedSlug || 'document-slug'
       }));
     } else {
       setFormData(prev => ({
@@ -132,8 +130,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Dosya boyutu kontrolü (10MB limit)
-      const maxSize = 10 * 1024 * 1024; // 10MB
+      const maxSize = 10 * 1024 * 1024;
       if (file.size > maxSize) {
         Swal.fire({
           icon: 'warning',
@@ -151,7 +148,6 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         fileSize: file.size
       }));
       
-      // File preview oluştur
       if (file.type.startsWith('image/')) {
         const url = URL.createObjectURL(file);
         setFilePreviewUrl(url);
@@ -164,8 +160,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
   const handlePreviewImageSelect = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Görsel boyutu kontrolü (5MB limit)
-      const maxSize = 5 * 1024 * 1024; // 5MB
+      const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
         Swal.fire({
           icon: 'warning',
@@ -178,13 +173,11 @@ const DocumentModal = ({ document, onSave, onClose }) => {
 
       setSelectedPreviewImage(file);
       
-      // Preview URL oluştur
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
     }
   };
 
-  // Sistemdeki dosyalardan seçme
   const handleSelectFromSystem = (file, isPreviewImage = false) => {
     if (isPreviewImage) {
       setFormData(prev => ({
@@ -207,7 +200,6 @@ const DocumentModal = ({ document, onSave, onClose }) => {
     }
   };
 
-  // Backend sağlık kontrolü
   const handleHealthCheck = async () => {
     setCheckingHealth(true);
     try {
@@ -252,7 +244,6 @@ const DocumentModal = ({ document, onSave, onClose }) => {
   };
 
   const uploadFileAndGetId = async (file, retries = 3) => {
-    // Dosya boyutu kontrolü (100MB)
     const maxSize = 100 * 1024 * 1024;
     if (file.size > maxSize) {
       throw new Error(`Dosya boyutu çok büyük. Maksimum ${maxSize / (1024 * 1024)}MB olmalıdır.`);
@@ -261,7 +252,6 @@ const DocumentModal = ({ document, onSave, onClose }) => {
     const fileFormData = new FormData();
     fileFormData.append('file', file);
 
-    // Upload state'ini başlat
     setUploadingFile(true);
     setUploadProgress(0);
 
@@ -270,9 +260,8 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         try {
           console.log(`Dosya yükleniyor (Deneme ${attempt}/${retries}):`, file.name, file.type, file.size);
           
-          // Timeout ve daha uzun bekleme süresi
           const response = await uploadFile(fileFormData, {
-            timeout: 300000, // 5 dakika timeout
+            timeout: 300000,
             onUploadProgress: (progressEvent) => {
               if (progressEvent.total) {
                 const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -284,7 +273,6 @@ const DocumentModal = ({ document, onSave, onClose }) => {
           
           console.log("Dosya yükleme response:", response);
           
-          // Yüklenen dosya bilgilerini form data'ya ekle
           const uploadedFileId = response.data?.fileId || response.data?.id;
           
           if (uploadedFileId) {
@@ -294,12 +282,11 @@ const DocumentModal = ({ document, onSave, onClose }) => {
               fileSize: file.size
             }));
             
-            // Upload tamamlandı
             setUploadProgress(100);
             setTimeout(() => {
               setUploadingFile(false);
               setUploadProgress(0);
-            }, 1000); // 1 saniye sonra progress bar'ı gizle
+            }, 1000);
             
             return uploadedFileId;
           } else {
@@ -310,7 +297,6 @@ const DocumentModal = ({ document, onSave, onClose }) => {
           console.error(`Dosya yükleme hatası (Deneme ${attempt}/${retries}):`, error);
           
           if (attempt === retries) {
-            // Son deneme de başarısız oldu
             let errorMessage = 'Dosya yükleme başarısız oldu.';
             
             if (error.message.includes('Ağ bağlantısı hatası')) {
@@ -332,7 +318,6 @@ const DocumentModal = ({ document, onSave, onClose }) => {
             throw new Error(errorMessage);
           }
           
-          // Bir sonraki deneme için kısa bir bekleme
           if (attempt < retries) {
             console.log(`${attempt + 1}. deneme için 2 saniye bekleniyor...`);
             await new Promise(resolve => setTimeout(resolve, 2000));
@@ -340,7 +325,6 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         }
       }
     } finally {
-      // Her durumda upload state'ini temizle
       setUploadingFile(false);
       setUploadProgress(0);
     }
@@ -364,28 +348,24 @@ const DocumentModal = ({ document, onSave, onClose }) => {
     try {
       let finalFormData = { ...formData };
 
-      // Ana dosya yükleme (eğer yeni dosya seçilmişse)
       if (selectedFile) {
         console.log("Ana dosya yükleniyor...");
         const uploadedFileId = await uploadFileAndGetId(selectedFile);
         finalFormData.fileId = uploadedFileId;
       }
 
-      // Önizleme görseli yükleme (eğer yeni görsel seçilmişse)
       if (selectedPreviewImage) {
         console.log("Önizleme görseli yükleniyor...");
         const uploadedPreviewImageId = await uploadFileAndGetId(selectedPreviewImage);
         finalFormData.previewImageFileId = uploadedPreviewImageId;
       }
 
-      // Slug alanını kontrol et ve varsa kullan
       if (!finalFormData.slug || finalFormData.slug.trim() === '') {
         finalFormData.slug = generateSlug(finalFormData.name) || 'document-slug';
       }
 
       console.log("Document kayıt data:", finalFormData);
 
-      // Document oluştur/güncelle
       let response;
       if (document?.id) {
         finalFormData.id = document.id;
@@ -642,7 +622,6 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         </form>
       </div>
 
-      {/* File Selector Modal */}
       {showFileSelector && (
         <FileSelector
           files={availableFiles}
@@ -653,7 +632,6 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         />
       )}
 
-      {/* Image Selector Modal */}
       {showImageSelector && (
         <FileSelector
           files={availableFiles.filter(f => f.contentType?.startsWith('image/'))}
@@ -667,7 +645,6 @@ const DocumentModal = ({ document, onSave, onClose }) => {
   );
 };
 
-// File Selector Component
 const FileSelector = ({ files, onSelect, onClose, title, filterType }) => {
   const [searchTerm, setSearchTerm] = useState("");
 

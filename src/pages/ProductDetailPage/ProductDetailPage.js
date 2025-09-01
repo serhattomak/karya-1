@@ -10,12 +10,14 @@ import "./ProductDetailPage.css";
 const BASE_URL = "https://localhost:7103/";
 
 function getEmbedUrl(url) {
-  if (!url) return '';
+  if (!url) return "";
   const ytShort = url.match(/^https?:\/\/youtu\.be\/([\w-]+)/);
   if (ytShort) {
     return `https://www.youtube.com/embed/${ytShort[1]}`;
   }
-  const ytWatch = url.match(/^https?:\/\/(www\.)?youtube\.com\/watch\?v=([\w-]+)/);
+  const ytWatch = url.match(
+    /^https?:\/\/(www\.)?youtube\.com\/watch\?v=([\w-]+)/
+  );
   if (ytWatch) {
     return `https://www.youtube.com/embed/${ytWatch[2]}`;
   }
@@ -40,9 +42,12 @@ function ProductDetailPage() {
         if (data.productImage) {
           try {
             const fileResponse = await getFile(data.productImageId);
-            const fileData = fileResponse?.data?.data || fileResponse?.data || fileResponse;
+            const fileData =
+              fileResponse?.data?.data || fileResponse?.data || fileResponse;
             if (fileData && fileData.path) {
-              productImage = fileData.path.startsWith("http") ? fileData.path : BASE_URL + fileData.path;
+              productImage = fileData.path.startsWith("http")
+                ? fileData.path
+                : BASE_URL + fileData.path;
             }
           } catch (err) {
             productImage = null;
@@ -50,18 +55,28 @@ function ProductDetailPage() {
         }
 
         let productDetailImages = [];
-        if (data.productDetailImageIds && data.productDetailImageIds.length > 0) {
-          const detailImagePromises = data.productDetailImageIds.map(async (imageId) => {
-            try {
-              const imageResponse = await getFile(imageId);
-              const imageData = imageResponse?.data?.data || imageResponse?.data || imageResponse;
-              if (imageData && imageData.path) {
-                return imageData.path.startsWith("http") ? imageData.path : BASE_URL + imageData.path;
+        if (
+          data.productDetailImageIds &&
+          data.productDetailImageIds.length > 0
+        ) {
+          const detailImagePromises = data.productDetailImageIds.map(
+            async (imageId) => {
+              try {
+                const imageResponse = await getFile(imageId);
+                const imageData =
+                  imageResponse?.data?.data ||
+                  imageResponse?.data ||
+                  imageResponse;
+                if (imageData && imageData.path) {
+                  return imageData.path.startsWith("http")
+                    ? imageData.path
+                    : BASE_URL + imageData.path;
+                }
+              } catch (err) {
+                return null;
               }
-            } catch (err) {
-              return null;
             }
-          });
+          );
           const detailImages = await Promise.all(detailImagePromises);
           productDetailImages = detailImages.filter(Boolean);
         }
@@ -136,15 +151,18 @@ function ProductDetailPage() {
         title={productData.titles?.[0] || productData.name}
       />
       <ProductInfo productData={productData} />
-      {/* Video alanı iki sütunlu düzen */}
       {productData.videoUrl ? (
         <div className="details-video-section">
           <div className="details-video-content">
             <div className="details-video-col">
-              <h2 className="details-video-title">{productData.videoTitles?.[0] || "Ürün Videosu"}</h2>
+              <h2 className="details-video-title">
+                {productData.videoTitles?.[0] || "Ürün Videosu"}
+              </h2>
               <hr className="line" />
               {productData.videoDescriptions?.[0] && (
-                <p className="details-video-description">{productData.videoDescriptions[0]}</p>
+                <p className="details-video-description">
+                  {productData.videoDescriptions[0]}
+                </p>
               )}
             </div>
             <div className="details-video-col details-video-col-right">

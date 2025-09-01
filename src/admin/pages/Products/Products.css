@@ -1,4 +1,3 @@
-/* Products Main Styles */
 .AdminPanel {
   padding: 20px;
   max-width: 1200px;
@@ -20,26 +19,6 @@
   color: #333;
   margin: 0;
 }
-
-/* .add-btn.primary {
-  background: linear-gradient(135deg, #f68b1f, #ee5c30);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-}
-
-.add-btn.primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
-} */
-
-/* Products Grid */
 .AdminProductsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -160,7 +139,6 @@
   display: inline;
 }
 
-/* List items styles */
 .AdminProductListItems {
   margin: 12px 0 0 0;
 }
@@ -200,40 +178,6 @@
   padding: 0 20px 20px 20px;
   box-sizing: border-box;
 }
-
-/* .edit-btn, .delete-btn {
-  flex: 1 1 0;
-  min-width: 0;
-  padding: 12px 0;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.edit-btn {
-  background: linear-gradient(135deg, #f68b1f, #ee5c30);
-  color: white;
-}
-
-.edit-btn:hover {
-  background: linear-gradient(135deg, #218838, #ee5c30);
-  transform: translateY(-1px);
-}
-
-.delete-btn {
-  background: linear-gradient(135deg, #dc3545, #c82333);
-  color: white;
-}
-
-.delete-btn:hover {
-  background: linear-gradient(135deg, #c82333, #a71e2a);
-  transform: translateY(-1px);
-} */
-
-/* No Products State */
 .AdminNoProducts {
   text-align: center;
   padding: 60px 20px;
@@ -245,16 +189,12 @@
   font-size: 18px;
   margin: 0;
 }
-
-/* Loading State */
 .AdminLoading {
   text-align: center;
   padding: 60px 20px;
   font-size: 18px;
   color: #666;
 }
-
-/* Pagination */
 .AdminPagination {
   display: flex;
   justify-content: center;
@@ -292,8 +232,6 @@
   color: #333;
   font-weight: 500;
 }
-
-/* Modal Styles */
 .AdminModalOverlay {
   position: fixed;
   top: 0;
@@ -554,61 +492,6 @@
   background: #f8f9fa;
 }
 
-/* .cancel-btn {
-  background: #6c757d;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.cancel-btn:hover {
-  background: #5a6268;
-}
-
-.cancel-btn.danger {
-  background: #dc3545;
-}
-
-.cancel-btn.danger:hover {
-  background: #c82333;
-} */
-
-/* .save-btn {
-  background: linear-gradient(135deg, #f68b1f, #ee5c30);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.save-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #f68b1f, #ee5c30);
-  transform: translateY(-1px);
-}
-
-.save-btn:disabled {
-  background: #6c757d;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.save-btn.primary {
-  background: #f68b1f;
-}
-
-.save-btn.primary:hover:not(:disabled) {
-  background: #ee5c30;
-} */
-
 .AdminDeleteBtn.danger {
   background: linear-gradient(135deg, #dc3545, #c82333);
 }
@@ -617,7 +500,6 @@
   background: linear-gradient(135deg, #c82333, #a71e2a);
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .AdminPanel {
     padding: 15px;
@@ -662,7 +544,6 @@
   }
 }
 
-/* Banner Image Input Styles */
 .AdminBannerImageInput {
   display: flex;
   flex-direction: column;
@@ -701,7 +582,6 @@
   margin-top: 10px;
 }
 
-/* Image Upload Controls */
 .AdminImageUploadControls {
   display: flex;
   flex-direction: column;
@@ -741,7 +621,6 @@
   margin-bottom: 8px;
 }
 
-/* Product Image Selector */
 .product-image-selector,
 .document-images-selector,
 .product-detail-images-selector {
@@ -768,7 +647,6 @@
   gap: 5px;
 }
 
-/* File Selector Modal */
 .AdminFileSelectorModal {
   position: fixed;
   top: 0;
@@ -894,7 +772,6 @@
   color: #666;
 }
 
-/* Document Selector Styles */
 .documents-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -939,7 +816,6 @@
   overflow: hidden;
 }
 
-/* Selected Documents Styles */
 .documents-selector {
   border: 1px solid #e9ecef;
   border-radius: 8px;

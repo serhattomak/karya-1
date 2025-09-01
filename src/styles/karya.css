@@ -1,6 +1,4 @@
 
-
-/* ==== Unified & Improved Button Styles ==== */
 button,
 .add-btn, .edit-btn, .delete-btn, .save-btn, .cancel-btn,
 .confirm-btn, .download-btn, .file-select-btn, .remove-btn, .detail-btn {
@@ -24,7 +22,6 @@ button:disabled,
   opacity: 0.7;
 }
 
-/* Orange Theme */
 .btn-orange, .add-btn, .save-btn, .detail-btn, .edit-btn {
   background: linear-gradient(135deg, #f68b1f, #ee5c30);
   color: white;
@@ -37,7 +34,6 @@ button:disabled,
   transform: translateY(-1px);
 }
 
-/* Danger Theme */
 .btn-danger, .delete-btn, .remove-btn {
   background: linear-gradient(135deg, #dc3545, #c82333);
   color: white;
@@ -50,7 +46,6 @@ button:disabled,
   transform: translateY(-1px);
 }
 
-/* Secondary Theme */
 .btn-secondary, .cancel-btn, .file-select-btn {
   background: #6c757d;
   color: white;
@@ -63,7 +58,6 @@ button:disabled,
   transform: translateY(-1px);
 }
 
-/* Success Theme */
 .btn-success, .download-btn {
   background: #28a745;
   color: white;
@@ -76,7 +70,6 @@ button:disabled,
   transform: translateY(-1px);
 }
 
-/* Blue Theme */
 .btn-blue, .confirm-btn {
   background: #007bff;
   color: white;
@@ -89,7 +82,6 @@ button:disabled,
   transform: translateY(-1px);
 }
 
-/* Color Schemes */
 .btn-orange, .add-btn, .save-btn, .detail-btn {
   background: linear-gradient(135deg, #f68b1f, #ee5c30);
   color: white;
@@ -138,7 +130,6 @@ button:disabled,
   transform: translateY(-1px);
 }
 
-/* Contact Button Styles */
 .contact-button .contact-word:hover {
   background-color: #fff5f6;
   transform: scale(1.05);
@@ -156,7 +147,6 @@ button:disabled,
   gap: 0.7rem;
 }
 
-/* Logout Button */
 .logout-btn {
   width: 100%;
   background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
@@ -180,7 +170,6 @@ button:disabled,
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 }
 
-/* Menu Toggle Button */
 .menu-toggle {
   position: fixed;
   top: 20px;
@@ -220,7 +209,6 @@ button:disabled,
   transform: rotate(-45deg) translate(6px, -6px);
 }
 
-/* Product Link Buttons */
 .product-link {
   display: inline-block;
   background-color: #f68b1f;
@@ -240,7 +228,6 @@ button:disabled,
   transform: translateY(-2px);
 }
 
-/* Error Container Buttons */
 .error-container button {
   background-color: #f68b1f;
   color: white;
@@ -256,7 +243,6 @@ button:disabled,
   background-color: #ee5c30;
 }
 
-/* Focus states for accessibility */
 .nav-item:focus,
 .logout-btn:focus,
 .menu-toggle:focus {
@@ -264,7 +250,6 @@ button:disabled,
   outline-offset: 2px;
 }
 
-/* Responsive Design for Buttons */
 @media (max-width: 768px) {
   .product-link {
     font-size: 12px;

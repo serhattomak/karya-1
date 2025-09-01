@@ -1,4 +1,3 @@
-// Banner.js
 import React from "react";
 import "./Banner.css";
 

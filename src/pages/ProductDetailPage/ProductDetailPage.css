@@ -1,5 +1,3 @@
-/* ProductDetailPage Modern Styles */
-/* Ürün detay sayfası arka planı ve düzeni */
 .details-product-detail-page {
   min-height: 100vh;
   background: #fff;
@@ -80,8 +78,6 @@
   background-color: #ee5c30;
 }
 
-/* Video Section Styles */
-/* Video alanı iki sütunlu düzen */
 .details-video-section {
   align-items: center;
   box-sizing: border-box;

@@ -4,13 +4,11 @@
   padding: 12px 16px;
   font-size: 16px;
 }
-/* Ensure text input borders are visible */
 .AdminFormGroup input[type="text"] {
   border: 2px solid #e9ecef !important;
   border-radius: 6px;
   box-sizing: border-box;
 }
-/* Ensure number input borders are visible */
 .AdminFormGroup input[type="number"] {
   border: 2px solid #e9ecef !important;
   border-radius: 6px;
@@ -231,43 +229,6 @@
   background: #f8f9fa;
 }
 
-/* .cancel-btn {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 100px;
-}
-
-.cancel-btn {
-  background: #6c757d;
-  color: white;
-}
-
-.cancel-btn:hover {
-  background: #5a6268;
-} */
-
-/* .save-btn {
-  background: #007bff;
-  color: white;
-}
-
-.save-btn:hover:not(:disabled) {
-  background: #0056b3;
-  transform: translateY(-1px);
-}
-
-.save-btn:disabled {
-  background: #6c757d;
-  cursor: not-allowed;
-  transform: none;
-} */
-
-/* File input styling */
 input[type="file"] {
   padding: 8px 0 !important;
   border: 2px dashed #dee2e6 !important;
@@ -280,7 +241,6 @@ input[type="file"]:hover {
   background: #e3f2fd;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .AdminModalOverlay {
     padding: 10px;
@@ -344,7 +304,6 @@ input[type="file"]:hover {
   }
 }
 
-/* File Input Group */
 .file-input-group {
   display: flex;
   gap: 10px;
@@ -368,7 +327,6 @@ input[type="file"]:hover {
   background: #5a6268;
 }
 
-/* Preview Images */
 .preview-image-container {
   margin-top: 10px;
   max-width: 200px;
@@ -397,7 +355,6 @@ input[type="file"]:hover {
   object-fit: cover;
 }
 
-/* File Selector Modal */
 .file-selector-modal {
   background: white;
   border-radius: 12px;
@@ -496,7 +453,6 @@ input[type="file"]:hover {
   }
 }
 
-/* Upload Progress Styles */
 .upload-progress {
   margin-top: 12px;
   padding: 8px 0;
@@ -527,7 +483,6 @@ input[type="file"]:hover {
   text-align: center;
 }
 
-/* Progress bar animation for active upload */
 .progress-fill::after {
   content: "";
   position: absolute;

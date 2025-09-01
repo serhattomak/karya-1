@@ -7,15 +7,13 @@ function getAuthHeader() {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-// Backend bağlantı kontrolü ve sistem durumu
 export const checkBackendHealth = async () => {
   try {
     console.log("Backend bağlantı kontrolü başlatılıyor...");
     
-    // Basit bir GET isteği ile backend'in erişilebilir olup olmadığını kontrol et
     const healthResponse = await axios.get(`${API_URL}/api/File`, { 
       headers: getAuthHeader(),
-      timeout: 10000 // 10 saniye timeout
+      timeout: 10000
     });
     
     console.log("✅ Backend erişilebilir, durum:", healthResponse.status);
@@ -34,7 +32,6 @@ export const checkBackendHealth = async () => {
       suggestions: []
     };
     
-    // Hata türüne göre tanı ve öneriler
     if (error.code === 'ECONNREFUSED' || error.message.includes('Network Error')) {
       diagnostics.message = "Backend sunucusuna bağlanılamıyor";
       diagnostics.suggestions = [
@@ -79,7 +76,6 @@ export const checkBackendHealth = async () => {
   }
 };
 
-// AUTH
 export const login = (data) =>
   axios.post(`${API_URL}/api/Auth/login`, data);
 
@@ -89,7 +85,6 @@ export const register = (data) =>
 export const logout = () =>
   axios.post(`${API_URL}/api/Auth/logout`, {}, { headers: getAuthHeader() });
 
-// CONTACT
 export const getContacts = () =>
   axios.get(`${API_URL}/api/Contact`, { headers: getAuthHeader() });
 
@@ -105,7 +100,6 @@ export const updateContact = (data) =>
 export const deleteContact = (id) =>
   axios.delete(`${API_URL}/api/Contact/${id}`, { headers: getAuthHeader() });
 
-// FILE
 export const getFiles = () =>
   axios.get(`${API_URL}/api/File`, { headers: getAuthHeader() });
 
@@ -142,26 +136,21 @@ export const uploadFile = (formData, options = {}) => {
   const config = {
     headers: { 
       ...getAuthHeader()
-      // Content-Type'ı kaldırdık, axios otomatik olarak boundary ekleyecek
     },
-    timeout: options.timeout || (fileInfo.isPDF ? 600000 : 300000), // PDF için 10 dakika, diğerleri için 5 dakika
-    maxContentLength: fileInfo.isPDF ? 50 * 1024 * 1024 : 100 * 1024 * 1024, // PDF için 50MB, diğerleri için 100MB
+    timeout: options.timeout || (fileInfo.isPDF ? 600000 : 300000),
+    maxContentLength: fileInfo.isPDF ? 50 * 1024 * 1024 : 100 * 1024 * 1024,
     maxBodyLength: fileInfo.isPDF ? 50 * 1024 * 1024 : 100 * 1024 * 1024,
     onUploadProgress: options.onUploadProgress,
-    // HTTP/2 devre dışı bırak, HTTP/1.1 kullan
     httpAgent: false,
     httpsAgent: false,
-    // Retry mekanizması
-    validateStatus: (status) => status < 500, // 500+ hatalar için retry
+    validateStatus: (status) => status < 500,
     ...options
   };
 
-  // PDF için özel ayarlar
   if (fileInfo.isPDF) {
     console.log("📄 PDF için özel konfigürasyon uygulanıyor...");
     config.headers['Accept'] = 'application/json';
-    // PDF için chunk size ayarı
-    config.maxRedirects = 0; // Redirect'leri engelle
+    config.maxRedirects = 0;
   }
   
   console.log("⚙️ Request config:", {
@@ -194,7 +183,6 @@ export const uploadFile = (formData, options = {}) => {
         fileInfo
       });
       
-      // PDF için özel hata analizi
       if (fileInfo.isPDF) {
         console.error("📄 PDF yükleme hatası detayları:", {
           pdfSize: fileInfo.size,
@@ -207,27 +195,22 @@ export const uploadFile = (formData, options = {}) => {
         });
       }
       
-      // Network hataları için özel mesaj
       if (error.code === 'NETWORK_ERROR' || error.message.includes('Network Error')) {
         throw new Error('Ağ bağlantısı hatası. Backend sunucusunun çalıştığından emin olun.');
       }
       
-      // HTTP/2 protokol hataları için özel mesaj
       if (error.message.includes('ERR_HTTP2_PROTOCOL_ERROR')) {
         throw new Error('HTTP/2 protokol hatası. Backend CORS ayarlarını kontrol edin.');
       }
       
-      // Timeout hataları için özel mesaj
       if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
         throw new Error('Dosya yükleme zaman aşımına uğradı. Backend timeout ayarlarını kontrol edin.');
       }
 
-      // CORS hataları
       if (error.message.includes('CORS') || error.message.includes('Access-Control')) {
         throw new Error('CORS hatası. Backend CORS ayarlarını kontrol edin.');
       }
 
-      // HTTP status hataları
       if (error.response?.status === 413) {
         throw new Error('Dosya çok büyük. Backend maksimum dosya boyutu limitini kontrol edin.');
       }
@@ -256,17 +239,14 @@ export const uploadFile = (formData, options = {}) => {
         throw new Error('Sunucu hatası. Backend loglarını kontrol edin.');
       }
 
-      // Sunucu hatası mesajları
       if (error.response?.data?.message) {
         throw new Error(error.response.data.message);
       }
 
-      // Genel hata mesajı
       throw new Error(`Dosya yükleme hatası: ${error.message || 'Bilinmeyen hata'}`);
     });
 };
 
-// DOCUMENT
 export const getDocuments = (params = {}) => {
   console.log("API getDocuments - Raw params:", params);
   
@@ -357,7 +337,6 @@ export const downloadDocument = (id) =>
     responseType: 'blob'
   });
 
-// PAGE
 export const getPages = (params) =>
   axios.get(`${API_URL}/api/Page`, { params, headers: getAuthHeader() });
 
@@ -403,7 +382,6 @@ export const updatePageProductOrder = (data) =>
 export const deletePage = (id) =>
   axios.delete(`${API_URL}/api/Page/${id}`, { headers: getAuthHeader() });
 
-// PRODUCT
 export const getProducts = (params) =>
   axios.get(`${API_URL}/api/Product`, { params });
 

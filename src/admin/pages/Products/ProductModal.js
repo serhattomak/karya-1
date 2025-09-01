@@ -387,7 +387,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
     setDocumentFiles((prev) => prev.filter((doc) => doc.id !== fileId));
   };
 
-  // Ana ürün görseli için seçilen dosyayı bul
   const getSelectedProductImage = () => {
     if (!productImageId) return null;
     return availableFiles.find((file) => file.id === productImageId);
@@ -440,11 +439,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
       case "productImage":
         setProductImageId(file.id);
         break;
-      case "productMainImage": // This should already be there
+      case "productMainImage":
         setProductMainImageId(file.id);
-        setProductMainImagePreview(""); // Clear any uploaded preview
+        setProductMainImagePreview("");
         setProductMainImageName(file.name);
-        setProductMainImageFile(null); // Clear any uploaded file
+        setProductMainImageFile(null);
         break;
       case "documentImage":
         setDocumentFiles((prev) => [
@@ -655,22 +654,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
               placeholder="Ürün adını girin"
               required
             />
-            {/* {name && (
-              <div
-                style={{
-                  marginTop: "8px",
-                  padding: "8px",
-                  borderRadius: "4px",
-                  fontSize: "12px",
-                }}
-              >
-                <strong>URL Önizleme:</strong> /product/
-                {slug || createSlugFromProduct({ name })}
-              </div>
-            )} */}
           </div>
-
-          {/* Slug - Collapsable */}
           <div
             className="form-group"
             style={{
@@ -716,8 +700,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
               </div>
             )}
           </div>
-
-          {/* Başlık */}
           <div
             style={{
               backgroundColor: "#f3f3f3",
@@ -773,8 +755,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
               </small>
             </div>
           </div>
-
-          {/* Product Image ID */}
           <div
             className="form-group"
             style={{
@@ -913,8 +893,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
               )}
             </div>
           </div>
-
-          {/* Banner Image URL */}
           <div
             className="form-group"
             style={{
@@ -972,8 +950,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
               )}
             </div>
           </div>
-
-          {/* ürün içerik düzenlemeleri */}
           <div
             style={{
               backgroundColor: "#f3f3f3",
@@ -981,7 +957,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
               borderRadius: "10px",
             }}
           >
-            {/* Başlıklar */}
             <div className="form-group">
               <label>Başlıklar</label>
               {titles.map((title, index) => (
@@ -1015,39 +990,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 <span>+ Başlık Ekle</span>
               </button>
             </div>
-
-            {/* Alt Başlıklar */}
-            {/* <div className="form-group">
-              <label>Alt Başlıklar</label>
-              {subtitles.map((subtitle, index) => (
-                <div key={index} className="AdminInputGroup">
-                  <input
-                    type="text"
-                    value={subtitle}
-                    onChange={(e) => updateSubtitle(index, e.target.value)}
-                    placeholder={`Alt başlık ${index + 1}`}
-                  />
-                  {subtitles.length > 1 && (
-                    <button
-                      type="button"
-                      className="delete-btn"
-                      onClick={() => removeSubtitle(index)}
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-              ))}
-              <button
-                type="button"
-                className="add-btn secondary"
-                onClick={addSubtitle}
-              >
-                <span>+ Alt Başlık Ekle</span>
-              </button>
-            </div> */}
           </div>
-          {/* Açıklamalar */}
           <div
             className="form-group"
             style={{
@@ -1085,8 +1028,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
               <span>+ Açıklama Ekle</span>
             </button>
           </div>
-
-          {/* Liste */}
           <div
             style={{
               backgroundColor: "#f3f3f3",
@@ -1095,7 +1036,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
               padding: "10px",
             }}
           >
-            {/* Liste Başlıkları */}
             <div className="form-group">
               <label>Liste Başlıkları</label>
               {listTitles.map((listTitle, index) => (
@@ -1125,8 +1065,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 <span>+ Liste Başlığı Ekle</span>
               </button>
             </div>
-
-            {/* Liste Öğeleri */}
             <div className="form-group">
               <label>Liste Öğeleri</label>
               {listItems.map((item, index) => (
@@ -1157,8 +1095,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
               </button>
             </div>
           </div>
-
-          {/* Video  */}
           <div
             style={{
               backgroundColor: "#f3f3f3",
@@ -1167,7 +1103,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
               marginTop: "10px",
             }}
           >
-            {/* Video Başlıkları */}
             <div className="form-group">
               <label>Video Başlıkları</label>
               {videoTitles.map((videoTitle, index) => (
@@ -1197,8 +1132,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 <span>+ Video Başlığı Ekle</span>
               </button>
             </div>
-
-            {/* Video URL'leri */}
             <div className="form-group">
               <label>Video URL'leri</label>
               {videoUrls.map((videoUrl, index) => (
@@ -1231,7 +1164,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
                       </button>
                     )}
                   </div>
-                  {/* Video embed önizleme */}
                   {videoUrl && (
                     <div style={{ marginTop: "8px", width: "100%" }}>
                       <iframe
@@ -1256,7 +1188,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 <span>+ Video URL Ekle</span>
               </button>
             </div>
-            {/* Video Açıklamaları */}
             <div className="form-group">
               <label>Video Açıklamaları</label>
               {videoDescriptions.map((description, index) => (
@@ -1289,8 +1220,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
               </button>
             </div>
           </div>
-
-          {/*Ana Ürün Görseli */}
           <div
             style={{
               backgroundColor: "#f3f3f3",
@@ -1299,7 +1228,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
               marginTop: "10px",
             }}
           >
-            {/* Ana Görsel URL */}
             <div className="form-group">
               <label>Ana Görsel URL</label>
               <input
@@ -1318,8 +1246,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 </div>
               )}
             </div>
-
-            {/* Product Main Image ID */}
             <div className="form-group">
               <label>Ana Ürün Görseli</label>
               <div className="AdminProductImageSelector">
@@ -1451,7 +1377,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
               marginTop: "10px",
             }}
           >
-            {/* Product Documents */}
             <div className="form-group">
               <label>Ürün Dökümanları</label>
               <div className="AdminDocumentsSelector">
@@ -1547,8 +1472,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
               </div>
             </div>
           </div>
-
-          {/* Product Detail Image IDs */}
           <div
             style={{
               backgroundColor: "#f3f3f3",
@@ -1656,7 +1579,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
               </div>
             </div>
           </div>
-          {/* URL'ler */}
           <div
             className="form-group"
             style={{
@@ -1694,7 +1616,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
               <span>+ URL Ekle</span>
             </button>
           </div>
-          {/* Modal Footer */}
           <div
             className="form-group"
             style={{
@@ -1725,9 +1646,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
           </div>
         </form>
       </div>
-
-      {/* Dosya Seçici Modal */}
-
       {showFileSelector && (
         <div className="AdminFileSelectorModal">
           <div className="AdminFileSelectorContent modern">
@@ -1902,8 +1820,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
           </div>
         </div>
       )}
-
-      {/* Document Seçici Modal */}
       {showDocumentSelector && (
         <div className="AdminFileSelectorModal">
           <div className="AdminFileSelectorContent modern">

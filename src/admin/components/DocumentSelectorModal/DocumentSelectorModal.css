@@ -247,43 +247,6 @@
   gap: 12px;
 }
 
-/* .cancel-btn,
-.confirm-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 80px;
-}
-
-.cancel-btn {
-  background: #6c757d;
-  color: white;
-}
-
-.cancel-btn:hover {
-  background: #5a6268;
-} */
-
-/* .confirm-btn {
-  background: #007bff;
-  color: white;
-}
-
-.confirm-btn:hover:not(:disabled) {
-  background: #0056b3;
-  transform: translateY(-1px);
-}
-
-.confirm-btn:disabled {
-  background: #6c757d;
-  cursor: not-allowed;
-  transform: none;
-} */
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .document-selector-modal {

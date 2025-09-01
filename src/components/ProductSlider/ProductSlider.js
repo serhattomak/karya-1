@@ -28,44 +28,56 @@ const ProductSlider = ({ products }) => {
 
   const getProductMainImage = (product) => {
     if (product.productMainImage && product.productMainImage.path) {
-      return product.productMainImage.path.startsWith('http')
+      return product.productMainImage.path.startsWith("http")
         ? product.productMainImage.path
         : BASE_URL + product.productMainImage.path;
     }
-    if (product.productMainImageId && product.files && product.files.length > 0) {
-      const mainImage = product.files.find(file => {
+    if (
+      product.productMainImageId &&
+      product.files &&
+      product.files.length > 0
+    ) {
+      const mainImage = product.files.find((file) => {
         const fileId = String(file.id).toLowerCase();
-        const productMainImageId = String(product.productMainImageId).toLowerCase();
+        const productMainImageId = String(
+          product.productMainImageId
+        ).toLowerCase();
         return fileId === productMainImageId && file.path;
       });
       if (mainImage && mainImage.path) {
-        return mainImage.path.startsWith('http')
+        return mainImage.path.startsWith("http")
           ? mainImage.path
           : BASE_URL + mainImage.path;
       }
     }
-    if (product.ProductMainImageId && product.files && product.files.length > 0) {
-      const mainImage = product.files.find(file => {
+    if (
+      product.ProductMainImageId &&
+      product.files &&
+      product.files.length > 0
+    ) {
+      const mainImage = product.files.find((file) => {
         const fileId = String(file.id).toLowerCase();
-        const productMainImageId = String(product.ProductMainImageId).toLowerCase();
+        const productMainImageId = String(
+          product.ProductMainImageId
+        ).toLowerCase();
         return fileId === productMainImageId && file.path;
       });
       if (mainImage && mainImage.path) {
-        return mainImage.path.startsWith('http')
+        return mainImage.path.startsWith("http")
           ? mainImage.path
           : BASE_URL + mainImage.path;
       }
     }
     if (product.files && product.files.length > 0) {
-      const firstFile = product.files.find(file => file.path);
+      const firstFile = product.files.find((file) => file.path);
       if (firstFile) {
-        return firstFile.path.startsWith('http')
+        return firstFile.path.startsWith("http")
           ? firstFile.path
           : BASE_URL + firstFile.path;
       }
     }
     if (product.mainImageUrl) {
-      return product.mainImageUrl.startsWith('http')
+      return product.mainImageUrl.startsWith("http")
         ? product.mainImageUrl
         : BASE_URL + product.mainImageUrl;
     }
@@ -84,9 +96,7 @@ const ProductSlider = ({ products }) => {
             <li
               key={index}
               className={
-                product.homePageSubtitle
-                  ? "slide with-subtitle"
-                  : "slide"
+                product.homePageSubtitle ? "slide with-subtitle" : "slide"
               }
               onClick={() => handleProductClick(index)}
             >
@@ -98,7 +108,15 @@ const ProductSlider = ({ products }) => {
                   e.target.src = "/assets/images/Group 300.webp";
                 }}
               />
-              <h3 className={product.homePageSubtitle ? "product-title" : "product-slider-title"}>{product.title}</h3>
+              <h3
+                className={
+                  product.homePageSubtitle
+                    ? "product-title"
+                    : "product-slider-title"
+                }
+              >
+                {product.title}
+              </h3>
               {product.homePageSubtitle && (
                 <p className="product-subtitle">{product.homePageSubtitle}</p>
               )}

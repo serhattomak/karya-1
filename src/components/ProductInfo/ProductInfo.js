@@ -172,7 +172,6 @@ const ProductInfo = ({ productData }) => {
   return (
     <div className="info-product-container">
       <div className="info-product-row">
-        {/* Sol: Başlık, açıklama, dökümanlar */}
         <div className="info-product-col info-product-col-left">
           <h2 className="info-product-title">{titles[0] || name}</h2>
           <hr className="line" />
@@ -184,7 +183,6 @@ const ProductInfo = ({ productData }) => {
             ) : null
           )}
 
-          {/* Dökümanlar - documents array veya documentImages ile URLs eşleştirilerek */}
           {documentImages.length > 0 && (
             <div className="info-product-documents">
               {documentImages.map((file, index) => {
@@ -256,7 +254,6 @@ const ProductInfo = ({ productData }) => {
                         📄
                       </div>
                     )}
-                    {/* Harici link varsa görsel ipucu ekle */}
                     {relatedUrl && (
                       <span
                         style={{
@@ -283,7 +280,6 @@ const ProductInfo = ({ productData }) => {
             </div>
           )}
 
-          {/* İletişim metni: showContact true ise göster */}
           {productData.showContact && (
             <p className="info-product-contact">
               {productData.name} hakkında daha fazla bilgi almak için
@@ -294,7 +290,6 @@ const ProductInfo = ({ productData }) => {
             </p>
           )}
         </div>
-        {/* Sağ: ListItem varsa uygulama alanları, yoksa mainImage */}
         <div className="info-product-col info-product-col-right">
           {listItems.length > 0 ? (
             <div className="info-product-list">
@@ -311,13 +306,16 @@ const ProductInfo = ({ productData }) => {
           ) : (
             !!productImage && (
               <div className="info-product-main-image">
-                <img src={productImage} alt={titles[0] || name} loading="lazy" />
+                <img
+                  src={productImage}
+                  alt={titles[0] || name}
+                  loading="lazy"
+                />
               </div>
             )
           )}
         </div>
       </div>
-      {/* Galeri */}
       {productDetailImages.length > 0 &&
         (productDetailImages.length > 4 ? (
           <div className="info-product-detail-gallery-section">

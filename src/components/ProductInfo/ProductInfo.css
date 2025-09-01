@@ -1,12 +1,7 @@
-/* =============================
-   ProductInfo - Mobile First Tasarım
-   ============================= */
-
-/* Ana kapsayıcı */
 .info-product-container {
   width: 100%;
   display: flex;
-  flex-direction: column; /* Mobile first: alt alta */
+  flex-direction: column;
   font-size: 1rem;
   gap: 1rem;
   padding: 16px;
@@ -14,10 +9,9 @@
   box-sizing: border-box;
 }
 
-/* Row / Kolon yapısı */
 .info-product-row {
   display: flex;
-  flex-direction: column; /* Mobile default */
+  flex-direction: column;
   gap: 1.5rem;
   width: 100%;
 }
@@ -29,7 +23,6 @@
   box-sizing: border-box;
 }
 
-/* Başlık ve açıklama */
 .info-product-title {
   font-size: 1.4rem;
   font-weight: bold;
@@ -47,7 +40,6 @@
   font-family: Montserrat, sans-serif;
 }
 
-/* Bölüm çizgisi */
 .line {
   width: 60px;
   height: 3px;
@@ -55,7 +47,6 @@
   margin: 0.5rem 0 1rem 0;
 }
 
-/* Liste alanı */
 .info-product-list {
   width: 100%;
 }
@@ -100,7 +91,6 @@
   transform: translateY(-50%);
 }
 
-/* Ana görsel */
 .info-product-main-image {
   display: flex;
   justify-content: center;
@@ -116,7 +106,6 @@
   object-fit: contain;
 }
 
-/* Döküman görselleri */
 .info-product-documents {
   display: flex;
   flex-wrap: wrap;
@@ -138,7 +127,6 @@
   transform: scale(1.05);
 }
 
-/* İletişim bölümü */
 .info-product-contact {
   margin-top: 15px;
   font-weight: bold;
@@ -151,7 +139,6 @@
   color: #f68b1f;
 }
 
-/* Detay galerisi */
 .info-product-detail-gallery-section {
   width: 100%;
   margin: 20px auto;
@@ -176,9 +163,6 @@
   transform: scale(1.05);
 }
 
-/* =============================
-   Tablet (>=768px)
-   ============================= */
 @media (max-width: 768px) {
   .info-product-documents {
     justify-content: space-around !important;
@@ -221,11 +205,6 @@
     height: 250px !important;
   }
 }
-
-/* ===========================
-   Desktop (>=1100px)
-=============================
-   */
 @media (min-width: 1100px) {
   .info-product-container {
     padding: 30px;

@@ -46,8 +46,6 @@ const AsilNunXInfo = () => {
           <p className="asil-nun-x-description">{asilNunXData.description}</p>
           <p className="asil-nun-x-details">{asilNunXData.details}</p>
           <p className="asil-nun-x-info">{asilNunXData.info}</p>
-
-          {/* Dökümanlar */}
           <div className="asil-nun-x-documents">
             {asilNunXData.documents.map((doc, index) => (
               <a

@@ -57,7 +57,6 @@ const AboutUs = () => {
   const [urls, setUrls] = useState([]);
   const [videoUrls, setVideoUrls] = useState([""]);
 
-  // Ana görsel
   const [mainImageUrl, setMainImageUrl] = useState("");
   const [mainImageId, setMainImageId] = useState("");
   const [mainImagePreview, setMainImagePreview] = useState("");
@@ -148,7 +147,6 @@ const AboutUs = () => {
         }
         setApplicationAreaImages(appImages);
 
-        // Dosya listesini getFiles ile çek
         try {
           const api = await import("../../../api");
           const filesResponse = await api.getFiles();
@@ -593,7 +591,6 @@ const AboutUs = () => {
         <div className="form-section">
           <h3 className="form-section-title"> Temel Bilgiler</h3>
 
-          {/* Banner */}
           <div className="form-group">
             <label htmlFor="bannerImageUrl" className="form-label">
               Banner Görsel URL:
@@ -652,128 +649,127 @@ const AboutUs = () => {
             )}
           </div>
 
-          {/* Ana Görsel */}
-         <div className="form-group">
-  <label className="form-label">Ana Görsel</label>
-  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-    <input
-      type="url"
-      value={mainImageUrl}
-      onChange={(e) => {
-        setMainImageUrl(e.target.value);
-        setMainImageId("");
-        setMainImagePreview(e.target.value);
-      }}
-      className="form-input"
-      placeholder="Ana görsel URL'si girin veya dosya seçin"
-    />
-    <input
-      type="file"
-      accept="image/*"
-      style={{ display: "none" }}
-      id="main-image-file-input"
-      onChange={(e) => {
-        const file = e.target.files?.[0];
-        if (file) {
-          setMainImageFile(file);
-          setMainImageId("");
-          setMainImageName(file.name);
-          const reader = new FileReader();
-          reader.onload = (ev) => {
-            setMainImagePreview(ev.target.result);
-            setMainImageUrl("");
-          };
-          reader.readAsDataURL(file);
-        }
-      }}
-    />
-    <label
-      htmlFor="main-image-file-input"
-      className="file-select-btn"
-      style={{ width: "fit-content" }}
-    >
-      <span>Dosya Seç</span>
-    </label>
-    <button
-      type="button"
-      className="file-select-btn"
-      style={{ width: "fit-content" }}
-      onClick={() => setShowMainImageSelector(true)}
-    >
-      Sistemden Seç
-    </button>
+          <div className="form-group">
+            <label className="form-label">Ana Görsel</label>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <input
+                type="url"
+                value={mainImageUrl}
+                onChange={(e) => {
+                  setMainImageUrl(e.target.value);
+                  setMainImageId("");
+                  setMainImagePreview(e.target.value);
+                }}
+                className="form-input"
+                placeholder="Ana görsel URL'si girin veya dosya seçin"
+              />
+              <input
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                id="main-image-file-input"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setMainImageFile(file);
+                    setMainImageId("");
+                    setMainImageName(file.name);
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                      setMainImagePreview(ev.target.result);
+                      setMainImageUrl("");
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+              />
+              <label
+                htmlFor="main-image-file-input"
+                className="file-select-btn"
+                style={{ width: "fit-content" }}
+              >
+                <span>Dosya Seç</span>
+              </label>
+              <button
+                type="button"
+                className="file-select-btn"
+                style={{ width: "fit-content" }}
+                onClick={() => setShowMainImageSelector(true)}
+              >
+                Sistemden Seç
+              </button>
 
-    {(mainImagePreview || mainImageUrl) && (
-      <div
-        className="AdminSelectedFileInfo"
-        style={{
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-          background: "#f9f9f9",
-          borderRadius: "8px",
-          padding: "8px 12px",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-          gap: "10px",
-          width: "fit-content",
-          marginTop: "10px",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <img
-            src={mainImagePreview || mainImageUrl}
-            alt={mainImageName || "Ana görsel"}
-            style={{
-              width: 80,
-              height: 80,
-              objectFit: "cover",
-              borderRadius: 6,
-              border: "1px solid #ddd",
-            }}
-          />
-          <span>
-            {mainImagePreview
-              ? mainImageName
-              : mainImageName || (mainImageUrl?.split("/")?.pop() ?? "")}
-          </span>
-        </div>
+              {(mainImagePreview || mainImageUrl) && (
+                <div
+                  className="AdminSelectedFileInfo"
+                  style={{
+                    position: "relative",
+                    display: "flex",
+                    alignItems: "center",
+                    background: "#f9f9f9",
+                    borderRadius: "8px",
+                    padding: "8px 12px",
+                    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                    gap: "10px",
+                    width: "fit-content",
+                    marginTop: "10px",
+                  }}
+                >
+                  <div
+                    style={{ display: "flex", alignItems: "center", gap: 10 }}
+                  >
+                    <img
+                      src={mainImagePreview || mainImageUrl}
+                      alt={mainImageName || "Ana görsel"}
+                      style={{
+                        width: 80,
+                        height: 80,
+                        objectFit: "cover",
+                        borderRadius: 6,
+                        border: "1px solid #ddd",
+                      }}
+                    />
+                    <span>
+                      {mainImagePreview
+                        ? mainImageName
+                        : mainImageName ||
+                          (mainImageUrl?.split("/")?.pop() ?? "")}
+                    </span>
+                  </div>
 
-        {/* Kapatma Butonu */}
-        <button
-          type="button"
-          onClick={() => {
-            setMainImageId("");
-            setMainImagePreview("");
-            setMainImageName("");
-            setMainImageFile(null);
-            setMainImageUrl("");
-          }}
-          style={{
-            position: "absolute",
-            top: "-6px",
-            right: "-6px",
-            background: "#e74c3c",
-            color: "#fff",
-            border: "none",
-            borderRadius: "50%",
-            width: "20px",
-            height: "20px",
-            fontSize: "14px",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          ×
-        </button>
-      </div>
-    )}
-  </div>
-</div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMainImageId("");
+                      setMainImagePreview("");
+                      setMainImageName("");
+                      setMainImageFile(null);
+                      setMainImageUrl("");
+                    }}
+                    style={{
+                      position: "absolute",
+                      top: "-6px",
+                      right: "-6px",
+                      background: "#e74c3c",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "50%",
+                      width: "20px",
+                      height: "20px",
+                      fontSize: "14px",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
 
-
-          {/* Dosya Seçici Modal (ProductModal ile aynı yapı) */}
           {showMainImageSelector && (
             <div className="AdminFileSelectorModal">
               <div className="AdminFileSelectorContent modern">
@@ -940,154 +936,6 @@ const AboutUs = () => {
             </div>
           )}
 
-          {/* Video Başlıkları */}
-          {/* <div className="form-group">
-            <div
-              className="section-header"
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 10,
-              }}
-            >
-              <label className="form-label">Video Başlıkları:</label>
-              <button
-                type="button"
-                onClick={addVideoTitle}
-                className="add-btn primary btn-sm"
-              >
-                + Video Başlığı Ekle
-              </button>
-            </div>
-            {videoTitles.map((title, index) => (
-              <div
-                key={index}
-                className="AdminMultiFieldItem"
-                style={{ display: "flex", gap: 10, marginBottom: 10 }}
-              >
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => updateVideoTitle(index, e.target.value)}
-                  className="form-input"
-                  placeholder={`Video Başlığı ${index + 1}`}
-                  style={{ flex: 1 }}
-                />
-                {videoTitles.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeVideoTitle(index)}
-                    className="btn btn-danger btn-sm"
-                  >
-                    Sil
-                  </button>
-                )}
-              </div>
-            ))}
-          </div> */}
-
-          {/* Video URL'leri */}
-          {/* <div className="form-group">
-            <div
-              className="section-header"
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 10,
-              }}
-            >
-              <label className="form-label">Video URL'leri:</label>
-              <button
-                type="button"
-                onClick={() => setVideoUrls([...videoUrls, ""])}
-                className="add-btn primary btn-sm"
-              >
-                + Video Ekle
-              </button>
-            </div>
-            {videoUrls.map((url, index) => (
-              <div
-                key={index}
-                className="AdminMultiFieldItem"
-                style={{ display: "flex", gap: 10, marginBottom: 10 }}
-              >
-                <input
-                  type="text"
-                  value={url}
-                  onChange={(e) => {
-                    const updated = [...videoUrls];
-                    updated[index] = e.target.value;
-                    setVideoUrls(updated);
-                  }}
-                  className="form-input"
-                  placeholder={`Video URL ${index + 1}`}
-                  style={{ flex: 1 }}
-                />
-                {videoUrls.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setVideoUrls(videoUrls.filter((_, i) => i !== index))
-                    }
-                    className="btn btn-danger btn-sm"
-                  >
-                    Sil
-                  </button>
-                )}
-              </div>
-            ))}
-          </div> */}
-
-          {/* Video Açıklamaları */}
-          {/* <div className="form-group">
-            <div
-              className="section-header"
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 10,
-              }}
-            >
-              <label className="form-label">Video Açıklamaları:</label>
-              <button
-                type="button"
-                onClick={addVideoDescription}
-                className="add-btn primary btn-sm"
-              >
-                + Video Açıklaması Ekle
-              </button>
-            </div>
-            {videoDescriptions.map((description, index) => (
-              <div
-                key={index}
-                className="AdminMultiFieldItem"
-                style={{ display: "flex", gap: 10, marginBottom: 10 }}
-              >
-                <input
-                  type="text"
-                  value={description}
-                  onChange={(e) => updateVideoDescription(index, e.target.value)}
-                  className="form-input"
-                  placeholder={`Video Açıklaması ${index + 1}`}
-                  style={{ flex: 1 }}
-                />
-                {videoDescriptions.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeVideoDescription(index)}
-                    className="btn btn-danger btn-sm"
-                  >
-                    Sil
-                  </button>
-                )}
-              </div>
-            ))}
-          </div> */}
-
-          {/* Başlık / Alt başlık / Paragraflar */}
           <div className="form-group">
             <div
               className="section-header"
@@ -1228,7 +1076,6 @@ const AboutUs = () => {
           </div>
         </div>
 
-        {/* Hizmetler */}
         <div className="form-section">
           <h3 className="form-section-title">🎯 Hizmetler Bölümü</h3>
           <div className="form-group AdminServiceSection">
@@ -1281,7 +1128,6 @@ const AboutUs = () => {
           </div>
         </div>
 
-        {/* Galeri */}
         <div className="form-section">
           <h3
             className="form-section-title"
@@ -1368,7 +1214,6 @@ const AboutUs = () => {
             })}
           </div>
 
-          {/* Galeri Sistem Seçici */}
           {showGalleryImageSelectorIndex !== null && (
             <div className="AdminFileSelectorModal">
               <div className="AdminFileSelectorContent modern">
@@ -1452,7 +1297,6 @@ const AboutUs = () => {
         </div>
       </form>
 
-      {/* Banner için sistem seçim modalı */}
       {showImageSelector && (
         <div
           className="AdminModalOverlay"

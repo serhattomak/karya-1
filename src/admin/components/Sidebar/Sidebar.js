@@ -51,13 +51,13 @@ const Sidebar = ({ setIsAuthenticated }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      const mobile = window.innerWidth < 992; // Breakpoint'i biraz daha büyük yaptık
+      const mobile = window.innerWidth < 992;
       setIsMobile(mobile);
 
       if (!mobile) {
-        setIsOpen(true); // Desktop'ta her zaman açık
+        setIsOpen(true);
       } else {
-        setIsOpen(false); // Mobile'da başlangıçta kapalı
+        setIsOpen(false);
       }
     };
 
@@ -67,7 +67,6 @@ const Sidebar = ({ setIsAuthenticated }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Mobile'da sidebar açıkken backdrop'a tıklanırsa kapat
   const handleBackdropClick = (e) => {
     if (isMobile && isOpen && e.target.classList.contains("sidebar-backdrop")) {
       setIsOpen(false);
@@ -76,7 +75,6 @@ const Sidebar = ({ setIsAuthenticated }) => {
 
   return (
     <>
-      {/* Mobile Toggle Button */}
       <button
         className={`menu-toggle ${isOpen ? "active" : ""}`}
         onClick={toggleSidebar}
@@ -87,12 +85,10 @@ const Sidebar = ({ setIsAuthenticated }) => {
         <span className="hamburger-line"></span>
       </button>
 
-      {/* Backdrop for mobile */}
       {isMobile && isOpen && (
         <div className="sidebar-backdrop" onClick={handleBackdropClick}></div>
       )}
 
-      {/* Sidebar */}
       <div
         className={`sidebar ${isOpen ? "open" : ""} ${
           isMobile ? "mobile" : "desktop"
@@ -146,13 +142,6 @@ const Sidebar = ({ setIsAuthenticated }) => {
             </svg>
             <span className="nav-text">Dosyalar</span>
           </NavLink>
-
-          {/* <NavLink to="Contact" onClick={closeSidebar} className="nav-item">
-            <svg className="nav-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4M20,8L12,13L4,8V6L12,11L20,6V8Z"/>
-            </svg>
-            <span className="nav-text">İletişim</span>
-          </NavLink> */}
         </nav>
 
         <div className="sidebar-footer">

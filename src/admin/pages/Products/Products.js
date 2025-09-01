@@ -57,23 +57,19 @@ const Products = () => {
     }
   };
 
-  // Helper function to get product main image
   const getProductMainImage = (product) => {
-    console.log("Product data:", product); // Debug log
+    console.log("Product data:", product);
 
-    // Method 1: Check if productImage exists directly
     if (product.productMainImage && product.productMainImage.path) {
       console.log("Found productMainImage:", product.productMainImage);
       return BASE_URL + product.productMainImage.path;
     }
 
-    // Method 2: Check ProductMainImageId with files array
     if (product.productMainImageId && product.files && product.files.length > 0) {
       console.log("Looking for ProductMainImageId:", product.productMainImageId);
       console.log("Available files:", product.files);
 
       const mainImage = product.files.find((file) => {
-        // Try different comparison methods since IDs might be strings or UUIDs
         const fileId = String(file.id).toLowerCase();
         const productMainImageId = String(
           product.productMainImageId
@@ -86,8 +82,6 @@ const Products = () => {
         return BASE_URL + mainImage.path;
       }
     }
-
-    // Method 3: Check alternative casing (productMainImageId vs ProductMainImageId)
     if (
       product.ProductMainImageId &&
       product.files &&
@@ -115,7 +109,6 @@ const Products = () => {
       }
     }
 
-    // Method 4: Fallback to first available file
     if (product.files && product.files.length > 0) {
       const firstFile = product.files.find((file) => file.path);
       if (firstFile) {
@@ -124,7 +117,6 @@ const Products = () => {
       }
     }
 
-    // Method 5: Check mainImageUrl
     if (product.mainImageUrl) {
       console.log("Found mainImageUrl:", product.mainImageUrl);
       return product.mainImageUrl.startsWith("http")
@@ -246,13 +238,11 @@ const Products = () => {
                 })()}
               </div>
               <div className="AdminProductInfo" style={{ textAlign: "left" }}>
-                {/* <h3 className="AdminProductName">{product.name}</h3> */}
                 <p className="AdminProductTitle">
                   {product.titles && product.titles[0]
                     ? product.titles[0]
                     : "Başlık yok"}
                 </p>
-                {/* Alt başlıklar */}
                 {product.subtitles && product.subtitles.length > 0 && (
                   <div className="AdminProductSubtitles">
                     {product.subtitles.slice(0, 2).map((subtitle, index) => (
@@ -276,24 +266,6 @@ const Products = () => {
                     ? product.descriptions[0].substring(0, 100) + "..."
                     : "Açıklama yok"}
                 </p>
-                {/* Liste öğeleri */}
-                {/* {product.listItems && product.listItems.length > 0 && (
-                  <div className="AdminProductListItems">
-                    {product.listTitles && product.listTitles.length > 0 && (
-                      <h5>{product.listTitles[0]}</h5>
-                    )}
-                    <ul>
-                      {product.listItems.slice(0, 3).map((item, index) => (
-                        <li key={index}>{item}</li>
-                      ))}
-                      {product.listItems.length > 3 && (
-                        <li className="AdminMoreItems">
-                          +{product.listItems.length - 3} madde daha
-                        </li>
-                      )}
-                    </ul>
-                  </div>
-                )} */}
               </div>
               <div className="AdminProductActions">
                 <button
@@ -319,8 +291,6 @@ const Products = () => {
           ))
         )}
       </div>
-
-      {/* Pagination */}
       {pagination.totalPages > 1 && (
         <div className="AdminPagination">
           <button
@@ -344,8 +314,6 @@ const Products = () => {
           </button>
         </div>
       )}
-
-      {/* Product Modal */}
       {showModal && (
         <ProductModal
           product={selectedProduct}
@@ -353,8 +321,6 @@ const Products = () => {
           onSave={handleProductSaved}
         />
       )}
-
-      {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <DeleteConfirmModal
           productName={productToDelete?.name}

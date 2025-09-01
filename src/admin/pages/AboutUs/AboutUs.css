@@ -69,15 +69,7 @@
 .sort-btn:hover {
   background: #ee5c30;
 }
-/* ===========================================
-   KARYA WEB - ADMIN ABOUT US COMPONENT CSS
-   ===========================================
-   Bu dosyada buton ve form stilleri temizlenmiştir.
-   Buton stilleri artık src/styles/buttons.css'de,
-   Form stilleri artık src/styles/forms.css'de tanımlanmaktadır.
-   =========================================== */
 
-/* Panel Header */
 .AdminSectionHeader {
   margin-bottom: 2rem;
   padding-bottom: 1rem;
@@ -97,7 +89,6 @@
   margin: 0;
 }
 
-/* Form Container */
 .form-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -105,9 +96,6 @@
   padding: 10px;
 }
 
-
-
-/* Service Section Specific */
 .AdminServiceSection {
   margin-top: 1rem;
   padding: 1.5rem;
@@ -139,7 +127,6 @@
   flex: 1;
 }
 
-/* Gallery Grid */
 .AdminGalleryGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -232,7 +219,6 @@
   color: #f68b1f;
 }
 
-/* Preview Image */
 .AdminPreviewImage {
   border: 2px solid #e9ecef;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -243,7 +229,6 @@
   transform: scale(1.02);
 }
 
-/* Form Actions */
 .AdminFormActions {
   margin-top: 2rem;
   padding-top: 2rem;
@@ -266,14 +251,11 @@
   justify-content: center;
 }
 
-/* form type */
-
 .form-section-title {
   font-size: 18px;
   font-weight: 500;
 }
 
-/* Loading State */
 .AdminLoading {
   display: flex;
   flex-direction: column;
@@ -308,7 +290,6 @@
   margin: 0;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .AdminPanelTitle {
     font-size: 1.5rem;
@@ -351,7 +332,6 @@
   }
 }
 
-/* Print Styles */
 @media print {
   .AdminGalleryItem,
   .AdminFormActions,
@@ -360,20 +340,9 @@
   }
 }
 
-/* Banner Image Styles */
 .AdminBannerImageOptions {
   margin-top: 15px;
 }
-
-/* .image-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 15px;
-  margin-top: 10px;
-  padding: 15px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-} */
 
 .AdminImageOption {
   cursor: pointer;
@@ -401,7 +370,6 @@
   border-left: 4px solid #007bff;
 }
 
-/* Multi-field styles */
 .AdminMultiFieldItem {
   display: flex;
   gap: 10px;
@@ -414,7 +382,6 @@
   flex: 1;
 }
 
-/* Main Image & Video URLs */
 .AdminPreviewImage {
   border: 2px solid #e9ecef;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -442,7 +409,6 @@
   margin-bottom: 15px;
 }
 
-/* Service group styles - NEW SYSTEM */
 .AdminServiceGroup {
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -473,7 +439,6 @@
   color: #666;
 }
 
-/* Modal Styles */
 .AdminModalOverlay {
   position: fixed;
   top: 0;
@@ -522,7 +487,6 @@
   transform: translateY(-2px);
 }
 
-/* High Contrast Mode */
 @media (prefers-contrast: high) {
   .AdminGalleryItem {
     border-color: #000;

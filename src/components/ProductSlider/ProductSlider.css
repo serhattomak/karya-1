@@ -1,11 +1,9 @@
-/* subtitle içeren kartlar için özel düzenleme */
 .slide.with-subtitle .product-title {
   font-size: 1.4rem;
-  margin-bottom: 0.5rem; /* Subtitle ile aralığı arttır */
+  margin-bottom: 0.5rem;
   font-weight: 600;
 }
 
-/* subtitle içeren kartlar için alt başlık düzenlemesi */
 .slide.with-subtitle .product-subtitle {
   font-size: 1rem;
   font-weight: 600;
@@ -130,10 +128,9 @@ a {
   }
   .slide.with-subtitle .product-title {
     font-size: 0.8rem;
-    margin-bottom: 0.1rem; /* Subtitle ile aralığı arttır */
+    margin-bottom: 0.1rem;
   }
 
-  /* subtitle içeren kartlar için alt başlık düzenlemesi */
   .slide.with-subtitle .product-subtitle {
     font-size: 0.6rem;
     margin-top: 0.05rem;
