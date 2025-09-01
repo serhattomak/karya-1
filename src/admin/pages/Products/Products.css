@@ -427,7 +427,8 @@
 .add-btn.secondary:hover {
   background: #545b62;
 }
-*/ .AdminFileInput {
+
+.AdminFileInput {
   margin-bottom: 15px;
 }
 
