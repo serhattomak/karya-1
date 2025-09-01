@@ -60,7 +60,7 @@ const Products = () => {
 
     if (product.productMainImage && product.productMainImage.path) {
       console.log("Found productMainImage:", product.productMainImage);
-      return API_URL + product.productMainImage.path;
+      return `${API_URL.replace(/\/$/, "")}/${product.productMainImage.path.replace(/^\//, "")}`;
     }
 
     if (product.productMainImageId && product.files && product.files.length > 0) {
@@ -77,7 +77,7 @@ const Products = () => {
 
       if (mainImage && mainImage.path) {
         console.log("Found main image via ProductMainImageId:", mainImage);
-        return API_URL + mainImage.path;
+        return `${API_URL.replace(/\/$/, "")}/${mainImage.path.replace(/^\//, "")}`;
       }
     }
     if (
@@ -103,7 +103,7 @@ const Products = () => {
           "Found main image via ProductMainImageId (capital P):",
           mainImage
         );
-        return API_URL + mainImage.path;
+        return `${API_URL.replace(/\/$/, "")}/${mainImage.path.replace(/^\//, "")}`;
       }
     }
 
@@ -111,7 +111,7 @@ const Products = () => {
       const firstFile = product.files.find((file) => file.path);
       if (firstFile) {
         console.log("Using first available file:", firstFile);
-        return API_URL + firstFile.path;
+        return `${API_URL.replace(/\/$/, "")}/${firstFile.path.replace(/^\//, "")}`;
       }
     }
 
@@ -119,7 +119,7 @@ const Products = () => {
       console.log("Found mainImageUrl:", product.mainImageUrl);
       return product.mainImageUrl.startsWith("http")
         ? product.mainImageUrl
-        : API_URL + product.mainImageUrl;
+        : `${API_URL.replace(/\/$/, "")}/${product.mainImageUrl.replace(/^\//, "")}`;
     }
 
     console.log("No image found for product");

@@ -13,7 +13,7 @@ import DocumentDetailModal from "./DocumentDetailModal";
 import Swal from "sweetalert2";
 import "./Documents.css";
 import { API_URL } from "../../../api";
-const BASE_URL = API_URL.endsWith("/") ? API_URL : API_URL + "/";
+const BASE_URL = API_URL.replace(/\/$/, "") + "/";
 
 const Documents = () => {
   const [documents, setDocuments] = useState([]);
@@ -437,9 +437,9 @@ const Documents = () => {
                           document.previewImageUrl.startsWith("http")
                             ? document.previewImageUrl
                             : document.previewImageFile?.path
-                            ? `${BASE_URL}${document.previewImageFile.path}`
+                            ? `${BASE_URL}${document.previewImageFile.path.replace(/^\//, "")}`
                             : document.previewImageUrl
-                            ? `${BASE_URL}${document.previewImageUrl}`
+                            ? `${BASE_URL}${document.previewImageUrl.replace(/^\//, "")}`
                             : null
                         }
                         alt={document.name}

@@ -160,9 +160,9 @@ const Home = () => {
 
             if (imagePath) {
               if (imagePath.startsWith("uploads/")) {
-                imagePath = `${API_URL}/${imagePath}`;
+                imagePath = `${API_URL.replace(/\/$/, "")}/${imagePath.replace(/^\//, "")}`;
               } else if (!imagePath.startsWith("http")) {
-                imagePath = `${API_URL}/${imagePath}`;
+                imagePath = `${API_URL.replace(/\/$/, "")}/${imagePath.replace(/^\//, "")}`;
               }
               console.log("Final imagePath:", imagePath);
             } else {
@@ -665,9 +665,9 @@ const Home = () => {
 
                     if (imagePath) {
                       if (imagePath.startsWith("uploads/")) {
-                        imagePath = `${API_URL}/${imagePath}`;
+                        imagePath = `${API_URL.replace(/\/$/, "")}/${imagePath.replace(/^\//, "")}`;
                       } else if (!imagePath.startsWith("http")) {
-                        imagePath = `${API_URL}/${imagePath}`;
+                        imagePath = `${API_URL.replace(/\/$/, "")}/${imagePath.replace(/^\//, "")}`;
                       }
                     }
 

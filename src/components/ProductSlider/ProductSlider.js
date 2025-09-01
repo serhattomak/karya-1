@@ -30,7 +30,7 @@ const ProductSlider = ({ products }) => {
     if (product.productMainImage && product.productMainImage.path) {
       return product.productMainImage.path.startsWith("http")
         ? product.productMainImage.path
-        : API_URL + product.productMainImage.path;
+        : `${API_URL.replace(/\/$/, "")}/${product.productMainImage.path.replace(/^\//, "")}`;
     }
     if (
       product.productMainImageId &&
@@ -47,7 +47,7 @@ const ProductSlider = ({ products }) => {
       if (mainImage && mainImage.path) {
         return mainImage.path.startsWith("http")
           ? mainImage.path
-          : API_URL + mainImage.path;
+          : `${API_URL.replace(/\/$/, "")}/${mainImage.path.replace(/^\//, "")}`;
       }
     }
     if (
@@ -65,7 +65,7 @@ const ProductSlider = ({ products }) => {
       if (mainImage && mainImage.path) {
         return mainImage.path.startsWith("http")
           ? mainImage.path
-          : API_URL + mainImage.path;
+          : `${API_URL.replace(/\/$/, "")}/${mainImage.path.replace(/^\//, "")}`;
       }
     }
     if (product.files && product.files.length > 0) {
@@ -73,13 +73,13 @@ const ProductSlider = ({ products }) => {
       if (firstFile) {
         return firstFile.path.startsWith("http")
           ? firstFile.path
-          : API_URL + firstFile.path;
+          : `${API_URL.replace(/\/$/, "")}/${firstFile.path.replace(/^\//, "")}`;
       }
     }
     if (product.mainImageUrl) {
       return product.mainImageUrl.startsWith("http")
         ? product.mainImageUrl
-        : API_URL + product.mainImageUrl;
+        : `${API_URL.replace(/\/$/, "")}/${product.mainImageUrl.replace(/^\//, "")}`;
     }
     if (product.image) {
       return product.image;

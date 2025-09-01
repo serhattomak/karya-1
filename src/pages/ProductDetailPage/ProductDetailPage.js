@@ -47,7 +47,7 @@ function ProductDetailPage() {
             if (fileData && fileData.path) {
               productImage = fileData.path.startsWith("http")
                 ? fileData.path
-                : API_URL + fileData.path;
+                : `${API_URL.replace(/\/$/, "")}/${fileData.path.replace(/^\//, "")}`;
             }
           } catch (err) {
             productImage = null;
@@ -70,7 +70,7 @@ function ProductDetailPage() {
                 if (imageData && imageData.path) {
                   return imageData.path.startsWith("http")
                     ? imageData.path
-                    : API_URL + imageData.path;
+                    : `${API_URL.replace(/\/$/, "")}/${imageData.path.replace(/^\//, "")}`;
                 }
               } catch (err) {
                 return null;
@@ -83,7 +83,7 @@ function ProductDetailPage() {
 
         let bannerImage = data.bannerImageUrl;
         if (bannerImage && !bannerImage.startsWith("http")) {
-          bannerImage = API_URL + bannerImage;
+          bannerImage = `${API_URL.replace(/\/$/, "")}/${bannerImage.replace(/^\//, "")}`;
         }
         if (!bannerImage) {
           bannerImage = "/assets/images/Group 300.webp";

@@ -135,9 +135,9 @@ const DocumentDetailModal = ({ document, onClose }) => {
                     document.previewImageUrl && document.previewImageUrl.startsWith('http') 
                       ? document.previewImageUrl 
                       : document.previewImageFile?.path
-                        ? `${API_URL}/${document.previewImageFile.path}`
+                        ? `${API_URL.replace(/\/$/, "")}/${document.previewImageFile.path.replace(/^\//, "")}`
                         : document.previewImageUrl
-                          ? `${API_URL}/${document.previewImageUrl}`
+                          ? `${API_URL.replace(/\/$/, "")}/${document.previewImageUrl.replace(/^\//, "")}`
                           : null
                   } 
                   alt={document.name}

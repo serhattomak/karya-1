@@ -59,13 +59,11 @@ function HomePage() {
 
             let fullImageUrl = "";
             if (imagePath) {
-              if (imagePath.startsWith("uploads/")) {
-                fullImageUrl = API_URL + imagePath;
-              } else if (!imagePath.startsWith("http")) {
-                fullImageUrl = API_URL + imagePath;
-              } else {
-                fullImageUrl = imagePath;
-              }
+                if (!imagePath.startsWith("http")) {
+                  fullImageUrl = `${API_URL.replace(/\/$/, "")}/${imagePath.replace(/^\//, "")}`;
+                } else {
+                  fullImageUrl = imagePath;
+                }
             }
 
             return {

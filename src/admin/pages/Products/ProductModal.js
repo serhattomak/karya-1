@@ -26,7 +26,7 @@ const getEmbedUrl = (url) => {
   return url;
 };
 
-const BASE_URL = API_URL.endsWith("/") ? API_URL : API_URL + "/";
+const BASE_URL = API_URL.replace(/\/$/, "") + "/";
 
 const uploadFile = async (file) => {
   const formData = new FormData();
@@ -430,7 +430,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
   };
 
   const selectFileFromSystem = (file) => {
-    const fileUrl = BASE_URL + file.path;
+  const fileUrl = `${BASE_URL}${file.path.replace(/^\//, "")}`;
 
     switch (selectedFileType) {
       case "banner":
@@ -1758,7 +1758,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                       {file.contentType?.startsWith("image/") ||
                       file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
                         <img
-                          src={BASE_URL + file.path}
+                          src={`${BASE_URL}${file.path.replace(/^\//, "")}`}
                           alt={file.name}
                           loading="lazy"
                           style={{
@@ -1919,7 +1919,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                           src={
                             document.previewImageUrl.startsWith("http")
                               ? document.previewImageUrl
-                              : BASE_URL + document.previewImageUrl
+                              : `${BASE_URL}${document.previewImageUrl.replace(/^\//, "")}`
                           }
                           alt={document.name}
                           loading="lazy"

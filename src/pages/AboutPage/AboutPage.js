@@ -35,7 +35,7 @@ function AboutPage() {
   let galleryImages = [];
   if (pageData.files && Array.isArray(pageData.files)) {
     galleryImages = pageData.files
-      .map(f => f.path ? API_URL + f.path : "")
+      .map(f => f.path ? `${API_URL.replace(/\/$/, "")}/${f.path.replace(/^\//, "")}` : "")
       .filter(Boolean);
     if (galleryImages.length > 4) {
       galleryImages = galleryImages.slice(0, 4);
@@ -44,7 +44,7 @@ function AboutPage() {
 
   let mainImageUrl = "/assets/images/hk.jpeg";
   if (pageData.mainImage && pageData.mainImage.path) {
-    mainImageUrl = API_URL + pageData.mainImage.path;
+    mainImageUrl = `${API_URL.replace(/\/$/, "")}/${pageData.mainImage.path.replace(/^\//, "")}`;
   }
   return (
     <div>

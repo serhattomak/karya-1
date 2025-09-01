@@ -4,7 +4,7 @@ import { API_URL } from "../../../api";
 import Swal from "sweetalert2";
 import "../AboutUs/AboutUs.css";
 
-const BASE_URL = API_URL.endsWith("/") ? API_URL : API_URL + "/";
+const BASE_URL = API_URL.replace(/\/$/, "") + "/";
 const API_BASE_URL = API_URL;
 
 const uploadFile = async (file) => {
@@ -131,7 +131,7 @@ const AboutUs = () => {
         const computedMainUrl =
           data.mainImageUrl ||
           (data.mainImage?.path
-            ? `${API_URL}/${data.mainImage.path}`
+            ? `${API_URL.replace(/\/$/, "")}/${data.mainImage.path.replace(/^\//, "")}`
             : "");
         setMainImageUrl(computedMainUrl || "");
         setMainImageId(data.mainImageId || data.mainImage?.id || "");
@@ -142,7 +142,7 @@ const AboutUs = () => {
         if (Array.isArray(data.files)) {
           appImages = data.files.slice(0, 4).map((f) => ({
             id: f.id,
-            url: f.path ? BASE_URL + f.path : "",
+            url: f.path ? `${BASE_URL}${f.path.replace(/^\//, "")}` : "",
           }));
           while (appImages.length < 4) appImages.push(null);
         }
@@ -183,9 +183,9 @@ const AboutUs = () => {
       try {
         const uploaded = await uploadFile(selectedFile);
         uploadedBannerUrl = uploaded?.data?.path
-          ? `${API_URL}/${uploaded.data.path}`
+          ? `${API_URL.replace(/\/$/, "")}/${uploaded.data.path.replace(/^\//, "")}`
           : uploaded?.path
-          ? `${API_URL}/${uploaded.path}`
+          ? `${API_URL.replace(/\/$/, "")}/${uploaded.path.replace(/^\//, "")}`
           : uploaded?.url || uploaded?.imageUrl || uploadedBannerUrl;
       } catch (err) {
         Swal.fire({
@@ -205,9 +205,9 @@ const AboutUs = () => {
       try {
         const uploaded = await uploadFile(mainImageFile);
         uploadedMainImageUrl = uploaded?.data?.path
-          ? `${API_URL}/${uploaded.data.path}`
+          ? `${API_URL.replace(/\/$/, "")}/${uploaded.data.path.replace(/^\//, "")}`
           : uploaded?.path
-          ? `${API_URL}/${uploaded.path}`
+          ? `${API_URL.replace(/\/$/, "")}/${uploaded.path.replace(/^\//, "")}`
           : uploaded?.url || uploaded?.imageUrl || uploadedMainImageUrl;
         uploadedMainImageId = uploaded?.data?.id || uploaded?.id || null;
       } catch (err) {
@@ -388,9 +388,9 @@ const AboutUs = () => {
       try {
         const uploaded = await uploadFile(file);
         const imageUrl = uploaded?.data?.path
-          ? BASE_URL + uploaded.data.path
+          ? `${BASE_URL}${uploaded.data.path.replace(/^\//, "")}`
           : uploaded?.path
-          ? BASE_URL + uploaded.path
+          ? `${BASE_URL}${uploaded.path.replace(/^\//, "")}`
           : "";
         const fileId = uploaded?.data?.id || uploaded?.id || null;
 
@@ -863,7 +863,7 @@ const AboutUs = () => {
                             key={file.id}
                             className="AdminFileItem modern"
                             onClick={() => {
-                              setMainImageUrl(`${API_URL}/${file.path}`);
+                              setMainImageUrl(`${API_URL.replace(/\/$/, "")}/${file.path.replace(/^\//, "")}`);
                               setMainImageId(file.id);
                               setMainImagePreview("");
                               setMainImageFile(null);
@@ -884,7 +884,7 @@ const AboutUs = () => {
                             }}
                           >
                             <img
-                              src={`${API_URL}/${file.path}`}
+                              src={`${API_URL.replace(/\/$/, "")}/${file.path.replace(/^\//, "")}`}
                               alt={fileName}
                               loading="lazy"
                               style={{
@@ -1348,7 +1348,7 @@ const AboutUs = () => {
                     }}
                   >
                     <img
-                      src={`${API_BASE_URL}/${file.path}`}
+                      src={`${API_BASE_URL.replace(/\/$/, "")}/${file.path.replace(/^\//, "")}`}
                       alt={`Görsel ${index + 1}`}
                       style={{ width: "100%", height: 120, objectFit: "cover" }}
                       loading="lazy"

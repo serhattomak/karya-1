@@ -52,11 +52,11 @@ const DocumentModal = ({ document, onSave, onClose }) => {
       if (document.previewImageUrl) {
         setPreviewUrl(document.previewImageUrl);
       } else if (document.previewImageFile?.path) {
-        setPreviewUrl(`${API_URL}/${document.previewImageFile.path}`);
+        setPreviewUrl(`${API_URL.replace(/\/$/, "")}/${document.previewImageFile.path.replace(/^\//, "")}`);
       }
-      
+
       if (document.file?.path && document.file?.contentType?.startsWith('image/')) {
-        setFilePreviewUrl(`${API_URL}/${document.file.path}`);
+        setFilePreviewUrl(`${API_URL.replace(/\/$/, "")}/${document.file.path.replace(/^\//, "")}`);
       }
     } else {
       setFormData({
@@ -184,7 +184,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         ...prev,
         previewImageFileId: file.id
       }));
-  setPreviewUrl(`${API_URL}/${file.path}`);
+      setPreviewUrl(`${API_URL.replace(/\/$/, "")}/${file.path.replace(/^\//, "")}`);
       setShowImageSelector(false);
     } else {
       setFormData(prev => ({
@@ -194,7 +194,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         fileSize: file.size || 0
       }));
       if (file.contentType?.startsWith('image/')) {
-        setFilePreviewUrl(`${API_URL}/${file.path}`);
+        setFilePreviewUrl(`${API_URL.replace(/\/$/, "")}/${file.path.replace(/^\//, "")}`);
       }
       setShowFileSelector(false);
     }
@@ -688,7 +688,7 @@ const FileSelector = ({ files, onSelect, onClose, title, filterType }) => {
                 <div className="AdminFilePreview">
                   {isImageFile(file.contentType) ? (
                     <img 
-                      src={`${API_URL}/${file.path}`} 
+                      src={`${API_URL.replace(/\/$/, "")}/${file.path.replace(/^\//, "")}`} 
                       alt={file.name}
                       className="AdminFileThumbnail"
                     />
