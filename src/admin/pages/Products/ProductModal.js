@@ -25,7 +25,8 @@ const getEmbedUrl = (url) => {
   return url;
 };
 
-const BASE_URL = "https://localhost:7103/";
+import { API_URL } from "../../../api";
+const BASE_URL = API_URL.endsWith("/") ? API_URL : API_URL + "/";
 
 const uploadFile = async (file) => {
   const formData = new FormData();

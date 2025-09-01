@@ -6,6 +6,7 @@ import {
   getProductsAuth as getProducts,
   updatePageProductOrder,
   getFile,
+  API_URL,
 } from "../../../api";
 import Swal from "sweetalert2";
 import "./Home.css";
@@ -52,8 +53,6 @@ const Home = () => {
 
         setAvailableProducts(allProducts);
 
-        const API_URL =
-          process.env.REACT_APP_API_URL || "https://localhost:7103";
         const currentSelectedProducts = await Promise.all(
           (pageData.products || []).map(async (product) => {
             console.log("Sayfa yüklenirken ürün:", product);
@@ -268,7 +267,6 @@ const Home = () => {
     console.log("productImageId:", product.productImageId);
     console.log("files:", product.files);
 
-    const API_URL = process.env.REACT_APP_API_URL || "https://localhost:7103";
     let imagePath = "";
 
     if (product.productImage && product.productImage.path) {
@@ -646,8 +644,6 @@ const Home = () => {
                       )
                   )
                   .map((product) => {
-                    const API_URL =
-                      process.env.REACT_APP_API_URL || "https://localhost:7103";
                     let imagePath = "";
 
                     if (product.productImage && product.productImage.path) {

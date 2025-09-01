@@ -1,8 +1,7 @@
 import React from "react";
 import Gallery from "../Gallery/Gallery";
 import "./ProductInfo.css";
-
-const BASE_URL = "https://localhost:7103/";
+import { API_URL } from "../../api";
 
 const ProductInfo = ({ productData }) => {
   if (!productData) return null;
@@ -38,7 +37,7 @@ const ProductInfo = ({ productData }) => {
       console.log("Using productImage.path:", productImage.path);
       return productImage.path.startsWith("http")
         ? productImage.path
-        : BASE_URL + productImage.path;
+        : API_URL + productImage.path;
     }
 
     if (productData.productImage && productData.productImage.path) {
@@ -48,7 +47,7 @@ const ProductInfo = ({ productData }) => {
       );
       return productData.productImage.path.startsWith("http")
         ? productData.productImage.path
-        : BASE_URL + productData.productImage.path;
+        : API_URL + productData.productImage.path;
     }
 
     if (productImageId && files && files.length > 0) {
@@ -67,7 +66,7 @@ const ProductInfo = ({ productData }) => {
       if (productImageFile && productImageFile.path) {
         const finalUrl = productImageFile.path.startsWith("http")
           ? productImageFile.path
-          : BASE_URL + productImageFile.path;
+          : API_URL + productImageFile.path;
         console.log("Using productImageFile:", finalUrl);
         return finalUrl;
       }
@@ -77,7 +76,7 @@ const ProductInfo = ({ productData }) => {
       console.log("Using first file:", files[0].path);
       return files[0].path.startsWith("http")
         ? files[0].path
-        : BASE_URL + files[0].path;
+        : API_URL + files[0].path;
     }
   })();
 
@@ -86,6 +85,7 @@ const ProductInfo = ({ productData }) => {
     console.log("- documents:", documents);
     console.log("- apiDocumentImages:", apiDocumentImages);
     console.log("- documentImageIds:", documentImageIds);
+
 
     if (documents && documents.length > 0) {
       console.log("Using documents array, length:", documents.length);
@@ -97,19 +97,19 @@ const ProductInfo = ({ productData }) => {
         if (doc.previewImageUrl) {
           imagePath = doc.previewImageUrl.startsWith("http")
             ? doc.previewImageUrl
-            : BASE_URL + doc.previewImageUrl;
+            : API_URL + doc.previewImageUrl;
         } else if (doc.fileUrl) {
           imagePath = doc.fileUrl.startsWith("http")
             ? doc.fileUrl
-            : BASE_URL + doc.fileUrl;
+            : API_URL + doc.fileUrl;
         } else if (doc.path) {
           imagePath = doc.path.startsWith("http")
             ? doc.path
-            : BASE_URL + doc.path;
+            : API_URL + doc.path;
         } else if (doc.previewImageFile?.path) {
           imagePath = doc.previewImageFile.path.startsWith("http")
             ? doc.previewImageFile.path
-            : BASE_URL + doc.previewImageFile.path;
+            : API_URL + doc.previewImageFile.path;
         }
 
         console.log("Document image path:", imagePath);
@@ -135,7 +135,7 @@ const ProductInfo = ({ productData }) => {
       );
       return apiDocumentImages.map((img) => ({
         ...img,
-        path: img.path.startsWith("http") ? img.path : BASE_URL + img.path,
+        path: img.path.startsWith("http") ? img.path : API_URL + img.path,
       }));
     }
 
@@ -157,7 +157,7 @@ const ProductInfo = ({ productData }) => {
               ...file,
               path: file.path.startsWith("http")
                 ? file.path
-                : BASE_URL + file.path,
+                : API_URL + file.path,
             };
           }
           return null;

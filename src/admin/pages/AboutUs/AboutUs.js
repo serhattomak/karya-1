@@ -1,16 +1,17 @@
 import React, { useEffect, useState, useRef } from "react";
 import { getPageByName } from "../../../api";
+import { API_URL } from "../../../api";
 import Swal from "sweetalert2";
 import "../AboutUs/AboutUs.css";
 
-const BASE_URL = "https://localhost:7103/";
-const API_BASE_URL = "https://localhost:7103";
+const BASE_URL = API_URL.endsWith("/") ? API_URL : API_URL + "/";
+const API_BASE_URL = API_URL;
 
 const uploadFile = async (file) => {
   const formData = new FormData();
   formData.append("file", file);
   const token = localStorage.getItem("token");
-  const response = await fetch(`${API_BASE_URL}/api/File/upload`, {
+  const response = await fetch(`${API_URL}/api/File/upload`, {
     method: "POST",
     body: formData,
     headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -130,7 +131,7 @@ const AboutUs = () => {
         const computedMainUrl =
           data.mainImageUrl ||
           (data.mainImage?.path
-            ? `${API_BASE_URL}/${data.mainImage.path}`
+            ? `${API_URL}/${data.mainImage.path}`
             : "");
         setMainImageUrl(computedMainUrl || "");
         setMainImageId(data.mainImageId || data.mainImage?.id || "");
@@ -182,9 +183,9 @@ const AboutUs = () => {
       try {
         const uploaded = await uploadFile(selectedFile);
         uploadedBannerUrl = uploaded?.data?.path
-          ? `${API_BASE_URL}/${uploaded.data.path}`
+          ? `${API_URL}/${uploaded.data.path}`
           : uploaded?.path
-          ? `${API_BASE_URL}/${uploaded.path}`
+          ? `${API_URL}/${uploaded.path}`
           : uploaded?.url || uploaded?.imageUrl || uploadedBannerUrl;
       } catch (err) {
         Swal.fire({
@@ -204,9 +205,9 @@ const AboutUs = () => {
       try {
         const uploaded = await uploadFile(mainImageFile);
         uploadedMainImageUrl = uploaded?.data?.path
-          ? `${API_BASE_URL}/${uploaded.data.path}`
+          ? `${API_URL}/${uploaded.data.path}`
           : uploaded?.path
-          ? `${API_BASE_URL}/${uploaded.path}`
+          ? `${API_URL}/${uploaded.path}`
           : uploaded?.url || uploaded?.imageUrl || uploadedMainImageUrl;
         uploadedMainImageId = uploaded?.data?.id || uploaded?.id || null;
       } catch (err) {
@@ -318,7 +319,7 @@ const AboutUs = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const resp = await fetch(`${API_BASE_URL}/api/Page`, {
+  const resp = await fetch(`${API_URL}/api/Page`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -332,7 +333,7 @@ const AboutUs = () => {
         throw new Error(`HTTP ${resp.status}: ${errorText}`);
       }
 
-      const getResp = await fetch(`${API_BASE_URL}/api/Page/${payload.id}`, {
+  const getResp = await fetch(`${API_URL}/api/Page/${payload.id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -526,7 +527,7 @@ const AboutUs = () => {
   const openImageSelector = () => setShowImageSelector(true);
 
   const selectImageFromSystem = (filePath) => {
-    setBannerImageUrl(`${API_BASE_URL}/${filePath}`);
+  setBannerImageUrl(`${API_URL}/${filePath}`);
     setShowImageSelector(false);
   };
 
@@ -862,7 +863,7 @@ const AboutUs = () => {
                             key={file.id}
                             className="AdminFileItem modern"
                             onClick={() => {
-                              setMainImageUrl(`${API_BASE_URL}/${file.path}`);
+                              setMainImageUrl(`${API_URL}/${file.path}`);
                               setMainImageId(file.id);
                               setMainImagePreview("");
                               setMainImageFile(null);
@@ -883,7 +884,7 @@ const AboutUs = () => {
                             }}
                           >
                             <img
-                              src={`${API_BASE_URL}/${file.path}`}
+                              src={`${API_URL}/${file.path}`}
                               alt={fileName}
                               loading="lazy"
                               style={{
@@ -1238,7 +1239,7 @@ const AboutUs = () => {
                             const updated = [...prev];
                             updated[showGalleryImageSelectorIndex] = {
                               id: file.id,
-                              url: `${API_BASE_URL}/${file.path}`,
+                              url: `${API_URL}/${file.path}`,
                               name: file.path.split("/").pop(),
                             };
                             return updated;
@@ -1259,7 +1260,7 @@ const AboutUs = () => {
                         }}
                       >
                         <img
-                          src={`${API_BASE_URL}/${file.path}`}
+                          src={`${API_URL}/${file.path}`}
                           alt={file.path.split("/").pop()}
                           style={{
                             width: "100%",
@@ -1334,7 +1335,7 @@ const AboutUs = () => {
                     key={index}
                     className="AdminFileItem"
                     onClick={() => {
-                      setBannerImageUrl(`${API_BASE_URL}/${file.path}`);
+                      setBannerImageUrl(`${API_URL}/${file.path}`);
                       setShowImageSelector(false);
                     }}
                     style={{

@@ -7,7 +7,7 @@ import Footer from "../../components/Footer/Footer";
 import { getProductBySlug, getFile } from "../../api";
 import "./ProductDetailPage.css";
 
-const BASE_URL = "https://localhost:7103/";
+import { API_URL } from "../../api";
 
 function getEmbedUrl(url) {
   if (!url) return "";
@@ -47,7 +47,7 @@ function ProductDetailPage() {
             if (fileData && fileData.path) {
               productImage = fileData.path.startsWith("http")
                 ? fileData.path
-                : BASE_URL + fileData.path;
+                : API_URL + fileData.path;
             }
           } catch (err) {
             productImage = null;
@@ -70,7 +70,7 @@ function ProductDetailPage() {
                 if (imageData && imageData.path) {
                   return imageData.path.startsWith("http")
                     ? imageData.path
-                    : BASE_URL + imageData.path;
+                    : API_URL + imageData.path;
                 }
               } catch (err) {
                 return null;
@@ -83,7 +83,7 @@ function ProductDetailPage() {
 
         let bannerImage = data.bannerImageUrl;
         if (bannerImage && !bannerImage.startsWith("http")) {
-          bannerImage = BASE_URL + bannerImage;
+          bannerImage = API_URL + bannerImage;
         }
         if (!bannerImage) {
           bannerImage = "/assets/images/Group 300.webp";

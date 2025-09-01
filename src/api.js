@@ -10,14 +10,11 @@ function getAuthHeader() {
 export const checkBackendHealth = async () => {
   try {
     console.log("Backend bağlantı kontrolü başlatılıyor...");
-    
-    const healthResponse = await axios.get(`${API_URL}/api/File`, { 
+    const healthResponse = await axios.get(`${API_URL}/api/File`, {
       headers: getAuthHeader(),
       timeout: 10000
     });
-    
     console.log("✅ Backend erişilebilir, durum:", healthResponse.status);
-    
     return {
       isHealthy: true,
       status: healthResponse.status,
@@ -25,18 +22,16 @@ export const checkBackendHealth = async () => {
     };
   } catch (error) {
     console.error("❌ Backend bağlantı hatası:", error);
-    
     let diagnostics = {
       isHealthy: false,
       error: error.message,
       suggestions: []
     };
-    
     if (error.code === 'ECONNREFUSED' || error.message.includes('Network Error')) {
       diagnostics.message = "Backend sunucusuna bağlanılamıyor";
       diagnostics.suggestions = [
         "Backend sunucusunun çalıştığından emin olun",
-        "URL'in doğru olduğunu kontrol edin: " + API_URL,
+        `URL'in doğru olduğunu kontrol edin: ${API_URL}`,
         "Firewall ayarlarını kontrol edin"
       ];
     } else if (error.message.includes('ERR_HTTP2_PROTOCOL_ERROR')) {
@@ -71,11 +66,9 @@ export const checkBackendHealth = async () => {
         "Tarayıcı geliştirici konsolunu kontrol edin"
       ];
     }
-    
     return diagnostics;
   }
 };
-
 export const login = (data) =>
   axios.post(`${API_URL}/api/Auth/login`, data);
 
@@ -117,7 +110,6 @@ export const deleteFile = (id) =>
 
 export const uploadFile = (formData, options = {}) => {
   console.log("📤 Upload File API başlıyor...");
-  
   let fileInfo = {};
   for (let [key, value] of formData.entries()) {
     if (value instanceof File) {
@@ -130,11 +122,9 @@ export const uploadFile = (formData, options = {}) => {
       console.log("📁 Dosya bilgileri:", fileInfo);
     }
   }
-  
   console.log("🌐 Upload URL:", `${API_URL}/api/File/upload`);
-  
   const config = {
-    headers: { 
+    headers: {
       ...getAuthHeader()
     },
     timeout: options.timeout || (fileInfo.isPDF ? 600000 : 300000),
@@ -146,13 +136,11 @@ export const uploadFile = (formData, options = {}) => {
     validateStatus: (status) => status < 500,
     ...options
   };
-
   if (fileInfo.isPDF) {
     console.log("📄 PDF için özel konfigürasyon uygulanıyor...");
     config.headers['Accept'] = 'application/json';
     config.maxRedirects = 0;
   }
-  
   console.log("⚙️ Request config:", {
     url: `${API_URL}/api/File/upload`,
     timeout: config.timeout,
@@ -160,7 +148,6 @@ export const uploadFile = (formData, options = {}) => {
     maxBodyLength: config.maxBodyLength,
     headers: config.headers
   });
-  
   return axios.post(`${API_URL}/api/File/upload`, formData, config)
     .then(response => {
       console.log("✅ Upload başarılı:", {
@@ -182,7 +169,6 @@ export const uploadFile = (formData, options = {}) => {
         config: error.config,
         fileInfo
       });
-      
       if (fileInfo.isPDF) {
         console.error("📄 PDF yükleme hatası detayları:", {
           pdfSize: fileInfo.size,
@@ -194,55 +180,42 @@ export const uploadFile = (formData, options = {}) => {
           statusCode: error.response?.status
         });
       }
-      
       if (error.code === 'NETWORK_ERROR' || error.message.includes('Network Error')) {
         throw new Error('Ağ bağlantısı hatası. Backend sunucusunun çalıştığından emin olun.');
       }
-      
       if (error.message.includes('ERR_HTTP2_PROTOCOL_ERROR')) {
         throw new Error('HTTP/2 protokol hatası. Backend CORS ayarlarını kontrol edin.');
       }
-      
       if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
         throw new Error('Dosya yükleme zaman aşımına uğradı. Backend timeout ayarlarını kontrol edin.');
       }
-
       if (error.message.includes('CORS') || error.message.includes('Access-Control')) {
         throw new Error('CORS hatası. Backend CORS ayarlarını kontrol edin.');
       }
-
       if (error.response?.status === 413) {
         throw new Error('Dosya çok büyük. Backend maksimum dosya boyutu limitini kontrol edin.');
       }
-      
       if (error.response?.status === 415) {
         throw new Error('Desteklenmeyen dosya formatı. Backend dosya türü ayarlarını kontrol edin.');
       }
-
       if (error.response?.status === 400) {
         throw new Error('Geçersiz dosya. Dosyanın bozuk olmadığından emin olun.');
       }
-
       if (error.response?.status === 401) {
         throw new Error('Yetkilendirme hatası. Giriş yapmayı deneyin.');
       }
-
       if (error.response?.status === 403) {
         throw new Error('Dosya yükleme izni yok. Admin ile iletişime geçin.');
       }
-
       if (error.response?.status === 404) {
         throw new Error('Upload endpoint\'i bulunamadı. Backend API ayarlarını kontrol edin.');
       }
-
       if (error.response?.status >= 500) {
         throw new Error('Sunucu hatası. Backend loglarını kontrol edin.');
       }
-
       if (error.response?.data?.message) {
         throw new Error(error.response.data.message);
       }
-
       throw new Error(`Dosya yükleme hatası: ${error.message || 'Bilinmeyen hata'}`);
     });
 };

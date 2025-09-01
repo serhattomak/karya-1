@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getProductUrl } from "../../utils/slugUtils";
 import "./ProductSlider.css";
 
-const BASE_URL = "https://localhost:7103/";
+import { API_URL } from "../../api";
 
 const ProductSlider = ({ products }) => {
   const trackRef = useRef(null);
@@ -30,7 +30,7 @@ const ProductSlider = ({ products }) => {
     if (product.productMainImage && product.productMainImage.path) {
       return product.productMainImage.path.startsWith("http")
         ? product.productMainImage.path
-        : BASE_URL + product.productMainImage.path;
+        : API_URL + product.productMainImage.path;
     }
     if (
       product.productMainImageId &&
@@ -47,7 +47,7 @@ const ProductSlider = ({ products }) => {
       if (mainImage && mainImage.path) {
         return mainImage.path.startsWith("http")
           ? mainImage.path
-          : BASE_URL + mainImage.path;
+          : API_URL + mainImage.path;
       }
     }
     if (
@@ -65,7 +65,7 @@ const ProductSlider = ({ products }) => {
       if (mainImage && mainImage.path) {
         return mainImage.path.startsWith("http")
           ? mainImage.path
-          : BASE_URL + mainImage.path;
+          : API_URL + mainImage.path;
       }
     }
     if (product.files && product.files.length > 0) {
@@ -73,13 +73,13 @@ const ProductSlider = ({ products }) => {
       if (firstFile) {
         return firstFile.path.startsWith("http")
           ? firstFile.path
-          : BASE_URL + firstFile.path;
+          : API_URL + firstFile.path;
       }
     }
     if (product.mainImageUrl) {
       return product.mainImageUrl.startsWith("http")
         ? product.mainImageUrl
-        : BASE_URL + product.mainImageUrl;
+        : API_URL + product.mainImageUrl;
     }
     if (product.image) {
       return product.image;

@@ -4,7 +4,7 @@ import ProductSlider from "../../components/ProductSlider/ProductSlider";
 import "./HomePage.css";
 import { getPageByName, getFile } from "../../api";
 
-const BASE_URL = "https://localhost:7103/";
+import { API_URL } from "../../api";
 
 function HomePage() {
   const [bannerTitle, setBannerTitle] = useState("");
@@ -60,9 +60,9 @@ function HomePage() {
             let fullImageUrl = "";
             if (imagePath) {
               if (imagePath.startsWith("uploads/")) {
-                fullImageUrl = BASE_URL + imagePath;
+                fullImageUrl = API_URL + imagePath;
               } else if (!imagePath.startsWith("http")) {
-                fullImageUrl = BASE_URL + imagePath;
+                fullImageUrl = API_URL + imagePath;
               } else {
                 fullImageUrl = imagePath;
               }

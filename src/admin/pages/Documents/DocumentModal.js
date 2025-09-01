@@ -60,7 +60,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         setPreviewUrl(document.previewImageUrl);
       } else if (document.previewImageFile?.path) {
         setPreviewUrl(
-          `https://localhost:7103/${document.previewImageFile.path}`
+          `${API_URL}/${document.previewImageFile.path}`
         );
       }
 
@@ -68,7 +68,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         document.file?.path &&
         document.file?.contentType?.startsWith("image/")
       ) {
-        setFilePreviewUrl(`https://localhost:7103/${document.file.path}`);
+        setFilePreviewUrl(`${API_URL}/${document.file.path}`);
       }
     } else {
       setFormData({
@@ -269,7 +269,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         ...prev,
         previewImageFileId: file.id,
       }));
-      setPreviewUrl(`https://localhost:7103/${file.path}`);
+  setPreviewUrl(`${API_URL}/${file.path}`);
       setShowImageSelector(false);
     } else {
       setFormData((prev) => ({
@@ -279,7 +279,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         fileSize: file.size || 0,
       }));
       if (file.contentType?.startsWith("image/")) {
-        setFilePreviewUrl(`https://localhost:7103/${file.path}`);
+        setFilePreviewUrl(`${API_URL}/${file.path}`);
       }
       setShowFileSelector(false);
     }
@@ -1250,7 +1250,7 @@ const FileSelector = ({ files = [], onSelect, onClose, title, filterType }) => {
                     {file.contentType?.startsWith("image/") ||
                     file.path?.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
                       <img
-                        src={`https://localhost:7103/${file.path}`}
+                        src={`${API_URL}/${file.path}`}
                         alt={file.name}
                         loading="lazy"
                         style={{

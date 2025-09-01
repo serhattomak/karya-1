@@ -7,7 +7,7 @@ import PartnersSlider from "../../components/PartnersSlider/PartnersSlider";
 import Footer from "../../components/Footer/Footer";
 import { getPageByName } from "../../api";
 
-const BASE_URL = "https://localhost:7103/";
+import { API_URL } from "../../api";
 
 function AboutPage() {
   const [pageData, setPageData] = useState(null);
@@ -35,7 +35,7 @@ function AboutPage() {
   let galleryImages = [];
   if (pageData.files && Array.isArray(pageData.files)) {
     galleryImages = pageData.files
-      .map(f => f.path ? BASE_URL + f.path : "")
+      .map(f => f.path ? API_URL + f.path : "")
       .filter(Boolean);
     if (galleryImages.length > 4) {
       galleryImages = galleryImages.slice(0, 4);
@@ -44,7 +44,7 @@ function AboutPage() {
 
   let mainImageUrl = "/assets/images/hk.jpeg";
   if (pageData.mainImage && pageData.mainImage.path) {
-    mainImageUrl = BASE_URL + pageData.mainImage.path;
+    mainImageUrl = API_URL + pageData.mainImage.path;
   }
   return (
     <div>

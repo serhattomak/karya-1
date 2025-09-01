@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { getProductsAuth as getProducts, deleteProduct } from "../../../api";
+import { getProductsAuth as getProducts, deleteProduct, API_URL } from "../../../api";
 import ProductModal from "./ProductModal";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import Swal from "sweetalert2";
 import "./Products.css";
-
-const BASE_URL = "https://localhost:7103/";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -62,7 +60,7 @@ const Products = () => {
 
     if (product.productMainImage && product.productMainImage.path) {
       console.log("Found productMainImage:", product.productMainImage);
-      return BASE_URL + product.productMainImage.path;
+      return API_URL + product.productMainImage.path;
     }
 
     if (product.productMainImageId && product.files && product.files.length > 0) {
@@ -79,7 +77,7 @@ const Products = () => {
 
       if (mainImage && mainImage.path) {
         console.log("Found main image via ProductMainImageId:", mainImage);
-        return BASE_URL + mainImage.path;
+        return API_URL + mainImage.path;
       }
     }
     if (
@@ -105,7 +103,7 @@ const Products = () => {
           "Found main image via ProductMainImageId (capital P):",
           mainImage
         );
-        return BASE_URL + mainImage.path;
+        return API_URL + mainImage.path;
       }
     }
 
@@ -113,7 +111,7 @@ const Products = () => {
       const firstFile = product.files.find((file) => file.path);
       if (firstFile) {
         console.log("Using first available file:", firstFile);
-        return BASE_URL + firstFile.path;
+        return API_URL + firstFile.path;
       }
     }
 
@@ -121,7 +119,7 @@ const Products = () => {
       console.log("Found mainImageUrl:", product.mainImageUrl);
       return product.mainImageUrl.startsWith("http")
         ? product.mainImageUrl
-        : BASE_URL + product.mainImageUrl;
+        : API_URL + product.mainImageUrl;
     }
 
     console.log("No image found for product");

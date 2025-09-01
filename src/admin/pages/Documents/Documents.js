@@ -12,8 +12,8 @@ import DeleteConfirmModal from "./DeleteConfirmModal";
 import DocumentDetailModal from "./DocumentDetailModal";
 import Swal from "sweetalert2";
 import "./Documents.css";
-
-const BASE_URL = "https://localhost:7103/";
+import { API_URL } from "../../../api";
+const BASE_URL = API_URL.endsWith("/") ? API_URL : API_URL + "/";
 
 const Documents = () => {
   const [documents, setDocuments] = useState([]);

@@ -4,7 +4,7 @@ import { getProducts, getFile } from "../../api";
 import { getProductUrl } from "../../utils/slugUtils";
 import "./RelatedProducts.css";
 
-const BASE_URL = "https://localhost:7103/";
+import { API_URL } from "../../api";
 
 const RelatedProducts = ({ currentProductId, productName = "Ürünler" }) => {
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -53,7 +53,7 @@ const RelatedProducts = ({ currentProductId, productName = "Ürünler" }) => {
               if (product.productImage && product.productImage.path) {
                 return product.productImage.path.startsWith('http') 
                   ? product.productImage.path 
-                  : BASE_URL + product.productImage.path;
+                  : API_URL + product.productImage.path;
               }
               if (product.productImageId && product.files) {
                 const productImageFile = product.files.find(file => 
@@ -64,13 +64,13 @@ const RelatedProducts = ({ currentProductId, productName = "Ürünler" }) => {
                 if (productImageFile && productImageFile.path) {
                   return productImageFile.path.startsWith('http') 
                     ? productImageFile.path 
-                    : BASE_URL + productImageFile.path;
+                    : API_URL + productImageFile.path;
                 }
               }
               if (product.files && product.files[0] && product.files[0].path) {
                 return product.files[0].path.startsWith('http') 
                   ? product.files[0].path 
-                  : BASE_URL + product.files[0].path;
+                  : API_URL + product.files[0].path;
               }
               return "/assets/images/Group 300.webp";
             })();

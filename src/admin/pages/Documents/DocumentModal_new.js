@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { createDocument, updateDocument, uploadFile, getFiles, checkBackendHealth } from "../../../api";
+import { createDocument, updateDocument, uploadFile, getFiles, checkBackendHealth, API_URL } from "../../../api";
 import Swal from "sweetalert2";
 import "./DocumentModal.css";
 
@@ -52,11 +52,11 @@ const DocumentModal = ({ document, onSave, onClose }) => {
       if (document.previewImageUrl) {
         setPreviewUrl(document.previewImageUrl);
       } else if (document.previewImageFile?.path) {
-        setPreviewUrl(`https://localhost:7103/${document.previewImageFile.path}`);
+        setPreviewUrl(`${API_URL}/${document.previewImageFile.path}`);
       }
       
       if (document.file?.path && document.file?.contentType?.startsWith('image/')) {
-        setFilePreviewUrl(`https://localhost:7103/${document.file.path}`);
+        setFilePreviewUrl(`${API_URL}/${document.file.path}`);
       }
     } else {
       setFormData({
@@ -184,7 +184,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         ...prev,
         previewImageFileId: file.id
       }));
-      setPreviewUrl(`https://localhost:7103/${file.path}`);
+  setPreviewUrl(`${API_URL}/${file.path}`);
       setShowImageSelector(false);
     } else {
       setFormData(prev => ({
@@ -194,7 +194,7 @@ const DocumentModal = ({ document, onSave, onClose }) => {
         fileSize: file.size || 0
       }));
       if (file.contentType?.startsWith('image/')) {
-        setFilePreviewUrl(`https://localhost:7103/${file.path}`);
+        setFilePreviewUrl(`${API_URL}/${file.path}`);
       }
       setShowFileSelector(false);
     }
@@ -688,7 +688,7 @@ const FileSelector = ({ files, onSelect, onClose, title, filterType }) => {
                 <div className="AdminFilePreview">
                   {isImageFile(file.contentType) ? (
                     <img 
-                      src={`https://localhost:7103/${file.path}`} 
+                      src={`${API_URL}/${file.path}`} 
                       alt={file.name}
                       className="AdminFileThumbnail"
                     />

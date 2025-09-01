@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getProducts, getPages, downloadDocument } from "../../../api";
+import { getProducts, getPages, downloadDocument, API_URL } from "../../../api";
 import Swal from "sweetalert2";
 import "./DocumentDetailModal.css";
 
@@ -135,9 +135,9 @@ const DocumentDetailModal = ({ document, onClose }) => {
                     document.previewImageUrl && document.previewImageUrl.startsWith('http') 
                       ? document.previewImageUrl 
                       : document.previewImageFile?.path
-                        ? `https://localhost:7103/${document.previewImageFile.path}`
+                        ? `${API_URL}/${document.previewImageFile.path}`
                         : document.previewImageUrl
-                          ? `https://localhost:7103/${document.previewImageUrl}`
+                          ? `${API_URL}/${document.previewImageUrl}`
                           : null
                   } 
                   alt={document.name}
