@@ -7,7 +7,7 @@
   flex-direction: column;
 }
 .service-content {
-  width: 90%;
+  width: 80%;
   justify-content: space-around;
   display: flex;
   align-items: center;

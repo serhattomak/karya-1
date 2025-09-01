@@ -756,7 +756,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
             </div>
           </div>
           <div
-            className="form-group"
             style={{
               backgroundColor: "#f3f3f3",
               padding: "10px",
@@ -899,6 +898,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
               backgroundColor: "#f3f3f3",
               padding: "10px",
               borderRadius: "10px",
+              marginTop: "10px",
             }}
           >
             <label>Banner Görseli</label>
@@ -1221,6 +1221,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
             </div>
           </div>
           <div
+            className="form-group"
             style={{
               backgroundColor: "#f3f3f3",
               padding: "10px",
