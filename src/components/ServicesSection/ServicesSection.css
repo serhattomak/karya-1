@@ -12,7 +12,6 @@
   display: flex;
   align-items: center;
 }
-
 @media (max-width: 768px) {
   .services-section {
     flex-direction: column;
