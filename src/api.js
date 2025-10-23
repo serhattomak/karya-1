@@ -1,6 +1,19 @@
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL || "https://localhost:7103";
+const API_URL = api.baseURL;
+
+function getBaseUrl() {
+  const meta = document.querySelector('meta[name="api-base"]');
+  if (meta?.content) return meta.content;
+
+  if (process.env.REACT_APP_API_BASE) return process.env.REACT_APP_API_BASE;
+
+  return "";
+}
+
+export const api = axios.create({
+  baseURL: getBaseUrl(),
+});
 
 function getAuthHeader() {
   const token = localStorage.getItem("token");
