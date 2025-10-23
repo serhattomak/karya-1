@@ -102,8 +102,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
       } else {
         setSelectedDocuments([]);
       }
-
-      // ... rest of your existing code for handling other files
       let allDocumentFiles = [];
 
       if (product.documentFiles && product.documentFiles.length > 0) {
@@ -262,6 +260,31 @@ const ProductModal = ({ product, onClose, onSave }) => {
 
       const fileIds = [];
       for (const image of productImages) {
+      const documentFileIds = [];
+      const documentImageFileIds = [];
+
+      for (const doc of documentFiles) {
+        if (doc.isExisting) {
+          if (doc.isDocumentImage) {
+            documentImageFileIds.push(doc.id);
+          } else {
+            documentFileIds.push(doc.id);
+          }
+        } else if (doc.file) {
+          const uploaded = await uploadFile(doc.file);
+          const uploadedFileId = uploaded?.data?.id || uploaded?.id;
+          if (uploadedFileId) {
+            if (doc.isDocumentImage) {
+              documentImageFileIds.push(uploadedFileId);
+            } else {
+              documentFileIds.push(uploadedFileId);
+            }
+          }
+        }
+      }
+
+      const productDetailFileIds = [];
+      for (const image of productDetailImages) {
         if (image.isExisting) {
           fileIds.push(image.id);
         } else if (image.file) {
@@ -588,7 +611,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
       <div className="AdminModalContent AdminProductModal">
         <div className="AdminModalHeader">
           <h3>{product ? "Ürün Düzenle" : "Yeni Ürün Ekle"}</h3>
-          <button className="delete-btn" onClick={onClose}>
+          <button className="close-btn" onClick={onClose}>
             ×
           </button>
         </div>
@@ -626,7 +649,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
           </div>
 
           {/* Slug */}
-          <div className="form-group">
+          {/* <div className="form-group">
             <label>URL Slug *</label>
             <input
               type="text"
@@ -653,7 +676,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
             <small style={{ color: "#666", fontSize: "12px" }}>
               Ana Sayfada gösterilecek ürünün alt başlığı olarak kullanılır.
             </small>
-          </div>
+          </div> */}
 
           {/* Başlıklar */}
           <div className="form-group">
@@ -703,7 +726,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     className="delete-btn"
                     onClick={() => removeSubtitle(index)}
                   >
-                    ×
+                    + Yeni Görsel Yükle
                   </button>
                 )}
               </div>
@@ -734,8 +757,84 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     className="delete-btn"
                     onClick={() => removeDescription(index)}
                   >
-                    ×
+                    Sistemden Seç
                   </button>
+                </div>
+                {productImageId && (
+                  <div
+                    style={{
+                      position: "relative",
+                      display: "flex",
+                      alignItems: "center",
+                      background: "#f9f9f9",
+                      borderRadius: "8px",
+                      padding: "8px 12px",
+                      boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                      gap: "10px",
+                      width: "fit-content",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                      }}
+                    >
+                      {(() => {
+                        const selectedImage = getSelectedProductImage();
+                        return selectedImage ? (
+                          <>
+                            <img
+                              src={BASE_URL + selectedImage.path}
+                              alt={selectedImage.name}
+                              style={{
+                                width: "60px",
+                                height: "60px",
+                                objectFit: "cover",
+                                borderRadius: "6px",
+                                border: "1px solid #ddd",
+                              }}
+                            />
+                            <span
+                              style={{
+                                fontSize: "14px",
+                                color: "#333",
+                                fontWeight: 500,
+                              }}
+                            >
+                              {selectedImage.name}
+                            </span>
+                          </>
+                        ) : (
+                          <span>Seçilen görsel ID: {productImageId}</span>
+                        );
+                      })()}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setProductImageId("")}
+                      style={{
+                        position: "absolute",
+                        top: "-6px",
+                        right: "-6px",
+                        background: "#e74c3c",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "50%",
+                        width: "20px",
+                        height: "20px",
+                        fontSize: "14px",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      ×
+                    </button>
+                  </div>
                 )}
               </div>
             ))}
@@ -765,7 +864,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     className="delete-btn"
                     onClick={() => removeListTitle(index)}
                   >
-                    ×
+                    Dosya Seç
                   </button>
                 )}
               </div>
@@ -796,7 +895,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     className="delete-btn"
                     onClick={() => removeListItem(index)}
                   >
-                    ×
+                    Sistemden Seç
                   </button>
                 )}
               </div>
@@ -817,17 +916,149 @@ const ProductModal = ({ product, onClose, onSave }) => {
               <div key={index} className="AdminInputGroup">
                 <input
                   type="url"
-                  value={url}
-                  onChange={(e) => updateUrl(index, e.target.value)}
-                  placeholder={`URL ${index + 1}`}
+                  value={bannerImageUrl}
+                  onChange={(e) => setBannerImageUrl(e.target.value)}
+                  placeholder="Banner görsel URL'si girebilir ya da dosya seçebilirsiniz"
                 />
-                {urls.length > 1 && (
+              </div>
+            </div>
+
+            {/* Açıklamalar */}
+            <div className="form-group">
+              <label>İçerik Paragrafı</label>
+
+              {descriptions.map((description, index) => (
+                <div key={index} className="input-group">
+                  <textarea
+                    value={description}
+                    onChange={(e) => updateDescription(index, e.target.value)}
+                    placeholder={`Açıklama ${index + 1}`}
+                    rows="3"
+                  />
+                  {descriptions.length > 1 && (
+                    <button
+                      type="button"
+                      className="remove-btn danger"
+                      onClick={() => removeDescription(index)}
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                className="add-btn secondary"
+                onClick={addDescription}
+              >
+                + Açıklama Ekle
+              </button>
+            </div>
+
+            {/* Liste Başlıkları */}
+            <div className="form-group">
+              <label>Liste Başlıkları</label>
+              {listTitles.map((listTitle, index) => (
+                <div key={index} className="input-group">
+                  <input
+                    type="text"
+                    value={listTitle}
+                    onChange={(e) => updateListTitle(index, e.target.value)}
+                    placeholder={`Liste başlığı ${index + 1}`}
+                  />
+                  {listTitles.length > 1 && (
+                    <button
+                      type="button"
+                      className="remove-btn danger"
+                      onClick={() => removeListTitle(index)}
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                className="add-btn secondary"
+                onClick={addListTitle}
+              >
+                + Liste Başlığı Ekle
+              </button>
+            </div>
+
+            {/* Liste Öğeleri */}
+            <div className="form-group">
+              <label>Liste Öğeleri</label>
+              {listItems.map((item, index) => (
+                <div key={index} className="input-group">
+                  <input
+                    type="text"
+                    value={item}
+                    onChange={(e) => updateListItem(index, e.target.value)}
+                    placeholder={`Liste öğesi ${index + 1}`}
+                  />
+                  {listItems.length > 1 && (
+                    <button
+                      type="button"
+                      className="remove-btn danger"
+                      onClick={() => removeListItem(index)}
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                className="add-btn secondary"
+                onClick={addListItem}
+              >
+                + Liste Öğesi Ekle
+              </button>
+            </div>
+
+            {/* URL'ler */}
+            <div className="form-group">
+              <label>URL'ler</label>
+              {urls.map((url, index) => (
+                <div key={index} className="input-group">
+                  <input
+                    type="url"
+                    value={url}
+                    onChange={(e) => updateUrl(index, e.target.value)}
+                    placeholder={`URL ${index + 1}`}
+                  />
+                  {urls.length > 1 && (
+                    <button
+                      type="button"
+                      className="remove-btn danger"
+                      onClick={() => removeUrl(index)}
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                className="add-btn secondary"
+                onClick={addUrl}
+              >
+                + URL Ekle
+              </button>
+            </div>
+
+            {/* Product Documents */}
+            <div className="form-group">
+              <label>Ürün Dökümanları</label>
+              <div className="documents-selector">
+                <div className="upload-controls">
                   <button
                     type="button"
                     className="delete-btn"
                     onClick={() => removeUrl(index)}
                   >
-                    ×
+                    Döküman Seç
                   </button>
                 )}
               </div>
@@ -936,10 +1167,11 @@ const ProductModal = ({ product, onClose, onSave }) => {
                     style={{ maxWidth: "200px", maxHeight: "100px" }}
                   />
                 </div>
-              )}
-            </div>
-          </div>
-
+                {selectedDocuments.length > 0 && (
+                  <div className="selected-documents">
+                    {selectedDocuments.map((documentId) => {
+                      const document = getSelectedDocumentData(documentId);
+                      if (!document) return null;
           {/* Product Image ID */}
           <div className="form-group">
             <label>Sayfa Görseli</label>
@@ -1009,11 +1241,52 @@ const ProductModal = ({ product, onClose, onSave }) => {
                           />
                           <span>{selectedImage.name}</span>
                         </div>
-                      ) : (
-                        <span>Seçilen görsel ID: {productImageId}</span>
                       );
-                    })()}
+                    })}
                   </div>
+                )}
+              </div>
+            </div>
+
+            {/* Product Detail Image IDs */}
+            <div className="form-group">
+              <label>Ürün Detay Görselleri</label>
+              <div className="product-detail-images-selector">
+                <div className="upload-controls">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files);
+                      files.forEach((file) => {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                          const newId = Date.now() + Math.random();
+                          setProductDetailImageIds((prev) => [...prev, newId]);
+                          setProductDetailImages((prev) => [
+                            ...prev,
+                            {
+                              id: newId,
+                              url: event.target.result,
+                              name: file.name,
+                              file: file,
+                              isExisting: false,
+                            },
+                          ]);
+                        };
+                        reader.readAsDataURL(file);
+                      });
+                    }}
+                    style={{ display: "none" }}
+                    id="detail-image-input"
+                  />
+                  <button
+                    htmlFor="detail-image-input"
+                    className="file-select-btn primary"
+                  >
+                    + Yeni Görsel Yükle
+                  </button>
                   <button
                     type="button"
                     className="delete-btn"
@@ -1137,7 +1410,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
                       setProductMainImageFile(null);
                     }}
                   >
-                    ×
+                    Sistemden Seç
                   </button>
                 </div>
               )}
@@ -1204,6 +1477,8 @@ const ProductModal = ({ product, onClose, onSave }) => {
                             >
                               📄
                             </div>
+                          ) : (
+                            <span>Görsel ID: {id}</span>
                           )}
                           <div>
                             <div style={{ fontWeight: "500" }}>
@@ -1323,7 +1598,6 @@ const ProductModal = ({ product, onClose, onSave }) => {
                 </div>
               )}
             </div>
-          </div>
 
           <div className="form-group" style={{ marginBottom: "16px", display: "flex", alignItems: "center", gap: "12px" }}>
             <label htmlFor="showContactCheckbox" style={{ marginBottom: 0 }}>

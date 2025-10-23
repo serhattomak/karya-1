@@ -84,7 +84,9 @@
 } */
 
 /* Banner Preview */
+
 .AdminBannerPreview {
+
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 12px;
   padding: 48px 32px;
@@ -94,8 +96,13 @@
   overflow: hidden;
 }
 
+
 .AdminBannerPreview::before {
   content: '';
+
+.banner-preview::before {
+  content: "";
+
   position: absolute;
   top: 0;
   left: 0;
@@ -488,18 +495,19 @@
   .AdminPanel {
     padding: 16px;
   }
-  
+ 
   .AdminHomeSection {
     padding: 16px;
     margin-bottom: 20px;
   }
   
   .AdminSectionHeader {
+
     flex-direction: column;
     gap: 16px;
     align-items: stretch;
   }
-  
+
   .AdminSectionTitle {
     font-size: 20px;
     text-align: center;
@@ -535,6 +543,7 @@
   }
   
   .AdminModalFooter {
+
     padding: 20px 24px;
     flex-direction: column;
   }
@@ -542,8 +551,9 @@
   .AdminSaveSection {
     justify-content: center;
   }
-  
+
   .AdminAvailableProductsGrid {
+
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 }
