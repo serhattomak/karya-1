@@ -21,24 +21,6 @@
   margin: 0;
 }
 
-/* .add-btn.primary {
-  background: linear-gradient(135deg, #f68b1f, #ee5c30);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-}
-
-.add-btn.primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
-} */
-
 /* Products Grid */
 .AdminProductsGrid {
   display: grid;
@@ -199,38 +181,6 @@
   padding: 0 20px 20px 20px;
   box-sizing: border-box;
 }
-
-/* .edit-btn, .delete-btn {
-  flex: 1 1 0;
-  min-width: 0;
-  padding: 12px 0;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.edit-btn {
-  background: linear-gradient(135deg, #f68b1f, #ee5c30);
-  color: white;
-}
-
-.edit-btn:hover {
-  background: linear-gradient(135deg, #218838, #ee5c30);
-  transform: translateY(-1px);
-}
-
-.delete-btn {
-  background: linear-gradient(135deg, #dc3545, #c82333);
-  color: white;
-}
-
-.delete-btn:hover {
-  background: linear-gradient(135deg, #c82333, #a71e2a);
-  transform: translateY(-1px);
-} */
 
 /* No Products State */
 .AdminNoProducts {
@@ -487,7 +437,7 @@
 
 .add-btn.secondary:hover {
   background: #545b62;
-} */
+}
 
 .AdminFileInput {
   margin-bottom: 15px;
@@ -553,61 +503,6 @@
   border-top: 2px solid #f0f0f0;
   background: #f8f9fa;
 }
-
-/* .cancel-btn {
-  background: #6c757d;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.cancel-btn:hover {
-  background: #5a6268;
-}
-
-.cancel-btn.danger {
-  background: #dc3545;
-}
-
-.cancel-btn.danger:hover {
-  background: #c82333;
-} */
-
-/* .save-btn {
-  background: linear-gradient(135deg, #f68b1f, #ee5c30);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.save-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #f68b1f, #ee5c30);
-  transform: translateY(-1px);
-}
-
-.save-btn:disabled {
-  background: #6c757d;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.save-btn.primary {
-  background: #f68b1f;
-}
-
-.save-btn.primary:hover:not(:disabled) {
-  background: #ee5c30;
-} */
 
 .AdminDeleteBtn.danger {
   background: linear-gradient(135deg, #dc3545, #c82333);

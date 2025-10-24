@@ -1,7 +1,5 @@
 import axios from "axios";
 
-const API_URL = api.baseURL;
-
 function getBaseUrl() {
   const meta = document.querySelector('meta[name="api-base"]');
   if (meta?.content) return meta.content;
@@ -11,8 +9,10 @@ function getBaseUrl() {
   return "";
 }
 
+const API_URL = getBaseUrl();
+
 export const api = axios.create({
-  baseURL: getBaseUrl(),
+  baseURL: API_URL,
 });
 
 function getAuthHeader() {
