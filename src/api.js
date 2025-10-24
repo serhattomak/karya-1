@@ -24,15 +24,12 @@ function getAuthHeader() {
 export const checkBackendHealth = async () => {
   try {
     console.log("Backend bağlantı kontrolü başlatılıyor...");
-    
     // Basit bir GET isteği ile backend'in erişilebilir olup olmadığını kontrol et
-    const healthResponse = await axios.get(`${API_URL}/api/File`, { 
+    const healthResponse = await axios.get(`${API_URL}/File`, { 
       headers: getAuthHeader(),
       timeout: 10000 // 10 saniye timeout
     });
-    
     console.log("✅ Backend erişilebilir, durum:", healthResponse.status);
-    
     return {
       isHealthy: true,
       status: healthResponse.status,
@@ -94,45 +91,35 @@ export const checkBackendHealth = async () => {
 
 // AUTH
 export const login = (data) =>
-  axios.post(`${API_URL}/api/Auth/login`, data);
-
+  axios.post(`${API_URL}/Auth/Login`, data);
 export const register = (data) =>
-  axios.post(`${API_URL}/api/Auth/register`, data);
-
+  axios.post(`${API_URL}/Auth/Register`, data);
 export const logout = () =>
-  axios.post(`${API_URL}/api/Auth/logout`, {}, { headers: getAuthHeader() });
+  axios.post(`${API_URL}/Auth/Logout`, {}, { headers: getAuthHeader() });
 
 // CONTACT
 export const getContacts = () =>
-  axios.get(`${API_URL}/api/Contact`, { headers: getAuthHeader() });
-
+  axios.get(`${API_URL}/Contact`, { headers: getAuthHeader() });
 export const getContact = (id) =>
-  axios.get(`${API_URL}/api/Contact/${id}`, { headers: getAuthHeader() });
-
+  axios.get(`${API_URL}/Contact/${id}`, { headers: getAuthHeader() });
 export const createContact = (data) =>
-  axios.post(`${API_URL}/api/Contact`, data, { headers: getAuthHeader() });
-
+  axios.post(`${API_URL}/Contact`, data, { headers: getAuthHeader() });
 export const updateContact = (data) =>
-  axios.put(`${API_URL}/api/Contact`, data, { headers: getAuthHeader() });
-
+  axios.put(`${API_URL}/Contact`, data, { headers: getAuthHeader() });
 export const deleteContact = (id) =>
-  axios.delete(`${API_URL}/api/Contact/${id}`, { headers: getAuthHeader() });
+  axios.delete(`${API_URL}/Contact/${id}`, { headers: getAuthHeader() });
 
 // FILE
 export const getFiles = () =>
-  axios.get(`${API_URL}/api/File`, { headers: getAuthHeader() });
-
+  axios.get(`${API_URL}/File`, { headers: getAuthHeader() });
 export const getFile = (id) =>
-  axios.get(`${API_URL}/api/File/${id}`, { headers: getAuthHeader() });
-
+  axios.get(`${API_URL}/File/${id}`, { headers: getAuthHeader() });
 export const createFile = (data) =>
-  axios.post(`${API_URL}/api/File`, data, { headers: getAuthHeader() });
-
+  axios.post(`${API_URL}/File`, data, { headers: getAuthHeader() });
 export const updateFile = (data) =>
-  axios.put(`${API_URL}/api/File`, data, { headers: getAuthHeader() });
-
+  axios.put(`${API_URL}/File`, data, { headers: getAuthHeader() });
 export const deleteFile = (id) =>
-  axios.delete(`${API_URL}/api/File/${id}`, { headers: getAuthHeader() });
+  axios.delete(`${API_URL}/File/${id}`, { headers: getAuthHeader() });
 
 export const uploadFile = (formData, options = {}) => {
   console.log("📤 Upload File API başlıyor...");
@@ -150,12 +137,11 @@ export const uploadFile = (formData, options = {}) => {
     }
   }
   
-  console.log("🌐 Upload URL:", `${API_URL}/api/File/upload`);
+  console.log("🌐 Upload URL:", `${API_URL}/File/Upload`);
   
   const config = {
     headers: { 
       ...getAuthHeader()
-      // Content-Type'ı kaldırdık, axios otomatik olarak boundary ekleyecek
     },
     timeout: options.timeout || (fileInfo.isPDF ? 600000 : 300000), // PDF için 10 dakika, diğerleri için 5 dakika
     maxContentLength: fileInfo.isPDF ? 50 * 1024 * 1024 : 100 * 1024 * 1024, // PDF için 50MB, diğerleri için 100MB
@@ -178,14 +164,14 @@ export const uploadFile = (formData, options = {}) => {
   }
   
   console.log("⚙️ Request config:", {
-    url: `${API_URL}/api/File/upload`,
+    url: `${API_URL}/File/Upload`,
     timeout: config.timeout,
     maxContentLength: config.maxContentLength,
     maxBodyLength: config.maxBodyLength,
     headers: config.headers
   });
   
-  return axios.post(`${API_URL}/api/File/upload`, formData, config)
+  return axios.post(`${API_URL}/File/Upload`, formData, config)
     .then(response => {
       console.log("✅ Upload başarılı:", {
         status: response.status,
@@ -295,18 +281,18 @@ export const getDocuments = (params = {}) => {
   
   console.log("API getDocuments - Clean params:", cleanParams);
   
-  return axios.get(`${API_URL}/api/Document`, { 
+  return axios.get(`${API_URL}/Document`, { 
     params: Object.keys(cleanParams).length > 0 ? cleanParams : undefined, 
     headers: getAuthHeader() 
   });
 };
 
 export const getDocument = (id) =>
-  axios.get(`${API_URL}/api/Document/${id}`, { headers: getAuthHeader() });
+  axios.get(`${API_URL}/Document/${id}`, { headers: getAuthHeader() });
 
 export const uploadMultipleFiles = (formData, options = {}) => {
   console.log("📤 Çoklu dosya yükleme başlıyor...");
-  return axios.post(`${API_URL}/api/File/upload-multiple`, formData, {
+  return axios.post(`${API_URL}/File/UploadMultiple`, formData, {
     headers: {
       ...getAuthHeader()
     },
@@ -316,14 +302,13 @@ export const uploadMultipleFiles = (formData, options = {}) => {
 
 export const uploadDocument = (formData) => {
   console.log("Upload Document API - FormData:", formData);
-  console.log("Upload Document API - URL:", `${API_URL}/api/Document/upload`);
-  return axios.post(`${API_URL}/api/Document/upload`, formData, {
+  console.log("Upload Document API - URL:", `${API_URL}/Document/Upload`);
+  return axios.post(`${API_URL}/Document/Upload`, formData, {
     headers: {
       ...getAuthHeader()
     },
   });
 };
-  axios.get(`${API_URL}/api/Document/active`, { headers: getAuthHeader() });
 
 export const createDocument = (data) => {
   console.log("=== CREATE DOCUMENT API ===");
@@ -332,7 +317,7 @@ export const createDocument = (data) => {
   console.log("========================");
   
   return axios.post(
-    `${API_URL}/api/Document`,
+    `${API_URL}/Document`,
     JSON.stringify(data),
     {
       headers: {
@@ -350,7 +335,7 @@ export const updateDocument = (data) => {
   console.log("========================");
   
   return axios.put(
-    `${API_URL}/api/Document`,
+    `${API_URL}/Document`,
     JSON.stringify(data),
     {
       headers: {
@@ -362,36 +347,36 @@ export const updateDocument = (data) => {
 };
 
 export const deleteDocument = (id) =>
-  axios.delete(`${API_URL}/api/Document/${id}`, { headers: getAuthHeader() });
+  axios.delete(`${API_URL}/Document/${id}`, { headers: getAuthHeader() });
 
 export const downloadDocument = (id) =>
-  axios.post(`${API_URL}/api/Document/${id}/download`, {}, { 
+  axios.post(`${API_URL}/Document/${id}/Download`, {}, { 
     headers: getAuthHeader(),
     responseType: 'blob'
   });
 
 // PAGE
 export const getPages = (params) =>
-  axios.get(`${API_URL}/api/Page`, { params, headers: getAuthHeader() });
+  axios.get(`${API_URL}/Page`, { params, headers: getAuthHeader() });
 
 export const getPage = (id) =>
-  axios.get(`${API_URL}/api/Page/${id}`, { headers: getAuthHeader() });
+  axios.get(`${API_URL}/Page/${id}`, { headers: getAuthHeader() });
 
 export const getPageByName = (name) =>
-  axios.get(`${API_URL}/api/Page/name/${name}`, { headers: getAuthHeader() });
+  axios.get(`${API_URL}/Page/Name/${name}`, { headers: getAuthHeader() });
 
 export const getPageBySlug = (slug) =>
-  axios.get(`${API_URL}/api/Page/slug/${slug}`, { headers: getAuthHeader() });
+  axios.get(`${API_URL}/Page/Slug/${slug}`, { headers: getAuthHeader() });
 
 export const getPagesByType = (type, params) =>
-  axios.get(`${API_URL}/api/Page/type/${type}`, { params, headers: getAuthHeader() });
+  axios.get(`${API_URL}/Page/Type/${type}`, { params, headers: getAuthHeader() });
 
 export const createPage = (data) =>
-  axios.post(`${API_URL}/api/Page`, data, { headers: getAuthHeader() });
+  axios.post(`${API_URL}/Page`, data, { headers: getAuthHeader() });
 
 export const updatePage = (data) =>
   axios.put(
-    `${API_URL}/api/Page`,
+    `${API_URL}/Page`,
     JSON.stringify(data),
     {
       headers: {
@@ -403,7 +388,7 @@ export const updatePage = (data) =>
 
 export const updatePageProductOrder = (data) =>
   axios.put(
-    `${API_URL}/api/Page/product-order`,
+    `${API_URL}/Page/ProductOrder`,
     JSON.stringify(data),
     {
       headers: {
@@ -414,30 +399,30 @@ export const updatePageProductOrder = (data) =>
   );
 
 export const deletePage = (id) =>
-  axios.delete(`${API_URL}/api/Page/${id}`, { headers: getAuthHeader() });
+  axios.delete(`${API_URL}/Page/${id}`, { headers: getAuthHeader() });
 
 // PRODUCT
 export const getProducts = (params) =>
-  axios.get(`${API_URL}/api/Product`, { params });
+  axios.get(`${API_URL}/Product`, { params });
 
 export const getProductsAuth = (params) =>
-  axios.get(`${API_URL}/api/Product`, { params, headers: getAuthHeader() });
+  axios.get(`${API_URL}/Product`, { params, headers: getAuthHeader() });
 
 export const getProduct = (id) =>
-  axios.get(`${API_URL}/api/Product/${id}`);
+  axios.get(`${API_URL}/Product/${id}`);
 
 export const getProductByName = (name) =>
-  axios.get(`${API_URL}/api/Product/name/${name}`);
+  axios.get(`${API_URL}/Product/Name/${name}`);
 
 export const getProductBySlug = (slug) =>
-  axios.get(`${API_URL}/api/Product/slug/${slug}`);
+  axios.get(`${API_URL}/Product/Slug/${slug}`);
 
 export const createProduct = (data) =>
-  axios.post(`${API_URL}/api/Product`, data, { headers: getAuthHeader() });
+  axios.post(`${API_URL}/Product`, data, { headers: getAuthHeader() });
 
 export const updateProduct = (data) =>
   axios.put(
-    `${API_URL}/api/Product`,
+    `${API_URL}/Product`,
     JSON.stringify(data),
     {
       headers: {
@@ -448,4 +433,7 @@ export const updateProduct = (data) =>
   );
 
 export const deleteProduct = (id) =>
-  axios.delete(`${API_URL}/api/Product/${id}`, { headers: getAuthHeader() });
+  axios.delete(`${API_URL}/Product/${id}`, { headers: getAuthHeader() });
+
+export const getDocumentsActive = () =>
+  axios.get(`${API_URL}/Document/Active`, { headers: getAuthHeader() });
